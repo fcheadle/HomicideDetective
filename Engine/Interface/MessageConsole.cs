@@ -19,17 +19,13 @@ namespace Engine.Interface
             IsCursorDisabled = true;
             Cursor.IsVisible = false;
             UseKeyboard = false;
-
-            _semiTransparentBlack = Color.Black;
             _semiTransparentBlack.A = 128;
-
-            DefaultBackground = _semiTransparentBlack;
-
+            DefaultBackground =  _semiTransparentBlack;
             Fill(Color.Blue, Color.Tan, '_');
             this[0].CopyAppearanceTo(Cursor.PrintAppearance);
         }
 
-        public void Print(string text, MessageTypes type)
+        public void Print(string text, MessageTypes type = MessageTypes.Warning)
         {
             Color color;
 

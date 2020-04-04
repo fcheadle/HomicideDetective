@@ -39,6 +39,18 @@ namespace Engine.Utils
             return color;
         }
 
+        internal static Color FadeOut(Color color)
+        {
+            color.A += Convert.ToByte(1);
+            return color;
+        }
+
+        internal static Color FadeIn(Color color)
+        {
+            color.A -= Convert.ToByte(1);
+            return color;
+        }
+
         public static Color Brighten(Color color)
         {
             int total = 1;

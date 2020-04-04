@@ -2,6 +2,7 @@
 using Engine.Creatures;
 using Engine.Utils;
 using GoRogue;
+using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Maps;
@@ -31,17 +32,19 @@ namespace Engine.Maps
             set => base.ControlledGameObject = value;
         }
 
-        public TerrainMap(int width, int height)
+        public TerrainMap(int width, int height, bool generate = true)
             // Allow multiple items on the same location only on the items layer.  This example uses 8-way movement, so Chebyshev distance is selected.
             : base(width, height, Enum.GetNames(typeof(MapLayer)).Length - 1, Distance.CHEBYSHEV, entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS))
         {
             ControlledGameObjectChanged += ControlledGameObjectTypeCheck<Player>; // Make sure we don't accidentally assign anything that isn't a Player type to ControlledGameObject
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
 
-
-            MakeOutdoors(width, height);
-            //MakePeople(width, height);
-            //MakeHouses(width, height);
+            if (generate)
+            {
+                MakeOutdoors(width, height);
+                //MakePeople(width, height);
+                //MakeHouses(width, height);
+            }
         }
 
         private void MakePeople(int width, int height)
@@ -60,12 +63,7 @@ namespace Engine.Maps
         private void MakeOutdoors(int width, int height)
         {
             var f = Calculate.MasterFormula();
-            Region area = new Region();
-            area.OuterRect = new Rectangle(new Coord(0, 0), new Coord(width - 1, height - 1));
-            area.InnerRect = new Rectangle(new Coord(1, 1), new Coord(width - 2, height - 2));
-            area.IsLit = false;
-            area.IsRectangle = true;
-            area.IsVisited = false;
+            
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
@@ -82,92 +80,95 @@ namespace Engine.Maps
 
                     if (i == 0 || i == width - 1 || j == 0 || j == height - 1)
                     {
-                        tile = new Terrain(Color.White, pos, '#', false, false);
-
-                        area.OuterPoints.Add(pos);
+                        tile = Maps.Terrain.Wall(pos);
                     }
                     else
                     {
-                        if (foreground.B > foreground.G)
-                        {
-                            Color target;
-                            int chance = Calculate.Chance();
-                            if (chance < 10)
-                                target = Color.DarkGreen;
-                            else if (chance < 20)
-                                target = Color.LightGreen;
-                            else if (chance < 30)
-                                target = Color.MediumSpringGreen;
-                            else if (chance < 40)
-                                target = Color.SpringGreen;
-                            else if (chance < 50)
-                                target = Color.DarkOliveGreen;
-                            else if (chance < 60)
-                                target = Color.DarkGray;
-                            else if (chance < 70)
-                                target = Color.Olive;
-                            else if (chance < 80)
-                                target = Color.OliveDrab;
-                            else if (chance < 90)
-                                target = Color.DarkSeaGreen;
-                            else
-                                target = Color.ForestGreen;
-
-                            foreground = Colors.MutateBy(foreground, target);
-                        }
-
-                        if (foreground.R > foreground.G)
-                        {
-                            Color target = Color.Black;
-                            int chance = Calculate.Chance();
-                            if (chance < 10)
-                                target = Color.DarkGreen;
-                            else if (chance < 20)
-                                target = Color.LightGreen;
-                            else if (chance < 30)
-                                target = Color.MediumSpringGreen;
-                            else if (chance < 40)
-                                target = Color.SpringGreen;
-                            else if (chance < 50)
-                                target = Color.DarkOliveGreen;
-                            else if (chance < 60)
-                                target = Color.DarkGray;
-                            else if (chance < 70)
-                                target = Color.Olive;
-                            else if (chance < 80)
-                                target = Color.OliveDrab;
-                            else if (chance < 90)
-                                target = Color.DarkSeaGreen;
-                            else
-                                target = Color.ForestGreen;
-
-                            foreground = Colors.MutateBy(foreground, target);
-                        }
-
-                        tile = new Terrain(foreground,pos, '"', true, true);
-                        area.InnerPoints.Add(pos);
+                        tile = Maps.Terrain.Grass(pos, z);
                     }
                     SetTerrain(tile);
                 }
             }
 
-            for (int i = 0; i < 33; i++)
+            for (int i = 0; i < 300; i++)
             {
                 int x = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Width);
                 int y = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Height);
-                Coord c = new Coord(x, y);
-                Terrain tree = new Terrain(Color.Brown, c,35, false, false);
-                tree.IsVisible = true;
-                area.InnerPoints.Add(c);
-                SetTerrain(tree);
+                SetTerrain(Maps.Terrain.Tree(new Coord(x, y)));
             }
-            Coord c2 = new Coord(6, 6);
-            Terrain tree2 = new Terrain(Color.Brown,c2, 'O', false, false);
+        }
 
-            SetTerrain(tree2);
+        public void ReverseHorizontal()
+        {
+            TerrainMap map = new TerrainMap(Width, Height, false);
+            for (int i = Width - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    Point source = new Point(i, j);
+                    Point target = new Point(map.Width - i - 1, j);
+                    Terrain t = GetTerrain<Terrain>(source);
+                    t.Position = target;
+                    map.SetTerrain(t);
+                }
+            }
+            Add(map);
+        }
 
-            //Regions.Add(area);//uncomment to make the entire map visible at once
+        private void Add(TerrainMap map) => Add(map, new Coord(0, 0));
+        private void Add(TerrainMap map, Coord origin)
+        {
+            for (int i = 0; i < map.Width; i++)
+            {
+                for (int j = 0; j < map.Height; j++)
+                {
+                    Coord target = new Coord(i+origin.X, j+origin.Y);
+                    Terrain t = map.GetTerrain<Terrain>(new Coord(i, j));
+                    if (t != null)
+                    {
+                        t.Position = target;
+                        SetTerrain(t);
+                    }
+                }
+            }
+        }
 
+        public void ReverseVertical()
+        {
+            TerrainMap map = new TerrainMap(Width, Height, false);
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = Height - 1; j >= 0; j--)
+                {
+                    Point source = new Point(i, j);
+                    Point target = new Point(map.Width - i - 1, j);
+                    Terrain t = GetTerrain<Terrain>(source);
+                    t.Position = target;
+                    map.SetTerrain(t);
+                }
+            }
+
+            Add(map);
+        }
+
+        public void SwapXY()
+        {
+
+            TerrainMap map = new TerrainMap(Width, Height, false);
+        
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    Point original = new Point(j, i);
+                    Point target = new Point(i, j);
+                    Terrain t = GetTerrain<Terrain>(original);
+                    t.Position = target;
+                    map.SetTerrain(t);
+                }
+            }
+
+            Add(map);
         }
     }
 }

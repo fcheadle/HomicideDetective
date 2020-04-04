@@ -8,20 +8,13 @@ using SadConsole;
 namespace Engine.Creatures
 {
     // Custom class for the player is used in this example just so we can handle input.  This could be done via a component, or in a main screen, but for simplicity we do it here.
-    internal class Player : BasicEntity
+    internal class Player : Creature
     {
-        private static readonly Dictionary<Keys, Direction> s_movementDirectionMapping = new Dictionary<Keys, Direction>
-        {
-            { Keys.NumPad7, Direction.UP_LEFT },    { Keys.NumPad8, Direction.UP },     { Keys.NumPad9, Direction.UP_RIGHT },
-            { Keys.NumPad4, Direction.LEFT },                                           { Keys.NumPad6, Direction.RIGHT },
-            { Keys.NumPad1, Direction.DOWN_LEFT },  { Keys.NumPad2, Direction.DOWN },   { Keys.NumPad3, Direction.DOWN_RIGHT },
-            { Keys.Up, Direction.UP }, { Keys.Down, Direction.DOWN }, { Keys.Left, Direction.LEFT }, { Keys.Right, Direction.RIGHT }
-        };
 
         public int FOVRadius;
 
         public Player(Coord position)
-            : base(Color.White, Color.Black, '@', position, (int)MapLayer.PLAYER, isWalkable: false, isTransparent: true) => FOVRadius = 10;
+            : base(position, Color.White, 1) => FOVRadius = 25;
 
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
@@ -32,11 +25,11 @@ namespace Engine.Creatures
                 Program.TogglePause();
             }
             // Simplified way to check if any key we care about is pressed and set movement direction.
-            foreach (Keys key in s_movementDirectionMapping.Keys)
+            foreach (Keys key in Settings.MovementKeyBindings.Keys)
             {
                 if (info.IsKeyPressed(key))
                 {
-                    moveDirection = s_movementDirectionMapping[key];
+                    moveDirection = Settings.MovementKeyBindings[key];
                     break;
                 }
             }
