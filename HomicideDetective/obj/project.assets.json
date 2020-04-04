@@ -1,0 +1,367 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "GoRogue/2.6.0": {
+        "type": "package",
+        "dependencies": {
+          "OptimizedPriorityQueue": "4.2.0",
+          "Troschuetz.Random": "4.3.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/GoRogue.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/GoRogue.dll": {}
+        }
+      },
+      "MonoGame.Framework.DesktopGL.Core/3.8.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/MonoGame.Framework.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/MonoGame.Framework.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libSDL2-2.0.so.0": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libopenal.so.1": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx/native/libSDL2-2.0.0.dylib": {
+            "assetType": "native",
+            "rid": "osx"
+          },
+          "runtimes/osx/native/libopenal.1.dylib": {
+            "assetType": "native",
+            "rid": "osx"
+          },
+          "runtimes/win-x64/native/SDL2.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x64/native/soft_oal.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/SDL2.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          },
+          "runtimes/win-x86/native/soft_oal.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
+      "Newtonsoft.Json/11.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        }
+      },
+      "OptimizedPriorityQueue/4.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/Priority Queue.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/Priority Queue.dll": {}
+        }
+      },
+      "SadConsole/8.99.0": {
+        "type": "package",
+        "dependencies": {
+          "newtonsoft.json": "11.0.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/SadConsole.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SadConsole.dll": {}
+        }
+      },
+      "SadConsole.GoRogueHelpers/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "GoRogue": "2.6.0",
+          "SadConsole": "8.9.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/SadConsole.GoRogue.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SadConsole.GoRogue.dll": {}
+        }
+      },
+      "Troschuetz.Random/4.3.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/Troschuetz.Random.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Troschuetz.Random.dll": {}
+        }
+      },
+      "Engine/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "GoRogue": "2.6.0",
+          "MonoGame.Framework.DesktopGL.Core": "3.8.0.1",
+          "SadConsole": "8.99.0",
+          "SadConsole.GoRogueHelpers": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Engine.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Engine.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "GoRogue/2.6.0": {
+      "sha512": "xAwX6Ww7HKbYeVFblvIozbLuqeB+uVh0ZbSG2IX0y10fSYjjcrsn68mDHTWsws7B4gnoaX9EMCYzn5Pe2t8kGA==",
+      "type": "package",
+      "path": "gorogue/2.6.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "gorogue.2.6.0.nupkg.sha512",
+        "gorogue.nuspec",
+        "lib/netstandard2.0/GoRogue.dll",
+        "lib/netstandard2.0/GoRogue.xml",
+        "readme.txt"
+      ]
+    },
+    "MonoGame.Framework.DesktopGL.Core/3.8.0.1": {
+      "sha512": "5wTVgO9R+0KQ+QlvPMGBuUjnZbAqFd0guHf++1C2fLpqqdLkhI4SBGAgOB+nbgDaENMGkE5PJBj3IH0Xvc6TZg==",
+      "type": "package",
+      "path": "monogame.framework.desktopgl.core/3.8.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/MonoGame.Framework.DesktopGL.targets",
+        "lib/net452/MonoGame.Framework.dll",
+        "lib/net452/MonoGame.Framework.xml",
+        "lib/netstandard2.0/MonoGame.Framework.dll",
+        "lib/netstandard2.0/MonoGame.Framework.xml",
+        "monogame.framework.desktopgl.core.3.8.0.1.nupkg.sha512",
+        "monogame.framework.desktopgl.core.nuspec",
+        "runtimes/linux-x64/native/libSDL2-2.0.so.0",
+        "runtimes/linux-x64/native/libopenal.so.1",
+        "runtimes/osx/native/libSDL2-2.0.0.dylib",
+        "runtimes/osx/native/libopenal.1.dylib",
+        "runtimes/win-x64/native/SDL2.dll",
+        "runtimes/win-x64/native/soft_oal.dll",
+        "runtimes/win-x86/native/SDL2.dll",
+        "runtimes/win-x86/native/soft_oal.dll"
+      ]
+    },
+    "Newtonsoft.Json/11.0.2": {
+      "sha512": "IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
+      "type": "package",
+      "path": "newtonsoft.json/11.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "newtonsoft.json.11.0.2.nupkg.sha512",
+        "newtonsoft.json.nuspec"
+      ]
+    },
+    "OptimizedPriorityQueue/4.2.0": {
+      "sha512": "/Sr/OfCFnff7zFe6HoDyWRU8pEvJbOCE9ZjFCSH0EcfETjgvZJ2kUoqlTgVR7cgTPexOGhNATdBKQigqbYn43w==",
+      "type": "package",
+      "path": "optimizedpriorityqueue/4.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net20/Priority Queue.dll",
+        "lib/net20/Priority Queue.pdb",
+        "lib/net20/Priority Queue.xml",
+        "lib/net35-unity full v3.5/Priority Queue.dll",
+        "lib/net35-unity full v3.5/Priority Queue.pdb",
+        "lib/net35-unity full v3.5/Priority Queue.xml",
+        "lib/net35-unity subset v3.5/Priority Queue.dll",
+        "lib/net35-unity subset v3.5/Priority Queue.pdb",
+        "lib/net35-unity subset v3.5/Priority Queue.xml",
+        "lib/net45/Priority Queue.dll",
+        "lib/net45/Priority Queue.pdb",
+        "lib/net45/Priority Queue.xml",
+        "lib/netstandard1.0/Priority Queue.dll",
+        "lib/netstandard1.0/Priority Queue.pdb",
+        "lib/netstandard1.0/Priority Queue.xml",
+        "lib/portable-net40+sl5+win8+wpa81+wp8/Priority Queue.dll",
+        "lib/portable-net40+sl5+win8+wpa81+wp8/Priority Queue.pdb",
+        "lib/portable-net40+sl5+win8+wpa81+wp8/Priority Queue.xml",
+        "optimizedpriorityqueue.4.2.0.nupkg.sha512",
+        "optimizedpriorityqueue.nuspec"
+      ]
+    },
+    "SadConsole/8.99.0": {
+      "sha512": "WYiEWJfpdNcjLmbxutjyXTkVUIqfu9TqPFq+jmUvOXV/tmnh+DHjdRrtpGiJB94oDRxVwpncISoKiRTiuK1agA==",
+      "type": "package",
+      "path": "sadconsole/8.99.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/SadConsole.dll",
+        "lib/netstandard2.0/SadConsole.xml",
+        "readme.txt",
+        "sadconsole.8.99.0.nupkg.sha512",
+        "sadconsole.nuspec"
+      ]
+    },
+    "SadConsole.GoRogueHelpers/1.0.0": {
+      "sha512": "GhrhMGRjw9+hqDYZcFeOq/KkYEBVpaqnJJbJJ7mx+JfmvEbUnwV4yBtWhVpTGxZaNpqNJiasReYhuCN9+KsckA==",
+      "type": "package",
+      "path": "sadconsole.goroguehelpers/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/SadConsole.GoRogue.dll",
+        "lib/netstandard2.0/SadConsole.GoRogue.xml",
+        "sadconsole.goroguehelpers.1.0.0.nupkg.sha512",
+        "sadconsole.goroguehelpers.nuspec"
+      ]
+    },
+    "Troschuetz.Random/4.3.1": {
+      "sha512": "F6ofytpDeE1LGyEeg9T+jfEYJ5QdfdhkqZ7R8GFBQ91nZMmAMTirnL5gkh2bygo1yDN+e6aZQldA7k1BjYalSg==",
+      "type": "package",
+      "path": "troschuetz.random/4.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net35/Troschuetz.Random.dll",
+        "lib/net35/Troschuetz.Random.pdb",
+        "lib/net35/Troschuetz.Random.xml",
+        "lib/net40/Troschuetz.Random.dll",
+        "lib/net40/Troschuetz.Random.pdb",
+        "lib/net40/Troschuetz.Random.xml",
+        "lib/net45/Troschuetz.Random.dll",
+        "lib/net45/Troschuetz.Random.pdb",
+        "lib/net45/Troschuetz.Random.xml",
+        "lib/net461/Troschuetz.Random.dll",
+        "lib/net461/Troschuetz.Random.pdb",
+        "lib/net461/Troschuetz.Random.xml",
+        "lib/net472/Troschuetz.Random.dll",
+        "lib/net472/Troschuetz.Random.pdb",
+        "lib/net472/Troschuetz.Random.xml",
+        "lib/netstandard1.0/Troschuetz.Random.dll",
+        "lib/netstandard1.0/Troschuetz.Random.pdb",
+        "lib/netstandard1.0/Troschuetz.Random.xml",
+        "lib/netstandard2.0/Troschuetz.Random.dll",
+        "lib/netstandard2.0/Troschuetz.Random.pdb",
+        "lib/netstandard2.0/Troschuetz.Random.xml",
+        "lib/netstandard2.1/Troschuetz.Random.dll",
+        "lib/netstandard2.1/Troschuetz.Random.pdb",
+        "lib/netstandard2.1/Troschuetz.Random.xml",
+        "troschuetz.random.4.3.1.nupkg.sha512",
+        "troschuetz.random.nuspec"
+      ]
+    },
+    "Engine/1.0.0": {
+      "type": "project",
+      "path": "../Engine/Engine.csproj",
+      "msbuildProject": "../Engine/Engine.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v3.1": [
+      "Engine >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\fchea\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\fchea\\projects\\HomicideDetective\\HomicideDetective\\HomicideDetective.csproj",
+      "projectName": "HomicideDetective",
+      "projectPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\HomicideDetective\\HomicideDetective.csproj",
+      "packagesPath": "C:\\Users\\fchea\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\HomicideDetective\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\fchea\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "netcoreapp3.1"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\fchea\\Projects\\NugetPackages": {},
+        "https://api.nuget.org/v3/index.json": {},
+        "https://proget.tcdevops.com/nuget/tcproget/": {}
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "projectReferences": {
+            "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj": {
+              "projectPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netcoreapp3.1": {
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

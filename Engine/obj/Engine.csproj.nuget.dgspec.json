@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj",
+        "projectName": "Engine",
+        "projectPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj",
+        "packagesPath": "C:\\Users\\fchea\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fchea\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\fchea\\Projects\\NugetPackages": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://proget.tcdevops.com/nuget/tcproget/": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "GoRogue": {
+              "target": "Package",
+              "version": "[2.6.0, )"
+            },
+            "MonoGame.Framework.DesktopGL.Core": {
+              "target": "Package",
+              "version": "[3.8.0.1, )"
+            },
+            "SadConsole": {
+              "target": "Package",
+              "version": "[8.99.0, )"
+            },
+            "SadConsole.GoRogueHelpers": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
