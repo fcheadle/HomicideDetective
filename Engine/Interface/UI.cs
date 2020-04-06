@@ -22,17 +22,14 @@ namespace Engine.Interface
 
         public UI(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight, Radius radius)
         {
-            
             Map = GenerateMap(mapWidth, mapHeight);
             Thoughts = new MessageConsole(24, viewportHeight / 3 - 2);
             Thoughts.Position = new Coord(viewportWidth - 25, 1);
-            //Thoughts.FillWithRandomGarbage();
             Messages = new MessageConsole(24, viewportHeight / 3 - 2);
             Messages.Position = new Coord(viewportWidth - 25, viewportHeight / 3);
-            //Messages.FillWithRandomGarbage();
             Dialogue = new MessageConsole(24, viewportHeight / 3 - 2);
             Dialogue.Position = new Coord(viewportWidth - 25, viewportHeight / 3 * 2 - 1);
-            //Dialogue.FillWithRandomGarbage();
+
             MapRenderer = Map.CreateRenderer(new XnaRect(0, 0, viewportWidth - 26, viewportHeight), Global.FontDefault);
             Children.Add(MapRenderer);
             Children.Add(Thoughts);

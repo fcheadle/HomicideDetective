@@ -12,8 +12,10 @@ namespace Engine
         public static int MapHeight { get; set; } = 320;
         public static int GameWidth { get; set; } = 120;
         public static int GameHeight { get; set; } = 36;
+        public static bool IsPaused { get; set; } = false;
         public static Random Random { get; set; } = new Random();
         public static Radius FOVRadius { get; set; } = Radius.CIRCLE;
+        public static SadConsole.FontMaster FontMaster { get; set; }
         public static SadConsole.Font Font { get; set; }
 
         public static readonly Dictionary<Keys, Direction> MovementKeyBindings = new Dictionary<Keys, Direction>

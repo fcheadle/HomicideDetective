@@ -11,11 +11,12 @@ namespace Engine.Interface
         private ColoredString _message;
         private Color fore;
         private Color back;
-        public SpeechConsole(string statement, Coord position) : base(statement.Length, 1)//for now
+        public SpeechConsole(Font voice, string statement, Coord position) : base(statement.Length, 1, voice)//for now
         {
             Position = position;
             fore = Color.White;
             back = Color.Black;
+            IsFocused = true;
             _message = new ColoredString(statement, fore, back);
             Print(0,0,_message);
         }

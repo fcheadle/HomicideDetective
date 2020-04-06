@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GoRogue;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Engine.Utils
 {
@@ -194,6 +196,63 @@ namespace Engine.Utils
         internal static int Chance()
         {
             return r.Next(1, 101);
+        }
+
+        internal static IEnumerable<Coord> PointsAlongLine(Coord start, Coord stop)
+        {
+            int xOrigin = start.X;
+            int yOrigin = start.Y;
+            int xDestination = stop.X;            
+            int yDestination = stop.Y;            
+            xOrigin = xOrigin < 0 ? 0 : xOrigin;
+            yOrigin = yOrigin < 0 ? 0 : yOrigin;
+            xDestination = xDestination > Settings.MapWidth ? 0 : xDestination;
+            yDestination = yDestination > Settings.MapHeight ? 0 : yDestination;
+
+            int dx = Math.Abs(xDestination - xOrigin);
+            int dy = Math.Abs(yDestination - yOrigin);
+
+            int sx = xOrigin < xDestination ? 1 : -1;
+            int sy = yOrigin < yDestination ? 1 : -1;
+            int err = dx - dy;
+
+            while (true)
+            {
+                yield return new Point(xOrigin, yOrigin);
+                if (xOrigin == xDestination && yOrigin == yDestination)
+                {
+                    break;
+                }
+                int e2 = 2 * err;
+                if (e2 > -dy)
+                {
+                    err = err - dy;
+                    xOrigin = xOrigin + sx;
+                }
+                if (e2 < dx)
+                {
+                    err = err + dx;
+                    yOrigin = yOrigin + sy;
+                }
+            }
+        }
+
+        internal static List<Coord> BorderLocations(GoRogue.Rectangle room)
+        {
+            int xMin = room.MinExtentX;
+            int xMax = room.MaxExtentX;
+            int yMin = room.MinExtentY;
+            int yMax = room.MaxExtentY;
+            Coord min = new Coord(xMin, yMin); //upper left
+            Coord max = new Coord(xMax, yMax); //bottom right
+            Coord bl = new Coord(xMin, yMax); //bottom left
+            Coord tr = new Coord(xMax, yMin); //top right
+            List<Coord> borderCells = Utils.Calculate.PointsAlongLine(tr, max).ToList();
+            borderCells.AddRange(Utils.Calculate.PointsAlongLine(min, tr).ToList());
+            borderCells.AddRange(Utils.Calculate.PointsAlongLine(min, bl).ToList());
+            borderCells.AddRange(Utils.Calculate.PointsAlongLine(bl, max).ToList());
+
+            return borderCells;
         }
     }
 }

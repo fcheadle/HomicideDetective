@@ -6,7 +6,6 @@ namespace Engine
 {
     internal class Program
     {
-        private static bool _isPaused { get; set; } = false;
         public static UI MapScreen { get; set; }
 
         public static void Main()
@@ -30,7 +29,7 @@ namespace Engine
 
         internal static void TogglePause()
         {
-            
+            Settings.IsPaused = !Settings.IsPaused;
         }
     }
 }

@@ -16,8 +16,10 @@ namespace Engine.Interface
 
         public MessageConsole(int width, int height) : base(width, height)
         {
-            IsCursorDisabled = true;
+            IsCursorDisabled = false;
             Cursor.IsVisible = false;
+            UseMouse = true;
+            
             UseKeyboard = false;
             _semiTransparentBlack.A = 128;
             DefaultBackground =  _semiTransparentBlack;

@@ -2,11 +2,8 @@
 using Engine.Creatures;
 using Engine.Utils;
 using GoRogue;
-using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using SadConsole.Maps;
-using Rectangle = GoRogue.Rectangle;
 
 namespace Engine.Maps
 {
@@ -41,60 +38,112 @@ namespace Engine.Maps
 
             if (generate)
             {
-                MakeOutdoors(width, height);
-                //MakePeople(width, height);
-                //MakeHouses(width, height);
+                MakeHouses();
+                MakeOutdoors();
+                //MakePeople();
             }
         }
 
-        private void MakePeople(int width, int height)
+        private void MakeHouses()
         {
-            //Person person;
-            //for (int i = 0; i < 50; i++)
-            //{
-            //    person = new Person(this, new Coord(GoRogue.Random.SingletonRandom.DefaultRNG.Next(Width), GoRogue.Random.SingletonRandom.DefaultRNG.Next(Height)));
-            //    AddEntity(person);
-            //}
-            //person = new Person(this, new Coord(3, 3));// debug fellow right next to us to start
-
-            //AddEntity(person);
-        }
-
-        private void MakeOutdoors(int width, int height)
-        {
-            var f = Calculate.MasterFormula();
-            
-            for (int i = 0; i < width; i++)
+            for (int x = 1; x < Width - 49; x+=48)
             {
-                for (int j = 0; j < height; j++)
+                for (int y = 1; y < Height - 49; y+=48)
                 {
-                    Terrain tile;
-                    double z = f(i, j);
-                    Coord pos = new Coord(i, j);
-
-                    Color foreground = Color.Green;
-                    for (double k = 0; k < z; k++)
-                        foreground = Colors.Brighten(foreground);
-                    for (double k = z; k < 0; k++)
-                        foreground = Colors.Darken(foreground);
-
-                    if (i == 0 || i == width - 1 || j == 0 || j == height - 1)
-                    {
-                        tile = Maps.Terrain.Wall(pos);
-                    }
-                    else
-                    {
-                        tile = Maps.Terrain.Grass(pos, z);
-                    }
-                    SetTerrain(tile);
+                    Point origin = new Point(x, y);
+                    Structure house = new Structure(48, 48, origin);
+                    Add(house.Map, origin);
                 }
             }
+        }
 
+        public bool Contains(Coord location)
+        {
+            return (location.X >= 0 && location.Y >= 0 && location.X < Width && location.Y < Height);
+        }
+
+        internal void Add(TerrainMap map, Point origin)
+        {
+            for (int x = 0; x < map.Width; x++)
+            {
+                for (int y = 0; y < map.Height; y++)
+                {
+                    Coord source = new Coord(x, y);
+                    Coord local = new Coord(x + origin.X, y + origin.Y);
+                    Terrain terrain = map.GetTerrain<Terrain>(source);
+                    if (terrain != null)
+                    {
+                        Terrain newTerrain = GetTerrain<Terrain>(local);
+                        newTerrain = Maps.Terrain.Copy(terrain, local);
+                        //try
+                        //{
+                        SetTerrain(newTerrain);
+                        //}
+                        //catch
+                        //{
+                        //    //do nothing
+                        //    ;
+                        //}
+                    }
+                }
+            }
+        }
+        private void MakePeople()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                AddEntity(Creature.Person(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
+            }
             for (int i = 0; i < 300; i++)
+            {
+                AddEntity(Creature.Animal(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
+            }
+        }
+
+        private void MakeOutdoors()
+        {
+            var f = Calculate.MasterFormula();
+            int temp = 0;
+            while (temp < 300)
             {
                 int x = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Width);
                 int y = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Height);
-                SetTerrain(Maps.Terrain.Tree(new Coord(x, y)));
+                Coord tree = new Coord(x, y);
+                if (GetTerrain<Terrain>(tree) == null)
+                {
+                    SetTerrain(Maps.Terrain.Tree(new Coord(x, y)));
+                    temp++;
+                }
+            }
+
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    Coord pos = new Coord(i, j);
+                    if (GetTerrain<Terrain>(pos) == null)
+                    {
+
+                        Terrain tile;
+                        double z = f(i, j);
+
+                        Color foreground = Color.Green;
+                        for (double k = 0; k < z; k++)
+                            foreground = Colors.Brighten(foreground);
+                        for (double k = z; k < 0; k++)
+                            foreground = Colors.Darken(foreground);
+
+                        if (i == 0 || i == Width - 1 || j == 0 || j == Height - 1)
+                        {
+                            tile = Maps.Terrain.Wall(pos);
+                        }
+                        else
+                        {
+                            tile = Maps.Terrain.Grass(pos, z);
+                        }
+                        SetTerrain(tile);
+                    }
+                }
             }
         }
 
@@ -108,8 +157,11 @@ namespace Engine.Maps
                     Point source = new Point(i, j);
                     Point target = new Point(map.Width - i - 1, j);
                     Terrain t = GetTerrain<Terrain>(source);
-                    t.Position = target;
-                    map.SetTerrain(t);
+                    if (t != null)
+                    {
+                        t.Position = target;
+                        map.SetTerrain(t);
+                    }
                 }
             }
             Add(map);
@@ -138,13 +190,16 @@ namespace Engine.Maps
             TerrainMap map = new TerrainMap(Width, Height, false);
             for (int i = 0; i < Width; i++)
             {
-                for (int j = Height - 1; j >= 0; j--)
+                for (int j = Height - 1; j > 0; j--)
                 {
                     Point source = new Point(i, j);
                     Point target = new Point(map.Width - i - 1, j);
                     Terrain t = GetTerrain<Terrain>(source);
-                    t.Position = target;
-                    map.SetTerrain(t);
+                    if (t != null)
+                    {
+                        t.Position = target;
+                        SetTerrain(t);
+                    }
                 }
             }
 
@@ -163,8 +218,11 @@ namespace Engine.Maps
                     Point original = new Point(j, i);
                     Point target = new Point(i, j);
                     Terrain t = GetTerrain<Terrain>(original);
-                    t.Position = target;
-                    map.SetTerrain(t);
+                    if (t != null)
+                    {
+                        t.Position = target;
+                        SetTerrain(t);
+                    }
                 }
             }
 

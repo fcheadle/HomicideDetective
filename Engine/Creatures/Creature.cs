@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Engine.Components;
 using Engine.Interface;
 using GoRogue;
-using GoRogue.MapViews;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using SadConsole.Maps;
-using SadConsole.Tiles;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Engine.Creatures
 {
-    internal abstract class Creature : BasicEntity
+    internal class Creature : BasicEntity
     {
         protected int baseVisibilityDistance = 25;
         protected int baseLightSourceDistance = 20;
@@ -18,6 +17,7 @@ namespace Engine.Creatures
 
         public Items.Inventory Inventory = new Items.Inventory();
         protected SpeechConsole Dialogue;
+        public readonly Font Voice;
 
         //protected Region currentRegion;
 
@@ -25,7 +25,25 @@ namespace Engine.Creatures
         protected Creature(Coord position, Color foreground, int glyph)
             : base(foreground, Color.Black, glyph, position, 1, isWalkable: false, isTransparent: true)
         {
-            
+            ComponentsUpdate.Add(new ThoughtProcess());
+            List<string> fonts = new List<string>();
+
+            foreach(string file in Directory.GetFiles("fonts"))
+            {
+                if(file.EndsWith(".font"))
+                    fonts.Add(file);
+            }
+            if (fonts.Count == 0)
+                Voice = Global.FontDefault;
+            else
+            {
+                string font = fonts.RandomItem();
+                Voice = Global.LoadFont(font).GetFont(Font.FontSizes.One);
+            }
+            Dialogue = new SpeechConsole(Voice, "this is my test string", position);
         }
+
+        public static Creature Person(Coord position) => new Creature(position, Color.White, 1);
+        public static Creature Animal(Coord position) => new Creature(position, Color.Gray, 224);
     }
 }

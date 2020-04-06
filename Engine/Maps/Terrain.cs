@@ -1,16 +1,18 @@
 ﻿using GoRogue;
+using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
+using System;
 
 namespace Engine.Maps
 {
     internal class Terrain : BasicTerrain
     {
-        public Terrain(Color foreground, Coord position, int glyph, bool isWalkable = true, bool isTransparent = true) : base(foreground, Color.Black, glyph, position, isWalkable, isTransparent)
+        public Terrain(Color foreground, Color background, Coord position, int glyph, bool isWalkable = true, bool isTransparent = true) : base(foreground, background, glyph, position, isWalkable, isTransparent)
         {
 
         }
-
+        internal static Terrain Copy(Terrain source, Coord target) => new Terrain(source.Foreground, source.Background, target, source.Glyph, source.IsWalkable, source.IsTransparent);
         internal static Terrain Grass(Coord position, double z = 0)
         {
             Color color = Color.Green;
@@ -78,53 +80,36 @@ namespace Engine.Maps
 
             int glyph = '"';
             chance = Utils.Calculate.Chance();
-            if (chance < 10)
+            if (chance < 15)
                 glyph = '\'';
-            else if (chance < 20)
-                glyph = ',';
             else if (chance < 30)
+                glyph = ',';
+            else if (chance < 45)
                 glyph = '.';
             else
                 glyph = '"';
-            Terrain t = new Terrain(color, position, glyph);
+            Terrain t = new Terrain(color, Color.Black, position, glyph);
             return t;
         }
-
-        internal static Terrain Tree(Coord position)
-        {
-            int[] glyphs = { 'o', 'O', '0', 9, 237 };
-            int glyph = glyphs[Settings.Random.Next(0, glyphs.Length)];
-            return new Terrain(Color.Brown, position, glyph, false, false);
-        }
-        internal static Terrain Pavement(Coord position) => new Terrain(Color.DarkGray, position, 247);
-        internal static Terrain Wall(Coord position) => new Terrain(Color.White, position, '#',false,false);
-        internal static Terrain Carpet(Coord position)
-        {
-            Color color = Color.LightGoldenrodYellow;
-            int glyph = position.Y % 2 == 1 ? 16 : 17;
-            Terrain t = new Terrain(color, position, glyph);
-            t.Background = Color.BurlyWood;
-            return t;
-        }
-        internal static Terrain Linoleum(Coord position)
-        {
-            Color color = Color.LightGray;
-            int glyph = 4;
-            Terrain t = new Terrain(color, position, glyph);
-            t.Background = Color.DarkGray;
-            return t;
-        }
+        internal static Terrain Pavement(Coord position) => new Terrain(Color.DarkGray, Color.Black, position, 247);
+        internal static Terrain Wall(Coord position) => new Terrain(Color.White, Color.Black, position, '#',false,false);
+        internal static Terrain Fence(Coord position) => new Terrain(Color.LightGray, Color.Black, position, 140, false, true);
+        internal static Terrain FenceGate(Coord position) => new Terrain(Color.LightGray, Color.Black, position, 15);
+        internal static Terrain Door(Coord position) => new Terrain(Color.LightGray, Color.Black, position, 234,true,false);
+        internal static Terrain Carpet(Coord position) => new Terrain(Color.Gold, Color.Red, position, position.Y % 2 == 1 ? 16 : 17);
+        internal static Terrain Linoleum(Coord position) => new Terrain(Color.LightGray, Color.DarkGray, position, 4);
+        internal static Terrain Window(Coord position) => new Terrain(Color.Transparent, Color.Black, position, 0, false, true);
         internal static Terrain HardwoodFloor(Coord position)
         {
             Color color = Color.BurlyWood;
             int glyph;
-            //if(Utils.Calculate.Chance(50))
-                glyph = position.Y % 2 == 1 ? 0171 : 0187;
-            //else
-                //glyph = 240;
-            Terrain t = new Terrain(color, position, glyph);
-            t.Background = Color.Brown;
+            if (Utils.Calculate.Chance(50))
+                glyph = position.Y % 2 == 1 ? 174 : 175;
+            else
+                glyph = 240;
+            Terrain t = new Terrain(color, Color.SaddleBrown, position, glyph);
             return t;
         }
+        internal static Terrain Tree(Coord position)=> new Terrain(Color.Brown, Color.Black, position, 'O', false, false);
     }
 }

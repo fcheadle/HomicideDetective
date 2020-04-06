@@ -19,7 +19,6 @@ C:\Users\fchea\projects\HomicideDetective\Engine\bin\Debug\netcoreapp3.1\runtime
 C:\Users\fchea\projects\HomicideDetective\Engine\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\soft_oal.dll
 C:\Users\fchea\projects\HomicideDetective\Engine\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\SDL2.dll
 C:\Users\fchea\projects\HomicideDetective\Engine\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\soft_oal.dll
-C:\Users\fchea\projects\HomicideDetective\Engine\obj\Debug\netcoreapp3.1\Engine.csprojAssemblyReference.cache
 C:\Users\fchea\projects\HomicideDetective\Engine\obj\Debug\netcoreapp3.1\Engine.csproj.CoreCompileInputs.cache
 C:\Users\fchea\projects\HomicideDetective\Engine\obj\Debug\netcoreapp3.1\Engine.AssemblyInfoInputs.cache
 C:\Users\fchea\projects\HomicideDetective\Engine\obj\Debug\netcoreapp3.1\Engine.AssemblyInfo.cs
@@ -27,3 +26,4 @@ C:\Users\fchea\projects\HomicideDetective\Engine\obj\Debug\netcoreapp3.1\Engine.
 C:\Users\fchea\projects\HomicideDetective\Engine\obj\Debug\netcoreapp3.1\Engine.dll
 C:\Users\fchea\projects\HomicideDetective\Engine\obj\Debug\netcoreapp3.1\Engine.pdb
 C:\Users\fchea\projects\HomicideDetective\Engine\obj\Debug\netcoreapp3.1\Engine.genruntimeconfig.cache
+C:\Users\fchea\projects\HomicideDetective\Engine\obj\Debug\netcoreapp3.1\Engine.csprojAssemblyReference.cache
