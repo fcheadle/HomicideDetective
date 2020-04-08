@@ -306,11 +306,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fchea\\projects\\HomicideDetective\\HomicideDetective\\HomicideDetective.csproj",
+      "projectUniqueName": "C:\\Users\\fchea\\Projects\\HomicideDetective\\HomicideDetective\\HomicideDetective.csproj",
       "projectName": "HomicideDetective",
-      "projectPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\HomicideDetective\\HomicideDetective.csproj",
+      "projectPath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\HomicideDetective\\HomicideDetective.csproj",
       "packagesPath": "C:\\Users\\fchea\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\HomicideDetective\\obj\\",
+      "outputPath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\HomicideDetective\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -331,8 +331,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj": {
-              "projectPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj"
+            "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\Engine.csproj": {
+              "projectPath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\Engine.csproj"
             }
           }
         }

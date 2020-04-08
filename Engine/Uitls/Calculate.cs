@@ -205,9 +205,13 @@ namespace Engine.Utils
             int xDestination = stop.X;            
             int yDestination = stop.Y;            
             xOrigin = xOrigin < 0 ? 0 : xOrigin;
+            xOrigin = xOrigin > Settings.MapWidth ? 0 : xOrigin;
             yOrigin = yOrigin < 0 ? 0 : yOrigin;
+            yOrigin = yOrigin > Settings.MapWidth ? 0 : yOrigin;
             xDestination = xDestination > Settings.MapWidth ? 0 : xDestination;
+            xDestination = xDestination < 0 ? 0 : xDestination;
             yDestination = yDestination > Settings.MapHeight ? 0 : yDestination;
+            yDestination = yDestination < 0 ? 0 : yDestination;
 
             int dx = Math.Abs(xDestination - xOrigin);
             int dy = Math.Abs(yDestination - yOrigin);
@@ -247,11 +251,12 @@ namespace Engine.Utils
             Coord max = new Coord(xMax, yMax); //bottom right
             Coord bl = new Coord(xMin, yMax); //bottom left
             Coord tr = new Coord(xMax, yMin); //top right
-            List<Coord> borderCells = Utils.Calculate.PointsAlongLine(tr, max).ToList();
-            borderCells.AddRange(Utils.Calculate.PointsAlongLine(min, tr).ToList());
-            borderCells.AddRange(Utils.Calculate.PointsAlongLine(min, bl).ToList());
-            borderCells.AddRange(Utils.Calculate.PointsAlongLine(bl, max).ToList());
-
+            List<Coord> borderCells;
+            borderCells = PointsAlongLine(tr, max).ToList();
+            borderCells.AddRange(PointsAlongLine(min, tr).ToList());
+            borderCells.AddRange(PointsAlongLine(min, bl).ToList());
+            borderCells.AddRange(PointsAlongLine(bl, max).ToList());
+            
             return borderCells;
         }
     }

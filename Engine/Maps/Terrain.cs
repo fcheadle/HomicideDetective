@@ -96,20 +96,10 @@ namespace Engine.Maps
         internal static Terrain Fence(Coord position) => new Terrain(Color.LightGray, Color.Black, position, 140, false, true);
         internal static Terrain FenceGate(Coord position) => new Terrain(Color.LightGray, Color.Black, position, 15);
         internal static Terrain Door(Coord position) => new Terrain(Color.LightGray, Color.Black, position, 234,true,false);
-        internal static Terrain Carpet(Coord position) => new Terrain(Color.Gold, Color.Red, position, position.Y % 2 == 1 ? 16 : 17);
+        internal static Terrain Carpet(Coord position) => new Terrain(Color.Olive, Color.DarkOliveGreen, position, position.Y % 2 == 1 ? 16 : 17);
         internal static Terrain Linoleum(Coord position) => new Terrain(Color.LightGray, Color.DarkGray, position, 4);
         internal static Terrain Window(Coord position) => new Terrain(Color.Transparent, Color.Black, position, 0, false, true);
-        internal static Terrain HardwoodFloor(Coord position)
-        {
-            Color color = Color.BurlyWood;
-            int glyph;
-            if (Utils.Calculate.Chance(50))
-                glyph = position.Y % 2 == 1 ? 174 : 175;
-            else
-                glyph = 240;
-            Terrain t = new Terrain(color, Color.SaddleBrown, position, glyph);
-            return t;
-        }
+        internal static Terrain HardwoodFloor(Coord position) => new Terrain(Color.SaddleBrown, Color.Brown, position, position.Y % 2 == 1 ? 174 : 175);
         internal static Terrain Tree(Coord position)=> new Terrain(Color.Brown, Color.Black, position, 'O', false, false);
     }
 }

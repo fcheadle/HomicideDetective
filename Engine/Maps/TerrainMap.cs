@@ -103,18 +103,18 @@ namespace Engine.Maps
         private void MakeOutdoors()
         {
             var f = Calculate.MasterFormula();
-            int temp = 0;
-            while (temp < 300)
-            {
-                int x = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Width);
-                int y = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Height);
-                Coord tree = new Coord(x, y);
-                if (GetTerrain<Terrain>(tree) == null)
-                {
-                    SetTerrain(Maps.Terrain.Tree(new Coord(x, y)));
-                    temp++;
-                }
-            }
+            //int temp = 0;
+            //while (temp < 300)
+            //{
+            //    int x = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Width);
+            //    int y = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Height);
+            //    Coord tree = new Coord(x, y);
+            //    if (GetTerrain<Terrain>(tree) == null)
+            //    {
+            //        SetTerrain(Maps.Terrain.Tree(new Coord(x, y)));
+            //        temp++;
+            //    }
+            //}
 
             for (int i = 0; i < Width; i++)
             {
