@@ -28,19 +28,19 @@ namespace Engine.Creatures
             ComponentsUpdate.Add(new ThoughtProcess());
             List<string> fonts = new List<string>();
 
-            foreach(string file in Directory.GetFiles("fonts"))
-            {
-                if(file.EndsWith(".font"))
-                    fonts.Add(file);
-            }
-            if (fonts.Count == 0)
-                Voice = Global.FontDefault;
-            else
-            {
-                string font = fonts.RandomItem();
-                Voice = Global.LoadFont(font).GetFont(Font.FontSizes.One);
-            }
-            Dialogue = new SpeechConsole(Voice, "this is my test string", position);
+            //foreach(string file in Directory.GetFiles("fonts"))
+            //{
+            //    if(file.EndsWith(".font"))
+            //        fonts.Add(file);
+            //}
+            //if (fonts.Count == 0)
+            //    Voice = Global.FontDefault;
+            //else
+            //{
+            //    string font = fonts.RandomItem();
+            //    Voice = Global.LoadFont(font).GetFont(Font.FontSizes.One);
+            //}
+            //Dialogue = new SpeechConsole(Voice, "this is my test string", position);
         }
 
         public static Creature Person(Coord position) => new Creature(position, Color.White, 1);

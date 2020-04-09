@@ -43,21 +43,13 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
-            "GoRogue": {
-              "target": "Package",
-              "version": "[2.6.0, )"
-            },
-            "MonoGame.Framework.DesktopGL.Core": {
-              "target": "Package",
-              "version": "[3.8.0.1, )"
-            },
             "SadConsole": {
               "target": "Package",
               "version": "[8.99.0, )"
             },
-            "SadConsole.GoRogueHelpers": {
+            "SadConsole.FNA": {
               "target": "Package",
-              "version": "[1.0.0, )"
+              "version": "[8.0.0, )"
             }
           },
           "imports": [
