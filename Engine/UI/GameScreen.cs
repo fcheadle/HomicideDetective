@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using XnaRect = Microsoft.Xna.Framework.Rectangle;
 
-namespace Engine.Interface
+namespace Engine.UI
 {
-    internal class UI : ContainerConsole
+    internal class GameScreen : ContainerConsole
     {
         private readonly double _radius;
 
@@ -20,7 +20,7 @@ namespace Engine.Interface
         public MessageConsole Dialogue { get; }
 
 
-        public UI(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight, Radius radius)
+        public GameScreen(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight, Radius radius)
         {
             Map = GenerateMap(mapWidth, mapHeight);
             Thoughts = new MessageConsole(24, viewportHeight / 3 - 2);
@@ -79,16 +79,6 @@ namespace Engine.Interface
         {
             Map.CalculateFOV(Map.ControlledGameObject.Position, Map.ControlledGameObject.FOVRadius, Settings.FOVRadius);
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
-        }
-
-        private static IGameObject SpawnTerrain(Coord position, bool mapGenValue)
-        {
-            // Floor or wall.  This could use the Factory system, or instantiate Floor and Wall classes, or something else if you prefer;
-            // this simplistic if-else is just used for example
-            if (mapGenValue) // Floor
-                return new BasicTerrain(Color.White, Color.Black, '.', position, isWalkable: true, isTransparent: true);
-            else             // Wall
-                return new BasicTerrain(Color.White, Color.Black, '#', position, isWalkable: false, isTransparent: false);
         }
     }
 }

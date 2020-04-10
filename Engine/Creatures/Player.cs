@@ -22,7 +22,7 @@ namespace Engine.Creatures
             Direction moveDirection = Direction.NONE;
             if (info.IsKeyPressed(Keys.Space))
             {
-                Program.TogglePause();
+                Settings.TogglePause();
             }
             // Simplified way to check if any key we care about is pressed and set movement direction.
             foreach (Keys key in Settings.MovementKeyBindings.Keys)

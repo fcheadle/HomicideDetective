@@ -256,8 +256,8 @@ namespace Engine.Utils
             borderCells.AddRange(PointsAlongLine(min, tr).ToList());
             borderCells.AddRange(PointsAlongLine(min, bl).ToList());
             borderCells.AddRange(PointsAlongLine(bl, max).ToList());
-            
-            return borderCells;
+
+            return borderCells.Distinct().ToList(); ;
         }
     }
 }

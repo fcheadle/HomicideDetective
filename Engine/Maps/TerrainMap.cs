@@ -46,12 +46,12 @@ namespace Engine.Maps
 
         private void MakeHouses()
         {
-            for (int x = 1; x < Width - 49; x+=48)
+            for (int x = 1; x < Width - 41; x+=40)
             {
-                for (int y = 1; y < Height - 49; y+=48)
+                for (int y = 1; y < Height - 41; y+=40)
                 {
                     Point origin = new Point(x, y);
-                    Structure house = new Structure(48, 48, origin);
+                    Structure house = new Structure(40, 40, origin, StructuresType.Testing);
                     Add(house.Map, origin);
                 }
             }
