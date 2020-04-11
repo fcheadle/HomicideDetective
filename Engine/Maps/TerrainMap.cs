@@ -51,7 +51,8 @@ namespace Engine.Maps
                 for (int y = 1; y < Height - 41; y+=40)
                 {
                     Point origin = new Point(x, y);
-                    Structure house = new Structure(40, 40, origin, StructuresType.Testing);
+                    StructureTypes type = Calculate.Chance() % 2 == 1 ? StructureTypes.Testing : StructureTypes.CentralPassageHouse;
+                    Structure house = new Structure(40, 40, origin, type);
                     Add(house.Map, origin);
                 }
             }
