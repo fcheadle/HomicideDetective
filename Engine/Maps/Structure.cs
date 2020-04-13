@@ -41,28 +41,61 @@ namespace Engine.Maps
         //Motel,
     }
 
-    public enum Directions
+    public class Road
     {
-        North,
-        NorthNorthEast,
-        NorthEast,
-        EastNorthEast,
-        East,
-        EastSouthEast,
-        SouthEast,
-        SouthSouthEast,
-        South, 
-        SouthSouthWest,
-        SouthWest,
-        WestSouthWest,
-        West,
-        WestNorthWest,
-        NorthWest,
-        NorthNorthWest,
-        Up,
-        Down,
-        None,
-        All
+        public struct Intersection
+        {
+            public string Name;
+            public List<Coord> Locations;
+        }
+
+        bool horizontal = true;
+        public Coord Start { get; }
+        public Coord End { get; }
+        public string Name { get; }
+        public List<Coord> Locations { get; } = new List<Coord>();
+        public List<Intersection> Intersections { get; private set; } = new List<Intersection>();
+        public Dictionary<Coord, Structure> Addresses { get; private set; } = new Dictionary<Coord, Structure>();
+        public Road(Coord start, Coord stop, string name)
+        {
+            Start = start;
+            End = stop;
+            Name = name;
+            Locations = Calculate.PointsAlongLine(start, stop, 8);
+        }
+
+        public void AddIntersection(Intersection overlap)
+        {
+            Intersections.Add(overlap);
+        }
+
+        public void Populate()
+        {
+            Structure house;
+            if (horizontal)
+            {
+                for (int i = Start.X; i < End.X - 49; i += 48)
+                {
+                    int j;
+                    j = Locations.Where(l => l.X == i).OrderBy(l => l.Y).First().Y - 49;
+                    Coord c = new Coord(i, j);
+                    house = new Structure(48, 48, c, StructureTypes.CentralPassageHouse);
+                    Addresses.Add(c, house);
+                }
+            }
+            else
+            {
+                for (int i = Start.Y; i < End.Y - 49; i += 48)
+                {
+                    int j;
+                    j = Locations.Where(l => l.Y == i).OrderBy(l => l.X).First().Y - 49;
+                    Coord c = new Coord(j, i);
+                    house = new Structure(48, 48, c, StructureTypes.CentralPassageHouse);
+                    house.Map.SwapXY();
+                    Addresses.Add(c, house);
+                }
+            }
+        }
     }
 
     class Room
@@ -106,18 +139,20 @@ namespace Engine.Maps
         }
     }
 
-    class Structure
+    public class Structure
     {
         public TerrainMap Map;
-        Coord _origin;
-        public Dictionary<string, Room> Rooms = new Dictionary<string, Room>();
+        public Coord Origin;
+        Dictionary<string, Room> Rooms = new Dictionary<string, Room>();
         int _minRoomSize;
         int _maxRoomSize;
         public readonly StructureTypes StructureType;
         public int Left => Rooms.OrderBy(key => key.Value.Left).ToList().First().Value.Left;
-        public int Right => Rooms.OrderBy(key => key.Value.Right).ToList().First().Value.Right;
+        public int Right => Rooms.OrderBy(key => key.Value.Right).ToList().Last().Value.Right;
         public int Top => Rooms.OrderBy(key => key.Value.Top).ToList().First().Value.Top;
-        public int Bottom => Rooms.OrderBy(key => key.Value.Bottom).ToList().First().Value.Bottom;
+        public int Bottom => Rooms.OrderBy(key => key.Value.Bottom).ToList().Last().Value.Bottom;
+
+        public string Address { get; internal set; }
 
         public Structure()
         {
@@ -126,9 +161,10 @@ namespace Engine.Maps
 
         public Structure(int width, int height, Coord origin, StructureTypes type)
         {
+            Address = origin.X.ToString() + origin.Y.ToString();
             StructureType = type;
             Map = new TerrainMap(width, height, false);
-            _origin = origin;
+            Origin = origin;
             _minRoomSize = width / 9;
             _maxRoomSize = width / 4;
             Generate();
@@ -136,6 +172,7 @@ namespace Engine.Maps
 
         public void Generate()
         {
+            //FenceYard(new Rectangle(new Coord(1, 1), new Coord(Map.Width - 1, Map.Height - 1)));
             switch (StructureType)
             {
                 case StructureTypes.Testing: CreateTestingStructure(); break;
@@ -143,6 +180,7 @@ namespace Engine.Maps
                 default: break;
             }
 
+            Map = Map.Subsection(new Coord(Left, Top), new Coord(Right, Bottom));            
         }
 
         private void CreateCentralPassageHouse()
@@ -226,7 +264,6 @@ namespace Engine.Maps
             int roomH;
             int offsetX;
             int offsetY;
-            FenceYard(new Rectangle(new Coord(1, 1), new Coord(Map.Width - 1, Map.Height - 1)));
 
             //Living Room
             roomW = _maxRoomSize;// Settings.Random.Next(_minRoomSize, _maxRoomSize);
@@ -272,7 +309,7 @@ namespace Engine.Maps
 
             //bathroom
             start = new Coord(Rooms["parlor"].Left, Rooms["parlor"].Top);
-            end = new Coord(Rooms["parlor"].Left + _minRoomSize - 2, midY - 1);
+            end = new Coord(Rooms["parlor"].Left + _minRoomSize, midY - 1);
             CreateRoom(start, end, "guest_bathroom", RoomTypes.Bathroom, Directions.South);
 
             //kitchen
@@ -296,8 +333,7 @@ namespace Engine.Maps
             roomH = RandomRoomDimension();
             start = new Coord(Rooms["kitchen"].Left - roomW, Rooms["parlor"].Top - roomH);
             end = new Coord(Rooms["kitchen"].Left, Rooms["parlor"].Top);
-            CreateRoom(start, end, "master_bed", RoomTypes.MasterBedroom, Directions.None, true);
-
+            CreateRoom(start, end, "master_bed", RoomTypes.MasterBedroom, Directions.South, true);
         }
 
         private void CreateArch(Room host, Room imposing)

@@ -60,12 +60,12 @@ namespace Engine.UI
             var map = new TerrainMap(width, height);
 
             Coord posToSpawn;
-            for (int i = 0; i < 10; i++)
-            {
-                posToSpawn = map.WalkabilityView.RandomPosition(true); // Get a location that is walkable
-                var goblin = new BasicEntity(Color.Red, Color.Transparent, 'g', posToSpawn, (int)MapLayer.MONSTERS, isWalkable: false, isTransparent: true);
-                map.AddEntity(goblin);
-            }
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    posToSpawn = map.WalkabilityView.RandomPosition(true); // Get a location that is walkable
+            //    var goblin = new BasicEntity(Color.Red, Color.Transparent, 'g', posToSpawn, (int)MapLayers.CREATURES, isWalkable: false, isTransparent: true);
+            //    map.AddEntity(goblin);
+            //}
 
             // Spawn player
             posToSpawn = map.WalkabilityView.RandomPosition(true);
