@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Engine.Creatures;
 using Engine.Utils;
 using GoRogue;
+using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
 
@@ -423,6 +425,19 @@ namespace Engine.Maps
             }
 
             Add(newMap);
+        }
+
+        internal IEnumerable<Creature> GetCreatures()
+        {
+            
+            foreach (ISpatialTuple<IGameObject> e in Entities)
+            {
+                IGameObject entity = e.Item;
+                if (entity.GetType() == typeof(Creature) || entity.GetType().IsAssignableFrom(typeof(IActor)))
+                {
+                    yield return (Creature)entity;
+                }
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Engine.Utils;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -109,7 +110,14 @@ namespace Engine.Creatures
 
         public void Act()
         {
-            throw new System.NotImplementedException();
+            //just move in a random direction for now
+            List<Direction> directions = new List<Direction>();
+            directions.Add(Direction.UP);
+            directions.Add(Direction.LEFT);
+            directions.Add(Direction.RIGHT);
+            directions.Add(Direction.DOWN);
+            Direction d = directions.RandomItem();
+            MoveIn(d);
         }
     }
 }

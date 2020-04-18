@@ -26,6 +26,7 @@ namespace Engine.Creatures
             {
                 Settings.TogglePause();
             }
+
             // Simplified way to check if any key we care about is pressed and set movement direction.
             foreach (Keys key in Settings.MovementKeyBindings.Keys)
             {
@@ -43,6 +44,5 @@ namespace Engine.Creatures
             else
                 return base.ProcessKeyboard(info);
         }
-
     }
 }
