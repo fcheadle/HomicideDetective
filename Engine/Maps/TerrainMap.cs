@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Engine.Creatures;
 using Engine.Utils;
 using GoRogue;
@@ -7,23 +9,112 @@ using SadConsole;
 
 namespace Engine.Maps
 {
-    internal enum MapLayer
+    internal enum MapLayers
     {
         TERRAIN,
+        FURNITURE,
+        CREATURES,
+        PLAYER,
         ITEMS,
-        MONSTERS,
-        PLAYER
     }
 
-    internal class TerrainMap : BasicMap
+    public enum Directions
     {
-        // Handles the changing of tile/entity visiblity as appropriate based on Map.FOV.
+        North,
+        NorthNorthEast,
+        NorthEast,
+        EastNorthEast,
+        East,
+        EastSouthEast,
+        SouthEast,
+        SouthSouthEast,
+        South,
+        SouthSouthWest,
+        SouthWest,
+        WestSouthWest,
+        West,
+        WestNorthWest,
+        NorthWest,
+        NorthNorthWest,
+        Up,
+        Down,
+        None,
+        All
+    }
+
+    //for now
+    public enum RoadNames
+    {
+        Alder,
+        Birch,
+        Cedar,
+        Dogwood,
+        Elm,
+        Fir,
+        Gomez,
+        Holly,
+        Ibex,
+        Juniper,
+        Kuiper,
+        Lark,
+        Menendez,
+        Norwood,
+        Oak,
+        Pear,
+        Quincy,
+        Redman,
+        Spruce,
+        Terweiliger,
+        Utah,
+        VillaNova,
+        Waterfront,
+        Xavier,
+        Yew,
+        Zedd,
+
+        Alm,
+        Baskins,
+        Cherry,
+        Danforth,
+        Elders,
+        Franklin,
+        Gabriel,
+        Hazelnut,
+        Ipanema,
+        Justice, 
+        Killinger,
+        Lamont,
+        Montoya,
+        Neumann,
+        Olive,
+        Peach,
+        Quenton,
+        Raspberry,
+        Spear,
+        Thompson,
+        Underbridge,
+        VanStrom,
+        Williams,
+        Xanadu,
+        YellowLine,
+        Zephraim,
+
+        Apple,
+        Burk,
+        Chestnut,
+        Quebec,
+        Ash,
+        Cottonwood,
+        Aspen,
+        Cypress,
+    }
+
+    public class TerrainMap : BasicMap
+    {
+        public List<Road> Roads { get; private set; } = new List<Road>();
+        public List<Structure> Structures { get; private set; } = new List<Structure>();
         public FOVVisibilityHandler FovVisibilityHandler { get; }
-
-
-        // Since we'll want to access the player as our Player type, create a property to do the cast for us.  The cast must succeed thanks to the ControlledGameObjectTypeCheck
-        // implemented in the constructor.
-        public new Player ControlledGameObject
+        internal new Player ControlledGameObject
         {
             get => (Player)base.ControlledGameObject;
             set => base.ControlledGameObject = value;
@@ -31,35 +122,113 @@ namespace Engine.Maps
 
         public TerrainMap(int width, int height, bool generate = true)
             // Allow multiple items on the same location only on the items layer.  This example uses 8-way movement, so Chebyshev distance is selected.
-            : base(width, height, Enum.GetNames(typeof(MapLayer)).Length - 1, Distance.CHEBYSHEV, entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS))
+            : base(width, height, Enum.GetNames(typeof(MapLayers)).Length - 1, Distance.CHEBYSHEV, entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayers.ITEMS))
         {
             ControlledGameObjectChanged += ControlledGameObjectTypeCheck<Player>; // Make sure we don't accidentally assign anything that isn't a Player type to ControlledGameObject
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
 
             if (generate)
             {
+                MakeRoads();
                 MakeHouses();
                 MakeOutdoors();
-                //MakePeople();
+                MakePeople();
             }
+        }
+
+        private void MakeRoads()
+        {
+            RoadNames roadName = 0;
+            List<Coord> roadCoords = new List<Coord>();
+            for (int i = 0; i < Width - 160; i += 80)
+            {
+                //east/west
+                Road road = new Road(new Coord(0, i), new Coord(Width + i + 400, 0), Enum.GetName(typeof(RoadNames), roadName) + " Street");
+                roadCoords.AddRange(road.InnerPoints);
+                Roads.Add(road);
+                roadName++;
+
+                //north/south
+                //runs 1 / rises -4
+                road = new Road(new Coord(i, 0), new Coord(Width, Height + i + 400), Enum.GetName(typeof(RoadNames), roadName) + " Street");
+                roadCoords.AddRange(road.InnerPoints);
+                Roads.Add(road);
+                roadName++;
+            }
+
+            foreach(Coord coord in roadCoords)
+            {
+                if(Contains(coord))
+                    SetTerrain(Maps.Terrain.Pavement(coord));
+            }
+        }
+
+        internal TerrainMap Subsection(Coord start, Coord stop)
+        {
+            int xDiff = stop.X - start.X;
+            int yDiff = stop.Y - start.Y;
+            int size = xDiff > yDiff ? xDiff : yDiff;
+            TerrainMap map = new TerrainMap(size + 2, size + 2, false);
+            for (int i = start.X; i < stop.X+1; i++)
+            {
+                for (int j = start.Y; j < stop.Y+1; j++)
+                {
+                    Terrain t = GetTerrain<Terrain>(new Coord(i, j));
+                    if (t != null)
+                    {
+                        Coord c = new Coord(i - start.X, j - start.Y);
+                        t = Maps.Terrain.Copy(t, c);
+                        if(map.Contains(c))
+                            map.SetTerrain(t);
+                    }
+                }
+            }
+            return map;
         }
 
         private void MakeHouses()
         {
-            for (int x = 1; x < Width - 49; x+=48)
+            foreach(Road road in Roads)
             {
-                for (int y = 1; y < Height - 49; y+=48)
+                road.Populate();
+                foreach (KeyValuePair<Coord, Structure> address in road.Addresses)
                 {
-                    Point origin = new Point(x, y);
-                    Structure house = new Structure(48, 48, origin);
-                    Add(house.Map, origin);
+                    Structure house = address.Value;
+                    house.Address += " Street";
+                    //if(IsClearOfObstructions(house.Origin, house.Map.Width))
+                        Add(house.Map, house.Origin);
+                    Structures.Add(house);
                 }
             }
         }
 
+        private bool IsClearOfObstructions(Coord origin, int width)
+        {
+            for (int i = origin.X; i < origin.X + width; i++)
+            {
+                for (int j = origin.Y; j < origin.Y + width; j++)
+                {
+                    Coord c = new Coord(i, j);
+                    if (Contains(c))
+                    {
+                        Terrain t = GetTerrain<Terrain>(c);
+                        if (t != null)
+                        {
+                            if (!t.IsWalkable)
+                                return false;
+                            else if (Maps.Terrain.Pavement(c) == Maps.Terrain.Copy(t, c)) //todo: fix this shit
+                                return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
         public bool Contains(Coord location)
         {
-            return (location.X >= 0 && location.Y >= 0 && location.X < Width && location.Y < Height);
+            return (location.X >= 0 && location.Y >= 0 && location.X < Width - 1 && location.Y < Height - 1);
         }
 
         internal void Add(TerrainMap map, Point origin)
@@ -73,49 +242,41 @@ namespace Engine.Maps
                     Terrain terrain = map.GetTerrain<Terrain>(source);
                     if (terrain != null)
                     {
-                        Terrain newTerrain = GetTerrain<Terrain>(local);
-                        newTerrain = Maps.Terrain.Copy(terrain, local);
-                        //try
-                        //{
-                        SetTerrain(newTerrain);
-                        //}
-                        //catch
-                        //{
-                        //    //do nothing
-                        //    ;
-                        //}
+                        if (Contains(local))
+                        {
+                            Terrain newTerrain = Maps.Terrain.Copy(terrain, local);
+
+                            SetTerrain(newTerrain);
+                        }
                     }
                 }
             }
         }
         private void MakePeople()
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 500; i++)
             {
                 AddEntity(Creature.Person(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
             }
-            for (int i = 0; i < 300; i++)
-            {
-                AddEntity(Creature.Animal(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
-            }
+            //for (int i = 0; i < 300; i++)
+            //{
+            //    AddEntity(Creature.Animal(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
+            //}
         }
 
         private void MakeOutdoors()
         {
+            for (int i = 0; i < 777; i++)
+            {
+                Coord tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
+                while (GetTerrain<Terrain>(tree) != null)
+                {
+                    tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
+                }
+                SetTerrain(Maps.Terrain.Tree(tree));
+            }
+         
             var f = Calculate.MasterFormula();
-            //int temp = 0;
-            //while (temp < 300)
-            //{
-            //    int x = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Width);
-            //    int y = GoRogue.Random.SingletonRandom.DefaultRNG.Next(Height);
-            //    Coord tree = new Coord(x, y);
-            //    if (GetTerrain<Terrain>(tree) == null)
-            //    {
-            //        SetTerrain(Maps.Terrain.Tree(new Coord(x, y)));
-            //        temp++;
-            //    }
-            //}
-
             for (int i = 0; i < Width; i++)
             {
                 for (int j = 0; j < Height; j++)
@@ -145,6 +306,7 @@ namespace Engine.Maps
                     }
                 }
             }
+
         }
 
         public void ReverseHorizontal()
@@ -159,7 +321,7 @@ namespace Engine.Maps
                     Terrain t = GetTerrain<Terrain>(source);
                     if (t != null)
                     {
-                        t.Position = target;
+                        t = Maps.Terrain.Copy(t, target);
                         map.SetTerrain(t);
                     }
                 }
@@ -176,9 +338,9 @@ namespace Engine.Maps
                 {
                     Coord target = new Coord(i+origin.X, j+origin.Y);
                     Terrain t = map.GetTerrain<Terrain>(new Coord(i, j));
-                    if (t != null)
+                    if (t != null && Contains(target))
                     {
-                        t.Position = target;
+                        t = Maps.Terrain.Copy(t,target);
                         SetTerrain(t);
                     }
                 }
@@ -197,7 +359,7 @@ namespace Engine.Maps
                     Terrain t = GetTerrain<Terrain>(source);
                     if (t != null)
                     {
-                        t.Position = target;
+                        t = Maps.Terrain.Copy(t, target);
                         SetTerrain(t);
                     }
                 }
@@ -220,13 +382,47 @@ namespace Engine.Maps
                     Terrain t = GetTerrain<Terrain>(original);
                     if (t != null)
                     {
-                        t.Position = target;
+                        t= Maps.Terrain.Copy(t, target);
                         SetTerrain(t);
                     }
                 }
             }
 
             Add(map);
+        }
+
+        /// <summary>
+        /// Too slow. Don't use.
+        /// </summary>
+        /// <param name="degrees"></param>
+        public void Rotate(int degrees)
+        {
+            //too slow
+            TerrainMap newMap = new TerrainMap(Width, Height, false);
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    Terrain t = GetTerrain<Terrain>(new Coord(i, j));
+                    if (t != null)
+                    {
+                        PolarCoord pc = Calculate.CartesianToPolar(new Coord(i, j));
+                        pc.theta += Calculate.DegreesToRadians(degrees);
+                        Coord c = Calculate.PolarToCartesian(pc);
+                        try
+                        {
+                            t = Maps.Terrain.Copy(t, c);
+                            newMap.SetTerrain(t);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
+            }
+
+            Add(newMap);
         }
     }
 }

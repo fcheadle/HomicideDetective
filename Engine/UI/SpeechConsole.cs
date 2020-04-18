@@ -4,7 +4,7 @@ using SadConsole;
 using Console = SadConsole.Console;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Engine.Interface
+namespace Engine.UI
 {
     internal class SpeechConsole : Console
     {

@@ -25,7 +25,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\fchea\\Projects\\NugetPackages": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://proget.tcdevops.com/nuget/tcproget/": {}
         },
@@ -100,7 +99,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\fchea\\Projects\\NugetPackages": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://proget.tcdevops.com/nuget/tcproget/": {}
         },

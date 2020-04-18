@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using XnaRect = Microsoft.Xna.Framework.Rectangle;
 
-namespace Engine.Interface
+namespace Engine.UI
 {
-    internal class UI : ContainerConsole
+    internal class GameScreen : ContainerConsole
     {
         private readonly double _radius;
 
@@ -20,7 +20,7 @@ namespace Engine.Interface
         public MessageConsole Dialogue { get; }
 
 
-        public UI(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight, Radius radius)
+        public GameScreen(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight, Radius radius)
         {
             Map = GenerateMap(mapWidth, mapHeight);
             Thoughts = new MessageConsole(24, viewportHeight / 3 - 2);
@@ -60,12 +60,12 @@ namespace Engine.Interface
             var map = new TerrainMap(width, height);
 
             Coord posToSpawn;
-            for (int i = 0; i < 10; i++)
-            {
-                posToSpawn = map.WalkabilityView.RandomPosition(true); // Get a location that is walkable
-                var goblin = new BasicEntity(Color.Red, Color.Transparent, 'g', posToSpawn, (int)MapLayer.MONSTERS, isWalkable: false, isTransparent: true);
-                map.AddEntity(goblin);
-            }
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    posToSpawn = map.WalkabilityView.RandomPosition(true); // Get a location that is walkable
+            //    var goblin = new BasicEntity(Color.Red, Color.Transparent, 'g', posToSpawn, (int)MapLayers.CREATURES, isWalkable: false, isTransparent: true);
+            //    map.AddEntity(goblin);
+            //}
 
             // Spawn player
             posToSpawn = map.WalkabilityView.RandomPosition(true);
@@ -79,16 +79,6 @@ namespace Engine.Interface
         {
             Map.CalculateFOV(Map.ControlledGameObject.Position, Map.ControlledGameObject.FOVRadius, Settings.FOVRadius);
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
-        }
-
-        private static IGameObject SpawnTerrain(Coord position, bool mapGenValue)
-        {
-            // Floor or wall.  This could use the Factory system, or instantiate Floor and Wall classes, or something else if you prefer;
-            // this simplistic if-else is just used for example
-            if (mapGenValue) // Floor
-                return new BasicTerrain(Color.White, Color.Black, '.', position, isWalkable: true, isTransparent: true);
-            else             // Wall
-                return new BasicTerrain(Color.White, Color.Black, '#', position, isWalkable: false, isTransparent: false);
         }
     }
 }

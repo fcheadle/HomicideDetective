@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Console = SadConsole.Console;
-namespace Engine.Interface
+namespace Engine.UI
 {
     internal class MessageConsole : Console
     {

@@ -39,13 +39,13 @@ namespace Engine.Utils
             return color;
         }
 
-        internal static Color FadeOut(Color color)
+        public static Color FadeOut(Color color)
         {
             color.A += Convert.ToByte(1);
             return color;
         }
 
-        internal static Color FadeIn(Color color)
+        public static Color FadeIn(Color color)
         {
             color.A -= Convert.ToByte(1);
             return color;
@@ -93,6 +93,17 @@ namespace Engine.Utils
             newC.G = Convert.ToByte((baseColor.G + target.G) / (byte)4);
             newC.B = Convert.ToByte((baseColor.B + target.B) / (byte)4);
             return newC;
+        }
+
+        public static Color Half(Color color)
+        {
+            int r = Convert.ToInt32(color.R);
+            int g = Convert.ToInt32(color.G);
+            int b = Convert.ToInt32(color.B);
+            r /= 2;
+            g /= 2;
+            b /= 2;
+            return new Color(r, g, b);
         }
     }
 }

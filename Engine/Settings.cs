@@ -8,17 +8,19 @@ namespace Engine
 {
     public class Settings
     {
-        public static int MapWidth { get; set; } = 320;
-        public static int MapHeight { get; set; } = 320;
+        public static int MapWidth { get; set; } = 360;
+        public static int MapHeight { get; set; } = 360;
         public static int GameWidth { get; set; } = 120;
-        public static int GameHeight { get; set; } = 36;
-        public static bool IsPaused { get; set; } = false;
+        public static int GameHeight { get; set; } = 40;
+        public static bool IsPaused { get; private set; } = false;
         public static Random Random { get; set; } = new Random();
         public static Radius FOVRadius { get; set; } = Radius.CIRCLE;
         public static SadConsole.FontMaster FontMaster { get; set; }
         public static SadConsole.Font Font { get; set; }
 
-        public static readonly Dictionary<Keys, Direction> MovementKeyBindings = new Dictionary<Keys, Direction>
+        public static Dictionary<Keys, Action> KeyBindings => keyBindings;
+
+        public static Dictionary<Keys, Direction> MovementKeyBindings { get; } = new Dictionary<Keys, Direction>
         {
             { Keys.NumPad7, Direction.UP_LEFT },    { Keys.NumPad8, Direction.UP },     { Keys.NumPad9, Direction.UP_RIGHT },
             { Keys.NumPad4, Direction.LEFT },                                           { Keys.NumPad6, Direction.RIGHT },
@@ -26,6 +28,20 @@ namespace Engine
             { Keys.Up, Direction.UP }, { Keys.Down, Direction.DOWN }, { Keys.Left, Direction.LEFT }, { Keys.Right, Direction.RIGHT }
         };
 
-        //public static readonly Dictionary<Keys, > KeyBindings = new Dictionary<Keys, > { };
+        public static Dictionary<Keys, Action> keyBindings { get; } = new Dictionary<Keys, Action>
+        {
+            {Keys.Space, () => TogglePause() },
+            {Keys.Escape, () => ToggleMenu() },
+        };
+
+        public static void ToggleMenu()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void TogglePause()
+        {
+            IsPaused = !IsPaused;
+        }
     }
 }

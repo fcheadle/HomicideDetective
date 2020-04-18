@@ -14,15 +14,17 @@ namespace Engine.Creatures
         public int FOVRadius;
 
         public Player(Coord position)
-            : base(position, Color.White, 1) => FOVRadius = 25;
-
+            : base(position, Color.White, 1)
+        {
+            FOVRadius = 25;
+        }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             Direction moveDirection = Direction.NONE;
             if (info.IsKeyPressed(Keys.Space))
             {
-                Program.TogglePause();
+                Settings.TogglePause();
             }
             // Simplified way to check if any key we care about is pressed and set movement direction.
             foreach (Keys key in Settings.MovementKeyBindings.Keys)
