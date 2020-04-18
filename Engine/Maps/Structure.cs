@@ -1,6 +1,7 @@
 ﻿using Engine.Utils;
 using GoRogue;
 using Microsoft.Xna.Framework;
+using SadConsole.Maps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,57 +42,75 @@ namespace Engine.Maps
         //Motel,
     }
 
-    public class Road
+    public class Road : Region
     {
-        public struct Intersection
-        {
-            public string Name;
-            public List<Coord> Locations;
-        }
-
-        bool horizontal = true;
+        private bool _horizontal;
         public Coord Start { get; }
         public Coord End { get; }
         public string Name { get; }
-        public List<Coord> Locations { get; } = new List<Coord>();
-        public List<Intersection> Intersections { get; private set; } = new List<Intersection>();
+        public int Left { get; }
+        public int Right { get; }
+        public int Top { get; }
+        public int Bottom { get; }
         public Dictionary<Coord, Structure> Addresses { get; private set; } = new Dictionary<Coord, Structure>();
-        public Road(Coord start, Coord stop, string name)
+        public Road(Coord start, Coord stop, string name, bool horizontal = true)
         {
             Start = start;
             End = stop;
             Name = name;
-            Locations = Calculate.PointsAlongLine(start, stop, 8);
+            InnerPoints = Calculate.PointsAlongLine(start, stop, 8);
+            //Populate();
+            Left = start.X < stop.X ? start.X : stop.X;
+            Right = start.X > stop.X ? start.X : stop.X;
+            Bottom = start.Y > stop.Y ? start.Y : stop.Y;
+            Top = start.Y < stop.Y ? start.Y : stop.Y;
+            _horizontal = horizontal;
         }
 
-        public void AddIntersection(Intersection overlap)
+        public void AddIntersection(List<Coord> overlap)
         {
-            Intersections.Add(overlap);
+            Connections.AddRange(overlap);
         }
 
         public void Populate()
         {
             Structure house;
-            if (horizontal)
+            int j;
+            Coord c;
+            if (_horizontal) //street runs east-west
             {
                 for (int i = Start.X; i < End.X - 49; i += 48)
                 {
-                    int j;
-                    j = Locations.Where(l => l.X == i).OrderBy(l => l.Y).First().Y - 49;
-                    Coord c = new Coord(i, j);
+                    j = InnerPoints.Where(l => l.X == i).OrderBy(l => l.Y).First().Y - 49;
+                    c = new Coord(i, j);
                     house = new Structure(48, 48, c, StructureTypes.CentralPassageHouse);
+                    house.Address = c.ToString() + Name;
+                    Addresses.Add(c, house);
+
+
+                    j = InnerPoints.Where(l => l.X == i).OrderBy(l => l.Y).Last().Y + 49;
+                    c = new Coord(i, j);
+                    house = new Structure(48, 48, c, StructureTypes.CentralPassageHouse);
+                    house.Address = c.ToString() + Name;
+                    house.Map.ReverseVertical();
                     Addresses.Add(c, house);
                 }
             }
-            else
+            else //street runs north/south
             {
                 for (int i = Start.Y; i < End.Y - 49; i += 48)
                 {
-                    int j;
-                    j = Locations.Where(l => l.Y == i).OrderBy(l => l.X).First().Y - 49;
-                    Coord c = new Coord(j, i);
+                    j = InnerPoints.Where(l => l.Y == i).OrderBy(l => l.X).First().Y - 49;
+                    c = new Coord(j, i);
+                    house = new Structure(48, 48, c, StructureTypes.CentralPassageHouse);
+                    house.Map.SwapXY(); //door now on east side of house
+                    Addresses.Add(c, house);
+
+                    j = InnerPoints.Where(l => l.Y == i).OrderBy(l => l.X).Last().Y + 49;
+                    c = new Coord(j, i);
                     house = new Structure(48, 48, c, StructureTypes.CentralPassageHouse);
                     house.Map.SwapXY();
+                    house.Map.ReverseHorizontal();
                     Addresses.Add(c, house);
                 }
             }

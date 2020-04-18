@@ -97,7 +97,7 @@ namespace Engine.Maps
         Williams,
         Xanadu,
         YellowLine,
-        Z,
+        Zephraim,
 
         Apple,
         Burk,
@@ -132,31 +132,28 @@ namespace Engine.Maps
                 MakeRoads();
                 MakeHouses();
                 MakeOutdoors();
-             
-                //MakePeople();
+                MakePeople();
             }
         }
 
         private void MakeRoads()
         {
-            System.Console.WriteLine("Starting to make roads.");
             RoadNames roadName = 0;
             List<Coord> roadCoords = new List<Coord>();
             for (int i = 0; i < Width - 160; i += 80)
             {
-                Road road = new Road(new Coord(i, 0), new Coord(i + Width, Height), $"{i + 1} Avenue");
-                roadCoords.AddRange(road.Locations);
+                //east/west
+                Road road = new Road(new Coord(0, i), new Coord(Width + i + 400, 0), Enum.GetName(typeof(RoadNames), roadName) + " Street");
+                roadCoords.AddRange(road.InnerPoints);
                 Roads.Add(road);
-                System.Console.WriteLine($"Made {road.Name}");
+                roadName++;
 
-                if (Calculate.Chance() % 2 == 0)
-                {
-                    road = new Road(new Coord(i, Height), new Coord(i + (Width * 3), -Height), Enum.GetName(typeof(RoadNames), roadName) + " Street");
-                    roadCoords.AddRange(road.Locations);
-                    Roads.Add(road);
-                    System.Console.WriteLine($"Made {road.Name}");
-                    roadName++;
-                }
+                //north/south
+                //runs 1 / rises -4
+                road = new Road(new Coord(i, 0), new Coord(Width, Height + i + 400), Enum.GetName(typeof(RoadNames), roadName) + " Street");
+                roadCoords.AddRange(road.InnerPoints);
+                Roads.Add(road);
+                roadName++;
             }
 
             foreach(Coord coord in roadCoords)
@@ -193,18 +190,40 @@ namespace Engine.Maps
         {
             foreach(Road road in Roads)
             {
-                if (road.Name.Contains("Street")) // for now
+                road.Populate();
+                foreach (KeyValuePair<Coord, Structure> address in road.Addresses)
                 {
-                    road.Populate();
-                    foreach(KeyValuePair<Coord,Structure> address in road.Addresses)
-                    {
-                        Structure house = address.Value;
-                        house.Address += " Street";
+                    Structure house = address.Value;
+                    house.Address += " Street";
+                    //if(IsClearOfObstructions(house.Origin, house.Map.Width))
                         Add(house.Map, house.Origin);
-                        Structures.Add(house);
+                    Structures.Add(house);
+                }
+            }
+        }
+
+        private bool IsClearOfObstructions(Coord origin, int width)
+        {
+            for (int i = origin.X; i < origin.X + width; i++)
+            {
+                for (int j = origin.Y; j < origin.Y + width; j++)
+                {
+                    Coord c = new Coord(i, j);
+                    if (Contains(c))
+                    {
+                        Terrain t = GetTerrain<Terrain>(c);
+                        if (t != null)
+                        {
+                            if (!t.IsWalkable)
+                                return false;
+                            else if (Maps.Terrain.Pavement(c) == Maps.Terrain.Copy(t, c)) //todo: fix this shit
+                                return false;
+                        }
                     }
                 }
             }
+
+            return true;
         }
 
         public bool Contains(Coord location)
@@ -235,14 +254,14 @@ namespace Engine.Maps
         }
         private void MakePeople()
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 500; i++)
             {
                 AddEntity(Creature.Person(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
             }
-            for (int i = 0; i < 300; i++)
-            {
-                AddEntity(Creature.Animal(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
-            }
+            //for (int i = 0; i < 300; i++)
+            //{
+            //    AddEntity(Creature.Animal(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
+            //}
         }
 
         private void MakeOutdoors()
@@ -302,7 +321,7 @@ namespace Engine.Maps
                     Terrain t = GetTerrain<Terrain>(source);
                     if (t != null)
                     {
-                        t.Position = target;
+                        t = Maps.Terrain.Copy(t, target);
                         map.SetTerrain(t);
                     }
                 }
@@ -340,7 +359,7 @@ namespace Engine.Maps
                     Terrain t = GetTerrain<Terrain>(source);
                     if (t != null)
                     {
-                        t.Position = target;
+                        t = Maps.Terrain.Copy(t, target);
                         SetTerrain(t);
                     }
                 }
@@ -363,7 +382,7 @@ namespace Engine.Maps
                     Terrain t = GetTerrain<Terrain>(original);
                     if (t != null)
                     {
-                        t.Position = target;
+                        t= Maps.Terrain.Copy(t, target);
                         SetTerrain(t);
                     }
                 }
@@ -372,6 +391,10 @@ namespace Engine.Maps
             Add(map);
         }
 
+        /// <summary>
+        /// Too slow. Don't use.
+        /// </summary>
+        /// <param name="degrees"></param>
         public void Rotate(int degrees)
         {
             //too slow

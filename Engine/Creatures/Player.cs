@@ -14,8 +14,10 @@ namespace Engine.Creatures
         public int FOVRadius;
 
         public Player(Coord position)
-            : base(position, Color.White, 1) => FOVRadius = 25;
-
+            : base(position, Color.White, 1)
+        {
+            FOVRadius = 25;
+        }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {

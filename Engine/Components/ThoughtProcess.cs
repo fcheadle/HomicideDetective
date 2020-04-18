@@ -5,6 +5,7 @@ using System;
 
 namespace Engine.Components
 {
+    //unknown if this even works or not
     class ThoughtProcess : LogicConsoleComponent, IGameObjectComponent
     {
         public IGameObject Parent { get; set; }
