@@ -4,7 +4,7 @@ namespace Engine.Items
 {
     internal class Inventory
     {
-        public enum ActionResult
+        internal enum ActionResult
         {
             Failure,
             Success
@@ -17,17 +17,17 @@ namespace Engine.Items
         private Item feet;
         private Item body;
 
-        public const int MaxCarriedItems = 11;
+        internal const int MaxCarriedItems = 11;
 
-        public IEnumerable<Item> CarriedItems => carriedItems;
+        internal IEnumerable<Item> CarriedItems => carriedItems;
 
-        public Item Head => head;
-        public Item LeftHand => leftHand;
-        public Item RightHand => rightHand;
-        public Item Feet => feet;
-        public Item Body => body;
+        internal Item Head => head;
+        internal Item LeftHand => leftHand;
+        internal Item RightHand => rightHand;
+        internal Item Feet => feet;
+        internal Item Body => body;
 
-        public ActionResult AddItem(Item item, bool carried)
+        internal ActionResult AddItem(Item item, bool carried)
         {
             //if (carried || item.Spot == InventorySpot.None)
             //{
@@ -63,7 +63,7 @@ namespace Engine.Items
             return ActionResult.Success;
         }
 
-        public ActionResult RemoveItem(Item item)
+        internal ActionResult RemoveItem(Item item)
         {
             if (carriedItems.Contains(item))
             {
@@ -117,7 +117,7 @@ namespace Engine.Items
             return ActionResult.Success;
         }
 
-        public bool IsSlotEquipped(InventorySpot spot)
+        internal bool IsSlotEquipped(InventorySpot spot)
         {
             switch (spot)
             {
@@ -136,8 +136,8 @@ namespace Engine.Items
             }
         }
 
-        public bool IsInventoryFull() => carriedItems.Count == MaxCarriedItems;
-        public Item GetItem(InventorySpot spot)
+        internal bool IsInventoryFull() => carriedItems.Count == MaxCarriedItems;
+        internal Item GetItem(InventorySpot spot)
         {
             switch (spot)
             {
@@ -156,7 +156,7 @@ namespace Engine.Items
             }
         }
 
-        public IEnumerable<Item> GetEquippedItems()
+        internal IEnumerable<Item> GetEquippedItems()
         {
             List<Item> items = new List<Item>(5);
 

@@ -6,15 +6,7 @@ namespace Engine.UI
     {
         private Color _semiTransparentBlack;
 
-        public enum MessageTypes
-        {
-            Warning,
-            Status,
-            Problem,
-            Battle
-        }
-
-        public MessageConsole(int width, int height) : base(width, height)
+        internal MessageConsole(int width, int height) : base(width, height)
         {
             IsCursorDisabled = false;
             Cursor.IsVisible = false;
@@ -27,7 +19,7 @@ namespace Engine.UI
             this[0].CopyAppearanceTo(Cursor.PrintAppearance);
         }
 
-        public void Print(string text, MessageTypes type = MessageTypes.Warning)
+        internal void Print(string text, MessageTypes type = MessageTypes.Warning)
         {
             Color color;
 

@@ -11,18 +11,18 @@ namespace Engine.UI
 {
     internal class GameScreen : ContainerConsole
     {
-        private readonly double _radius;
-
-        public TerrainMap Map { get; }
-        public ScrollingConsole MapRenderer { get; }
-        public MessageConsole Thoughts { get; }
-        public MessageConsole Messages { get; }
-        public MessageConsole Dialogue { get; }
-
-
-        public GameScreen(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight, Radius radius)
+        internal Town Town { get; }
+        internal BasicMap Map { get => Town.Map; }
+        internal ScrollingConsole MapRenderer { get; }
+        internal MessageConsole Thoughts { get; }
+        internal MessageConsole Messages { get; }
+        internal MessageConsole Dialogue { get; }
+        internal GameScreen(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight, Radius radius)
         {
-            Map = GenerateMap(mapWidth, mapHeight);
+            Town = new Town(mapWidth, mapHeight);
+            Map.ControlledGameObject = new Player(Map.WalkabilityView.RandomPosition(true));
+            Map.AddEntity(Map.ControlledGameObject);
+
             Thoughts = new MessageConsole(24, viewportHeight / 3 - 2);
             Thoughts.Position = new Coord(viewportWidth - 25, 1);
             Messages = new MessageConsole(24, viewportHeight / 3 - 2);
@@ -43,10 +43,9 @@ namespace Engine.UI
             Map.ControlledGameObjectChanged += ControlledGameObjectChanged;
 
             // Calculate initial FOV and center camera
-            Map.CalculateFOV(Map.ControlledGameObject.Position, Map.ControlledGameObject.FOVRadius, radius);
+            Map.CalculateFOV(Map.ControlledGameObject.Position, ((Player)Map.ControlledGameObject).FOVRadius, radius);
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
         }
-
         private void ControlledGameObjectChanged(object s, ControlledGameObjectChangedArgs e)
         {
             if (e.OldObject != null)
@@ -54,30 +53,9 @@ namespace Engine.UI
 
             ((BasicMap)s).ControlledGameObject.Moved += Player_Moved;
         }
-        private static TerrainMap GenerateMap(int width, int height)
-        {
-            //TerrainMap generation happens in the constructor
-            var map = new TerrainMap(width, height);
-
-            Coord posToSpawn;
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    posToSpawn = map.WalkabilityView.RandomPosition(true); // Get a location that is walkable
-            //    var goblin = new BasicEntity(Color.Red, Color.Transparent, 'g', posToSpawn, (int)MapLayers.CREATURES, isWalkable: false, isTransparent: true);
-            //    map.AddEntity(goblin);
-            //}
-
-            // Spawn player
-            posToSpawn = map.WalkabilityView.RandomPosition(true);
-            map.ControlledGameObject = new Player(posToSpawn);
-            map.AddEntity(map.ControlledGameObject);
-
-            return map;
-        }
-
         private void Player_Moved(object sender, ItemMovedEventArgs<IGameObject> e)
         {
-            Map.CalculateFOV(Map.ControlledGameObject.Position, Map.ControlledGameObject.FOVRadius, Settings.FOVRadius);
+            Map.CalculateFOV(Map.ControlledGameObject.Position, ((Player)Map.ControlledGameObject).FOVRadius, Settings.FOVRadius);
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
         }
     }

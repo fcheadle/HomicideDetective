@@ -1,4 +1,5 @@
 ﻿using Engine.Creatures;
+using Engine.Maps;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -6,10 +7,10 @@ namespace Engine
 {
     internal class Program
     {
-        public static UI.GameScreen MapScreen { get; private set; }
-        public static TimeSpan UpdateCounter { get; private set; } = TimeSpan.FromSeconds(0);
+        internal static UI.GameScreen MapScreen { get; private set; }
+        internal static TimeSpan UpdateCounter { get; private set; } = TimeSpan.FromSeconds(0);
 
-        public static void Main()
+        internal static void Main()
         {
             SadConsole.Game.Create(Settings.GameWidth, Settings.GameHeight);
             SadConsole.Game.OnInitialize = Init;

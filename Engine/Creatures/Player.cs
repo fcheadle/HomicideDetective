@@ -11,9 +11,9 @@ namespace Engine.Creatures
     internal class Player : Creature
     {
 
-        public int FOVRadius;
+        internal int FOVRadius;
 
-        public Player(Coord position)
+        internal Player(Coord position)
             : base(position, Color.White, 1)
         {
             FOVRadius = 25;
@@ -22,7 +22,8 @@ namespace Engine.Creatures
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             Direction moveDirection = Direction.NONE;
-            if (info.IsKeyPressed(Keys.Space))
+            foreach(Keys key in Settings.KeyBindings.Keys)
+            if (info.IsKeyPressed(key))
             {
                 Settings.TogglePause();
             }

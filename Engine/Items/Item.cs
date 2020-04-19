@@ -9,14 +9,14 @@ namespace Engine.Items
 {
     internal class Item : BasicEntity
     {
-        public string Title;
+        internal string Title;
 
-        public Item(Coord position, string name, int layer) : base(Color.White, Color.Transparent, name[0], position, layer, true, true)
+        internal Item(Coord position, string name, int layer) : base(Color.White, Color.Transparent, name[0], position, layer, true, true)
         {
             Title = name;
         }
 
-        public (ColoredString title, ColoredString attributes) GetColoredString()
+        internal (ColoredString title, ColoredString attributes) GetColoredString()
         {
             StringBuilder modifierString = new StringBuilder(20);
 
@@ -24,7 +24,7 @@ namespace Engine.Items
             return (Title.CreateColored(), ColoredString.Parse(modifierString.ToString()));
         }
 
-        public string Describe()
+        internal string Describe()
         {
             return "This item is 1 cm^3 and weighs one gram.";
         }
