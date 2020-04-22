@@ -10,9 +10,6 @@ namespace Engine.Creatures
     // Custom class for the player is used in this example just so we can handle input.  This could be done via a component, or in a main screen, but for simplicity we do it here.
     internal class Player : Creature
     {
-
-        internal int FOVRadius;
-
         internal Player(Coord position)
             : base(position, Color.White, 1)
         {

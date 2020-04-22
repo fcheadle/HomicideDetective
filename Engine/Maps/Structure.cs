@@ -7,7 +7,7 @@ using Rectangle = GoRogue.Rectangle;
 
 namespace Engine.Maps
 {
-    class Room
+    class Room : Region
     {
         internal readonly Rectangle Area;
         internal readonly string Name;
@@ -47,7 +47,7 @@ namespace Engine.Maps
             Type = type;
         }
     }
-    internal class Structure
+    internal class Structure : Region
     {
         internal BasicMap Map;
         internal Coord Origin;

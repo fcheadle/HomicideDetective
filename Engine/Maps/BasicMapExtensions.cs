@@ -36,7 +36,7 @@ namespace Engine.Maps
         {
             return (location.X >= 0 && location.Y >= 0 && location.X < m.Width && location.Y < m.Height);
         }
-        public static void ReverseHorizontal(this BasicMap m)
+        public static BasicMap ReverseHorizontal(this BasicMap m)
         {
             BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.MANHATTAN);
 
@@ -54,9 +54,8 @@ namespace Engine.Maps
                     }
                 }
             }
-            m.Add(map);
-        }
-        public static void ReverseVertical(this BasicMap m)
+            return map;        }
+        public static BasicMap ReverseVertical(this BasicMap m)
         {
             BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.MANHATTAN);
             for (int i = 0; i < m.Width; i++)
@@ -74,9 +73,9 @@ namespace Engine.Maps
                 }
             }
 
-            m.Add(map);
+            return map;
         }
-        public static void SwapXY(this BasicMap m)
+        public static BasicMap SwapXY(this BasicMap m)
         {
 
             BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.MANHATTAN);
@@ -96,9 +95,10 @@ namespace Engine.Maps
                 }
             }
 
-            m.Add(map);
+            return map;
         }
-        public static void Rotate(this BasicMap m, int degrees)
+
+        public static BasicMap Rotate(this BasicMap m, int degrees)
         {
             if (degrees % 90 != 0)
                 throw new ArgumentOutOfRangeException("Degrees must be a multiple of 90.");
@@ -167,7 +167,7 @@ namespace Engine.Maps
                     break;
             }
 
-            m.Add(map);
+            return map;
         }
         public static void Add(this BasicMap m, BasicMap map) => Add(m, map, new Coord(0, 0));
         public static void Add(this BasicMap m, BasicMap map, Coord origin)

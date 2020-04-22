@@ -26,7 +26,7 @@ namespace Engine
             //every tenth of a second
             if(UpdateCounter > TimeSpan.FromMilliseconds(250))
             {
-                foreach(IActor actor in MapScreen.Map.GetCreatures())
+                foreach(IActor actor in MapScreen.TownMap.GetCreatures())
                 {
                     actor.Act();
                 }

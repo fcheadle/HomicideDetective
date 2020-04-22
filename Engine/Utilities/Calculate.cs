@@ -38,12 +38,12 @@ namespace Engine
             //    return answer;
             //},
 
-            //(x,y) => //nice, simple, fast
-            //{
-            //    double answer = Math.Exp(Math.Sin(x)) - (2*Math.Cos(4* y)) + Math.Pow(Math.Sin((2*x*y - Math.PI)/24), 5);
-            //    answer *= 3;
-            //    return answer;
-            //},
+            (x,y) => //nice, simple, fast
+            {
+                double answer = Math.Exp(Math.Sin(x)) - (2*Math.Cos(4* y)) + Math.Pow(Math.Sin((2*x*y - Math.PI)/24), 5);
+                answer *= 3;
+                return answer;
+            },
 
             //(x,y) => //nice and simple
             //{

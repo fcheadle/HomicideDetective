@@ -1,17 +1,20 @@
 ﻿using Engine.Components;
+using Engine.Maps;
 using Engine.UI;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using System;
 using System.Collections.Generic;
+using Region = SadConsole.Maps.Region;
 
 namespace Engine.Creatures
 {
     public class Creature : BasicEntity, IActor
     {
-        protected int baseVisibilityDistance = 25;
-        protected int baseLightSourceDistance = 20;
+        internal new TownMap CurrentMap;
+        internal int FOVRadius;
+        //protected int baseVisibilityDistance = 25;
+        //protected int baseLightSourceDistance = 20;
         internal string Title = "Creature";
         internal string Description = "A creature of some sort. Everything from rats to people to bears.";
 
@@ -26,7 +29,6 @@ namespace Engine.Creatures
         public int Mass { get => _mass; set => _mass = value; }
         public int Volume { get => _volume; set => _volume = value; }
 
-        private int _awareness;
         private int _systoleBloodPressure;
         private int _diastoleBloodPressure;
         private int _pulse;
@@ -35,7 +37,7 @@ namespace Engine.Creatures
         private int _mass;
         private int _volume;
 
-        //protected Region currentRegion;
+        protected SadConsole.Maps.Region currentRegion;
 
         private BasicEntity _target;
         private GoRogue.Pathing.Path _path;
@@ -100,7 +102,6 @@ namespace Engine.Creatures
             critter.BodyTemperature = 102.5;
             return critter;
         }
-
         public void Act()
         {
             //Determine whether or not we have a path
@@ -117,17 +118,24 @@ namespace Engine.Creatures
             Direction d = directions.RandomItem();
             MoveIn(d);
         }
-
         public void Interact(IActor actor)
         {
             //for now, just print something random to the screen
             PrintDialogue("Hello there!");
         }
-
         private void PrintDialogue(string message)
         {
             Dialogue = new SpeechConsole(Voice, message, new Coord(Position.X - message.Length / 2, Position.Y - 1));
             Dialogue.Print(0, 0, message);
+        }
+
+        private Region? DetectRegion()
+        {
+            foreach(Region region in CurrentMap.Regions)
+                if (region.InnerPoints.Contains(Position))
+                    return region;
+
+            return null;
         }
     }
 }

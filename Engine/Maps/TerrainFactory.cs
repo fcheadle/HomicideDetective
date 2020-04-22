@@ -1,4 +1,5 @@
 ﻿using GoRogue;
+using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
@@ -18,7 +19,17 @@ namespace Engine.Maps
         internal static BasicTerrain Linoleum(Coord position) => new BasicTerrain(Color.LightGray, Color.DarkGray, 4, position, true, true);
         internal static BasicTerrain Window(Coord position) => new BasicTerrain(Color.Transparent, Color.Black, 0, position, false, true);
         internal static BasicTerrain HardwoodFloor(Coord position) => new BasicTerrain(Colors.Half(Color.SaddleBrown), Colors.Half(Color.Brown), position.Y % 2 == 1 ? 174 : 175, position, true, true);
-        internal static BasicTerrain Tree(Coord position)=> new BasicTerrain(Colors.MutateBy(Color.Brown, Color.Black), Color.Black, '0', position, false, false);
+        internal static BasicTerrain Tree(Coord position) => new BasicTerrain(Colors.MutateBy(Color.Brown, Color.Black), Color.Black, '0', position, false, false);
+        internal static BasicTerrain TestSquare1(Coord position) => new BasicTerrain(Color.Cyan, Color.Navy, '1', position, true, true);
+        internal static BasicTerrain TestSquare2(Coord position) => new BasicTerrain(Color.Magenta, Color.Red, '2', position, true, true);
+        internal static BasicTerrain TestSquare3(Coord position) => new BasicTerrain(Color.Green, Color.Olive, '3', position, true, true);
+        internal static BasicTerrain TestSquare4(Coord position) => new BasicTerrain(Color.LightGreen, Color.DarkGreen, '4', position, true, true);
+        internal static BasicTerrain TestSquare5(Coord position) => new BasicTerrain(Color.Yellow, Color.Orange, '5', position, true, true);
+        internal static BasicTerrain TestSquare6(Coord position) => new BasicTerrain(Color.Blue, Color.Purple, '6', position, true, true);
+        internal static BasicTerrain TestSquare7(Coord position) => new BasicTerrain(Color.Purple, Color.Red, '7', position, true, true);
+        internal static BasicTerrain TestSquare8(Coord position) => new BasicTerrain(Color.Red, Color.Orange, '8', position, true, true);
+        internal static BasicTerrain TestSquare9(Coord position) => new BasicTerrain(Color.Yellow, Color.Violet, '9', position, true, true);
+        internal static BasicTerrain TestSquare0(Coord position) => new BasicTerrain(Color.Tan, Color.DarkGray, '0', position, true, true);
         internal static BasicTerrain Grass(Coord position, double z = 0)
         {
             Color color = Color.Green;

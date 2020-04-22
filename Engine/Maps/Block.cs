@@ -5,80 +5,62 @@ using System.Linq;
 
 namespace Engine.Maps
 {
-    internal class Block : SadConsole.Maps.Region
+    internal class Block : Area
     {
-        public string HundredBlock;
         internal List<Coord> Houses { get; private set; }
-        internal Block(RoadIntersection nw, RoadIntersection sw, RoadIntersection se, RoadIntersection ne)
-        {
-            HundredBlock = Convert.ToInt32(sw.HorizontalStreet).ToString() + "00 Block " + sw.VerticalStreet.ToString();
-
-            Coord start = new Coord(nw.Right(), nw.Bottom());
-            Coord stop = new Coord(sw.Right(), sw.Top());
-            OuterPoints.AddRange(Calculate.PointsAlongStraightLine(start, stop));
-
-            start = new Coord(sw.Right(), sw.Top());
-            stop = new Coord(se.Left(), se.Top());
-            OuterPoints.AddRange(Calculate.PointsAlongStraightLine(start, stop));
-
-            start = new Coord(se.Left(), se.Top());
-            stop = new Coord(ne.Left(), ne.Bottom());
-            OuterPoints.AddRange(Calculate.PointsAlongStraightLine(start, stop));
-
-            start = new Coord(ne.Left(), ne.Bottom());
-            stop = new Coord(nw.Right(), se.Top());
-            OuterPoints.AddRange(Calculate.PointsAlongStraightLine(start, stop));
-
-            InnerPoints = Calculate.InnerFromOuterPoints(OuterPoints).ToList();
-        }
+        internal Block(RoadIntersection nw, RoadIntersection sw, RoadIntersection se, RoadIntersection ne) :
+            base(
+                Convert.ToInt32(sw.HorizontalStreet).ToString() + "00 Block " + sw.VerticalStreet.ToString(),
+                nw.SouthEastCorner,
+                sw.NorthEastCorner,
+                se.NorthWestCorner,
+                ne.SouthWestCorner
+                )
+        { }
 
         internal IEnumerable<Coord> GetFenceLocations()
         {
-            Coord sw = this.SouthWestCorner();
-            Coord nw = this.NorthWestCorner();
-            Coord se = this.SouthEastCorner();
-            Coord ne = this.NorthEastCorner();
-            sw = new Coord(sw.X + 24, sw.Y - 24);
-            nw = new Coord(nw.X + 24, nw.Y + 24);
-            se = new Coord(se.X - 24, se.Y - 24);
-            ne = new Coord(ne.X - 24, ne.Y + 24);
+            // left off here - this is returning some bonkers stuff 
+            Coord sw = SouthWestCorner + new Coord(-16,-16);
+            Coord nw = NorthWestCorner + new Coord(-16, 16);
+            Coord se = SouthEastCorner + new Coord(16, -16);
+            Coord ne = NorthEastCorner + new Coord(16, 16);
             int centerXTop = (nw.X + ne.X) / 2;
             int centerYLeft = (nw.Y + sw.Y) / 2;
             int centerXBottom = (sw.X + se.X) / 2;
             int centerYRight = (ne.Y + se.Y) / 2;
-            List<Coord> west =  Calculate.PointsAlongStraightLine(nw, sw).ToList();
-            List<Coord> north = Calculate.PointsAlongStraightLine(nw, ne).ToList();
-            List<Coord> east =  Calculate.PointsAlongStraightLine(ne, se).ToList();
-            List<Coord> south = Calculate.PointsAlongStraightLine(sw, se).ToList();
 
-            bool horizontal = west.Count + east.Count > north.Count + south.Count;
-
-            List<Coord> answer;
-            if (horizontal)
+            List<Coord> answer = new List<Coord>(); 
+            answer.AddRange(Calculate.PointsAlongStraightLine(sw, nw));
+            answer.AddRange(Calculate.PointsAlongStraightLine(se, sw));
+            answer.AddRange(Calculate.PointsAlongStraightLine(ne, nw));
+            answer.AddRange(Calculate.PointsAlongStraightLine(ne, se));
+            if (Orientation == SadConsole.Orientation.Horizontal)
             {
-                answer = Calculate.PointsAlongStraightLine(new Coord((nw.X + sw.X) / 2, centerYLeft), new Coord((ne.X + se.X) / 2, centerYRight)).ToList();
-                for (int i = nw.X; i < ne.X - 24; i += (north.Count / 24)) //for now
+                answer.AddRange(Calculate.PointsAlongStraightLine(new Coord(centerXTop, (centerYLeft + centerYRight) / 2), new Coord(centerXBottom, (centerYLeft + centerYRight) / 2)).ToList());
+                for (int i = 16; i < NorthBoundary.Count - 16; i += 16) //for now
                 {
-                    Coord start = north[i];
-                    Coord stop = south[i];
+                    Coord start = NorthBoundary[i] + new Coord(0, 24);
+                    Coord stop = SouthBoundary[SouthBoundary.Count - i - 1] + new Coord(0, -24);
                     answer.AddRange(Calculate.PointsAlongStraightLine(start, stop));
                 }
             }
             else
             {
-                answer = Calculate.PointsAlongStraightLine(new Coord(centerXTop, (ne.Y + nw.Y) / 2), new Coord(centerXBottom, (ne.X + se.X) / 2)).ToList();
-                for (int i = nw.Y; i < sw.Y - 24; i += (north.Count / 24)) //for now
+                answer.AddRange(Calculate.PointsAlongStraightLine(new Coord((centerXTop + centerXBottom) / 2, centerYLeft), new Coord((centerXTop + centerXBottom) / 2, centerYRight)).ToList());
+                for (int i = 16; i < EastBoundary.Count - 16; i += 16) //for now
                 {
-                    Coord start = north[i];
-                    Coord stop = south[i];
+                    Coord start = EastBoundary[i]+ new Coord(16,0);
+                    Coord stop = WestBoundary[WestBoundary.Count - i - 1] + new Coord(-16,0);
                     answer.AddRange(Calculate.PointsAlongStraightLine(start, stop));
                 }
             }
-            answer.AddRange(west);
-            answer.AddRange(south);
-            answer.AddRange(north);
-            answer.AddRange(east);
             return answer;
+        }
+
+        internal void Populate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

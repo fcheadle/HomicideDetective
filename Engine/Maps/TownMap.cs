@@ -6,25 +6,24 @@ using GoRogue;
 using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
+using SadConsole.Maps;
 
 namespace Engine.Maps
 {
-    internal class Town
+    internal class TownMap : BasicMap
     {
         private int _width;
         private int _height;
-        private BasicMap _map;
-
-        internal Dictionary<RoadNumbers, Road> HorizontalRoads { get; private set; } = new Dictionary<RoadNumbers, Road>();
-        internal Dictionary<RoadNames, Road> VerticalRoads { get; private set; } = new Dictionary<RoadNames, Road>();
+        public List<Region> Regions { get => new List<Region>().Concat(Roads).ToList().Concat(Blocks).ToList().Concat(Houses).ToList(); }
+        public List<Road> Roads { get => HorizontalRoads.Values.ToList().Concat(VerticalRoads.Values).ToList(); }
+        public Dictionary<RoadNumbers, Road> HorizontalRoads { get; private set; } = new Dictionary<RoadNumbers, Road>();
+        public Dictionary<RoadNames, Road> VerticalRoads { get; private set; } = new Dictionary<RoadNames, Road>();
         internal List<Block> Blocks { get; private set; } = new List<Block>();
         internal List<Structure> Houses { get; private set; } = new List<Structure>();
-        internal BasicMap Map { get => _map; }
-        internal Town(int width, int height)
+        internal TownMap(int width, int height) : base(width, height, Calculate.EnumLength<MapLayers>(), Distance.MANHATTAN)
         {
             _width = width;
             _height = height;
-            _map = new BasicMap(width, height, Calculate.EnumLength<MapLayers>(), Distance.MANHATTAN);
             MakeRoadsAndBlocks();
             MakeHouses();
             MakeOutdoors();
@@ -35,13 +34,11 @@ namespace Engine.Maps
             RoadNames roadName = 0;
             RoadNumbers roadNum = 0;
             Road road;
-            for (int i = 0; i < _width; i += 96)
+            for (int i = 0; i < _width; i += 96 )
             {
                 road = new Road(new Coord(-100, i), new Coord(_width + 100,  (_height/9) + i), roadNum);
                 HorizontalRoads.Add(roadNum, road);       
                 roadNum++;
-
-                
 
                 road = new Road(new Coord(i, -100), new Coord(i - _width / 4, _height + 100), roadName);
                 VerticalRoads.Add(roadName, road);
@@ -51,31 +48,42 @@ namespace Engine.Maps
             {
                 foreach (Road vRoad in VerticalRoads.Values)
                 {
-                    vRoad.AddIntersection(hRoad);
-                    hRoad.AddIntersection(vRoad);
-                    foreach (Coord c in vRoad.InnerPoints)
-                        if (Map.Contains(c))
-                            Map.SetTerrain(TerrainFactory.Pavement(c));
+                    RoadIntersection ri = new RoadIntersection(hRoad.StreetNumber, vRoad.StreetName, vRoad.Overlap(hRoad).ToList());
+                    vRoad.AddIntersection(ri);
+                    hRoad.AddIntersection(ri);
                 }
-
-                foreach (Coord c in hRoad.InnerPoints)
-                    if (Map.Contains(c))
-                        Map.SetTerrain(TerrainFactory.Pavement(c));
-            
             }
-            for (int i = 0; i < HorizontalRoads.Count() - 2; i++)
+
+            foreach(Road ro in HorizontalRoads.Values)
             {
-                Road r = HorizontalRoads[Calculate.EnumValueFromIndex<RoadNumbers>(i)];
-                for (int j = 0; j < r.Intersections.Count - 2; j++)
+                for (int j = 0; j < ro.Intersections.Count-1; j++)
                 {
+                    Road r = HorizontalRoads[Calculate.EnumValueFromIndex<RoadNumbers>(j)];
                     RoadIntersection sw = r.Intersections[j];
                     RoadIntersection se = r.Intersections[j + 1];
-                    r = HorizontalRoads[Calculate.EnumValueFromIndex<RoadNumbers>(i + 1)];
+                    r = HorizontalRoads[Calculate.EnumValueFromIndex<RoadNumbers>(j + 1)];
                     RoadIntersection nw = r.Intersections[j];
                     RoadIntersection ne = r.Intersections[j + 1];
                     Blocks.Add(new Block(nw,sw,se,ne));
                 }
             }
+            foreach (Road r in Roads)
+            {
+                foreach (Coord c in r.InnerPoints)
+                    if (this.Contains(c))
+                        SetTerrain(TerrainFactory.Pavement(c));
+
+                foreach(RoadIntersection i in r.Intersections)
+                    foreach(Coord c in i.OuterPoints)
+                        if (this.Contains(c))
+                            SetTerrain(TerrainFactory.TestSquare1(c));
+
+            }
+
+            foreach (Block block in Blocks)
+                foreach(Coord c in block.OuterPoints)
+                    if(this.Contains(c))
+                        SetTerrain(TerrainFactory.TestSquare2(c));
         }
         private void MakeHouses()
         {
@@ -84,16 +92,17 @@ namespace Engine.Maps
             {
                 foreach (Coord c in block.GetFenceLocations())
                 {
-                    if(Map.Contains(c))
-                        Map.SetTerrain(TerrainFactory.Fence(c));
+                    if(this.Contains(c))
+                        SetTerrain(TerrainFactory.Fence(c));
                 }
+                //block.Populate(); //left off here
             }
         }
         private void MakePeople()
         {
             for (int i = 0; i < 500; i++)
             {
-                Map.AddEntity(Creature.Person(new Coord(Settings.Random.Next(Map.Width), Settings.Random.Next(Map.Height))));
+                AddEntity(Creature.Person(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
             }
             //for (int i = 0; i < 300; i++)
             //{
@@ -104,21 +113,21 @@ namespace Engine.Maps
         {
             for (int i = 0; i < 777; i++)
             {
-                Coord tree = new Coord(Settings.Random.Next(Map.Width), Settings.Random.Next(Map.Height));
-                while (Map.GetTerrain<BasicTerrain>(tree) != null)
+                Coord tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
+                while (GetTerrain<BasicTerrain>(tree) != null)
                 {
-                    tree = new Coord(Settings.Random.Next(Map.Width), Settings.Random.Next(Map.Height));
+                    tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
                 }
-                Map.SetTerrain(TerrainFactory.Tree(tree));
+                SetTerrain(TerrainFactory.Tree(tree));
             }
          
             var f = Calculate.MasterFormula();
-            for (int i = 0; i < Map.Width; i++)
+            for (int i = 0; i < Width; i++)
             {
-                for (int j = 0; j < Map.Height; j++)
+                for (int j = 0; j < Height; j++)
                 {
                     Coord pos = new Coord(i, j);
-                    if (Map.GetTerrain<BasicTerrain>(pos) == null)
+                    if (GetTerrain<BasicTerrain>(pos) == null)
                     {
 
                         BasicTerrain tile;
@@ -130,7 +139,7 @@ namespace Engine.Maps
                         for (double k = z; k < 0; k++)
                             foreground = Colors.Darken(foreground);
 
-                        if (i == 0 || i == Map.Width - 1 || j == 0 || j == Map.Height - 1)
+                        if (i == 0 || i == Width - 1 || j == 0 || j == Height - 1)
                         {
                             tile = Maps.TerrainFactory.Wall(pos);
                         }
@@ -138,7 +147,7 @@ namespace Engine.Maps
                         {
                             tile = Maps.TerrainFactory.Grass(pos, z);
                         }
-                        Map.SetTerrain(tile);
+                        SetTerrain(tile);
                     }
                 }
             }
