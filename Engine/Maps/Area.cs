@@ -65,11 +65,12 @@ namespace Engine.Maps
             OuterPoints.AddRange(_eastBoundary);
             OuterPoints.AddRange(_westBoundary);
             InnerPoints = Calculate.InnerFromOuterPoints(OuterPoints).ToList();
+            _orientation = se.X + sw.X > se.Y + sw.Y ? SadConsole.Orientation.Horizontal : SadConsole.Orientation.Vertical;
         }
 
         public override string ToString()
         {
-            return base.ToString() + Name;
+            return Name;
         }
         internal IEnumerable<Coord> Overlap(Area other)
         {

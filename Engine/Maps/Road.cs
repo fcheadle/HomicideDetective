@@ -21,8 +21,6 @@ namespace Engine.Maps
         }
         internal RoadNames StreetName { get; }
         internal RoadNumbers StreetNumber { get; }
-        internal Direction.Types Orientation { get; }
-        internal bool Horizontal { get => Orientation == Direction.Types.UP || Orientation == Direction.Types.DOWN; }
         internal List<RoadIntersection> Intersections { get; private set; } = new List<RoadIntersection>();
         internal Road(Coord start, Coord stop, RoadNames name) :
             base(
@@ -31,29 +29,22 @@ namespace Engine.Maps
                 new Coord(start.X > stop.X ? start.X : stop.X, start.Y < stop.Y ? start.Y : stop.Y),
                 new Coord(start.X < stop.X ? start.X : stop.X, start.Y > stop.Y ? start.Y : stop.Y),
                 new Coord(start.X < stop.X ? start.X : stop.X, start.Y < stop.Y ? start.Y : stop.Y)
-                )
+            )
         {
             Start = start;
             Stop = stop; 
             StreetName = name;
             InnerPoints = Calculate.PointsAlongStraightLine(start, stop, 8);
-            Orientation = Direction.GetCardinalDirection(start, stop).Type;
             switch (Orientation)
             {                
                 default:
-                case Direction.Types.UP_LEFT:
-                case Direction.Types.DOWN_RIGHT:
-                case Direction.Types.UP:
-                case Direction.Types.DOWN:
+                case SadConsole.Orientation.Vertical:
                     OuterPoints = Calculate.PointsAlongStraightLine(new Coord(start.X - 4, start.Y), new Coord(stop.X - 4, stop.Y)).ToList();
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X + 4, start.Y), new Coord(stop.X + 4, stop.Y)).ToList());
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X - 4, start.Y), new Coord(stop.X + 4, start.Y)).ToList());
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X - 4, stop.Y), new Coord(stop.X + 4, stop.Y)).ToList());
                     break;
-                case Direction.Types.UP_RIGHT:
-                case Direction.Types.DOWN_LEFT:
-                case Direction.Types.LEFT:
-                case Direction.Types.RIGHT:
+                case SadConsole.Orientation.Horizontal:
                     OuterPoints = Calculate.PointsAlongStraightLine(new Coord(start.X, start.Y - 4), new Coord(stop.X, stop.Y - 4)).ToList();
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X, start.Y + 4), new Coord(stop.X, stop.Y + 4)).ToList());
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X, start.Y - 4), new Coord(start.X, start.Y + 4)).ToList());
@@ -77,23 +68,16 @@ namespace Engine.Maps
             Stop = stop;
             StreetNumber = number;
             InnerPoints = Calculate.PointsAlongStraightLine(start, stop, 8);
-            Orientation = Direction.GetCardinalDirection(start, stop).Type;
             switch (Orientation)
             {
-                default: 
-                case Direction.Types.UP_LEFT:
-                case Direction.Types.DOWN_RIGHT:
-                case Direction.Types.UP:
-                case Direction.Types.DOWN:
+                default:
+                case SadConsole.Orientation.Vertical:
                     OuterPoints = Calculate.PointsAlongStraightLine(new Coord(start.X - 4, start.Y), new Coord(stop.X - 4, stop.Y)).ToList();
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X + 4, start.Y), new Coord(stop.X + 4, stop.Y)).ToList());
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X - 4, start.Y), new Coord(stop.X + 4, start.Y)).ToList());
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X - 4, stop.Y), new Coord(stop.X + 4, stop.Y)).ToList());
                     break;
-                case Direction.Types.UP_RIGHT:
-                case Direction.Types.DOWN_LEFT:
-                case Direction.Types.LEFT:
-                case Direction.Types.RIGHT:
+                case SadConsole.Orientation.Horizontal:
                     OuterPoints = Calculate.PointsAlongStraightLine(new Coord(start.X, start.Y - 4), new Coord(stop.X, stop.Y - 4)).ToList();
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X, start.Y + 4), new Coord(stop.X, stop.Y + 4)).ToList());
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X, start.Y - 4), new Coord(start.X, start.Y + 4)).ToList());
@@ -127,7 +111,7 @@ namespace Engine.Maps
         public RoadNames VerticalStreet { get; }
         internal RoadIntersection(RoadNumbers horizontalCrossStreet, RoadNames verticalCrossStreet, List<Coord> points) :
             base(
-                horizontalCrossStreet.ToString() + verticalCrossStreet + " Intersection",
+                horizontalCrossStreet.ToString() + "-" + verticalCrossStreet + " Intersection",
                 points.OrderBy(x => x.Y).ToList().Last(),
                 points.OrderBy(x => x.Y).ToList().Last(),
                 points.OrderBy(x => x.Y).ToList().Last(),

@@ -14,8 +14,9 @@ namespace Engine.Maps
     {
         private int _width;
         private int _height;
-        public List<Region> Regions { get => new List<Region>().Concat(Roads).ToList().Concat(Blocks).ToList().Concat(Houses).ToList(); }
+        public List<Region> Regions { get => new List<Region>().Concat(Roads).ToList().Concat(Blocks).ToList().Concat(Houses).ToList().Concat(Intersections.Values).ToList(); }
         public List<Road> Roads { get => HorizontalRoads.Values.ToList().Concat(VerticalRoads.Values).ToList(); }
+        public Dictionary<string, RoadIntersection> Intersections { get; private set; } = new Dictionary<string, RoadIntersection>();
         public Dictionary<RoadNumbers, Road> HorizontalRoads { get; private set; } = new Dictionary<RoadNumbers, Road>();
         public Dictionary<RoadNames, Road> VerticalRoads { get; private set; } = new Dictionary<RoadNames, Road>();
         internal List<Block> Blocks { get; private set; } = new List<Block>();
@@ -24,23 +25,24 @@ namespace Engine.Maps
         {
             _width = width;
             _height = height;
+            MakeOutdoors();
             MakeRoadsAndBlocks();
             MakeHouses();
-            MakeOutdoors();
-            MakePeople();
+            //MakePeople();
         }
         private void MakeRoadsAndBlocks()
         {
             RoadNames roadName = 0;
             RoadNumbers roadNum = 0;
+            int offset = Calculate.Percent();
             Road road;
-            for (int i = 0; i < _width; i += 96 )
+            for (int i = 16; i < _width - 48; i += 96)
             {
-                road = new Road(new Coord(-100, i), new Coord(_width + 100,  (_height/9) + i), roadNum);
-                HorizontalRoads.Add(roadNum, road);       
+                road = new Road(new Coord(-100, i), new Coord(_width + 100, i + offset), roadNum);
+                HorizontalRoads.Add(roadNum, road);
                 roadNum++;
 
-                road = new Road(new Coord(i, -100), new Coord(i - _width / 4, _height + 100), roadName);
+                road = new Road(new Coord(i, -100), new Coord(i - offset, _height + 100), roadName);
                 VerticalRoads.Add(roadName, road);
                 roadName++;
             }
@@ -48,15 +50,17 @@ namespace Engine.Maps
             {
                 foreach (Road vRoad in VerticalRoads.Values)
                 {
-                    RoadIntersection ri = new RoadIntersection(hRoad.StreetNumber, vRoad.StreetName, vRoad.Overlap(hRoad).ToList());
+                    List<Coord> overlap = vRoad.Overlap(hRoad).ToList();
+                    RoadIntersection ri = new RoadIntersection(hRoad.StreetNumber, vRoad.StreetName, overlap);
                     vRoad.AddIntersection(ri);
                     hRoad.AddIntersection(ri);
+                    Intersections.Add(ri.Name, ri);
                 }
             }
 
-            foreach(Road ro in HorizontalRoads.Values)
+            foreach (Road ro in HorizontalRoads.Values)
             {
-                for (int j = 0; j < ro.Intersections.Count-1; j++)
+                for (int j = 0; j < ro.Intersections.Count - 1; j++)
                 {
                     Road r = HorizontalRoads[Calculate.EnumValueFromIndex<RoadNumbers>(j)];
                     RoadIntersection sw = r.Intersections[j];
@@ -64,7 +68,7 @@ namespace Engine.Maps
                     r = HorizontalRoads[Calculate.EnumValueFromIndex<RoadNumbers>(j + 1)];
                     RoadIntersection nw = r.Intersections[j];
                     RoadIntersection ne = r.Intersections[j + 1];
-                    Blocks.Add(new Block(nw,sw,se,ne));
+                    Blocks.Add(new Block(nw, sw, se, ne));
                 }
             }
             foreach (Road r in Roads)
@@ -73,29 +77,44 @@ namespace Engine.Maps
                     if (this.Contains(c))
                         SetTerrain(TerrainFactory.Pavement(c));
 
-                foreach(RoadIntersection i in r.Intersections)
-                    foreach(Coord c in i.OuterPoints)
+                foreach (RoadIntersection i in r.Intersections)
+                    foreach (Coord c in i.OuterPoints)
                         if (this.Contains(c))
                             SetTerrain(TerrainFactory.TestSquare1(c));
 
             }
 
             foreach (Block block in Blocks)
-                foreach(Coord c in block.OuterPoints)
-                    if(this.Contains(c))
+            {
+                foreach (Coord c in block.OuterPoints)
+                    if (this.Contains(c))
                         SetTerrain(TerrainFactory.TestSquare2(c));
+                foreach (Coord c in block.GetFenceLocations())
+                    if (this.Contains(c))
+                        SetTerrain(TerrainFactory.Fence(c));
+            }
         }
         private void MakeHouses()
         {
             Structure house;
             foreach (Block block in Blocks)
             {
-                foreach (Coord c in block.GetFenceLocations())
+                for (int i = 0; i < block.WestBoundary.Count - 48; i+=48)
                 {
-                    if(this.Contains(c))
-                        SetTerrain(TerrainFactory.Fence(c));
+                    house = new Structure(48, 48, block.WestBoundary[i] + new Coord(12,0), StructureTypes.CentralPassageHouse);
+                    Houses.Add(house);
+                    for (int j = 0; j < 48; j++)
+                    {
+                        for (int k = 0; k < 48; k++)
+                        {
+                            Coord c = new Coord(j, k);
+                            if(house.Map.GetTerrain(c) != null)
+                            {
+                                SetTerrain(TerrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
+                            }
+                        }
+                    }
                 }
-                //block.Populate(); //left off here
             }
         }
         private void MakePeople()
@@ -111,15 +130,15 @@ namespace Engine.Maps
         }
         private void MakeOutdoors()
         {
-            for (int i = 0; i < 777; i++)
-            {
-                Coord tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
-                while (GetTerrain<BasicTerrain>(tree) != null)
-                {
-                    tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
-                }
-                SetTerrain(TerrainFactory.Tree(tree));
-            }
+            //for (int i = 0; i < 777; i++)
+            //{
+            //    Coord tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
+            //    while (GetTerrain<BasicTerrain>(tree) != null)
+            //    {
+            //        tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
+            //    }
+            //    SetTerrain(TerrainFactory.Tree(tree));
+            //}
          
             var f = Calculate.MasterFormula();
             for (int i = 0; i < Width; i++)
@@ -127,31 +146,9 @@ namespace Engine.Maps
                 for (int j = 0; j < Height; j++)
                 {
                     Coord pos = new Coord(i, j);
-                    if (GetTerrain<BasicTerrain>(pos) == null)
-                    {
-
-                        BasicTerrain tile;
-                        double z = f(i, j);
-
-                        Color foreground = Color.Green;
-                        for (double k = 0; k < z; k++)
-                            foreground = Colors.Brighten(foreground);
-                        for (double k = z; k < 0; k++)
-                            foreground = Colors.Darken(foreground);
-
-                        if (i == 0 || i == Width - 1 || j == 0 || j == Height - 1)
-                        {
-                            tile = Maps.TerrainFactory.Wall(pos);
-                        }
-                        else
-                        {
-                            tile = Maps.TerrainFactory.Grass(pos, z);
-                        }
-                        SetTerrain(tile);
-                    }
+                    SetTerrain(TerrainFactory.Grass(pos, f(i, j))) ;
                 }
             }
-
         }
     }
 }

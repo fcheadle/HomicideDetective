@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Engine.Maps;
 using GoRogue;
 using Microsoft.Xna.Framework;
@@ -41,6 +42,15 @@ namespace Engine.Creatures
                 return true;
             else
                 return base.ProcessKeyboard(info);
+        }
+
+        internal IEnumerable<Area> GetCurrentRegions()
+        {
+            foreach(Area area in Program.MapScreen.TownMap.Regions)
+            {
+                if (area.InnerPoints.Contains(Position))
+                    yield return area;
+            }
         }
     }
 }

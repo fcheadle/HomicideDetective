@@ -28,17 +28,17 @@ namespace Engine
 
         internal static Dictionary<Keys, GameActions> KeyBindings { get; } = new Dictionary<Keys, GameActions>
         {
-            {Keys.Space, GameActions.TogglePause },
-            {Keys.Escape, GameActions.ToggleMenu },
-            {Keys.P, GameActions.TakePhotograph },
-            {Keys.L, GameActions.LookAtEverythingInSquare },
-            {Keys.D, GameActions.DustItemForPrints },
-            {Keys.G, GameActions.GetItem },
-            {Keys.R, GameActions.RemoveItemFromInventory },
-            {Keys.T, GameActions.Talk },
-            {Keys.I, GameActions.ToggleInventory },
-            {Keys.N, GameActions.ToggleNotes },
-            {Keys.A, GameActions.LookAtPerson },
+            {Keys.Space, GameActions.TogglePause }, //not implements
+            {Keys.Escape, GameActions.ToggleMenu }, //not implemented
+            {Keys.P, GameActions.TakePhotograph }, //not implemented
+            {Keys.L, GameActions.LookAtEverythingInSquare }, //not implemented
+            {Keys.D, GameActions.DustItemForPrints }, //not implemented
+            {Keys.G, GameActions.GetItem },//not implemented
+            {Keys.R, GameActions.RemoveItemFromInventory },//not implemented
+            {Keys.T, GameActions.Talk },//not implemented
+            {Keys.I, GameActions.ToggleInventory },//not implemented
+            {Keys.N, GameActions.ToggleNotes },//not implemented
+            {Keys.A, GameActions.LookAtPerson },//not implemented
         };
 
         internal static void ToggleMenu()

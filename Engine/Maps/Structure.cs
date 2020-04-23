@@ -7,47 +7,24 @@ using Rectangle = GoRogue.Rectangle;
 
 namespace Engine.Maps
 {
-    class Room : Region
+    class Room : Area
     {
-        internal readonly Rectangle Area;
-        internal readonly string Name;
         internal readonly RoomTypes Type;
-        internal int Left
+        
+        internal Room(string name, Rectangle area, RoomTypes type) : base(
+            name,
+            new Coord(area.MaxExtentX, area.MaxExtentY),
+            new Coord(area.MaxExtentX, area.MinExtentY),
+            new Coord(area.MinExtentX, area.MinExtentY),
+            new Coord(area.MinExtentX, area.MaxExtentY)
+            )
         {
-            get
-            {
-                return Area.MinExtentX;
-            }
-        }
-        internal int Right
-        {
-            get
-            {
-                return Area.MaxExtentX;
-            }
-        }
-        internal int Top
-        {
-            get
-            {
-                return Area.MinExtentY;
-            }
-        }
-        internal int Bottom
-        {
-            get
-            {
-                return Area.MaxExtentY;
-            }
-        }
-        internal Room(string name, Rectangle area, RoomTypes type)
-        {
-            Name = name;
-            Area = area;
+            OuterRect = area;
+            InnerRect = area;
             Type = type;
         }
     }
-    internal class Structure : Region
+    internal class Structure : Area
     {
         internal BasicMap Map;
         internal Coord Origin;
@@ -62,14 +39,14 @@ namespace Engine.Maps
 
         internal string Address { get; set; }
 
-        internal Structure()
+        internal Structure(int width, int height, Coord origin, StructureTypes type): base(
+            origin.X.ToString() + origin.Y.ToString(),
+            new Coord(width, height) + origin,
+            new Coord(width, 0) + origin,
+            origin,
+            new Coord(0,height) + origin
+            )
         {
-            //Map = new TerrainMap(32, 32, false);
-        }
-
-        internal Structure(int width, int height, Coord origin, StructureTypes type)
-        {
-            Address = origin.X.ToString() + origin.Y.ToString();
             StructureType = type;
             Map = new BasicMap(width, height, 1, Distance.MANHATTAN);
             Origin = origin;
@@ -88,7 +65,7 @@ namespace Engine.Maps
                 default: break;
             }
 
-            Map = Map.Subsection(new Coord(Left, Top), new Coord(Right, Bottom));            
+            //Map = Map.Subsection(new Coord(Left, Top), new Coord(Right, Bottom));            
         }
 
         private void CreateCentralPassageHouse()
@@ -97,6 +74,7 @@ namespace Engine.Maps
             int midY = Map.Height / 2;
             int roomW;
             int roomH;
+            Coord target;
             //FenceYard(new Rectangle(new Coord(1, 1), new Coord(Map.Width - 1, Map.Height - 1)));
 
             //central passage
@@ -111,17 +89,21 @@ namespace Engine.Maps
 
             //parlor
             roomW = RandomRoomDimension() * 2;
-            roomH = hallway.Area.Height / 2 - 1;
+            roomH = hallway.OuterRect.Height / 2 - 1;
             start = new Coord(Left - roomW, Bottom - roomH);
             end = new Coord(Left, Bottom);
             CreateRoom(start, end, "parlor", RoomTypes.Parlor, Direction.Types.NONE);
-            Map.SetTerrain(TerrainFactory.Door(new Coord(Rooms["parlor"].Right, Rooms["parlor"].Bottom - 1)));
+            target = new Coord(Rooms["parlor"].Right, Rooms["parlor"].Bottom - 1);
+            if (Map.Contains(target))
+                Map.SetTerrain(TerrainFactory.Door(target));
 
             //master bed
             start = new Coord(Left, Rooms["parlor"].Top - roomH);
             end = new Coord(hallway.Left, Rooms["parlor"].Top);
             CreateRoom(start, end, "master_bed", RoomTypes.MasterBedroom, Direction.Types.RIGHT);
-            Map.SetTerrain(TerrainFactory.Door(new Coord(Rooms["master_bed"].Right, Rooms["master_bed"].Top +1)));
+            target = new Coord(Rooms["parlor"].Right, Rooms["parlor"].Bottom - 1);
+            if (Map.Contains(target))
+                Map.SetTerrain(TerrainFactory.Door(new Coord(Rooms["master_bed"].Right, Rooms["master_bed"].Top +1)));
 
             //main bathroom
             roomW = 5;//RandomRoomDimension();
@@ -131,7 +113,7 @@ namespace Engine.Maps
             CreateRoom(start, end, "bathroom", RoomTypes.Bathroom, Direction.Types.RIGHT);
 
             //dining room
-            roomH = (Rooms["hallway"].Area.Height - 3) / 2;
+            roomH = (Rooms["hallway"].OuterRect.Height - 3) / 2;
             roomW = roomH;
             start = new Coord(Rooms["hallway"].Right, Rooms["hallway"].Bottom - roomH - 1);
             end = new Coord(Rooms["hallway"].Right + roomW, Rooms["hallway"].Bottom);
@@ -144,18 +126,22 @@ namespace Engine.Maps
             CreateArch(Rooms["dining"], Rooms["kitchen"]);
 
             //kids room 1
-            roomH = (Rooms["hallway"].Area.Height - 3) / 2;
+            roomH = (Rooms["hallway"].OuterRect.Height - 3) / 2;
             roomW = roomH;
             start = new Coord(Rooms["hallway"].Right, Rooms["kitchen"].Top - roomH + 1);
             end = new Coord(Rooms["hallway"].Right + roomW, Rooms["kitchen"].Top + 1);
             CreateRoom(start, end, "kids_bedroom_1", RoomTypes.Bedroom, Direction.Types.NONE);
-            Map.SetTerrain(TerrainFactory.Door(new Coord(Rooms["kids_bedroom_1"].Left, Rooms["kids_bedroom_1"].Bottom - 1)));
+            target = new Coord(Rooms["parlor"].Right, Rooms["parlor"].Bottom - 1);
+            if (Map.Contains(target))
+                Map.SetTerrain(TerrainFactory.Door(new Coord(Rooms["kids_bedroom_1"].Left, Rooms["kids_bedroom_1"].Bottom - 1)));
 
             //kids room 2
             start = new Coord(Rooms["hallway"].Left - roomW, Rooms["master_bed"].Top - roomH);
             end = new Coord(Rooms["hallway"].Left, Rooms["master_bed"].Top);
             CreateRoom(start, end, "kids_bedroom_2", RoomTypes.Bedroom, Direction.Types.NONE);
-            Map.SetTerrain(TerrainFactory.Door(new Coord(Rooms["kids_bedroom_2"].Right, Rooms["kids_bedroom_2"].Bottom - 1)));
+            target = new Coord(Rooms["parlor"].Right, Rooms["parlor"].Bottom - 1);
+            if (Map.Contains(target))
+                Map.SetTerrain(TerrainFactory.Door(new Coord(Rooms["kids_bedroom_2"].Right, Rooms["kids_bedroom_2"].Bottom - 1)));
 
         }
         private int RandomRoomDimension()
@@ -245,20 +231,21 @@ namespace Engine.Maps
         {
             List<Coord> walls = new List<Coord>();
 
-            foreach (Coord c in Calculate.BorderLocations(imposing.Area))
+            foreach (Coord c in Calculate.BorderLocations(imposing.OuterRect))
             {
-                if(host.Area.Contains(c))
+                if(host.OuterRect.Contains(c))
                     walls.Add(c);
             }
 
             foreach(Coord arch in walls)
             {
-                Map.SetTerrain(TerrainFactory.HardwoodFloor(arch));
+                if (Map.Contains(arch))
+                    Map.SetTerrain(TerrainFactory.HardwoodFloor(arch));
             }
 
-            foreach(Coord c in Calculate.BorderLocations(host.Area))
+            foreach(Coord c in Calculate.BorderLocations(host.OuterRect))
             {
-                if (walls.Contains(c))
+                if (walls.Contains(c) && Map.Contains(c))
                     Map.SetTerrain(TerrainFactory.Wall(c));
             }
         }
