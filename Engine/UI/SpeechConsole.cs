@@ -11,7 +11,7 @@ namespace Engine.UI
         private ColoredString _message;
         private Color fore;
         private Color back;
-        public SpeechConsole(Font voice, string statement, Coord position) : base(statement.Length, 1, voice)//for now
+        internal SpeechConsole(Font voice, string statement, Coord position) : base(statement.Length, 1, voice)//for now
         {
             Position = position;
             fore = Color.White;
@@ -23,8 +23,8 @@ namespace Engine.UI
 
         public override void Update(TimeSpan timeElapsed)
         {
-            fore = Utils.Colors.FadeOut(fore);
-            back = Utils.Colors.FadeOut(back);
+            fore = Colors.FadeOut(fore);
+            back = Colors.FadeOut(back);
             _message.SetForeground(fore);
             _message.SetBackground(back);
             Clear();

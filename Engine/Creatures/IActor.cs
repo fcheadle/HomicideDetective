@@ -13,5 +13,7 @@
         int Mass { get; set; }
         int Volume { get; set; }
         public void Act();
+
+        public void Interact(IActor initiator);
     }
 }

@@ -1,32 +1,26 @@
 ﻿using Engine.Components;
+using Engine.Maps;
 using Engine.UI;
-using Engine.Utils;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System.Collections.Generic;
-using System.IO;
+using Region = SadConsole.Maps.Region;
 
 namespace Engine.Creatures
 {
-    internal enum BloodTypes
+    public class Creature : BasicEntity, IActor
     {
-        O,
-        A,
-        B,
-        AB
-    }
+        internal new TownMap CurrentMap;
+        internal int FOVRadius;
+        //protected int baseVisibilityDistance = 25;
+        //protected int baseLightSourceDistance = 20;
+        internal string Title = "Creature";
+        internal string Description = "A creature of some sort. Everything from rats to people to bears.";
 
-    internal class Creature : BasicEntity, IActor
-    {
-        protected int baseVisibilityDistance = 25;
-        protected int baseLightSourceDistance = 20;
-        public string Title = "Creature";
-        public string Description = "A creature of some sort. Everything from rats to people to bears.";
-
-        public Items.Inventory Inventory = new Items.Inventory();
-        protected SpeechConsole Dialogue;
-        public readonly Font Voice;
+        internal Items.Inventory Inventory = new Items.Inventory();
+        internal SpeechConsole Dialogue;
+        internal readonly Font Voice;
         public int SystoleBloodPressure { get => _systoleBloodPressure; set => _systoleBloodPressure = value; }
         public int DiastoleBloodPressure { get => _diastoleBloodPressure; set => _diastoleBloodPressure = value; }
         public int Pulse { get => _pulse; set => _pulse = value; }
@@ -35,7 +29,6 @@ namespace Engine.Creatures
         public int Mass { get => _mass; set => _mass = value; }
         public int Volume { get => _volume; set => _volume = value; }
 
-        private int _awareness;
         private int _systoleBloodPressure;
         private int _diastoleBloodPressure;
         private int _pulse;
@@ -44,13 +37,16 @@ namespace Engine.Creatures
         private int _mass;
         private int _volume;
 
-        //protected Region currentRegion;
+        protected SadConsole.Maps.Region currentRegion;
 
+        private BasicEntity _target;
+        private GoRogue.Pathing.Path _path;
 
         protected Creature(Coord position, Color foreground, int glyph)
             : base(foreground, Color.Black, glyph, position, 1, isWalkable: false, isTransparent: true)
         {
             ComponentsUpdate.Add(new ThoughtProcess());
+            Voice = SadConsole.Global.LoadFont("acorntileset.font").GetFont(Font.FontSizes.One);
             //List<string> fonts = new List<string>();
             //foreach(string file in Directory.GetFiles("fonts"))
             //{
@@ -67,10 +63,10 @@ namespace Engine.Creatures
             //Dialogue = new SpeechConsole(Voice, "this is my test string", position);
         }
 
-        public static Creature Person(Coord position)
+        internal static Creature Person(Coord position)
         {
             Color color;
-            int chance = Calculate.Chance();
+            int chance = Calculate.Percent();
             if (chance < 30)
                 color = Colors.MutateBy(Color.Brown, Color.Black);
             else if (chance < 60)
@@ -94,7 +90,7 @@ namespace Engine.Creatures
             return critter;
 
         }
-        public static Creature Animal(Coord position)
+        internal static Creature Animal(Coord position)
         {
             Creature critter = new Creature(position, Color.Gray, 224);
 
@@ -106,10 +102,40 @@ namespace Engine.Creatures
             critter.BodyTemperature = 102.5;
             return critter;
         }
-
         public void Act()
         {
-            throw new System.NotImplementedException();
+            //Determine whether or not we have a path
+            if (_path == null)
+            {
+
+            }
+            //just move in a random direction for now
+            List<Direction> directions = new List<Direction>();
+            directions.Add(Direction.UP);
+            directions.Add(Direction.LEFT);
+            directions.Add(Direction.RIGHT);
+            directions.Add(Direction.DOWN);
+            Direction d = directions.RandomItem();
+            MoveIn(d);
+        }
+        public void Interact(IActor actor)
+        {
+            //for now, just print something random to the screen
+            PrintDialogue("Hello there!");
+        }
+        private void PrintDialogue(string message)
+        {
+            Dialogue = new SpeechConsole(Voice, message, new Coord(Position.X - message.Length / 2, Position.Y - 1));
+            Dialogue.Print(0, 0, message);
+        }
+
+        private Region? DetectRegion()
+        {
+            foreach(Region region in CurrentMap.Regions)
+                if (region.InnerPoints.Contains(Position))
+                    return region;
+
+            return null;
         }
     }
 }

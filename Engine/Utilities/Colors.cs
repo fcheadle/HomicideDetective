@@ -1,11 +1,11 @@
 ﻿using System;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Engine.Utils
+namespace Engine
 {
-    public class Colors
+    internal class Colors
     {
-        public static Color Darken(Color color)
+        internal static Color Darken(Color color)
         {
             int r = Convert.ToInt32(color.R);
             int g = Convert.ToInt32(color.G);
@@ -39,19 +39,19 @@ namespace Engine.Utils
             return color;
         }
 
-        public static Color FadeOut(Color color)
+        internal static Color FadeOut(Color color)
         {
             color.A += Convert.ToByte(1);
             return color;
         }
 
-        public static Color FadeIn(Color color)
+        internal static Color FadeIn(Color color)
         {
             color.A -= Convert.ToByte(1);
             return color;
         }
 
-        public static Color Brighten(Color color)
+        internal static Color Brighten(Color color)
         {
             int total = 1;
             int r = Convert.ToInt32(color.R);
@@ -86,7 +86,7 @@ namespace Engine.Utils
             return color;
         }
 
-        public static Color MutateBy(Color baseColor, Color target)
+        internal static Color MutateBy(Color baseColor, Color target)
         {
             Color newC = Color.Black;
             newC.R = Convert.ToByte((baseColor.R + target.R) / (byte)4);
@@ -95,7 +95,7 @@ namespace Engine.Utils
             return newC;
         }
 
-        public static Color Half(Color color)
+        internal static Color Half(Color color)
         {
             int r = Convert.ToInt32(color.R);
             int g = Convert.ToInt32(color.G);
