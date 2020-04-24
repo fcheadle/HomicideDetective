@@ -60,6 +60,13 @@ namespace Engine.Maps
             _southBoundary = Calculate.PointsAlongStraightLine(_southWestCorner, _southEastCorner).ToList();
             _eastBoundary = Calculate.PointsAlongStraightLine(_southEastCorner, _northEastCorner).ToList();
             _northBoundary = Calculate.PointsAlongStraightLine(_northEastCorner, _northWestCorner).ToList();
+
+            _top = ne.Y > nw.Y ? ne.Y : nw.Y;
+            _right = se.X > ne.X ? se.X : ne.X;
+            _left = sw.X < nw.X ? sw.X : nw.X;
+            _bottom = se.Y < sw.Y ? sw.Y : se.Y;
+
+
             OuterPoints.AddRange(_southBoundary);
             OuterPoints.AddRange(_northBoundary);
             OuterPoints.AddRange(_eastBoundary);

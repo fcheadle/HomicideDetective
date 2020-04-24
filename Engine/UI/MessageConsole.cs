@@ -4,12 +4,10 @@ namespace Engine.UI
 {
     internal class MessageConsole : Console
     {
-        private Color _semiTransparentBlack;
-
         internal MessageConsole(int width, int height) : base(width, height)
         {
             IsCursorDisabled = false;
-            Cursor.IsVisible = true;
+            Cursor.IsVisible = false;
             UseMouse = true;
             
             UseKeyboard = true;

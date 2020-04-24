@@ -22,26 +22,16 @@ namespace Engine.UI
             TownMap.ControlledGameObject = new Player(TownMap.WalkabilityView.RandomPosition(true));
             TownMap.AddEntity(TownMap.ControlledGameObject);
 
-            //Thoughts = new MessageConsole(24, viewportHeight / 3 - 2);
-            //Thoughts.Position = new Coord(viewportWidth - 25, 1);
-            Messages = new MessageConsole(24, viewportHeight - 2);
-            Messages.Position = new Coord(viewportWidth - 25, 1);
-            //Dialogue = new MessageConsole(24, viewportHeight / 3 - 2);
-            //Dialogue.Position = new Coord(viewportWidth - 25, viewportHeight / 3 * 2 - 1);
+            Messages = new MessageConsole(24, viewportHeight);
+            Messages.Position = new Coord(viewportWidth - 24, 0);
 
-            MapRenderer = TownMap.CreateRenderer(new XnaRect(0, 0, viewportWidth - 26, viewportHeight), Global.FontDefault);
+            MapRenderer = TownMap.CreateRenderer(new XnaRect(0, 0, viewportWidth - 25, viewportHeight), Global.FontDefault);
             Children.Add(MapRenderer);
-            //Children.Add(Thoughts);
             Children.Add(Messages);
-            //Children.Add(Dialogue);
-            TownMap.ControlledGameObject.IsFocused = true; // Set player to receive input, since in this example the player handles movement
-
-            // Set up to recalculate FOV and set camera position appropriately when the player moves.  Also make sure we hook the new
-            // Player if that object is reassigned.
+            TownMap.ControlledGameObject.IsFocused = true; 
             TownMap.ControlledGameObject.Moved += Player_Moved;
             TownMap.ControlledGameObjectChanged += ControlledGameObjectChanged;
 
-            // Calculate initial FOV and center camera
             TownMap.CalculateFOV(TownMap.ControlledGameObject.Position, ((Player)TownMap.ControlledGameObject).FOVRadius, radius);
             MapRenderer.CenterViewPortOnPoint(TownMap.ControlledGameObject.Position);
         }

@@ -14,20 +14,20 @@ namespace Engine.Maps
         internal Block(RoadIntersection nw, RoadIntersection sw, RoadIntersection se, RoadIntersection ne) :
             base(
                 Convert.ToInt32(sw.HorizontalStreet + 1).ToString() + "00 Block " + sw.VerticalStreet.ToString(),
-                nw.SouthEastCorner,
-                sw.NorthEastCorner,
-                se.NorthWestCorner,
-                ne.SouthWestCorner
+                se.SouthEastCorner,
+                ne.NorthEastCorner,
+                nw.NorthWestCorner,
+                sw.SouthWestCorner
                 )
         { }
 
         internal IEnumerable<Coord> GetFenceLocations()
         {
             // left off here - this is returning some bonkers stuff 
-            Coord sw = SouthWestCorner + new Coord(-16,-16);
-            Coord nw = NorthWestCorner + new Coord(-16, 16);
-            Coord se = SouthEastCorner + new Coord(16, -16);
-            Coord ne = NorthEastCorner + new Coord(16, 16);
+            Coord sw = SouthWestCorner + new Coord(16,-16);
+            Coord nw = NorthWestCorner + new Coord(16, 16);
+            Coord se = SouthEastCorner + new Coord(-16, -16);
+            Coord ne = NorthEastCorner + new Coord(-16, 16);
 
             List<Coord> answer = new List<Coord>();
             WestFenceLine = Calculate.PointsAlongStraightLine(nw, sw).ToList();

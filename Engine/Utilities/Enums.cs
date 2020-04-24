@@ -271,13 +271,16 @@
     internal enum RoomTypes
     {
         Parlor,
-        Bedroom,
+        BoysBedroom,
         MasterBedroom,
         Bathroom,
         Kitchen,
         DiningRoom,
         Yard,
-        Closet
+        Closet,
+        Hall,
+        GirlsBedroom,
+        GuestBedroom
     }
 
     /// <summary>
