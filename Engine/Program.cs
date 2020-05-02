@@ -1,11 +1,12 @@
-﻿using Engine.Creatures;
+﻿using Engine.Components;
+using Engine.Creatures;
 using Engine.Maps;
 using Microsoft.Xna.Framework;
 using System;
 
 namespace Engine
 {
-    internal class Program
+    public class Program
     {
         internal static UI.GameScreen MapScreen { get; private set; }
         internal static TimeSpan UpdateCounter { get; private set; } = TimeSpan.FromSeconds(0);
@@ -21,14 +22,13 @@ namespace Engine
 
         private static void Update(GameTime obj)
         {
-            // jk... unless...?
             UpdateCounter += obj.ElapsedGameTime;
-            //every tenth of a second
-            if(UpdateCounter > TimeSpan.FromMilliseconds(250))
+
+            if (UpdateCounter > TimeSpan.FromMilliseconds(250))
             {
-                foreach(IActor actor in MapScreen.TownMap.GetCreatures())
+                foreach (SadConsole.BasicEntity creature in MapScreen.TownMap.GetCreatures())
                 {
-                    actor.Act();
+                    creature.GetGoRogueComponent<ActorComponent>().Act();
                 }
                 UpdateCounter = TimeSpan.FromMilliseconds(0);
                 MapScreen.IsDirty = true;
@@ -37,8 +37,13 @@ namespace Engine
 
         private static void Init()
         {
-            MapScreen = new UI.GameScreen(Settings.MapWidth, Settings.MapHeight, Settings.GameWidth, Settings.GameHeight, Settings.FOVRadius);
+            MapScreen = new UI.GameScreen(Settings.MapWidth, Settings.MapHeight, Settings.GameWidth, Settings.GameHeight);
             SadConsole.Global.CurrentScreen = MapScreen;
+        }
+
+        public static void Start()
+        {
+            Main();
         }
     }
 }

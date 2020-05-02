@@ -10,7 +10,7 @@ namespace Engine.Maps
     /// <summary>
     /// Convenience class for specifying details of a subsection of the map
     /// </summary>
-    class Area : SadConsole.Maps.Region
+    class Area
     {
         private Coord _southEastCorner;
         private Coord _northEastCorner;
@@ -28,7 +28,9 @@ namespace Engine.Maps
         private int _top;
 
         private SadConsole.Orientation _orientation;
-        public string Name { get; }
+        public string Name { get; set; }
+        public Line OuterPoints { get; set; } = new Line();
+        public Line InnerPoints { get; set; } = new Line();
         public Coord Origin { get; }
         public Line SouthBoundary { get => _southBoundary; }
         public Line NorthBoundary { get => _northBoundary; }
@@ -86,6 +88,45 @@ namespace Engine.Maps
                 if (other.InnerPoints.Contains(c))
                     yield return c;
             }
+        }
+        internal void Shift(Coord origin)
+        {
+            Line newOuter = new Line();
+            Line newInner = new Line();
+            Line newSouth = new Line();
+            Line newNorth = new Line();
+            Line newWest = new Line();
+            Line newEast = new Line();
+            foreach (Coord c in OuterPoints)
+            {
+                newOuter.Add(c + origin);
+            }
+
+            foreach (Coord c in InnerPoints)
+            {
+                newInner.Add(c + origin);
+            }
+
+            _southEastCorner += origin;
+            _northEastCorner += origin;
+            _northWestCorner += origin;
+            _southWestCorner += origin;
+
+            foreach(Coord c in _southBoundary) newSouth.Add(c + origin);
+            foreach(Coord c in _eastBoundary) newEast.Add(c + origin);
+            foreach(Coord c in _northBoundary) newNorth.Add(c + origin);
+            foreach(Coord c in _westBoundary) newWest.Add(c + origin);
+
+            _top =    _northEastCorner.Y > _northWestCorner.Y ? _northEastCorner.Y : _northWestCorner.Y;
+            _right =  _southEastCorner.X > _northEastCorner.X ? _southEastCorner.X : _northEastCorner.X;
+            _left =   _southWestCorner.X < _northWestCorner.X ? _southWestCorner.X : _northWestCorner.X;
+            _bottom = _southEastCorner.Y < _southWestCorner.Y ? _southWestCorner.Y : _southEastCorner.Y;
+        }
+
+        internal virtual Area Shift()
+        {
+            Shift(Origin);
+            return this;// new Area(Name, SouthEastCorner + Origin, NorthEastCorner + Origin, NorthWestCorner + Origin, SouthWestCorner + Origin);
         }
     }
 }

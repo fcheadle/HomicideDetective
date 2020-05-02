@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Engine.Launcher.Start();
+            Engine.Program.Start();
         }
     }
 }

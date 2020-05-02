@@ -6,12 +6,9 @@ using System.Linq;
 
 namespace Engine
 {
-    internal static class Calculate
+    public static class Calculate
     {
-        #region generation
-        /// <summary>
-        /// List of 2d functions. Use these for calculating wind effects
-        /// </summary>
+        #region map generation
         internal static List<Func<double, double>> Functions2d { get; } = new List<Func<double, double>>
         {
             x => { return Math.Sin(x) + (x/4); },
@@ -21,9 +18,6 @@ namespace Engine
 
         };
 
-        /// <summary>
-        /// List of 3d functions. Use this to calculate Z-Levels according to whatever formulae you like
-        /// </summary>
         internal static List<Func<int, int, double>> Functions3d = new List<Func<int, int, double>>
         {
             (x,y) => //pretty, simple, fast
@@ -107,44 +101,12 @@ namespace Engine
             //},
         };
 
-        internal static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
+        public static List<Func<int, int, TimeSpan, double>> Functions4d = new List<Func<int, int, TimeSpan, double>> //for future shenanigans
         {
-            List<Coord> inner = new List<Coord>();
-            outer = outer.OrderBy(x => x.X).ToList();
-            for (int i = outer.First().X; i < outer.Last().X; i++)
-            {
-                List<Coord> chunk = outer.Where(w=> w.X==i).OrderBy(o => o.Y).ToList();
-                for (int j = 0; j < chunk.Last().Y; j++)
-                {
-                    yield return new Coord(i, j);
-                }
-            }
-        }
-
-        internal static T EnumValueFromIndex<T>(int i) where T : Enum
-        {
-            Array values = Enum.GetValues(typeof(T));
-            T value = (T)values.GetValue(i);
-            return value;
-        }
-
-    internal static int EnumLength<T>()
-        {
-            return Enum.GetNames(typeof(T)).Length;
-        }
-
-        /// <summary>
-        /// List of 4d functions. Use these to animate trippy effects map-wide, such as when the player is hallucinating, during an earthquake or meteor strike, or if some magic effect is changing the landscape.
-        /// </summary>
-        internal static List<Func<int, int, int, double>> Functions4d = new List<Func<int, int, int, double>> //for future shenanigans
-        {
-
+            (x,y,t) => Math.Sin(x + t.TotalMilliseconds) + Math.Cos(y + t.TotalMilliseconds)
         };
 
-        /// <summary>
-        /// List of Polar Functions. Useful for wind generation, Tornado and Hurricane Effects, and Distribution of town buildings around traffic circles. Unfortunately, this is too slow to be truly usable.
-        /// </summary>
-        internal static List<Func<double, Point>> FunctionsPolar = new List<Func<double, Point>> 
+        public static List<Func<double, Point>> FunctionsPolar = new List<Func<double, Point>> 
         {
             (theta) => //the butterfly curve
             {
@@ -161,42 +123,55 @@ namespace Engine
             }
         };
 
-        /// <summary>
-        /// Returns a random 2d function hardcoded into Calculate.cs
-        /// </summary>
-        /// <returns>A line.</returns>
-        internal static Func<double, double> RandomFunction2d()
+        public static Func<double, double> RandomFunction2d()
         {
             int index = Settings.Random.Next(0, Functions2d.Count);
             return Functions2d[index];
         }
 
-        /// <summary>
-        /// Returns a random 3d function hardcoded into Calculate.cs
-        /// </summary>
-        /// <returns>A heightmap.</returns>
-        internal static Func<int, int, double> RandomFunction3d()
+        public static Func<int, int, double> RandomFunction3d()
         {
             int index = Settings.Random.Next(0, Functions3d.Count);
             return Functions3d[index];
         }
 
-        /// <summary>
-        /// returns a random enum value from the type provided
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        internal static T RandomEnumValue<T>()
+        public static T RandomEnumValue<T>()
         {
             var v = Enum.GetValues(typeof(T));
             return (T)v.GetValue(new Random().Next(v.Length));
         }
 
+
+        public static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
+        {
+            List<Coord> inner = new List<Coord>();
+            outer = outer.OrderBy(x => x.X).ToList();
+            for (int i = outer.First().X; i < outer.Last().X; i++)
+            {
+                List<Coord> chunk = outer.Where(w => w.X == i).OrderBy(o => o.Y).ToList();
+                for (int j = 0; j < chunk.Last().Y; j++)
+                {
+                    yield return new Coord(i, j);
+                }
+            }
+        }
+
+        public static T EnumValueFromIndex<T>(int i) where T : Enum
+        {
+            Array values = Enum.GetValues(typeof(T));
+            T value = (T)values.GetValue(i);
+            return value;
+        }
+
+        public static int EnumLength<T>()
+        {
+            return Enum.GetNames(typeof(T)).Length;
+        }
         /// <summary>
         /// Returns a random 4d function hardcoded into Calculate.cs
         /// </summary>
         /// <returns>A heightmap which changes over time.</returns>
-        internal static Func<int, int, int, double> RandomFunction4d()
+        public static Func<int, int, TimeSpan, double> RandomFunction4d()
         {
             int index = Settings.Random.Next(0, Functions4d.Count);
             return Functions4d[index];
@@ -206,20 +181,13 @@ namespace Engine
         /// Picks a random terrain generation formula from the list of 3d functions in Calculate.cs
         /// </summary>
         /// <returns>The formula for terrain generation.</returns>
-        internal static Func<int, int, double> MasterFormula()
+        public static Func<int, int, double> MasterFormula()
         {
             Func<int, int, double> f = RandomFunction3d();
 
             return f;
         }
-
-        /// <summary>
-        /// Converts a Polar Coordinate to a Cartesian Coordinate
-        /// </summary>
-        /// <param name="radius"></param>
-        /// <param name="theta"></param>
-        /// <returns></returns>
-        internal static Coord PolarToCartesian(double radius, double theta)
+        public static Coord PolarToCartesian(double radius, double theta)
         {
             double x = radius * Math.Cos(theta);
             double y = radius * Math.Sin(theta);
@@ -231,50 +199,30 @@ namespace Engine
         /// </summary>
         /// <param name="pc"></param>
         /// <returns></returns>
-        internal static Coord PolarToCartesian(PolarCoord pc)
+        public static Coord PolarToCartesian(PolarCoord pc)
         {
-            return PolarToCartesian(pc.radius, pc.theta);
+            //double radius = (c.X ^ 2) + (c.Y ^ 2);
+            //radius = Math.Sqrt(radius);
+            //double theta = c.X == 0 ? 0 : 1 / Math.Tan(c.Y / c.X);
+            return PolarToCartesian(pc.Radius, pc.Theta);
         }
 
-        /// <summary>
-        /// Converts a Cartesian Coordinate to a Polar Coordinate
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        internal static PolarCoord CartesianToPolar(Coord c)
+        public static PolarCoord CartesianToPolar(Coord c)
         {
-            double radius = (c.X ^ 2) + (c.Y ^ 2);
+            double radius = (c.X * c.X) + (c.Y * c.Y);
             radius = Math.Sqrt(radius);
             double theta = c.X == 0 ? 0 : 1 / Math.Tan(c.Y / c.X);
             return new PolarCoord(radius, theta);
         }
-
-        /// <summary>
-        /// Converts a given Radians to a degree value
-        /// </summary>
-        /// <param name="degrees"></param>
-        /// <returns></returns>
-        internal static double RadiansToDegrees(double theta)
+        public static double RadiansToDegrees(double theta)
         {
             return theta * 180.0f / Math.PI ;
         }
-
-        /// <summary>
-        /// Converts a given Degree to a radian value
-        /// </summary>
-        /// <param name="degrees"></param>
-        /// <returns></returns>
-        internal static double DegreesToRadians(int degrees)
+        public static double DegreesToRadians(int degrees)
         {
             return degrees * Math.PI / 180.0f;
         }
-
-        /// <summary>
-        /// Calculates the radius for a given theta according to the butterfly curve. Too beautiful for its own good, this operates too slowly to use.
-        /// </summary>
-        /// <param name="theta"></param>
-        /// <returns></returns>
-        internal static Point ButterflyCurve(double theta)
+        public static Point ButterflyCurve(double theta)
         {
             double radius = Math.Exp(Math.Sin(theta));
             radius -= (2 * Math.Cos(theta * 4));
@@ -283,12 +231,7 @@ namespace Engine
             radius += Math.Pow(powerBase, 5);
             return PolarToCartesian(radius, theta);
         }
-
-        /// <summary>
-        /// Calculates all the points along the butterfly curve.  Too beautiful for its own good, this operates too slowly to use.
-        /// </summary>
-        /// <returns></returns>
-        internal static List<Point> ButterflyCurve() 
+        public static List<Point> ButterflyCurve() 
         {
             List<Point> p = new List<Point>();
             Point lastP = new Point();
@@ -307,28 +250,12 @@ namespace Engine
         #endregion
 
         #region chances
-        /// <summary>
-        /// Returns or not that a given percent chance of something happening, happens 
-        /// </summary>
-        /// <param name="percentChance">Odds of this particular thing</param>
-        /// <returns></returns>
-        internal static bool Percent(int percentChance)=> percentChance >= Settings.Random.Next(1, 101);
-
-        /// <summary>
-        /// Gets a random number between 1 and 100
-        /// </summary>
-        /// <returns></returns>
-        internal static int Percent() => Settings.Random.Next(1, 101);
+        public static bool Percent(int percentChance)=> percentChance >= Percent();
+        public static int Percent() => Settings.Random.Next(1, 101);
         #endregion
 
         #region MapUtils
-        /// <summary>
-        /// Calculates the points along a line
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="stop"></param>
-        /// <returns></returns>
-        internal static IEnumerable<Coord> PointsAlongStraightLine(Coord start, Coord stop)
+        public static IEnumerable<Coord> PointsAlongStraightLine(Coord start, Coord stop)
         {
             int xOrigin = start.X;
             int yOrigin = start.Y;
@@ -370,15 +297,7 @@ namespace Engine
                 }
             }
         }
-
-        /// <summary>
-        /// Gets the points along the ling with a specified width, aka the thickness of the line.
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="stop"></param>
-        /// <param name="width"></param>
-        /// <returns></returns>
-        internal static List<Coord> PointsAlongStraightLine(Coord start, Coord stop, int width)
+        public static List<Coord> PointsAlongStraightLine(Coord start, Coord stop, int width)
         {
             if (width == 0)
                 throw new ArgumentOutOfRangeException("width must be equal to or greater than 1.");
@@ -407,13 +326,7 @@ namespace Engine
 
             return answer.Distinct().ToList();
         }
-
-        /// <summary>
-        /// Calculates all points which are considered "bordering" the given rectangle
-        /// </summary>
-        /// <param name="room"></param>
-        /// <returns></returns>
-        internal static List<Coord> BorderLocations(GoRogue.Rectangle room)
+        public static List<Coord> BorderLocations(GoRogue.Rectangle room)
         {
             int xMin = room.MinExtentX;
             int xMax = room.MaxExtentX;
@@ -434,17 +347,37 @@ namespace Engine
         #endregion
     }
 
-    //too slow
-    internal class PolarCoord
+    public class PolarCoord
     {   
-        internal double radius;
-        internal double theta;
-        
-        internal PolarCoord(double radius, double theta)
+        public readonly double Radius; //in meters
+        public readonly double Theta; //in degrees clockwise
+
+        public PolarCoord(double radius, double theta)
         {
-            this.radius = radius;
-            this.theta = theta;
+            Radius = radius;
+            Theta = theta;
         }
         
+        public static bool operator ==(PolarCoord left, PolarCoord right)
+        {
+            if (left.Theta > right.Theta - 0.05 && left.Theta < right.Theta - 0.05)
+                if (left.Radius > right.Radius - 0.05 && left.Radius < right.Radius + 0.05)
+                    return true;
+
+            return false;
+        }
+
+        public static bool operator !=(PolarCoord left, PolarCoord right)
+        {
+            return !(left == right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType() != typeof(PolarCoord))
+                return false;
+            else
+                return this == (PolarCoord)obj;
+        }
     }
 }

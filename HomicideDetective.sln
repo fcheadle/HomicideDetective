@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomicideDetective", "Homici
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine", "Engine\Engine.csproj", "{9C4048EA-C31B-4EC6-BDA9-3B4B99EE7BDE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{E8A816A4-8C4C-4506-8FAA-4862FBA0B41E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9C4048EA-C31B-4EC6-BDA9-3B4B99EE7BDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C4048EA-C31B-4EC6-BDA9-3B4B99EE7BDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C4048EA-C31B-4EC6-BDA9-3B4B99EE7BDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8A816A4-8C4C-4506-8FAA-4862FBA0B41E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8A816A4-8C4C-4506-8FAA-4862FBA0B41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8A816A4-8C4C-4506-8FAA-4862FBA0B41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8A816A4-8C4C-4506-8FAA-4862FBA0B41E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

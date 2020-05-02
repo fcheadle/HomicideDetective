@@ -8,14 +8,12 @@ using SadConsole;
 
 namespace Engine.Creatures
 {
-    // Custom class for the player is used in this example just so we can handle input.  This could be done via a component, or in a main screen, but for simplicity we do it here.
-    internal class Player : Creature
+    internal class Player : BasicEntity
     {
-        internal Player(Coord position)
-            : base(position, Color.White, 1)
-        {
-            FOVRadius = 25;
-        }
+        public int FOVRadius;
+        internal Player(Coord position, int fovradius = 15)
+            : base( Color.White, Color.Black, 1, position, 5, true, true)
+        { FOVRadius = fovradius; }
 
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
@@ -26,7 +24,6 @@ namespace Engine.Creatures
                 Settings.TogglePause();
             }
 
-            // Simplified way to check if any key we care about is pressed and set movement direction.
             foreach (Keys key in Settings.MovementKeyBindings.Keys)
             {
                 if (info.IsKeyPressed(key))

@@ -23,8 +23,8 @@ namespace Engine.UI
 
         public override void Update(TimeSpan timeElapsed)
         {
-            fore = Colors.FadeOut(fore);
-            back = Colors.FadeOut(back);
+            fore = ColorExtensions.FadeOut(fore);
+            back = ColorExtensions.FadeOut(back);
             _message.SetForeground(fore);
             _message.SetBackground(back);
             Clear();
