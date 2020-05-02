@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Engine.Items
+namespace Engine.Entities.Factories
 {
     internal class Item : BasicEntity
     {

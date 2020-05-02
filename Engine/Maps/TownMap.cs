@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Engine;
 using System.Linq;
-using Engine.Creatures;
 using GoRogue;
-using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using SadConsole.Maps;
 
 namespace Engine.Maps
 {
@@ -14,31 +11,34 @@ namespace Engine.Maps
     {
         private int _width;
         private int _height;
-        public List<Region> Regions 
+        public List<Area> Regions 
         { 
-            get => new List<Region>()
-                .Concat(Roads).ToList()
-                .Concat(Blocks).ToList()
-                .Concat(Houses).ToList()
-                .Concat(Intersections.Values).ToList()
+            get => new List<Area>()
+                .Concat(Roads)
+                .Concat(Blocks)
+                .Concat(Houses)
+                .Concat(Intersections.Values)
                 .Concat(Rooms).ToList()
-                ; }
+                .ToList()
+                ; 
+        }
         internal List<Road> Roads { get => HorizontalRoads.Values.ToList().Concat(VerticalRoads.Values).ToList(); }
         internal Dictionary<KeyValuePair<RoadNumbers, RoadNames>, RoadIntersection> Intersections { get; private set; } = new Dictionary<KeyValuePair<RoadNumbers, RoadNames>, RoadIntersection>();
         internal Dictionary<RoadNumbers, Road> HorizontalRoads { get; private set; } = new Dictionary<RoadNumbers, Road>();
         internal Dictionary<RoadNames, Road> VerticalRoads { get; private set; } = new Dictionary<RoadNames, Road>();
         internal List<Block> Blocks { get; private set; } = new List<Block>();
-        internal List<Structure> Houses { get; private set; } = new List<Structure>();
+        internal List<House> Houses { get; private set; } = new List<House>();
         internal List<Room> Rooms { get; private set; } = new List<Room>();
-
+        public FOVVisibilityHandler FovVisibilityHandler { get; }
         internal TownMap(int width, int height) : base(width, height, Calculate.EnumLength<MapLayers>(), Distance.MANHATTAN)
         {
             _width = width;
             _height = height;
+            FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
             MakeOutdoors();
             MakeRoadsAndBlocks();
             MakeHouses();
-            //MakePeople();
+            MakePeople();
         }
         private void MakeRoadsAndBlocks()
         {
@@ -85,7 +85,7 @@ namespace Engine.Maps
             {
                 foreach (Coord c in r.InnerPoints)
                     if (this.Contains(c))
-                        SetTerrain(TerrainFactory.Pavement(c));
+                        SetTerrain(Engine.Entities.Factories.Tile.Pavement(c));
             }
 
             foreach (Block block in Blocks)
@@ -107,7 +107,7 @@ namespace Engine.Maps
                 //        SetTerrain(TerrainFactory.TestSquare4(c));
                 foreach (Coord c in block.GetFenceLocations())
                     if (this.Contains(c))
-                        SetTerrain(TerrainFactory.Fence(c));
+                        SetTerrain(Engine.Entities.Factories.Tile.Fence(c));
             }
             //foreach (RoadIntersection ri in Intersections.Values)
             //    foreach (Coord c in ri.OuterPoints)
@@ -116,36 +116,24 @@ namespace Engine.Maps
         }
         private void MakeHouses()
         {
-            int houseDistance = 25;
-            Structure house;
+            int houseDistance = 20;
+            House house;
             foreach (Block block in Blocks)
             {
-                    for (int i = 0; i < block.WestBoundary.Count - houseDistance; i += houseDistance)
-                    {
-                        string address = block.Name[0] + "0" + ((i / houseDistance) * 2).ToString() + block.Name.Substring(9);
-                        house = new Structure(houseDistance, houseDistance, block.WestBoundary[i] + new Coord(12, 8), StructureTypes.CentralPassageHouse, address);
-                        foreach(Room room in house.Rooms.Values)
-                        {
-                            Coord start = new Coord(house.Origin.X + room.Left, house.Origin.Y + room.Top);
-                            Coord stop = new Coord(house.Origin.X + room.Right, house.Origin.Y + room.Bottom);
-                            //Rooms.Add(new Room(room.Name, new GoRogue.Rectangle(start, stop), room.Type));
-                        }
-
-
-                    int chance = Calculate.Percent();
-                    if(chance < 50)
-                    {
-                        house.Map = house.Map.SwapXY();
-                        house.Map = house.Map.ReverseHorizontal();
-                    }
-                    else
-                    {
-                        house.Map = house.Map.Rotate(90);
-                    }
-
-
+                int i = 1;
+                foreach (Coord houseOrigin in block.Addresses)
+                {
+                    string address = block.Name[0] + "0" + i.ToString() + block.Name.Substring(9);
+                    house = new House(houseOrigin, Calculate.RandomEnumValue<HouseTypes>(), address/*, Direction.Types.RIGHT*/);
+                    
                     Houses.Add(house);
-
+                    i++;
+                    
+                    foreach(Room r in house.Rooms.Values)
+                    {
+                        Rooms.Add((Room)r.Shift());
+                    }
+                    
                     for (int j = 0; j < houseDistance; j++)
                     {
                         for (int k = 0; k < houseDistance; k++)
@@ -153,10 +141,14 @@ namespace Engine.Maps
                             Coord c = new Coord(j, k);
                             if (house.Map.GetTerrain(c) != null && this.Contains(house.Origin + c))
                             {
-                                SetTerrain(TerrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
+                                SetTerrain(Engine.Entities.Factories.Tile.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
                             }
                         }
                     }
+
+                    foreach (Coord c in house.OuterPoints)
+                        if (this.Contains(c))
+                            SetTerrain(Engine.Entities.Factories.Tile.Test(8, c));
                 }
             }
         }
@@ -164,7 +156,7 @@ namespace Engine.Maps
         {
             for (int i = 0; i < 500; i++)
             {
-                AddEntity(Creature.Person(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
+                AddEntity(Engine.Entities.Factories.Creature.Person(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
             }
             //for (int i = 0; i < 300; i++)
             //{
@@ -189,7 +181,7 @@ namespace Engine.Maps
                 for (int j = 0; j < Height; j++)
                 {
                     Coord pos = new Coord(i, j);
-                    SetTerrain(TerrainFactory.Grass(pos, f(i, j))) ;
+                    SetTerrain(Engine.Entities.Factories.Tile.Grass(pos, f(i, j))) ;
                 }
             }
         }

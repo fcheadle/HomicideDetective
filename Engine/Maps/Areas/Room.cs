@@ -5,6 +5,8 @@ namespace Engine.Maps
     internal class Room : Area
     {
         internal readonly RoomTypes Type;
+        public Rectangle OuterRect { get; }
+        public Rectangle InnerRect { get; private set; }
 
         internal Room(string name, Rectangle area, RoomTypes type) : base(
             name,
@@ -17,6 +19,12 @@ namespace Engine.Maps
             OuterRect = area;
             InnerRect = area;
             Type = type;
+        }
+
+        internal new Room Shift()
+        {
+            Shift(Origin);
+            return this;
         }
     }
 }

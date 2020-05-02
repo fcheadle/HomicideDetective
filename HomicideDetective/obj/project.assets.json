@@ -15,13 +15,16 @@
           "lib/netstandard2.0/GoRogue.dll": {}
         }
       },
-      "MonoGame.Framework.DesktopGL.Core/3.8.0.1": {
+      "MonoGame.Framework.DesktopGL.Core/3.8.0.13": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/MonoGame.Framework.dll": {}
         },
         "runtime": {
           "lib/netstandard2.0/MonoGame.Framework.dll": {}
+        },
+        "build": {
+          "build/_._": {}
         },
         "runtimeTargets": {
           "runtimes/linux-x64/native/libSDL2-2.0.so.0": {
@@ -76,7 +79,7 @@
           "lib/netstandard1.0/Priority Queue.dll": {}
         }
       },
-      "SadConsole/8.99.0": {
+      "SadConsole/8.99.1": {
         "type": "package",
         "dependencies": {
           "newtonsoft.json": "11.0.2"
@@ -115,8 +118,8 @@
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
           "GoRogue": "2.6.0",
-          "MonoGame.Framework.DesktopGL.Core": "3.8.0.1",
-          "SadConsole": "8.99.0",
+          "MonoGame.Framework.DesktopGL.Core": "3.8.0.13",
+          "SadConsole": "8.99.1",
           "SadConsole.GoRogueHelpers": "1.0.0"
         },
         "compile": {
@@ -143,19 +146,19 @@
         "readme.txt"
       ]
     },
-    "MonoGame.Framework.DesktopGL.Core/3.8.0.1": {
-      "sha512": "5wTVgO9R+0KQ+QlvPMGBuUjnZbAqFd0guHf++1C2fLpqqdLkhI4SBGAgOB+nbgDaENMGkE5PJBj3IH0Xvc6TZg==",
+    "MonoGame.Framework.DesktopGL.Core/3.8.0.13": {
+      "sha512": "cMsc/UZFS8Uk/a1RDc8OZ9Z2EXrEglWGcZGSvPJiWEcUC5Oo9K9uoZXaprvesM3YbyT1ItzqS4jXjTDR4qT4WA==",
       "type": "package",
-      "path": "monogame.framework.desktopgl.core/3.8.0.1",
+      "path": "monogame.framework.desktopgl.core/3.8.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "build/MonoGame.Framework.DesktopGL.targets",
+        "build/MonoGame.Framework.DesktopGL.Core.targets",
         "lib/net452/MonoGame.Framework.dll",
         "lib/net452/MonoGame.Framework.xml",
         "lib/netstandard2.0/MonoGame.Framework.dll",
         "lib/netstandard2.0/MonoGame.Framework.xml",
-        "monogame.framework.desktopgl.core.3.8.0.1.nupkg.sha512",
+        "monogame.framework.desktopgl.core.3.8.0.13.nupkg.sha512",
         "monogame.framework.desktopgl.core.nuspec",
         "runtimes/linux-x64/native/libSDL2-2.0.so.0",
         "runtimes/linux-x64/native/libopenal.so.1",
@@ -226,17 +229,18 @@
         "optimizedpriorityqueue.nuspec"
       ]
     },
-    "SadConsole/8.99.0": {
-      "sha512": "WYiEWJfpdNcjLmbxutjyXTkVUIqfu9TqPFq+jmUvOXV/tmnh+DHjdRrtpGiJB94oDRxVwpncISoKiRTiuK1agA==",
+    "SadConsole/8.99.1": {
+      "sha512": "FdTZeDFdfSDNz0MXLhxOLE7dQekzPM8XixvJFCfscQZmsFm8f/yp+5yWiM8O12Vz4iMghc/TIaFYAZCEzJUjVA==",
       "type": "package",
-      "path": "sadconsole/8.99.0",
+      "path": "sadconsole/8.99.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "icon.png",
         "lib/netstandard2.0/SadConsole.dll",
         "lib/netstandard2.0/SadConsole.xml",
         "readme.txt",
-        "sadconsole.8.99.0.nupkg.sha512",
+        "sadconsole.8.99.1.nupkg.sha512",
         "sadconsole.nuspec"
       ]
     },

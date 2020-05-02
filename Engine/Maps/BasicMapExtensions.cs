@@ -1,4 +1,5 @@
-﻿using Engine.Creatures;
+﻿using Engine.Components;
+using Engine.Entities;
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
@@ -14,8 +15,7 @@ namespace Engine.Maps
         {
             int xDiff = stop.X - start.X;
             int yDiff = stop.Y - start.Y;
-            int size = xDiff > yDiff ? xDiff : yDiff;
-            BasicMap map = new BasicMap(size + 2, size + 2, Enum.GetNames(typeof(MapLayers)).Length, Distance.MANHATTAN);
+            BasicMap map = new BasicMap(xDiff, yDiff, Enum.GetNames(typeof(MapLayers)).Length, Distance.MANHATTAN);
             for (int i = start.X; i < stop.X + 1; i++)
             {
                 for (int j = start.Y; j < stop.Y + 1; j++)
@@ -24,7 +24,7 @@ namespace Engine.Maps
                     if (t != null)
                     {
                         Coord c = new Coord(i - start.X, j - start.Y);
-                        t = TerrainFactory.Copy(t, c);
+                        t = Entities.Factories.Tile.Copy(t, c);
                         if (map.Contains(c))
                             map.SetTerrain(t);
                     }
@@ -40,7 +40,7 @@ namespace Engine.Maps
         {
             BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.MANHATTAN);
 
-            for (int i = m.Width - 1; i > 0; i--)
+            for (int i = 0; i < m.Width; i++)
             {
                 for (int j = 0; j < m.Height; j++)
                 {
@@ -49,26 +49,27 @@ namespace Engine.Maps
                     BasicTerrain t = m.GetTerrain<BasicTerrain>(source);
                     if (t != null)
                     {
-                        t = Maps.TerrainFactory.Copy(t, target);
+                        t = Entities.Factories.Tile.Copy(t, target);
                         map.SetTerrain(t);
                     }
                 }
             }
-            return map;        }
+            return map;        
+        }
         public static BasicMap ReverseVertical(this BasicMap m)
         {
             BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.MANHATTAN);
             for (int i = 0; i < m.Width; i++)
             {
-                for (int j = m.Height - 1; j > 0; j--)
+                for (int j = 0; j < m.Height; j++)
                 {
                     Coord source = new Coord(i, j);
-                    Coord target = new Coord(map.Width - i - 1, j);
+                    Coord target = new Coord(i, m.Height - 1 - j);
                     BasicTerrain t = m.GetTerrain<BasicTerrain>(source);
                     if (t != null)
                     {
-                        t = TerrainFactory.Copy(t, target);
-                        m.SetTerrain(t);
+                        t = Entities.Factories.Tile.Copy(t, target);
+                        map.SetTerrain(t);
                     }
                 }
             }
@@ -77,7 +78,6 @@ namespace Engine.Maps
         }
         public static BasicMap SwapXY(this BasicMap m)
         {
-
             BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.MANHATTAN);
 
             for (int i = 0; i < m.Width; i++)
@@ -89,15 +89,14 @@ namespace Engine.Maps
                     BasicTerrain t = m.GetTerrain<BasicTerrain>(original);
                     if (t != null)
                     {
-                        t = TerrainFactory.Copy(t, target);
-                        m.SetTerrain(t);
+                        t = Entities.Factories.Tile.Copy(t, target);
+                        map.SetTerrain(t);
                     }
                 }
             }
 
             return map;
         }
-
         public static BasicMap Rotate(this BasicMap m, int degrees)
         {
             if (degrees % 90 != 0)
@@ -106,72 +105,60 @@ namespace Engine.Maps
             if (m.Width != m.Height)
                 throw new Exception("Map must be square (Width == Height) to rotate");
 
-            BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.MANHATTAN);
-            int center = m.Width / 2;
-            center--;
-            switch (degrees)
-            {
-                case 90:
-                    for (int homeX = 0; homeX < m.Width; homeX++)
-                    {
-                        for (int homeY = 0; homeY < m.Height; homeY++)
-                        {
-                            int targetX = m.Height - 1 - homeY;
-                            int targetY = homeX;
-                            Coord original = new Coord(homeX, homeY);
-                            Coord target = new Coord(targetX, targetY);
-                            BasicTerrain t = m.GetTerrain<BasicTerrain>(original);
-                            if (t != null)
-                            {
-                                t = TerrainFactory.Copy(t, target);
-                                map.SetTerrain(t);
-                            }
-                        }
-                    }
-                    break;
-                case 180:
-                    for (int homeX = 0; homeX < m.Width; homeX++)
-                    {
-                        for (int homeY = 0; homeY < m.Height; homeY++)
-                        {
-                            int targetX = m.Height - 1 - homeY;
-                            int targetY = m.Width - 1 - homeX;
-                            Coord original = new Coord(homeX, homeY);
-                            Coord target = new Coord(targetX, targetY);
-                            BasicTerrain t = m.GetTerrain<BasicTerrain>(original);
-                            if (t != null)
-                            {
-                                t = TerrainFactory.Copy(t, target);
-                                map.SetTerrain(t);
-                            }
-                        }
-                    }
-                    break;
-                case 270:
-                    for (int homeX = 0; homeX < m.Width; homeX++)
-                    {
-                        for (int homeY = 0; homeY < m.Height; homeY++)
-                        {
-                            int targetX = homeY;
-                            int targetY = m.Width - 1 - homeX;
-                            Coord original = new Coord(homeX, homeY);
-                            Coord target = new Coord(targetX, targetY);
-                            BasicTerrain t = m.GetTerrain<BasicTerrain>(original);
-                            if (t != null)
-                            {
-                                t = TerrainFactory.Copy(t, target);
-                                map.SetTerrain(t);
-                            }
-                        }
-                    }
-                    break;
-            }
+            BasicMap map = m.SwapXY();
+            map = map.ReverseVertical();
+            if (degrees > 0)
+                map.Rotate(degrees - 90);
+
+
+
+            //int size = m.Width;
+            //BasicMap map = new BasicMap(size, size, 1, Distance.MANHATTAN);
+            //int half = size / 2;
+            //for (int homeX = -half; homeX < half; homeX++)
+            //{
+            //    for (int homeY = -half; homeY < half; homeY++)
+            //    {
+            //        //where x was 0, is now y at 0 (left side to top side)
+            //        //where was x at max is now y at max (right side to bottom side) 
+
+            //        Coord original = new Coord(homeX + half, homeY + half);
+            //        Coord target = new Coord(size - 1 - (homeY + half), homeX + half);
+            //        BasicTerrain t = m.GetTerrain<BasicTerrain>(original);
+            //        if (t != null)
+            //        {
+            //            t = TerrainFactory.Copy(t, target);
+            //            map.SetTerrain(t);
+            //        }
+            //    }
+            //}
 
             return map;
         }
         public static void Add(this BasicMap m, BasicMap map) => Add(m, map, new Coord(0, 0));
         public static void Add(this BasicMap m, BasicMap map, Coord origin)
         {
+            if ((m.Width < map.Width + origin.X && m.Height < map.Height + origin.X))
+                throw new ArgumentOutOfRangeException("Parent Map must be larger than or equal to the map we're adding.");
+            for (int i = 0; i < map.Width; i++)
+            {
+                for (int j = 0; j < map.Height; j++)
+                {
+                    Coord target = new Coord(i + origin.X, j + origin.Y);
+                    BasicTerrain t1 = map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t2 = m.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    if (t1 != null && t2 == null && m.Contains(target))
+                    {
+                        t1 = Entities.Factories.Tile.Copy(t1, target);
+                        m.SetTerrain(t1);
+                    }
+                }
+            }
+        }
+        public static void ReplaceTiles(this BasicMap m, BasicMap map, Coord origin)
+        {
+            if ((m.Width > map.Width + origin.X && m.Height > map.Height + origin.X))
+                throw new ArgumentOutOfRangeException("Map raplacing must be larger than or equal to the map we're replacing tiles with");
             for (int i = 0; i < map.Width; i++)
             {
                 for (int j = 0; j < map.Height; j++)
@@ -180,37 +167,20 @@ namespace Engine.Maps
                     BasicTerrain t = map.GetTerrain<BasicTerrain>(new Coord(i, j));
                     if (t != null && m.Contains(target))
                     {
-                        t = TerrainFactory.Copy(t, target);
+                        t = Entities.Factories.Tile.Copy(t, target);
                         m.SetTerrain(t);
                     }
                 }
             }
         }
-        public static void ReplaceTiles(this BasicMap m, BasicMap map, Coord origin)
-        {
-            if ((m.Width >= map.Width + origin.X && m.Height >= map.Height + origin.X))
-                throw new ArgumentOutOfRangeException("Map raplacing must be larger than the map we're replacing tiles with");
-
-            for (int i = 0; i < map.Width; i++)
-            {
-                for (int j = 0; j < map.Height; j++)
-                {
-                    m.SetTerrain(TerrainFactory.Grass(new Coord(i + origin.X, j + origin.Y)));
-                    Coord c = new Coord(i, j);
-                    BasicTerrain t = m.GetTerrain<BasicTerrain>(c);
-                    if (t != null)
-                        m.SetTerrain(TerrainFactory.Copy(t, c));
-                }
-            }
-        }
-        public static IEnumerable<Creature> GetCreatures(this BasicMap m)
+        public static IEnumerable<BasicEntity> GetCreatures(this BasicMap m)
         {
             foreach (ISpatialTuple<IGameObject> e in m.Entities)
             {
                 IGameObject entity = e.Item;
-                if (entity.GetType() == typeof(Creature) || entity.GetType().IsAssignableFrom(typeof(IActor)))
+                if (entity.GetType() == typeof(BasicEntity) && entity.GetComponent<ActorComponent>() != null)
                 {
-                    yield return (Creature)entity;
+                    yield return (BasicEntity)entity;
                 }
             }
         }
@@ -228,7 +198,7 @@ namespace Engine.Maps
                         {
                             if (!t.IsWalkable)
                                 return false;
-                            else if (TerrainFactory.Pavement(c) == TerrainFactory.Copy(t, c)) //todo: fix this shit
+                            else if (Entities.Factories.Tile.Pavement(c) == Entities.Factories.Tile.Copy(t, c)) //todo: fix this shit
                                 return false;
                         }
                     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SadConsole;
+using System.Collections.Generic;
 
 namespace Engine.Items
 {
@@ -10,24 +11,24 @@ namespace Engine.Items
             Success
         }
 
-        private readonly List<Item> carriedItems = new List<Item>();
-        private Item head;
-        private Item leftHand;
-        private Item rightHand;
-        private Item feet;
-        private Item body;
+        private readonly List<BasicEntity> carriedItems = new List<BasicEntity>();
+        private BasicEntity head;
+        private BasicEntity leftHand;
+        private BasicEntity rightHand;
+        private BasicEntity feet;
+        private BasicEntity body;
 
         internal const int MaxCarriedItems = 11;
 
-        internal IEnumerable<Item> CarriedItems => carriedItems;
+        internal IEnumerable<BasicEntity> CarriedItems => carriedItems;
 
-        internal Item Head => head;
-        internal Item LeftHand => leftHand;
-        internal Item RightHand => rightHand;
-        internal Item Feet => feet;
-        internal Item Body => body;
+        internal BasicEntity Head => head;
+        internal BasicEntity LeftHand => leftHand;
+        internal BasicEntity RightHand => rightHand;
+        internal BasicEntity Feet => feet;
+        internal BasicEntity Body => body;
 
-        internal ActionResult AddItem(Item item, bool carried)
+        internal ActionResult AddItem(BasicEntity item, bool carried)
         {
             //if (carried || item.Spot == InventorySpot.None)
             //{
@@ -63,7 +64,7 @@ namespace Engine.Items
             return ActionResult.Success;
         }
 
-        internal ActionResult RemoveItem(Item item)
+        internal ActionResult RemoveItem(BasicEntity item)
         {
             if (carriedItems.Contains(item))
             {
@@ -137,7 +138,7 @@ namespace Engine.Items
         }
 
         internal bool IsInventoryFull() => carriedItems.Count == MaxCarriedItems;
-        internal Item GetItem(InventorySpot spot)
+        internal BasicEntity GetItem(InventorySpot spot)
         {
             switch (spot)
             {
@@ -156,9 +157,9 @@ namespace Engine.Items
             }
         }
 
-        internal IEnumerable<Item> GetEquippedItems()
+        internal IEnumerable<BasicEntity> GetEquippedItems()
         {
-            List<Item> items = new List<Item>(5);
+            List<BasicEntity> items = new List<BasicEntity>(5);
 
             if (head != null)
             {
