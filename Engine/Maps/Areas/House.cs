@@ -7,32 +7,49 @@ using Rectangle = GoRogue.Rectangle;
 
 namespace Engine.Maps
 {
+    public enum HouseTypes
+    {
+        //Testing,
+        CentralPassageHouse,
+        //CourtyardHouse,
+        //Konak,
+        //LogHouse,
+        //HouseBarn,
+        //SplitLevel,
+        //UpperLusatian,
+        //Cottage,
+        //TrailerHome,
+        //DuplixSemiDetached,
+        //TriplexTripleDecker,
+        //Quadplex,
+        //Townhome,
+    }
     internal class House : Area
     {
         internal BasicMap Map;
         new internal Coord Origin;
-        internal Dictionary<RoomTypes, Room> Rooms = new Dictionary<RoomTypes, Room>();
+        internal Dictionary<RoomType, Room> Rooms = new Dictionary<RoomType, Room>();
         private const int _minRoomSize = 4;
         private const int _maxRoomSize = 9;
         private readonly HouseTypes StructureType;
         private readonly Direction.Types _facing;
-        internal Room Parlor { get => Rooms[RoomTypes.Parlor]; }
-        internal Room Hallway { get => Rooms[RoomTypes.Hall]; }
-        internal Room Kitchen { get => Rooms[RoomTypes.Kitchen]; }
-        internal Room GuestBathroom { get => Rooms[RoomTypes.GuestBathroom]; }
-        internal Room MasterBedroom { get => Rooms[RoomTypes.MasterBedroom]; }
-        internal Room MasterBathroom { get => Rooms[RoomTypes.MasterBathroom]; }
-        internal Room MasterBedCloset { get => Rooms[RoomTypes.MasterBedCloset]; }
-        internal Room BoysBedroom { get => Rooms[RoomTypes.BoysBedroom]; }
-        internal Room BoysCloset { get => Rooms[RoomTypes.BoysCloset]; }
-        internal Room GirlsBedroom { get => Rooms[RoomTypes.GirlsBedroom]; }
-        internal Room GirlsCloset { get => Rooms[RoomTypes.GirlsCloset]; }
-        internal Room DiningRoom { get => Rooms[RoomTypes.DiningRoom]; }
-        internal Room HallCloset { get => Rooms[RoomTypes.HallCloset]; }
-        internal Room ParlorCloset { get => Rooms[RoomTypes.ParlorCloset]; }
-        internal List<Room> Bedrooms { get => new List<Room>() { Rooms[RoomTypes.MasterBedroom], Rooms[RoomTypes.BoysBedroom], Rooms[RoomTypes.GirlsBedroom], Rooms[RoomTypes.GuestBedroom] }; }
-        internal List<Room> Closets { get => new List<Room>() { Rooms[RoomTypes.MasterBedCloset], Rooms[RoomTypes.BoysCloset], Rooms[RoomTypes.GirlsCloset], Rooms[RoomTypes.GuestCloset] }; }
-        internal List<Room> Bathrooms { get => new List<Room>() { Rooms[RoomTypes.MasterBathroom], Rooms[RoomTypes.GuestBathroom] }; }
+        internal Room Parlor { get => Rooms[RoomType.Parlor]; }
+        internal Room Hallway { get => Rooms[RoomType.Hall]; }
+        internal Room Kitchen { get => Rooms[RoomType.Kitchen]; }
+        internal Room GuestBathroom { get => Rooms[RoomType.GuestBathroom]; }
+        internal Room MasterBedroom { get => Rooms[RoomType.MasterBedroom]; }
+        internal Room MasterBathroom { get => Rooms[RoomType.MasterBathroom]; }
+        internal Room MasterBedCloset { get => Rooms[RoomType.MasterBedCloset]; }
+        internal Room BoysBedroom { get => Rooms[RoomType.BoysBedroom]; }
+        internal Room BoysCloset { get => Rooms[RoomType.BoysCloset]; }
+        internal Room GirlsBedroom { get => Rooms[RoomType.GirlsBedroom]; }
+        internal Room GirlsCloset { get => Rooms[RoomType.GirlsCloset]; }
+        internal Room DiningRoom { get => Rooms[RoomType.DiningRoom]; }
+        internal Room HallCloset { get => Rooms[RoomType.HallCloset]; }
+        internal Room ParlorCloset { get => Rooms[RoomType.ParlorCloset]; }
+        internal List<Room> Bedrooms { get => new List<Room>() { Rooms[RoomType.MasterBedroom], Rooms[RoomType.BoysBedroom], Rooms[RoomType.GirlsBedroom], Rooms[RoomType.GuestBedroom] }; }
+        internal List<Room> Closets { get => new List<Room>() { Rooms[RoomType.MasterBedCloset], Rooms[RoomType.BoysCloset], Rooms[RoomType.GirlsCloset], Rooms[RoomType.GuestCloset] }; }
+        internal List<Room> Bathrooms { get => new List<Room>() { Rooms[RoomType.MasterBathroom], Rooms[RoomType.GuestBathroom] }; }
         internal string Address { get; set; }
 
         internal House(Coord origin, HouseTypes type, string name = null, Direction.Types facing = Direction.Types.DOWN): base(
@@ -133,24 +150,24 @@ namespace Engine.Maps
             int roomW = 6;
             int roomH = 16;
 
-            Rooms.Add(RoomTypes.Hall, new Room(RoomTypes.Hall.ToString() + ", " + Name, new Rectangle(new Coord((Map.Width / 2) - (roomW / 2), Map.Height - 4 - roomH), new Coord((Map.Width / 2) + (roomW / 2), Map.Height - 4)), RoomTypes.Hall));
+            Rooms.Add(RoomType.Hall, new Room(RoomType.Hall.ToString() + ", " + Name, new Rectangle(new Coord((Map.Width / 2) - (roomW / 2), Map.Height - 4 - roomH), new Coord((Map.Width / 2) + (roomW / 2), Map.Height - 4)), RoomType.Hall));
 
             roomW = RandomRoomDimension();
             roomH = RandomRoomDimension() + 2;
-            Rooms.Add(RoomTypes.Parlor, new Room(RoomTypes.Parlor.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Left - roomW, Map.Height - 3 - roomH), new Coord(Hallway.Left, Hallway.Bottom + 2)), RoomTypes.Parlor));
-            Rooms.Add(RoomTypes.MasterBedroom, new Room(RoomTypes.MasterBedroom.ToString() + ", " + Name,new Rectangle(new Coord(Parlor.Left, Parlor.Top - roomH),new Coord(Hallway.Left, Parlor.Top)),RoomTypes.MasterBedroom));
-            Rooms.Add(RoomTypes.GuestBathroom, new Room(RoomTypes.GuestBathroom.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Left - 3, Parlor.Top - 3), new Coord(Hallway.Left + 1, Parlor.Top + 2)), RoomTypes.GuestBathroom));
+            Rooms.Add(RoomType.Parlor, new Room(RoomType.Parlor.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Left - roomW, Map.Height - 3 - roomH), new Coord(Hallway.Left, Hallway.Bottom + 2)), RoomType.Parlor));
+            Rooms.Add(RoomType.MasterBedroom, new Room(RoomType.MasterBedroom.ToString() + ", " + Name,new Rectangle(new Coord(Parlor.Left, Parlor.Top - roomH),new Coord(Hallway.Left, Parlor.Top)), RoomType.MasterBedroom));
+            Rooms.Add(RoomType.GuestBathroom, new Room(RoomType.GuestBathroom.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Left - 3, Parlor.Top - 3), new Coord(Hallway.Left + 1, Parlor.Top + 2)), RoomType.GuestBathroom));
 
             roomH = (Hallway.Top + Hallway.Bottom) / 2;
             roomW = RandomRoomDimension();
-            Rooms.Add(RoomTypes.DiningRoom, new Room(RoomTypes.DiningRoom.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Right, roomH + 2), new Coord(Hallway.Right + roomW, Hallway.Bottom + 2)), RoomTypes.DiningRoom));
-            Rooms.Add(RoomTypes.Kitchen, new Room(RoomTypes.Kitchen.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Right, DiningRoom.Top - roomH + 1), new Coord(Hallway.Right + roomW, DiningRoom.Top + 1)), RoomTypes.Kitchen));
+            Rooms.Add(RoomType.DiningRoom, new Room(RoomType.DiningRoom.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Right, roomH + 2), new Coord(Hallway.Right + roomW, Hallway.Bottom + 2)), RoomType.DiningRoom));
+            Rooms.Add(RoomType.Kitchen, new Room(RoomType.Kitchen.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Right, DiningRoom.Top - roomH + 1), new Coord(Hallway.Right + roomW, DiningRoom.Top + 1)), RoomType.Kitchen));
 
             roomH = RandomRoomDimension();
             roomW = RandomRoomDimension();
 
-            Rooms.Add(RoomTypes.BoysBedroom, new Room(RoomTypes.BoysBedroom.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Right, Hallway.Top - roomH), new Coord(Hallway.Right + roomW, Hallway.Top)), RoomTypes.BoysBedroom));
-            Rooms.Add(RoomTypes.GirlsBedroom, new Room(RoomTypes.GirlsBedroom.ToString() + ", " + Name, new Rectangle( new Coord(Hallway.Right, Hallway.Top - roomH), new Coord(Hallway.Right + roomW, Hallway.Top)), RoomTypes.GirlsBedroom));
+            Rooms.Add(RoomType.BoysBedroom, new Room(RoomType.BoysBedroom.ToString() + ", " + Name, new Rectangle(new Coord(Hallway.Right, Hallway.Top - roomH), new Coord(Hallway.Right + roomW, Hallway.Top)), RoomType.BoysBedroom));
+            Rooms.Add(RoomType.GirlsBedroom, new Room(RoomType.GirlsBedroom.ToString() + ", " + Name, new Rectangle( new Coord(Hallway.Right, Hallway.Top - roomH), new Coord(Hallway.Right + roomW, Hallway.Top)), RoomType.GirlsBedroom));
         }
 
         private void DrawRoom(Room room)
@@ -165,13 +182,13 @@ namespace Engine.Maps
                         BasicTerrain floor;
                         switch (room.Type)
                         {
-                            case RoomTypes.BoysBedroom:
-                            case RoomTypes.GirlsBedroom:
-                            case RoomTypes.HallCloset:
-                            case RoomTypes.MasterBedroom:
-                            case RoomTypes.GuestBedroom: floor = TerrainFactory.Carpet(location); break;
-                            case RoomTypes.Kitchen:
-                            case RoomTypes.GuestBathroom: floor = TerrainFactory.Linoleum(location); break;
+                            case RoomType.BoysBedroom:
+                            case RoomType.GirlsBedroom:
+                            case RoomType.HallCloset:
+                            case RoomType.MasterBedroom:
+                            case RoomType.GuestBedroom: floor = TerrainFactory.Carpet(location); break;
+                            case RoomType.Kitchen:
+                            case RoomType.GuestBathroom: floor = TerrainFactory.Linoleum(location); break;
                             default: floor = TerrainFactory.HardwoodFloor(location); break;
                         }
 

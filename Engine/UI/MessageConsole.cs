@@ -2,6 +2,13 @@
 using Console = SadConsole.Console;
 namespace Engine.UI
 {
+    public enum MessageTypes
+    {
+        Warning,
+        Status,
+        Problem,
+        Battle
+    }
     internal class MessageConsole : Console
     {
         internal MessageConsole(int width, int height) : base(width, height)

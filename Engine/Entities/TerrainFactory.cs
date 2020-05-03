@@ -1,4 +1,6 @@
-﻿using Engine.Extensions;
+﻿using Engine.Components;
+using Engine.Components.Terrain;
+using Engine.Extensions;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
@@ -27,6 +29,7 @@ namespace Engine.Entities
             else
                 glyph = '*';
             BasicTerrain t = new BasicTerrain(color, Color.Black, glyph, position, true, true);
+            t.AddComponent(new BlowsInWindComponent(glyph));
             return t;
         }
         public static BasicTerrain Pavement(Coord position) => new BasicTerrain(Color.DarkGray, Color.Black, 247, position, true, true);

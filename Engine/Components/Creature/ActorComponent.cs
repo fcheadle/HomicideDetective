@@ -1,6 +1,5 @@
 ﻿using Engine.Maps;
 using GoRogue;
-using Engine.Components;
 using GoRogue.GameFramework.Components;
 using GoRogue.Pathing;
 using SadConsole;
@@ -9,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Engine.Components
+namespace Engine.Components.Creature
 {
     internal class ActorComponent : ComponentBase
     {

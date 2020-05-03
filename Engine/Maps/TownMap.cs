@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using Engine.Entities;
 using Engine.Extensions;
+using System;
 
 namespace Engine.Maps
 {
@@ -32,7 +33,7 @@ namespace Engine.Maps
         internal List<House> Houses { get; private set; } = new List<House>();
         internal List<Room> Rooms { get; private set; } = new List<Room>();
         public FOVVisibilityHandler FovVisibilityHandler { get; }
-        internal TownMap(int width, int height) : base(width, height, Calculate.EnumLength<MapLayers>(), Distance.MANHATTAN)
+        internal TownMap(int width, int height) : base(width, height, Calculate.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {
             _width = width;
             _height = height;

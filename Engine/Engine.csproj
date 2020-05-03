@@ -4,12 +4,18 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <ApplicationIcon>hd_icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GoRogue" Version="2.6.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.13" />
     <PackageReference Include="SadConsole" Version="8.99.1" />
     <PackageReference Include="SadConsole.GoRogueHelpers" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Item\" />
   </ItemGroup>
 
 </Project>

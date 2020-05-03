@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Engine.Components
+namespace Engine.Components.Creature
 {
     class SpeechComponent : ComponentBase
     {
@@ -26,7 +26,7 @@ namespace Engine.Components
 
         public override void ProcessGameFrame()
         {
-           
+
         }
     }
 }
