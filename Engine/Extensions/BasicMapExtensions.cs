@@ -1,5 +1,6 @@
-﻿using Engine.Components;
+﻿using Engine.Components.Creature;
 using Engine.Entities;
+using Engine.Maps;
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
@@ -15,7 +16,7 @@ namespace Engine.Extensions
         {
             int xDiff = stop.X - start.X;
             int yDiff = stop.Y - start.Y;
-            BasicMap map = new BasicMap(xDiff, yDiff, Enum.GetNames(typeof(MapLayers)).Length, Distance.MANHATTAN);
+            BasicMap map = new BasicMap(xDiff, yDiff, Enum.GetNames(typeof(MapLayer)).Length, Distance.MANHATTAN);
             for (int i = start.X; i < stop.X + 1; i++)
             {
                 for (int j = start.Y; j < stop.Y + 1; j++)

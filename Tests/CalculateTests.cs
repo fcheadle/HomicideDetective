@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Components.Creature;
 using GoRogue;
 using NUnit.Framework;
 using System;
@@ -29,7 +30,7 @@ namespace Tests
         public void RandomFunction4dTest()
         {
             var f = Calculate.RandomFunction4d();
-            double answer = f(63, 35, TimeSpan.FromMilliseconds(100));
+            bool answer = f(63, 35, TimeSpan.FromMilliseconds(100));
             Assert.AreNotEqual(0.000, answer); //I mean, statistically...
         }
         [Test]
@@ -86,9 +87,9 @@ namespace Tests
         [Test]
         public void EnumValueFromIndexTest()
         {
-            BloodTypes first = Calculate.EnumValueFromIndex<BloodTypes>(0);
-            int amountOfTypes = Calculate.EnumLength<BloodTypes>();
-            BloodTypes last = Calculate.EnumValueFromIndex<BloodTypes>(amountOfTypes - 1);
+            BloodType first = Calculate.EnumValueFromIndex<BloodType>(0);
+            int amountOfTypes = Calculate.EnumLength<BloodType>();
+            BloodType last = Calculate.EnumValueFromIndex<BloodType>(amountOfTypes - 1);
             Assert.AreNotEqual(first, last);
             last -= amountOfTypes;
             last++;
@@ -97,13 +98,13 @@ namespace Tests
         [Test]
         public void EnumLengthTest()
         {
-            int answer = Calculate.EnumLength<BloodTypes>();
+            int answer = Calculate.EnumLength<BloodType>();
             Assert.AreEqual(4, answer);
         }
         [Test]
         public void RandomEnumValueTest()
         {
-            BloodTypes type = Calculate.RandomEnumValue<BloodTypes>();
+            BloodType type = Calculate.RandomEnumValue<BloodType>();
             bool makesnew = false;
             bool makesA = false;
             bool makesAB = false;
@@ -111,18 +112,18 @@ namespace Tests
             bool makesB = false;
             for (int i = 0; i < 50; i++)
             {
-                if (Calculate.RandomEnumValue<BloodTypes>() != type)
+                if (Calculate.RandomEnumValue<BloodType>() != type)
                     makesnew = true;
-                if (type == BloodTypes.A)
+                if (type == BloodType.A)
                     makesA = true;
-                if (type == BloodTypes.B)
+                if (type == BloodType.B)
                     makesB = true;
-                if (type == BloodTypes.AB)
+                if (type == BloodType.AB)
                     makesAB = true;
-                if (type == BloodTypes.O)
+                if (type == BloodType.O)
                     makesO = true;
 
-                type = Calculate.RandomEnumValue<BloodTypes>();
+                type = Calculate.RandomEnumValue<BloodType>();
             }
 
             Assert.IsTrue(makesnew);

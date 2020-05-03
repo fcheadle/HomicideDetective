@@ -39,8 +39,9 @@ namespace Engine.Components
                     break;
                 }
             }
-            if(Program.MapScreen.TownMap.GetTerrain(Position + moveDirection).IsWalkable)
-                Parent.Position += moveDirection;
+            if(Program.MapScreen.TownMap.GetTerrain(Position + moveDirection) != null)
+                if(Program.MapScreen.TownMap.GetTerrain(Position + moveDirection).IsWalkable)
+                    Parent.Position += moveDirection;
 
             if (moveDirection != Direction.NONE)
                 handled = true;

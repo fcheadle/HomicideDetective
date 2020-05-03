@@ -17,7 +17,6 @@ namespace Engine
             x => { return (Math.Cos(x)* 2) * (Math.Tan(x) * 2); },
 
         };
-
         internal static List<Func<int, int, double>> Functions3d = new List<Func<int, int, double>>
         {
             (x,y) => //pretty, simple, fast
@@ -100,10 +99,13 @@ namespace Engine
             //    return answer;
             //},
         };
-
-        public static List<Func<int, int, TimeSpan, double>> Functions4d = new List<Func<int, int, TimeSpan, double>> //for future shenanigans
+        public static List<Func<int, int, TimeSpan, bool>> Functions4d = new List<Func<int, int, TimeSpan, bool>> //for future shenanigans
         {
-            (x,y,t) => Math.Sin(x + t.TotalMilliseconds) + Math.Cos(y + t.TotalMilliseconds)
+            (x,y,t) => Math.Sin(x / 3.33 + t.TotalSeconds) + Math.Cos(y * 3.33 + t.TotalSeconds) > 1.25, //odd, but quick enough
+            (x,y,t) => Math.Sin(x * 7.77 + t.TotalSeconds) + Math.Cos(y / 7.77 + t.TotalSeconds) > 1.25, //odd, but quick enough
+            (x,y,t) => (int)(t.TotalSeconds * 50 + x + y) % 192 <= 3, //simple, quick enough
+            (x,y,t) => (int)(x * 3.5 + y / 2.5 + t.TotalMilliseconds) % 77 == 1,//beautiful, quick enough
+            (x,y,t) => (int)(x + y + t.TotalSeconds * 200) % 48 == 1, //beautiful, quick enough
         };
 
         public static List<Func<double, Point>> FunctionsPolar = new List<Func<double, Point>> 
@@ -167,7 +169,7 @@ namespace Engine
         {
             return Enum.GetNames(typeof(T)).Length;
         }
-        public static Func<int, int, TimeSpan, double> RandomFunction4d()
+        public static Func<int, int, TimeSpan, bool> RandomFunction4d()
         {
             int index = Settings.Random.Next(0, Functions4d.Count);
             return Functions4d[index];
@@ -190,16 +192,8 @@ namespace Engine
             return new Coord((int)x, (int)y);
         }
 
-        /// <summary>
-        /// Another way of changing a polar coordinate to a cartesian coordinate
-        /// </summary>
-        /// <param name="pc"></param>
-        /// <returns></returns>
         public static Coord PolarToCartesian(PolarCoord pc)
         {
-            //double radius = (c.X ^ 2) + (c.Y ^ 2);
-            //radius = Math.Sqrt(radius);
-            //double theta = c.X == 0 ? 0 : 1 / Math.Tan(c.Y / c.X);
             return PolarToCartesian(pc.Radius, pc.Theta);
         }
 

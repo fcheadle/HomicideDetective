@@ -1,4 +1,6 @@
 ﻿using Engine.Components;
+using Engine.Components.Creature;
+using Engine.Components.UI;
 using Engine.Extensions;
 using Engine.Maps;
 using Engine.UI;
@@ -21,9 +23,10 @@ namespace Engine.Entities
         }
         internal static BasicEntity Player(Coord coord)
         {
-            BasicEntity critter = new BasicEntity(Color.White, Color.Black, 1, coord, Calculate.EnumIndexFromValue(MapLayers.PLAYER), true, true);
+            BasicEntity critter = new BasicEntity(Color.White, Color.Black, 1, coord, Calculate.EnumIndexFromValue(MapLayer.Player), true, true);
 
             critter.AddGoRogueComponent(new HealthComponent());
+            critter.AddGoRogueComponent(new DisplayStatsComponent(new Coord(Settings.GameWidth - 24, Settings.GameHeight - 24)));
             critter.AddGoRogueComponent(new ActorComponent());
             critter.AddGoRogueComponent(new KeyboardComponent());
 
@@ -33,7 +36,7 @@ namespace Engine.Entities
         public static BasicEntity Animal(Coord position)
         {
             BasicEntity critter = new BasicEntity(Color.Gray, Color.Black, 224, position, 3, true, true);
-            critter.AddGoRogueComponent(new HealthComponent() { BodyTemperature = 102.5 });
+            critter.AddGoRogueComponent(new HealthComponent());
             return critter;
         }
     }

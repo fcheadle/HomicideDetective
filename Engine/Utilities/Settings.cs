@@ -6,6 +6,20 @@ using System.Collections.Generic;
 
 namespace Engine
 {
+    public enum GameActions
+    {
+        LookAtEverythingInSquare,
+        LookAtPerson,
+        Talk,
+        TakePhotograph,
+        GetItem,
+        RemoveItemFromInventory,
+        TogglePause,
+        DustItemForPrints, //prints and tracks really just work the same way anyways
+        ToggleNotes,
+        ToggleInventory,
+        ToggleMenu,
+    }
     internal class Settings : ISettings
     {
         public static bool ShowingMenu { get; private set; } = false;
@@ -18,6 +32,7 @@ namespace Engine
         internal static Radius FOVRadius { get; set; } = Radius.CIRCLE;
         internal static FontMaster FontMaster { get; set; }
         internal static Font Font { get; set; }
+        public static Func<int, int, TimeSpan, bool> Wind { get; set; } = Calculate.RandomFunction4d();
 
         internal static Dictionary<Keys, Direction> MovementKeyBindings { get; } = new Dictionary<Keys, Direction>
         {

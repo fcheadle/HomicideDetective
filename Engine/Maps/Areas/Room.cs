@@ -2,13 +2,32 @@
 
 namespace Engine.Maps
 {
+    public enum RoomType
+    {
+        Parlor,
+        BoysBedroom,
+        MasterBedroom,
+        GuestBathroom,
+        Kitchen,
+        DiningRoom,
+        HallCloset,
+        MasterBedCloset,
+        ParlorCloset,
+        BoysCloset,
+        GirlsCloset,
+        GuestCloset,
+        Hall,
+        GirlsBedroom,
+        GuestBedroom,
+        MasterBathroom
+    }
     internal class Room : Area
     {
-        internal readonly RoomTypes Type;
+        internal readonly RoomType Type;
         public Rectangle OuterRect { get; }
         public Rectangle InnerRect { get; private set; }
 
-        internal Room(string name, Rectangle area, RoomTypes type) : base(
+        internal Room(string name, Rectangle area, RoomType type) : base(
             name,
             new Coord(area.MaxExtentX, area.MaxExtentY),
             new Coord(area.MaxExtentX, area.MinExtentY),
