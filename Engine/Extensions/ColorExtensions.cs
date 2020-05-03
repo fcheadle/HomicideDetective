@@ -1,7 +1,7 @@
 ﻿using System;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Engine
+namespace Engine.Extensions
 {
     public static class ColorExtensions
     {

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Engine.Entities.Factories
+namespace Engine.Extensions
 {
-    public interface IFactory
+    public static class BasicTerrainExtensions
     {
-
     }
 }

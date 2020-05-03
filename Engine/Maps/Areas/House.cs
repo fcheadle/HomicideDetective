@@ -1,4 +1,5 @@
 ﻿using Engine.Entities;
+using Engine.Extensions;
 using GoRogue;
 using SadConsole;
 using System.Collections.Generic;
@@ -124,7 +125,7 @@ namespace Engine.Maps
             doors.Add(new Coord(GirlsBedroom.Right, GirlsBedroom.Bottom - 1));
             foreach (Coord d in doors)
                 if (Map.Contains(d))
-                    Map.SetTerrain(Entities.Factories.Tile.Door(d));
+                    Map.SetTerrain(TerrainFactory.Door(d));
         }
 
         private void CreateCentralPassageHouse()
@@ -168,10 +169,10 @@ namespace Engine.Maps
                             case RoomTypes.GirlsBedroom:
                             case RoomTypes.HallCloset:
                             case RoomTypes.MasterBedroom:
-                            case RoomTypes.GuestBedroom: floor = Engine.Entities.Factories.Tile.Carpet(location); break;
+                            case RoomTypes.GuestBedroom: floor = TerrainFactory.Carpet(location); break;
                             case RoomTypes.Kitchen:
-                            case RoomTypes.GuestBathroom: floor = Engine.Entities.Factories.Tile.Linoleum(location); break;
-                            default: floor = Engine.Entities.Factories.Tile.HardwoodFloor(location); break;
+                            case RoomTypes.GuestBathroom: floor = TerrainFactory.Linoleum(location); break;
+                            default: floor = TerrainFactory.HardwoodFloor(location); break;
                         }
 
                         Map.SetTerrain(floor);
@@ -181,7 +182,7 @@ namespace Engine.Maps
 
             foreach (Coord location in room.OuterPoints)
                 if(Map.Contains(location))
-                    Map.SetTerrain(Engine.Entities.Factories.Tile.Wall(location));
+                    Map.SetTerrain(TerrainFactory.Wall(location));
             
         }
         private int RandomRoomDimension()
@@ -201,13 +202,13 @@ namespace Engine.Maps
             foreach(Coord arch in walls)
             {
                 if (Map.Contains(arch))
-                    Map.SetTerrain(Engine.Entities.Factories.Tile.HardwoodFloor(arch));
+                    Map.SetTerrain(TerrainFactory.HardwoodFloor(arch));
             }
 
             foreach(Coord c in Calculate.BorderLocations(host.OuterRect))
             {
                 if (walls.Contains(c) && Map.Contains(c))
-                    Map.SetTerrain(Engine.Entities.Factories.Tile.Wall(c));
+                    Map.SetTerrain(TerrainFactory.Wall(c));
             }
         }
     }

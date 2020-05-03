@@ -18,6 +18,17 @@ namespace Engine.Components
         private int _bloodVolume;
         private double _bodyTemperature;
         private int _timeSinceLastHeartbeat = 0;
+
+        public HealthComponent(int systoleBloodPressure = 120, int diastoleBloodPressure = 80, int pulse = 85, int bloodVolume = 5000, double bodyTemperature = 96.7) 
+            : base(isUpdate: false, isKeyboard: false, isDraw: false, isMouse: false)
+        {
+            SystoleBloodPressure = systoleBloodPressure;
+            DiastoleBloodPressure = diastoleBloodPressure;
+            Pulse = pulse;
+            BloodVolume = bloodVolume;
+            BodyTemperature = bodyTemperature;
+        }
+
         public override void ProcessGameFrame()
         {
             //health status check?

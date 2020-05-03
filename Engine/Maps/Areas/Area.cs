@@ -7,10 +7,7 @@ using Line = System.Collections.Generic.List<GoRogue.Coord>;
 
 namespace Engine.Maps
 {
-    /// <summary>
-    /// Convenience class for specifying details of a subsection of the map
-    /// </summary>
-    class Area
+    public class Area
     {
         private Coord _southEastCorner;
         private Coord _northEastCorner;

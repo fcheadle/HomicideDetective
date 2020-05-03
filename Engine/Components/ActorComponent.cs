@@ -1,4 +1,6 @@
-﻿using GoRogue;
+﻿using Engine.Maps;
+using GoRogue;
+using Engine.Components;
 using GoRogue.GameFramework.Components;
 using GoRogue.Pathing;
 using SadConsole;
@@ -13,8 +15,17 @@ namespace Engine.Components
     {
         private Path _path;
         private BasicEntity _target;
+        public int FOVRadius = 15;
+        public Coord Position => Parent.Position;
+        public ActorComponent() : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
+        {
+        }
+
         public void Act()
         {
+            if (((BasicEntity)Parent).GetGoRogueComponent<KeyboardComponent>() != null)
+                return;
+
             //Determine whether or not we have a path
             if (_path == null)
             {

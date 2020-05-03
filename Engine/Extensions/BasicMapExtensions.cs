@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Engine.Maps
+namespace Engine.Extensions
 {
     public static class BasicMapExtensions
     {
@@ -24,7 +24,7 @@ namespace Engine.Maps
                     if (t != null)
                     {
                         Coord c = new Coord(i - start.X, j - start.Y);
-                        t = Entities.Factories.Tile.Copy(t, c);
+                        t = TerrainFactory.Copy(t, c);
                         if (map.Contains(c))
                             map.SetTerrain(t);
                     }
@@ -49,7 +49,7 @@ namespace Engine.Maps
                     BasicTerrain t = m.GetTerrain<BasicTerrain>(source);
                     if (t != null)
                     {
-                        t = Entities.Factories.Tile.Copy(t, target);
+                        t = TerrainFactory.Copy(t, target);
                         map.SetTerrain(t);
                     }
                 }
@@ -68,7 +68,7 @@ namespace Engine.Maps
                     BasicTerrain t = m.GetTerrain<BasicTerrain>(source);
                     if (t != null)
                     {
-                        t = Entities.Factories.Tile.Copy(t, target);
+                        t = TerrainFactory.Copy(t, target);
                         map.SetTerrain(t);
                     }
                 }
@@ -89,7 +89,7 @@ namespace Engine.Maps
                     BasicTerrain t = m.GetTerrain<BasicTerrain>(original);
                     if (t != null)
                     {
-                        t = Entities.Factories.Tile.Copy(t, target);
+                        t = TerrainFactory.Copy(t, target);
                         map.SetTerrain(t);
                     }
                 }
@@ -149,7 +149,7 @@ namespace Engine.Maps
                     BasicTerrain t2 = m.GetTerrain<BasicTerrain>(new Coord(i, j));
                     if (t1 != null && t2 == null && m.Contains(target))
                     {
-                        t1 = Entities.Factories.Tile.Copy(t1, target);
+                        t1 = TerrainFactory.Copy(t1, target);
                         m.SetTerrain(t1);
                     }
                 }
@@ -167,7 +167,7 @@ namespace Engine.Maps
                     BasicTerrain t = map.GetTerrain<BasicTerrain>(new Coord(i, j));
                     if (t != null && m.Contains(target))
                     {
-                        t = Entities.Factories.Tile.Copy(t, target);
+                        t = TerrainFactory.Copy(t, target);
                         m.SetTerrain(t);
                     }
                 }
@@ -198,7 +198,7 @@ namespace Engine.Maps
                         {
                             if (!t.IsWalkable)
                                 return false;
-                            else if (Entities.Factories.Tile.Pavement(c) == Entities.Factories.Tile.Copy(t, c)) //todo: fix this shit
+                            else if (TerrainFactory.Pavement(c) == TerrainFactory.Copy(t, c)) //todo: fix this shit
                                 return false;
                         }
                     }

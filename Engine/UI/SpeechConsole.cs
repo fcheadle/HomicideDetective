@@ -3,6 +3,7 @@ using System;
 using SadConsole;
 using Console = SadConsole.Console;
 using Color = Microsoft.Xna.Framework.Color;
+using Engine.Extensions;
 
 namespace Engine.UI
 {
@@ -17,14 +18,15 @@ namespace Engine.UI
             fore = Color.White;
             back = Color.Black;
             IsFocused = true;
+            IsVisible = true;
             _message = new ColoredString(statement, fore, back);
             Print(0,0,_message);
         }
 
         public override void Update(TimeSpan timeElapsed)
         {
-            fore = ColorExtensions.FadeOut(fore);
-            back = ColorExtensions.FadeOut(back);
+            fore = fore.FadeOut();
+            back = back.FadeOut();
             _message.SetForeground(fore);
             _message.SetBackground(back);
             Clear();
