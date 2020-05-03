@@ -4,6 +4,8 @@ using System.Linq;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
+using Engine.Entities;
+using Engine.Extensions;
 
 namespace Engine.Maps
 {
@@ -38,7 +40,7 @@ namespace Engine.Maps
             MakeOutdoors();
             MakeRoadsAndBlocks();
             MakeHouses();
-            MakePeople();
+            //MakePeople();
         }
         private void MakeRoadsAndBlocks()
         {
@@ -85,29 +87,26 @@ namespace Engine.Maps
             {
                 foreach (Coord c in r.InnerPoints)
                     if (this.Contains(c))
-                        SetTerrain(Engine.Entities.Factories.Tile.Pavement(c));
+                        SetTerrain(TerrainFactory.Pavement(c));
             }
 
             foreach (Block block in Blocks)
             {
-                //foreach (Coord c in block.OuterPoints)
-                //    if (this.Contains(c))
-                //        SetTerrain(TerrainFactory.TestSquare0(c));
-                //foreach (Coord c in block.WestBoundary)
-                //    if (this.Contains(c))
-                //        SetTerrain(TerrainFactory.TestSquare1(c));
-                //foreach (Coord c in block.EastBoundary)
-                //    if (this.Contains(c))
-                //        SetTerrain(TerrainFactory.TestSquare2(c));
-                //foreach (Coord c in block.WestBoundary)
-                //    if (this.Contains(c))
-                //        SetTerrain(TerrainFactory.TestSquare3(c));
-                //foreach (Coord c in block.WestBoundary)
-                //    if (this.Contains(c))
-                //        SetTerrain(TerrainFactory.TestSquare4(c));
+                foreach (Coord c in block.WestBoundary)
+                    if (this.Contains(c))
+                        SetTerrain(TerrainFactory.Test(4, c));
+                foreach (Coord c in block.NorthBoundary)
+                    if (this.Contains(c))
+                        SetTerrain(TerrainFactory.Test(5, c));
+                foreach (Coord c in block.EastBoundary)
+                    if (this.Contains(c))
+                        SetTerrain(TerrainFactory.Test(6, c));
+                foreach (Coord c in block.SouthBoundary)
+                    if (this.Contains(c))
+                        SetTerrain(TerrainFactory.Test(3, c));
                 foreach (Coord c in block.GetFenceLocations())
                     if (this.Contains(c))
-                        SetTerrain(Engine.Entities.Factories.Tile.Fence(c));
+                        SetTerrain(TerrainFactory.Fence(c));
             }
             //foreach (RoadIntersection ri in Intersections.Values)
             //    foreach (Coord c in ri.OuterPoints)
@@ -141,14 +140,14 @@ namespace Engine.Maps
                             Coord c = new Coord(j, k);
                             if (house.Map.GetTerrain(c) != null && this.Contains(house.Origin + c))
                             {
-                                SetTerrain(Engine.Entities.Factories.Tile.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
+                                SetTerrain(TerrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
                             }
                         }
                     }
 
                     foreach (Coord c in house.OuterPoints)
                         if (this.Contains(c))
-                            SetTerrain(Engine.Entities.Factories.Tile.Test(8, c));
+                            SetTerrain(TerrainFactory.Test(8, c));
                 }
             }
         }
@@ -156,7 +155,7 @@ namespace Engine.Maps
         {
             for (int i = 0; i < 500; i++)
             {
-                AddEntity(Engine.Entities.Factories.Creature.Person(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
+                AddEntity(CreatureFactory.Person(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
             }
             //for (int i = 0; i < 300; i++)
             //{
@@ -181,7 +180,7 @@ namespace Engine.Maps
                 for (int j = 0; j < Height; j++)
                 {
                     Coord pos = new Coord(i, j);
-                    SetTerrain(Engine.Entities.Factories.Tile.Grass(pos, f(i, j))) ;
+                    SetTerrain(TerrainFactory.Grass(pos, f(i, j))) ;
                 }
             }
         }

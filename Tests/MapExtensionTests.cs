@@ -1,24 +1,16 @@
 using GoRogue;
 using NUnit.Framework;
 using SadConsole;
-using Engine.Maps;
-using Engine.Creatures;
 using System.Linq;
 using System;
-using Engine.Entities.Factories;
+using Engine.Entities;
+using Engine.Extensions;
 
 namespace Tests
 {
     public class MapExtensionTests
     {
-        BasicMap _map;
-
-        [Datapoints]
-        BasicMap[] _maps;
-
-        [Datapoints]
-        int[] _degreesHappy;
-        
+        BasicMap _map;        
 
         [SetUp]
         public void Setup()
@@ -30,7 +22,7 @@ namespace Tests
                 {
                     int glyph = i + j;
                     Coord c = new Coord(i, j);
-                    _map.SetTerrain(Tile.Test(i+j, c));
+                    _map.SetTerrain(TerrainFactory.Test(i+j, c));
                 }
             }
         }
@@ -193,7 +185,7 @@ namespace Tests
 
             for (int i = 0; i < 8; i++)
             {
-                newMap.SetTerrain(Tile.Test('#', new Coord(i, i)));
+                newMap.SetTerrain(TerrainFactory.Test('#', new Coord(i, i)));
             }
 
             newMap.Add(_map);
@@ -222,7 +214,7 @@ namespace Tests
 
             for (int i = 0; i < 8; i++)
             {
-                newMap.SetTerrain(Tile.Test('#', new Coord(i, i)));
+                newMap.SetTerrain(TerrainFactory.Test('#', new Coord(i, i)));
             }
 
             newMap.ReplaceTiles(_map, new Coord(0,0));
@@ -242,7 +234,7 @@ namespace Tests
         {
             Assert.IsTrue(_map.IsClearOfObstructions(new Coord(0,0), 8));
 
-            _map.SetTerrain(Tile.Wall(new Coord(0, 0)));
+            _map.SetTerrain(TerrainFactory.Wall(new Coord(0, 0)));
 
             Assert.IsFalse(_map.IsClearOfObstructions(new Coord(0, 0), 8));
 
@@ -252,11 +244,11 @@ namespace Tests
         //[Test]//currently, unable to test because adding entities
         public void GetCreaturesTest()
         {
-            _map.AddEntity(Creature.Person(new Coord(0, 0)));
-            _map.AddEntity(Creature.Person(new Coord(1, 1)));
-            _map.AddEntity(Creature.Person(new Coord(2, 2)));
-            _map.AddEntity(Creature.Person(new Coord(3, 3)));
-            _map.AddEntity(Creature.Person(new Coord(4, 4)));
+            _map.AddEntity(CreatureFactory.Person(new Coord(0, 0)));
+            _map.AddEntity(CreatureFactory.Person(new Coord(1, 1)));
+            _map.AddEntity(CreatureFactory.Person(new Coord(2, 2)));
+            _map.AddEntity(CreatureFactory.Person(new Coord(3, 3)));
+            _map.AddEntity(CreatureFactory.Person(new Coord(4, 4)));
 
             Assert.AreEqual(_map.GetCreatures().Count(), 0);
             foreach (BasicEntity c in _map.GetCreatures())

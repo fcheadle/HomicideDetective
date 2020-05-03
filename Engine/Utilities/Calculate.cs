@@ -167,20 +167,16 @@ namespace Engine
         {
             return Enum.GetNames(typeof(T)).Length;
         }
-        /// <summary>
-        /// Returns a random 4d function hardcoded into Calculate.cs
-        /// </summary>
-        /// <returns>A heightmap which changes over time.</returns>
         public static Func<int, int, TimeSpan, double> RandomFunction4d()
         {
             int index = Settings.Random.Next(0, Functions4d.Count);
             return Functions4d[index];
         }
 
-        /// <summary>
-        /// Picks a random terrain generation formula from the list of 3d functions in Calculate.cs
-        /// </summary>
-        /// <returns>The formula for terrain generation.</returns>
+        internal static int EnumIndexFromValue<T>(T mune) 
+        {
+            return Convert.ToInt32(mune);
+        }
         public static Func<int, int, double> MasterFormula()
         {
             Func<int, int, double> f = RandomFunction3d();

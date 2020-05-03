@@ -8,51 +8,32 @@ using System.Text;
 
 namespace Engine.Components
 {
-    class ComponentBase : GameFrameProcessor, IGameObjectComponent, IConsoleComponent
+    public abstract class ComponentBase : GameFrameProcessor, IGameObjectComponent, IConsoleComponent
     {
-        public int SortOrder => 9;
 
-        public bool IsUpdate => false;
+        public int SortOrder { get; set; } = 9;
 
-        public bool IsDraw => false;
+        public bool IsUpdate { get; } = false;
 
-        public bool IsMouse => false;
+        public bool IsDraw { get; } = false;
 
-        public bool IsKeyboard => false;
+        public bool IsMouse { get; } = false;
 
-        public void Draw(SadConsole.Console console, TimeSpan delta)
+        public bool IsKeyboard { get; } = false;
+        public ComponentBase(bool isUpdate, bool isKeyboard, bool isDraw, bool isMouse)
         {
-            //do nothing
+            IsUpdate = isUpdate;
+            IsKeyboard = isKeyboard;
+            IsMouse = isMouse;
+            IsDraw = isDraw;
         }
 
-        public void OnAdded(SadConsole.Console console)
-        {
-            //donothing
-        }
-
-        public void OnRemoved(SadConsole.Console console)
-        {
-            //do nothing
-        }
-
-        public override void ProcessGameFrame()
-        {
-            //do nothing
-        }
-
-        public void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled)
-        {
-            handled = false;
-        }
-
-        public void ProcessMouse(SadConsole.Console console, MouseConsoleState state, out bool handled)
-        {
-            handled = false;
-        }
-
-        public void Update(SadConsole.Console console, TimeSpan delta)
-        {
-            //do nothing
-        }
+        public virtual void Draw(SadConsole.Console console, TimeSpan delta) => throw new NotImplementedException();
+        public virtual void OnAdded(SadConsole.Console console) => throw new NotImplementedException();
+        public virtual void OnRemoved(SadConsole.Console console) => throw new NotImplementedException();
+        public abstract override void ProcessGameFrame();
+        public virtual void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled) => throw new NotImplementedException();
+        public virtual void ProcessMouse(SadConsole.Console console, MouseConsoleState state, out bool handled) => throw new NotImplementedException();
+        public virtual void Update(SadConsole.Console console, TimeSpan delta) => throw new NotImplementedException();
     }
 }
