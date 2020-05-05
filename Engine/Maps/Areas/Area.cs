@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Line = System.Collections.Generic.List<GoRogue.Coord>;
 
 namespace Engine.Maps
 {
@@ -14,10 +13,10 @@ namespace Engine.Maps
         private Coord _northWestCorner;
         private Coord _southWestCorner;
 
-        private Line _southBoundary;
-        private Line _eastBoundary;
-        private Line _northBoundary;
-        private Line _westBoundary;
+        private List<Coord> _southBoundary;
+        private List<Coord> _eastBoundary;
+        private List<Coord> _northBoundary;
+        private List<Coord> _westBoundary;
 
         private int _bottom;
         private int _left;
@@ -26,28 +25,28 @@ namespace Engine.Maps
 
         private SadConsole.Orientation _orientation;
         public string Name { get; set; }
-        public Line OuterPoints { get; set; } = new Line();
-        public Line InnerPoints { get; set; } = new Line();
-        public Coord Origin { get; }
-        public Line SouthBoundary { get => _southBoundary; }
-        public Line NorthBoundary { get => _northBoundary; }
-        public Line EastBoundary { get => _eastBoundary; }
-        public Line WestBoundary { get => _westBoundary; }
-        internal int Left { get => _left; }
-        internal int Right { get => _right; }
-        internal int Top { get => _top; }
-        internal int Bottom { get => _bottom; }
-        internal Coord SouthEastCorner { get => _southEastCorner; }
-        internal Coord SouthWestCorner { get => _southWestCorner; }
-        internal Coord NorthWestCorner { get => _northWestCorner; }
-        internal Coord NorthEastCorner { get => _northEastCorner; }
+        public List<Coord> OuterPoints { get; set; } = new List<Coord>();
+        public List<Coord> InnerPoints { get; set; } = new List<Coord>();
+        public Coord Origin { get; set; }
+        public List<Coord> SouthBoundary { get => _southBoundary; }
+        public List<Coord> NorthBoundary { get => _northBoundary; }
+        public List<Coord> EastBoundary { get => _eastBoundary; }
+        public List<Coord> WestBoundary { get => _westBoundary; }
+        public int Left { get => _left; }
+        public int Right { get => _right; }
+        public int Top { get => _top; }
+        public int Bottom { get => _bottom; }
+        public Coord SouthEastCorner { get => _southEastCorner; }
+        public Coord SouthWestCorner { get => _southWestCorner; }
+        public Coord NorthWestCorner { get => _northWestCorner; }
+        public Coord NorthEastCorner { get => _northEastCorner; }
         public SadConsole.Orientation Orientation { get => _orientation; }
-        internal int Width { get => _right - _left; }
-        internal int Height { get => _bottom - _top; }
-        internal int LeftAt(int y) => OuterPoints.Where(c => c.Y == y).OrderBy(c => c.X).First().X;
-        internal int RightAt(int y) => OuterPoints.Where(c => c.Y == y).OrderBy(c => c.X).Last().X;
-        internal int TopAt(int x) => OuterPoints.Where(c => c.X == x).OrderBy(c => c.Y).First().Y;
-        internal int BottomAt(int x) => OuterPoints.Where(c => c.X == x).OrderBy(c => c.Y).Last().Y;
+        public int Width { get => _right - _left; }
+        public int Height { get => _bottom - _top; }
+        public int LeftAt(int y) => OuterPoints.Where(c => c.Y == y).OrderBy(c => c.X).First().X;
+        public int RightAt(int y) => OuterPoints.Where(c => c.Y == y).OrderBy(c => c.X).Last().X;
+        public int TopAt(int x) => OuterPoints.Where(c => c.X == x).OrderBy(c => c.Y).First().Y;
+        public int BottomAt(int x) => OuterPoints.Where(c => c.X == x).OrderBy(c => c.Y).Last().Y;
         public Area(string name, Coord se, Coord ne, Coord nw, Coord sw)
         {
             Name = name;
@@ -60,7 +59,7 @@ namespace Engine.Maps
             _eastBoundary = Calculate.PointsAlongStraightLine(_southEastCorner, _northEastCorner).ToList();
             _northBoundary = Calculate.PointsAlongStraightLine(_northEastCorner, _northWestCorner).ToList();
 
-            _top = ne.Y > nw.Y ? ne.Y : nw.Y;
+            _top = ne.Y < nw.Y ? ne.Y : nw.Y;
             _right = se.X > ne.X ? se.X : ne.X;
             _left = sw.X < nw.X ? sw.X : nw.X;
             _bottom = se.Y < sw.Y ? sw.Y : se.Y;
@@ -78,7 +77,7 @@ namespace Engine.Maps
         {
             return Name;
         }
-        internal IEnumerable<Coord> Overlap(Area other)
+        public IEnumerable<Coord> Overlap(Area other)
         {
             foreach (Coord c in InnerPoints)
             {
@@ -86,14 +85,18 @@ namespace Engine.Maps
                     yield return c;
             }
         }
-        internal void Shift(Coord origin)
+        public bool Contains(Coord c)
         {
-            Line newOuter = new Line();
-            Line newInner = new Line();
-            Line newSouth = new Line();
-            Line newNorth = new Line();
-            Line newWest = new Line();
-            Line newEast = new Line();
+            return InnerPoints.Contains(c);
+        }
+        public void Shift(Coord origin)
+        {
+            List<Coord> newOuter = new List<Coord>();
+            List<Coord> newInner = new List<Coord>();
+            List<Coord> newSouth = new List<Coord>();
+            List<Coord> newNorth = new List<Coord>();
+            List<Coord> newWest = new  List<Coord>();
+            List<Coord> newEast = new List<Coord>();
             foreach (Coord c in OuterPoints)
             {
                 newOuter.Add(c + origin);
@@ -114,13 +117,13 @@ namespace Engine.Maps
             foreach(Coord c in _northBoundary) newNorth.Add(c + origin);
             foreach(Coord c in _westBoundary) newWest.Add(c + origin);
 
-            _top =    _northEastCorner.Y > _northWestCorner.Y ? _northEastCorner.Y : _northWestCorner.Y;
+            _top =    _northEastCorner.Y < _northWestCorner.Y ? _northEastCorner.Y : _northWestCorner.Y;
             _right =  _southEastCorner.X > _northEastCorner.X ? _southEastCorner.X : _northEastCorner.X;
             _left =   _southWestCorner.X < _northWestCorner.X ? _southWestCorner.X : _northWestCorner.X;
             _bottom = _southEastCorner.Y < _southWestCorner.Y ? _southWestCorner.Y : _southEastCorner.Y;
         }
 
-        internal virtual Area Shift()
+        public virtual Area Shift()
         {
             Shift(Origin);
             return this;// new Area(Name, SouthEastCorner + Origin, NorthEastCorner + Origin, NorthWestCorner + Origin, SouthWestCorner + Origin);

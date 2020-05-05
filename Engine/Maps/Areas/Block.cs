@@ -2,18 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Line = System.Collections.Generic.List<GoRogue.Coord>;
 
 namespace Engine.Maps
 {
     internal class Block : Area
     {
-        internal Line SouthFenceLine { get; private set; }
-        internal Line NorthFenceLine { get; private set; }
-        internal Line WestFenceLine { get; private set; }
-        internal Line EastFenceLine { get; private set; }
-        internal Line Addresses { get; private set; }
-        internal Line FenceLocations { get => SouthFenceLine.Concat(NorthFenceLine).Concat(WestFenceLine).Concat(EastFenceLine).ToList(); }
+        internal List<Coord> SouthFenceLine { get; private set; }
+        internal List<Coord> NorthFenceLine { get; private set; }
+        internal List<Coord> WestFenceLine { get; private set; }
+        internal List<Coord> EastFenceLine { get; private set; }
+        internal List<Coord> Addresses { get; private set; }
+        internal List<Coord> FenceLocations { get => SouthFenceLine.Concat(NorthFenceLine).Concat(WestFenceLine).Concat(EastFenceLine).ToList(); }
         internal Block(RoadIntersection nw, RoadIntersection sw, RoadIntersection se, RoadIntersection ne) :
             base(
                 Convert.ToInt32(sw.HorizontalStreet + 1).ToString() + "00 Block " + sw.VerticalStreet.ToString(),
@@ -31,8 +30,8 @@ namespace Engine.Maps
             Coord se = SouthEastCorner + new Coord(-16, -16);
             Coord ne = NorthEastCorner + new Coord(-16, 16);
 
-            Line answer = new Line();
-            Addresses = new Line();
+           List<Coord>answer = new List<Coord>();
+            Addresses = new List<Coord>();
             WestFenceLine = Calculate.PointsAlongStraightLine(nw, sw).ToList();
             SouthFenceLine = Calculate.PointsAlongStraightLine(sw, se).ToList();
             NorthFenceLine = Calculate.PointsAlongStraightLine(nw, ne).ToList();

@@ -5,6 +5,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ApplicationIcon>hd_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj" />
   </ItemGroup>

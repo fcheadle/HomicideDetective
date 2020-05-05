@@ -21,22 +21,18 @@ namespace Engine.Maps
         GuestBedroom,
         MasterBathroom
     }
-    internal class Room : Area
+    public class Room : Area
     {
-        internal readonly RoomType Type;
-        public Rectangle OuterRect { get; }
-        public Rectangle InnerRect { get; private set; }
+        public readonly RoomType Type;
 
-        internal Room(string name, Rectangle area, RoomType type) : base(
+        public Room(string name, Rectangle area, RoomType type) : base(
             name,
-            new Coord(area.MaxExtentX, area.MaxExtentY),
-            new Coord(area.MaxExtentX, area.MinExtentY),
+            new Coord(area.MaxExtentX + 1, area.MaxExtentY + 1),
+            new Coord(area.MaxExtentX + 1, area.MinExtentY),
             new Coord(area.MinExtentX, area.MinExtentY),
-            new Coord(area.MinExtentX, area.MaxExtentY)
+            new Coord(area.MinExtentX, area.MaxExtentY + 1)
             )
         {
-            OuterRect = area;
-            InnerRect = area;
             Type = type;
         }
 

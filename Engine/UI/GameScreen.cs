@@ -2,8 +2,6 @@
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
-using XnaRect = Microsoft.Xna.Framework.Rectangle;
-using TownMap = Engine.Maps.TownMap;
 using System.Linq;
 using Engine.Entities;
 using Engine.Extensions;
@@ -19,9 +17,8 @@ namespace Engine.UI
     {
         TimeSpan _elapsed = default;
         TimeSpan _windCounter = default;
-        TimeSpan _windInterval = TimeSpan.FromMilliseconds(100);
+        TimeSpan _windInterval = TimeSpan.FromMilliseconds(75);
         Func<int, int, TimeSpan, bool> f = Calculate.RandomFunction4d();
-        Dictionary<BlowsInWindComponent, bool> _windAffectedSpots = new Dictionary<BlowsInWindComponent, bool>();
         internal TownMap TownMap { get; }
         internal ScrollingConsole MapRenderer { get; }
         internal MessageConsole Messages { get; }
@@ -38,7 +35,7 @@ namespace Engine.UI
             Messages = new MessageConsole(24, viewportHeight - 24);
             Messages.Position = new Coord(viewportWidth - 24, 0);
 
-            MapRenderer = TownMap.CreateRenderer(new XnaRect(0, 0, viewportWidth - 25, viewportHeight), Global.FontDefault);
+            MapRenderer = TownMap.CreateRenderer(new Microsoft.Xna.Framework.Rectangle(0, 0, viewportWidth - 25, viewportHeight), Global.FontDefault);
             Children.Add(MapRenderer);
             Children.Add(Messages);
             Children.Add(Health.Console);
@@ -55,10 +52,10 @@ namespace Engine.UI
         {
             _elapsed += t;
             _windCounter += t;
-            if(_elapsed / _windCounter > 100)
+            if (Convert.ToInt32(_elapsed.TotalMilliseconds) % 1250 <= 2)// && Convert.ToInt32(_elapsed.TotalSeconds) % 10 <= 1)
             {
-                _elapsed = default;
                 f = Calculate.RandomFunction4d();
+                _windInterval = TimeSpan.FromMilliseconds(Calculate.Percent() + 30);
             }
             if (_windCounter > _windInterval)
             {

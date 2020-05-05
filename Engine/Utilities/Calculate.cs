@@ -101,10 +101,13 @@ namespace Engine
         };
         public static List<Func<int, int, TimeSpan, bool>> Functions4d = new List<Func<int, int, TimeSpan, bool>> //for future shenanigans
         {
-            (x,y,t) => Math.Sin(x / 3.33 + t.TotalSeconds) + Math.Cos(y * 3.33 + t.TotalSeconds) > 1.25, //odd, but quick enough
-            (x,y,t) => Math.Sin(x * 7.77 + t.TotalSeconds) + Math.Cos(y / 7.77 + t.TotalSeconds) > 1.25, //odd, but quick enough
-            (x,y,t) => (int)(t.TotalSeconds * 50 + x + y) % 192 <= 3, //simple, quick enough
-            (x,y,t) => (int)(x * 3.5 + y / 2.5 + t.TotalMilliseconds) % 77 == 1,//beautiful, quick enough
+            (x,y,t) => Math.Sin(x / 3.33 + t.TotalSeconds) + Math.Cos(y * 3.33 + t.TotalSeconds) > 1.0, //odd, but quick enough
+            (x,y,t) => Math.Sin(x * 7.77 + t.TotalSeconds) + Math.Cos(y / 7.77 + t.TotalSeconds) > 1.1, //odd, but quick enough
+            (x,y,t) => (int)(t.TotalMilliseconds * 50 + x + y) % 192 <= 3, //simple, quick enough
+            (x,y,t) => (int)(Settings.MapHeight - x - y + t.TotalMilliseconds / 49) % 192 <= 3, //simple, quick enough
+            (x,y,t) => (int)(x * (x / 8) + Math.Sin(y)*4 + t.TotalSeconds * 25) % 77 == 1,//BEAUTIFUL!, quick enough
+            (x,y,t) => (int)(Math.Cos(x)* 3.75 + x + y * 4.15 + t.TotalSeconds * 25) % 64 <= 5,//BEAUTIFUL!, quick enough
+            (x,y,t) => (int)(Math.Cos((x/3)) - (x*0.8) + y * 4.15 + t.TotalSeconds * 25) % 64 <= 5,//BEAUTIFUL!, quick enough
             (x,y,t) => (int)(x + y + t.TotalSeconds * 200) % 48 == 1, //beautiful, quick enough
         };
 
@@ -148,10 +151,10 @@ namespace Engine
         {
             List<Coord> inner = new List<Coord>();
             outer = outer.OrderBy(x => x.X).ToList();
-            for (int i = outer.First().X; i < outer.Last().X; i++)
+            for (int i = outer.First().X; i <= outer.Last().X; i++)
             {
                 List<Coord> chunk = outer.Where(w => w.X == i).OrderBy(o => o.Y).ToList();
-                for (int j = 0; j < chunk.Last().Y; j++)
+                for (int j = chunk.First().Y; j <= chunk.Last().Y; j++)
                 {
                     yield return new Coord(i, j);
                 }
