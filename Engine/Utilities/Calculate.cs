@@ -139,7 +139,6 @@ namespace Engine
             (x,y,t) => (int)(Math.Cos(x)* 3.75 + x + y * 4.15 + t.TotalSeconds * 25) % 64 <= 5,//alright
             (x,y,t) => (int)(Math.Cos((x/3)) - (x*0.8) + y * 4.15 - t.TotalSeconds * 18) % 64 <= 5,//alright
         };
-
         public static List<Func<double, Point>> FunctionsPolar = new List<Func<double, Point>> 
         {
             (theta) => //the butterfly curve
@@ -156,26 +155,21 @@ namespace Engine
                 return new Point((int)x, (int)y);
             }
         };
-
         public static Func<double, double> RandomFunction2d()
         {
             int index = Settings.Random.Next(0, Functions2d.Count);
             return Functions2d[index];
         }
-
         public static Func<int, int, double> RandomFunction3d()
         {
             int index = Settings.Random.Next(0, Functions3d.Count);
             return Functions3d[index];
         }
-
         public static T RandomEnumValue<T>()
         {
             var v = Enum.GetValues(typeof(T));
             return (T)v.GetValue(new Random().Next(v.Length));
         }
-
-
         public static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
         {
             List<Coord> inner = new List<Coord>();
