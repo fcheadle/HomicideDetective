@@ -101,11 +101,43 @@ namespace Engine
         };
         public static List<Func<int, int, TimeSpan, bool>> Functions4d = new List<Func<int, int, TimeSpan, bool>> //for future shenanigans
         {
-            (x,y,t) => Math.Sin(x / 3.33 + t.TotalSeconds) + Math.Cos(y * 3.33 + t.TotalSeconds) > 1.25, //odd, but quick enough
-            (x,y,t) => Math.Sin(x * 7.77 + t.TotalSeconds) + Math.Cos(y / 7.77 + t.TotalSeconds) > 1.25, //odd, but quick enough
-            (x,y,t) => (int)(t.TotalSeconds * 50 + x + y) % 192 <= 3, //simple, quick enough
-            (x,y,t) => (int)(x * 3.5 + y / 2.5 + t.TotalMilliseconds) % 77 == 1,//beautiful, quick enough
-            (x,y,t) => (int)(x + y + t.TotalSeconds * 200) % 48 == 1, //beautiful, quick enough
+            (x,y,t) => Math.Cos(t.TotalMilliseconds / 222 + Math.Sqrt((x*x) + (y*y))) > 0.95, //concentric waves converging on 0,0
+            (x,y,t) => Math.Cos(-t.TotalMilliseconds / 333 - Math.Sqrt(Math.Abs((-x*x) + (y*y)))) > 0.9, //spiraling waves converging on 0,max
+            (x,y,t) => Math.Cos(-t.TotalMilliseconds / 444 + Math.Sqrt((x*x) + (y*y))) > 0.9, //concentric waves diverging from 0,0
+            (x,y,t) => Math.Cos(t.TotalMilliseconds / 555 + Math.Sqrt(Math.Abs((x*x) + (y * 20)))) > 0.9, //spiraling towards 0,0
+            (x,y,t) => Math.Cos(t.TotalMilliseconds / 666 + Math.Sqrt(Math.Abs((x * y) + y))) > 0.9, //odd waves
+            (x,y,t) => Math.Cos(t.TotalMilliseconds / 777 + Math.Sqrt(Math.Abs(y * y * 0.75 - x * 3.5))) > 0.9, //odd waves, left to right
+            (x,y,t) => Math.Cos(- t.TotalMilliseconds / 777 + Math.Sqrt(Math.Abs(y * y * 0.75 - x * 3.5))) > 0.9, //odd waves, right to left
+            (x,y,t) => Math.Cos(t.TotalMilliseconds / 777 - Math.Sqrt(y * y * x * x)) > 0.95, //light chaos
+            (x,y,t) => Math.Sin(t.TotalMilliseconds / 777 + Math.Sqrt(y * y * x)) > 0.95, //light chaos
+            (x,y,t) => Math.Sin(t.TotalMilliseconds / 777 - Math.Sqrt(y * x * x)) > 0.95, //light chaos
+            (x,y,t) => Math.Sin(-t.TotalMilliseconds / 777 + Math.Sqrt(y * y * x)) > 0.95, //light chaos
+            (x,y,t) => Math.Sin(-t.TotalMilliseconds / 777 - Math.Sqrt(y * x * x)) > 0.95, //light chaos
+            (x,y,t) => Math.Cos(t.TotalMilliseconds / 888 + Math.Sqrt(Math.Abs((y*y) - (x*x)))) > 0.9, //beautiful
+            (x,y,t) => Math.Cos(-t.TotalMilliseconds / 999 + Math.Sqrt(Math.Abs((x*x) - (y*y)))) > 0.9, //beautiful
+            (x,y,t) => Math.Sin(x / 3.33 + t.TotalSeconds) + Math.Cos(y * 3.33 + t.TotalSeconds) > 1.0, //odd
+            (x,y,t) => Math.Sin(x / 3.33 + t.TotalMilliseconds / 666) + Math.Cos(y * 8.76 + t.TotalMilliseconds / 222) > 1.25, //odd
+            (x,y,t) => Math.Sin(x + t.TotalMilliseconds / 444) + Math.Cos(y + t.TotalMilliseconds / 333) > 1.25,
+            (x,y,t) => Math.Sin(x - t.TotalMilliseconds / 111) + Math.Cos(y + t.TotalMilliseconds / 333) > 1.25,
+            (x,y,t) => Math.Sin(x + t.TotalMilliseconds / 111) + Math.Cos(y - t.TotalMilliseconds / 555) > 1.25,
+            (x,y,t) => - Math.Cos(x * 3.45 - t.TotalMilliseconds / 777) - Math.Sin(y*0.77 - t.TotalMilliseconds / 77) < -1.25,
+            (x,y,t) => Math.Cos(x * 3.45 - t.TotalMilliseconds / 500) - Math.Sin(y*0.77 - t.TotalMilliseconds / 250) < -1.25,
+            (x,y,t) => Math.Cos(x * 0.88 + t.TotalMilliseconds / 333) + Math.Sin(y*1.125 - t.TotalMilliseconds / 777) > 1.55,
+            (x,y,t) => Math.Cos(x * 1.125 - t.TotalMilliseconds / 111) + Math.Sin(y + t.TotalMilliseconds / 999) > 1.55,
+            (x,y,t) => Math.Cos(x * y - t.TotalMilliseconds / 999) + Math.Sin(y - t.TotalMilliseconds / 111) > 1.55,
+            (x,y,t) => Math.Cos(x * y - t.TotalMilliseconds / 222) + Math.Sin(y * 4 - t.TotalMilliseconds / 222) > 1.55,
+            (x,y,t) => Math.Cos(x * y + t.TotalMilliseconds / 144) + Math.Sin(y * x - t.TotalMilliseconds / 366) > 1.55, //odd shapes
+            (x,y,t) => Math.Cos(x * y + t.TotalMilliseconds / 666) - Math.Sin(-1.5 * y * x - t.TotalMilliseconds / 222) < -1.55, //chaotic with chapes
+            (x,y,t) => Math.Cos(x * y + t.TotalMilliseconds / 666) + Math.Sin(y * x) < -1.55, //light breeze
+            (x,y,t) => Math.Cos(y) + Math.Sin(x * y + t.TotalMilliseconds / 666) > 1.55, //light breeze
+            (x,y,t) => Math.Cos(y + t.TotalSeconds) + Math.Sin(x * y - t.TotalMilliseconds / 666) > 1.55, //light breeze
+            (x,y,t) => Math.Sin(x * 7.77 + t.TotalSeconds) + Math.Cos(y / 7.77 + t.TotalSeconds) > 1.1, //odd
+            (x,y,t) => (int)(x * (x / 8) + Math.Sin(y)*4 + t.TotalSeconds * 25) % 77 == 1,//BEAUTIFUL
+            (x,y,t) => (int)(Math.Tan(x*0.875) + Math.Tan(y*1.875) + t.TotalSeconds * 11) % 54 == 1,//BEAUTIFUL!, quick enough
+            (x,y,t) => (int)(x*1.111 + Math.Tan(y*.875) - t.TotalMilliseconds / 250) % 23 == 1,//ok
+            (x,y,t) => (int)(y*4.4 + Math.Tan(x*0.666) - t.TotalMilliseconds / 188) % 47 == 1,//nice
+            (x,y,t) => (int)(Math.Cos(x)* 3.75 + x + y * 4.15 + t.TotalSeconds * 25) % 64 <= 5,//alright
+            (x,y,t) => (int)(Math.Cos((x/3)) - (x*0.8) + y * 4.15 - t.TotalSeconds * 18) % 64 <= 5,//alright
         };
 
         public static List<Func<double, Point>> FunctionsPolar = new List<Func<double, Point>> 
@@ -148,10 +180,10 @@ namespace Engine
         {
             List<Coord> inner = new List<Coord>();
             outer = outer.OrderBy(x => x.X).ToList();
-            for (int i = outer.First().X; i < outer.Last().X; i++)
+            for (int i = outer.First().X; i <= outer.Last().X; i++)
             {
                 List<Coord> chunk = outer.Where(w => w.X == i).OrderBy(o => o.Y).ToList();
-                for (int j = 0; j < chunk.Last().Y; j++)
+                for (int j = chunk.First().Y; j <= chunk.Last().Y; j++)
                 {
                     yield return new Coord(i, j);
                 }

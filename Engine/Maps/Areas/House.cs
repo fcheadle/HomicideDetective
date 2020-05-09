@@ -210,9 +210,9 @@ namespace Engine.Maps
         {
             List<Coord> walls = new List<Coord>();
 
-            foreach (Coord c in Calculate.BorderLocations(imposing.OuterRect))
+            foreach (Coord c in imposing.OuterPoints)
             {
-                if(host.OuterRect.Contains(c))
+                if(host.Contains(c))
                     walls.Add(c);
             }
 
@@ -222,7 +222,7 @@ namespace Engine.Maps
                     Map.SetTerrain(TerrainFactory.HardwoodFloor(arch));
             }
 
-            foreach(Coord c in Calculate.BorderLocations(host.OuterRect))
+            foreach(Coord c in host.OuterPoints)
             {
                 if (walls.Contains(c) && Map.Contains(c))
                     Map.SetTerrain(TerrainFactory.Wall(c));

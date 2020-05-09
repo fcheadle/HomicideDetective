@@ -392,7 +392,6 @@ namespace Engine.Maps
             Intersections.Add(ri);
         }
     }
-
     internal class RoadIntersection : Area
     {
         public RoadNumbers HorizontalStreet { get; }

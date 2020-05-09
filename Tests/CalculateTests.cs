@@ -32,6 +32,7 @@ namespace Tests
             var f = Calculate.RandomFunction4d();
             bool answer = f(63, 35, TimeSpan.FromMilliseconds(100));
             Assert.AreNotEqual(0.000, answer); //I mean, statistically...
+            //Assert.Fail();
         }
         [Test]
         public void InnerFromOuterPointsTest()
@@ -39,13 +40,23 @@ namespace Tests
             List<Coord> inner = new List<Coord>();
             List<Coord> outer = new List<Coord>();
 
-            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(2, 3), new Coord(8, 9)));
-            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(8, 9), new Coord(5, 14)));
-            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(5, 14), new Coord(-1, 7)));
-            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(-1, 7), new Coord(2,3)));
+            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(1, 1), new Coord(5, 0)));
+            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(5, 0), new Coord(7, 3)));
+            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(7, 3), new Coord(3, 4)));
+            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(3, 4), new Coord(1, 1)));
 
             inner = Calculate.InnerFromOuterPoints(outer).ToList();
             Assert.Greater(outer.Count * 10, inner.Count);
+
+            Assert.IsFalse(inner.Contains(new Coord(-5, -5)));
+            Assert.IsFalse(inner.Contains(new Coord(1, 2)));
+            Assert.IsFalse(inner.Contains(new Coord(9, 8)));
+            Assert.IsFalse(inner.Contains(new Coord(6, 15)));
+
+            Assert.IsTrue(inner.Contains(new Coord(2, 1)));
+            Assert.IsTrue(inner.Contains(new Coord(4, 1)));
+            Assert.IsTrue(inner.Contains(new Coord(6, 3)));
+            Assert.IsTrue(inner.Contains(new Coord(3, 3)));
         }
         [Test]
         public void PointsAlongStraightLineTest()
@@ -65,20 +76,36 @@ namespace Tests
         [Test]
         public void BorderLocationsTest()
         {
+            /*
+             * 01234567890
+             *0 
+             *1 XxxX
+             *2 x  x
+             *3 x  x
+             *4 x  x
+             *5 XxxX
+             *6 
+             * 
+             */
             int xmin = 1;
             int ymin = 1;
             int xmax = 4;
             int ymax = 5;
+            int expectedCount = 14;
             var answer = Calculate.BorderLocations(new Rectangle(new Coord(xmin, ymin), new Coord(xmax, ymax)));
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
                     Coord c = new Coord(i, j);
-                    if ((i == xmin && j >= ymin && j <= ymax) || (j == ymin && i >= xmin && i <= xmax))
+                    if (
+                        (i == xmin && (j == ymin || j == ymax)) ||
+                        (j == ymin && (i == xmin || i == xmax - 1)) ||
+                        (i == xmax && (j == ymin || j == ymax)) ||
+                        (j == ymax && (i == xmin || i == xmax)))
+                    {
                         Assert.Contains(c, answer);
-                    if ((i == xmax && j >= ymin && j <= ymax) || (j == ymax && i >= xmin && i <= xmax))
-                        Assert.Contains(c, answer);
+                    }
                 }
             }
 
@@ -160,45 +187,45 @@ namespace Tests
             Assert.Greater(expectedTheta + 0.01, target.Theta);
             Assert.Less(expectedRadius - 0.01, target.Radius);
             Assert.Greater(expectedRadius + 0.01, target.Radius);
-
-            //origin = new Coord(3, 13);
-            //target = Calculate.CartesianToPolar(origin);
-            //Assert.Less(0.86, target.theta);
-            //Assert.Greater(0.87, target.theta);
-            //Assert.AreEqual(4, target.radius);
         }
         [Test]
         public void PolarCoordTest()
         {
             PolarCoord target = Calculate.CartesianToPolar(new Coord(5, 5));
             PolarCoord origin = new PolarCoord(7.0710678118654755d, 0.64209261593433065);
-            Assert.AreEqual(target.Radius, origin.Radius);
-            Assert.AreEqual(target.Theta, origin.Theta);
             Coord cartTarget = Calculate.PolarToCartesian(target);
             Coord cartOrigin = Calculate.PolarToCartesian(origin);
+
+            Assert.AreEqual(target.Radius, origin.Radius);
+            Assert.AreEqual(target.Theta, origin.Theta);
             Assert.AreEqual(cartOrigin, cartTarget);
         }
 
         [Test]
         public void RadiansToDegreesTest()
         {
-            Assert.Greater(Calculate.RadiansToDegrees(Math.PI), 179.95f);
-            Assert.Less(Calculate.RadiansToDegrees(Math.PI), 180.05f);
+            Assert.Greater(Calculate.RadiansToDegrees(Math.PI), 179.99f);
+            Assert.Less(Calculate.RadiansToDegrees(Math.PI), 180.01f);
         }
         [Test]
         public void DegreesToRadiansTest()
         {
-            Assert.Greater(Calculate.DegreesToRadians(180), Math.PI - 0.05);
-            Assert.Less(Calculate.DegreesToRadians(180), Math.PI + 0.05);
+            Assert.Greater(Calculate.DegreesToRadians(180), Math.PI - 0.01);
+            Assert.Less(Calculate.DegreesToRadians(180), Math.PI + 0.01);
         }
         [Test]
         public void PercentTest()
         {
+            List<int> previousChances = new List<int>();
             for (int i = 0; i < 50; i++)
             {
-                Assert.Less(Calculate.Percent(), 101);
-                Assert.Greater(Calculate.Percent(), 0);
+                int x = Calculate.Percent();
+                previousChances.Add(x);
+                Assert.Less(x, 101);
+                Assert.Greater(x, 0);
             }
+
+            Assert.Greater(previousChances.Distinct().Count(), 12);
         }
     }
 }
