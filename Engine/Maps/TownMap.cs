@@ -21,7 +21,7 @@ namespace Engine.Maps
                 .Concat(Blocks)
                 .Concat(Houses)
                 .Concat(Intersections.Values)
-                .Concat(Rooms).ToList()
+                .Concat(Rooms)
                 .ToList()
                 ; 
         }
@@ -73,12 +73,12 @@ namespace Engine.Maps
 
             for(int i = 0; i < HorizontalRoads.Count - 1; i++)
             {
-                Road h = HorizontalRoads[Calculate.EnumValueFromIndex<RoadNumbers>(i)];
+                Road h = HorizontalRoads[(RoadNumbers)i];
                 for (int j = 0; j < h.Intersections.Count - 1; j++)
                 {
                     RoadIntersection nw = h.Intersections[j];
                     RoadIntersection ne = h.Intersections[j + 1];
-                    Road r = HorizontalRoads[Calculate.EnumValueFromIndex<RoadNumbers>(i + 1)];
+                    Road r = HorizontalRoads[(RoadNumbers)i + 1];
                     RoadIntersection sw = r.Intersections[j];
                     RoadIntersection se = r.Intersections[j + 1];
                     Blocks.Add(new Block(nw, sw, se, ne));

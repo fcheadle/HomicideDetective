@@ -1,4 +1,5 @@
-﻿using GoRogue;
+﻿using Engine.Extensions;
+using GoRogue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +28,10 @@ namespace Engine.Maps
         public SadConsole.Orientation Orientation { get; }
         public int Width { get => Right - Left; }
         public int Height { get => Bottom - Top; }
-        public int LeftAt(int y) => OuterPoints.Where(c => c.Y == y).OrderBy(c => c.X).First().X;
-        public int RightAt(int y) => OuterPoints.Where(c => c.Y == y).OrderBy(c => c.X).Last().X;
-        public int TopAt(int x) => OuterPoints.Where(c => c.X == x).OrderBy(c => c.Y).First().Y;
-        public int BottomAt(int x) => OuterPoints.Where(c => c.X == x).OrderBy(c => c.Y).Last().Y;
+        public int LeftAt(int y) => OuterPoints.LeftAt(y);
+        public int RightAt(int y) => OuterPoints.RightAt(y);
+        public int TopAt(int x) => OuterPoints.TopAt(x);
+        public int BottomAt(int x) => OuterPoints.BottomAt(x);
         public Area(string name, Coord se, Coord ne, Coord nw, Coord sw)
         {
             Name = name;
@@ -96,5 +97,7 @@ namespace Engine.Maps
                 }
             }
         }
+
+
     }
 }

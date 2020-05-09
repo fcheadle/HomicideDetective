@@ -5,25 +5,25 @@ using System.Linq;
 
 namespace Engine.Maps
 {
-    internal class Block : Area
+    public class Block : Area
     {
-        internal List<Coord> SouthFenceLine { get; private set; }
-        internal List<Coord> NorthFenceLine { get; private set; }
-        internal List<Coord> WestFenceLine { get; private set; }
-        internal List<Coord> EastFenceLine { get; private set; }
-        internal List<Coord> Addresses { get; private set; }
-        internal List<Coord> FenceLocations { get => SouthFenceLine.Concat(NorthFenceLine).Concat(WestFenceLine).Concat(EastFenceLine).ToList(); }
-        internal Block(RoadIntersection nw, RoadIntersection sw, RoadIntersection se, RoadIntersection ne) :
+        public List<Coord> SouthFenceLine { get; private set; }
+        public List<Coord> NorthFenceLine { get; private set; }
+        public List<Coord> WestFenceLine { get; private set; }
+        public List<Coord> EastFenceLine { get; private set; }
+        public List<Coord> Addresses { get; private set; }
+        public List<Coord> FenceLocations { get => SouthFenceLine.Concat(NorthFenceLine).Concat(WestFenceLine).Concat(EastFenceLine).ToList(); }
+        public Block(RoadIntersection nw, RoadIntersection sw, RoadIntersection se, RoadIntersection ne) :
             base(
                 Convert.ToInt32(sw.HorizontalStreet + 1).ToString() + "00 Block " + sw.VerticalStreet.ToString(),
-                se.SouthEastCorner,
-                ne.NorthEastCorner,
-                nw.NorthWestCorner,
-                sw.SouthWestCorner
+                se.NorthWestCorner,
+                ne.SouthWestCorner,
+                nw.SouthEastCorner,
+                sw.NorthEastCorner
                 )
         { }
 
-        internal IEnumerable<Coord> GetFenceLocations()
+        public IEnumerable<Coord> GetFenceLocations()
         {
             Coord sw = SouthWestCorner + new Coord(16,-16);
             Coord nw = NorthWestCorner + new Coord(16, 16);
