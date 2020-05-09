@@ -76,20 +76,36 @@ namespace Tests
         [Test]
         public void BorderLocationsTest()
         {
+            /*
+             * 01234567890
+             *0 
+             *1 XxxX
+             *2 x  x
+             *3 x  x
+             *4 x  x
+             *5 XxxX
+             *6 
+             * 
+             */
             int xmin = 1;
             int ymin = 1;
             int xmax = 4;
             int ymax = 5;
+            int expectedCount = 14;
             var answer = Calculate.BorderLocations(new Rectangle(new Coord(xmin, ymin), new Coord(xmax, ymax)));
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
                     Coord c = new Coord(i, j);
-                    if ((i == xmin && j == ymin && j == ymax) || (j == ymin && i == xmin && i == xmax - 1))
+                    if (
+                        (i == xmin && (j == ymin || j == ymax)) ||
+                        (j == ymin && (i == xmin || i == xmax - 1)) ||
+                        (i == xmax && (j == ymin || j == ymax)) ||
+                        (j == ymax && (i == xmin || i == xmax)))
+                    {
                         Assert.Contains(c, answer);
-                    if ((i == xmax && j == ymin && j == ymax) || (j == ymax && i == xmin && i == xmax - 1))
-                        Assert.Contains(c, answer);
+                    }
                 }
             }
 

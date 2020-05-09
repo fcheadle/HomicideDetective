@@ -18,6 +18,8 @@ namespace Engine.UI
         TimeSpan _elapsed = default;
         TimeSpan _windCounter = default;
         TimeSpan _windInterval = TimeSpan.FromMilliseconds(75);
+        int _xOffset;
+        int _yOffset;
         Func<int, int, TimeSpan, bool> f = Calculate.RandomFunction4d();
         internal TownMap TownMap { get; }
         internal ScrollingConsole MapRenderer { get; }
@@ -28,10 +30,11 @@ namespace Engine.UI
         internal GameScreen(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight)
         {
             TownMap = new TownMap(mapWidth, mapHeight);
-            Player = CreatureFactory.Player(new Coord(33, 33));
+            _xOffset = mapWidth - 33;// / 2;
+            _yOffset = mapHeight - 33;// / 2;
+            Player = CreatureFactory.Player(new Coord(_xOffset, _yOffset));
             TownMap.ControlledGameObject = Player;
             TownMap.AddEntity(TownMap.ControlledGameObject);
-            
             Messages = new MessageConsole(24, viewportHeight - 24);
             Messages.Position = new Coord(viewportWidth - 24, 0);
 
@@ -52,10 +55,10 @@ namespace Engine.UI
         {
             _elapsed += t;
             _windCounter += t;
-            if (Convert.ToInt32(_elapsed.TotalMilliseconds) % 1250 <= 2)// && Convert.ToInt32(_elapsed.TotalSeconds) % 10 <= 1)
+            if (Convert.ToInt32(_elapsed.TotalMilliseconds) % (_windInterval.TotalMilliseconds * 100) <= 1)// && Convert.ToInt32(_elapsed.TotalSeconds) % 10 <= 1)
             {
                 f = Calculate.RandomFunction4d();
-                _windInterval = TimeSpan.FromMilliseconds(Calculate.Percent() + 30);
+                _windInterval = TimeSpan.FromMilliseconds(Calculate.Percent() * 2 + 50);
             }
             if (_windCounter > _windInterval)
             {
@@ -72,7 +75,7 @@ namespace Engine.UI
                                 BlowsInWindComponent c = terrain.GetComponent<BlowsInWindComponent>();
                                 if (c != null)
                                 {
-                                    if (f(x, y, _elapsed))
+                                    if (f(x + _xOffset, y + _yOffset, _elapsed))
                                     {
                                         c.Blow();
                                     }
