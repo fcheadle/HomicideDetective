@@ -3,6 +3,7 @@ using GoRogue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Engine.Maps
@@ -10,9 +11,10 @@ namespace Engine.Maps
     public class Area
     {
         public string Name { get; set; }
+        public Coord Origin { get; set; }
+        public Dictionary<Enum, Area> SubAreas { get; set; } = new Dictionary<Enum, Area>();
         public List<Coord> OuterPoints { get; set; } = new List<Coord>();
         public List<Coord> InnerPoints { get; set; } = new List<Coord>();
-        public Coord Origin { get; set; }
         public List<Coord> SouthBoundary { get; }
         public List<Coord> NorthBoundary { get; }
         public List<Coord> EastBoundary { get; }
@@ -32,6 +34,8 @@ namespace Engine.Maps
         public int RightAt(int y) => OuterPoints.RightAt(y);
         public int TopAt(int x) => OuterPoints.TopAt(x);
         public int BottomAt(int x) => OuterPoints.BottomAt(x);
+
+        public Area this[Enum e] => SubAreas[e];
         public Area(string name, Coord se, Coord ne, Coord nw, Coord sw)
         {
             Name = name;

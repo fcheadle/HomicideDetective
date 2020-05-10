@@ -31,7 +31,7 @@ namespace Engine.Maps
         internal Dictionary<RoadNames, Road> VerticalRoads { get; private set; } = new Dictionary<RoadNames, Road>();
         internal List<Block> Blocks { get; private set; } = new List<Block>();
         internal List<House> Houses { get; private set; } = new List<House>();
-        internal List<Room> Rooms { get; private set; } = new List<Room>();
+        internal List<Area> Rooms { get; private set; } = new List<Area>();
         public FOVVisibilityHandler FovVisibilityHandler { get; }
         internal TownMap(int width, int height) : base(width, height, Calculate.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {
@@ -40,7 +40,7 @@ namespace Engine.Maps
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
             MakeOutdoors();
             MakeRoadsAndBlocks();
-            //MakeHouses();
+            MakeHouses();
             //MakePeople();
         }
         private void MakeRoadsAndBlocks()
@@ -129,9 +129,9 @@ namespace Engine.Maps
                     Houses.Add(house);
                     i++;
                     
-                    foreach(Room r in house.Rooms.Values)
+                    foreach(Area r in house.SubAreas.Values)
                     {
-                        Rooms.Add((Room)r.Shift());
+                        Rooms.Add((Area)r.Shift());
                     }
                     
                     for (int j = 0; j < houseDistance; j++)
@@ -145,10 +145,6 @@ namespace Engine.Maps
                             }
                         }
                     }
-
-                    foreach (Coord c in house.OuterPoints)
-                        if (this.Contains(c))
-                            SetTerrain(TerrainFactory.Test(8, c));
                 }
             }
         }
