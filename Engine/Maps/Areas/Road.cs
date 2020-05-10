@@ -294,23 +294,14 @@ namespace Engine.Maps
         OneHundred,
         OneHundredFirst,
     }
-    internal class Road : Area
+    public class Road : Area
     {
-        internal Coord Start { get; }
-        internal Coord Stop { get; }
-        internal int Value
-        {
-            get
-            {
-                try { return Convert.ToInt32(StreetName); }
-                catch { return Convert.ToInt32(StreetNumber); }
-
-            }
-        }
-        internal RoadNames StreetName { get; }
-        internal RoadNumbers StreetNumber { get; }
-        internal List<RoadIntersection> Intersections { get; private set; } = new List<RoadIntersection>();
-        internal Road(Coord start, Coord stop, RoadNames name) :
+        public Coord Start { get; }
+        public Coord Stop { get; }
+        public RoadNames StreetName { get; }
+        public RoadNumbers StreetNumber { get; }
+        public List<RoadIntersection> Intersections { get; private set; } = new List<RoadIntersection>();
+        public Road(Coord start, Coord stop, RoadNames name) :
             base(
                 name.ToString(),
                 new Coord(start.X > stop.X ? start.X : stop.X, start.Y > stop.Y ? start.Y : stop.Y),
@@ -343,7 +334,7 @@ namespace Engine.Maps
         }
 
 
-        internal Road(Coord start, Coord stop, RoadNumbers number) :
+        public Road(Coord start, Coord stop, RoadNumbers number) :
             base(
                 number.ToString(),
                 new Coord(start.X > stop.X ? start.X : stop.X, start.Y > stop.Y ? start.Y : stop.Y),
@@ -374,14 +365,14 @@ namespace Engine.Maps
             }
         }
 
-        internal void AddIntersection(RoadNames name, Road road)
+        public void AddIntersection(RoadNames name, Road road)
         {
             List<Coord> overlap = Overlap(road).ToList();
             RoadIntersection i = new RoadIntersection(road.StreetNumber, name, overlap);
             Intersections.Add(i);
 
         }
-        internal void AddIntersection(RoadNumbers number, Road road)
+        public void AddIntersection(RoadNumbers number, Road road)
         {
             List<Coord> overlap = Overlap(road).ToList();
             RoadIntersection i = new RoadIntersection(number, road.StreetName, overlap);
@@ -392,17 +383,17 @@ namespace Engine.Maps
             Intersections.Add(ri);
         }
     }
-    internal class RoadIntersection : Area
+    public class RoadIntersection : Area
     {
         public RoadNumbers HorizontalStreet { get; }
         public RoadNames VerticalStreet { get; }
-        internal RoadIntersection(RoadNumbers horizontalCrossStreet, RoadNames verticalCrossStreet, List<Coord> points) :
+        public RoadIntersection(RoadNumbers horizontalCrossStreet, RoadNames verticalCrossStreet, List<Coord> points) :
             base(
                 horizontalCrossStreet.ToString() + "-" + verticalCrossStreet + " Intersection",
-                points.OrderBy(x => x.Y).ToList().Last(),
-                points.OrderBy(x => x.Y).ToList().Last(),
-                points.OrderBy(x => x.Y).ToList().Last(),
-                points.OrderBy(x => x.Y).ToList().Last()
+                points.OrderBy(c => -c.Y).ThenBy(c => -c.X).ToList().First(),
+                points.OrderBy(c => c.Y).ThenBy(c => -c.X).ToList().First(),
+                points.OrderBy(c => c.Y).ThenBy(c => c.X).ToList().First(),
+                points.OrderBy(c => -c.Y).ThenBy(c => c.X).ToList().First()
                 )
         {
             HorizontalStreet = horizontalCrossStreet;

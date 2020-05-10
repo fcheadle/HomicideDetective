@@ -122,7 +122,7 @@ namespace Tests
             Coord one = new Coord(1, 1);
 
             foreach (Coord inner in a2.InnerPoints)
-                Assert.IsTrue(a1.Contains(inner + one));
+                Assert.IsTrue(a1.Contains(inner - one));
 
         }
         
@@ -131,19 +131,10 @@ namespace Tests
         {
             Coord two = new Coord(2, 2);
             Area a1 = area;
-            area.Shift(two);
+            Area a2 = area.Shift(two);
 
-            foreach (Coord inner in a1.InnerPoints)
-                Assert.IsTrue(area.Contains(inner + 2));
-        }
-
-
-        [Test]
-        public void RoomTest()
-        {
-            Rectangle rect = new Rectangle(0, 0, 4, 4);
-            Room room = new Room("test room", rect, RoomType.Parlor);
-            Assert.AreEqual(rect.Width * rect.Height, room.InnerPoints.Count);
+            foreach (Coord inner in a2.InnerPoints)
+                Assert.IsTrue(a1.Contains(inner - two));
         }
     }
 }
