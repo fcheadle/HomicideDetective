@@ -6,29 +6,37 @@ _A Procedurally Generated Murder-Mystery Game_
 
 Homicide Detective is a text-based game where you are a detective who investigates homicides. These homicides are generated somewhat randomly from ranges given in the .json files. (Coming Soon)
 
-[This project has a board on Trello for development](https://trello.com/invite/b/qngR0CGL/35e762327185af78bdd2959332b87e0d/homicide-detective). This board is in dire need of grooming so don't take it super seriously.
+[This project has a board on Trello for development](https://trello.com/invite/b/qngR0CGL/35e762327185af78bdd2959332b87e0d/homicide-detective). This board is up to date, but perhaps not granular enough on what I'm working on _right now_.
 
 [And a subreddit!](https://www.reddit.com/r/HomicideDetective)
 
 ### Playing
-
-Clone this repo, the open it in visual studio and run the debugger (f5). Later, I'll be doing some work to make it run like _real_ game.
+Clone it, run it. More later.
 
 ### Features
 
-Crime Scene Investigation!
-- Search crimes scenes carefully for clues:
+***NOT DONE***
+
+- Normal game mode is Crime Scene Investigation
+	- Search crimes scenes carefully for clues:
 	- Photograph scenes or items
 	- Dust for Prints
+		- Fingerprints are proc-genned arrays of glyphs
+		- partial fingerprints, only a small subset of the whole, will be left on most items a person touches
+		- partial fingerprints can be collected as evidence
+		- if the player chooses, they can combine the partial prints they've collected
+		- if a player does this carelessly, they will destroy evidence, and give the killer precious time to book town
 	- Check for tracks
+	- Stake out and see if anyone returns to the scene
 	- bring in the K9 Unit
 	- perpetrators who cover their tracks with varying degrees of attention to detail
 	
 - Intricate NPC Dialogue:
-	- Input is freetext
+	- Input is basic for now, will become much more complicated as time goes on
 	- NPCs will figure out what you mean and respond in character
 	- NPCs will have an ability to detect lies that varies according to skill
-	- NPC
+	- NPCs will have multiple different reasons why they might lie
+	- NPCs will remember who/what they saw at any given point that they've walked before (maybe not correctly)
 
 - Customizeable Settings:
 	- Blind mode / screen reader
