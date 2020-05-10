@@ -17,27 +17,15 @@ namespace Tests
         public void NewHorizontlRoadTest()
         {
             road = new Road(start, stop, RoadNumbers.Thirteenth);
-            Assert.Fail();
+            Assert.AreEqual(road.Name, RoadNumbers.Thirteenth.ToString());
+            Assert.Less(road.OuterPoints.Count, road.InnerPoints.Count);
         }
         [Test]
         public void NewVerticalRoadTest()
         {
-            Assert.Fail();
-        }
-        [Test]
-        public void AddIntersectionWithRoadNumber()
-        {
-            Assert.Fail();
-        }
-        [Test]
-        public void AddIntersectionWithRoadName()
-        {
-            Assert.Fail();
-        }
-        [Test]
-        public void AddIntersectionTest()
-        {
-            Assert.Fail();
+            road = new Road(start, stop, RoadNames.ZooFront);
+            Assert.AreEqual(road.Name, RoadNames.ZooFront.ToString());
+            Assert.Less(road.OuterPoints.Count, road.InnerPoints.Count);
         }
     }
 }

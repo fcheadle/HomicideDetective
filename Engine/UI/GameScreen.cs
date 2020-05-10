@@ -30,9 +30,7 @@ namespace Engine.UI
         internal GameScreen(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight)
         {
             TownMap = new TownMap(mapWidth, mapHeight);
-            _xOffset = mapWidth - 33;// / 2;
-            _yOffset = mapHeight - 33;// / 2;
-            Player = CreatureFactory.Player(new Coord(_xOffset, _yOffset));
+            Player = CreatureFactory.Player(new Coord(15, 15));
             TownMap.ControlledGameObject = Player;
             TownMap.AddEntity(TownMap.ControlledGameObject);
             Messages = new MessageConsole(24, viewportHeight - 24);
@@ -98,9 +96,11 @@ namespace Engine.UI
         private void Player_Moved(object sender, ItemMovedEventArgs<IGameObject> e)
         {
             TownMap.CalculateFOV(TownMap.ControlledGameObject.Position, Actor.FOVRadius, Settings.FOVRadius);
-            Area[] areas = Player.GetCurrentRegions().ToArray();
-            if (areas != null)
-                Messages.Print(areas);
+            List<string> output = new List<string>();
+            output.Add("At coordinate " + Player.Position.X + ", " + Player.Position.Y);
+            foreach (Area area in Player.GetCurrentRegions())
+                output.Add(area.ToString());
+            Messages.Print(output.ToArray());
             Health.Print();
             MapRenderer.CenterViewPortOnPoint(TownMap.ControlledGameObject.Position);
         }

@@ -81,26 +81,52 @@ namespace Tests
         public void GetFenceLocationsTest()
         {
             List<Coord> locations = block.GetFenceLocations().ToList();
-        }
-        [Test]
-        public void SouthFenceLineTest()
-        {
-            Assert.Fail();
-        }
-        [Test]
-        public void NorthFenceLineTest()
-        {
-            Assert.Fail();
-        }
-        [Test]
-        public void EastFenceLineTest()
-        {
-            Assert.Fail();
-        }
-        [Test]
-        public void WestFenceLineTest()
-        {
-            Assert.Fail();
+            Assert.IsEmpty(locations);
+
+            nwIntersection = new RoadIntersection(RoadNumbers.Seventh, RoadNames.Guthrow, new List<Coord>()
+            {
+                new Coord(0, 0),
+                new Coord(0, 1),
+                new Coord(1, 0),
+                new Coord(1, 1),
+            });
+            swIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
+            {
+                new Coord(3, 40),
+                new Coord(3, 41),
+                new Coord(4, 40),
+                new Coord(4, 41),
+            });
+            neIntersection = new RoadIntersection(RoadNumbers.Seventh, RoadNames.Guthrow, new List<Coord>()
+            {
+                new Coord(55, 0),
+                new Coord(55, 1),
+                new Coord(56, 0),
+                new Coord(56, 1),
+            });
+            seIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
+            {
+                new Coord(50, 50),
+                new Coord(50, 51),
+                new Coord(51, 50),
+                new Coord(51, 51),
+            });
+
+            block = new Block(nwIntersection, swIntersection, seIntersection, neIntersection); 
+            locations = block.GetFenceLocations().ToList();
+            Assert.IsEmpty(locations);
+
+            swIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
+            {
+                new Coord(3, 70),
+                new Coord(3, 71),
+                new Coord(4, 70),
+                new Coord(4, 71),
+            });
+
+            block = new Block(nwIntersection, swIntersection, seIntersection, neIntersection);
+            locations = block.GetFenceLocations().ToList();
+            Assert.IsNotEmpty(locations);
         }
     }
 }

@@ -25,12 +25,30 @@ namespace Engine.Maps
 
         public IEnumerable<Coord> GetFenceLocations()
         {
-            Coord sw = SouthWestCorner + new Coord(16,-16);
+            List<Coord> answer = new List<Coord>();
+            int houseDistance = 24;
+            int length = 0;
+            switch (Orientation)
+            {
+                default:
+                case SadConsole.Orientation.Horizontal:
+                    length += NorthBoundary.Count + SouthBoundary.Count;
+                    length /= 2;
+                    break;
+                case SadConsole.Orientation.Vertical:
+                    length += WestBoundary.Count + EastBoundary.Count;
+                    length /= 2;
+                    break;
+            }
+
+            if (length <= 48) //no fence blocks (too small)
+                return answer;
+
+            Coord sw = SouthWestCorner + new Coord(16, -16);
             Coord nw = NorthWestCorner + new Coord(16, 16);
             Coord se = SouthEastCorner + new Coord(-16, -16);
             Coord ne = NorthEastCorner + new Coord(-16, 16);
 
-           List<Coord>answer = new List<Coord>();
             Addresses = new List<Coord>();
             WestFenceLine = Calculate.PointsAlongStraightLine(nw, sw).ToList();
             SouthFenceLine = Calculate.PointsAlongStraightLine(sw, se).ToList();
@@ -40,29 +58,41 @@ namespace Engine.Maps
             answer.AddRange(EastFenceLine);
             answer.AddRange(NorthFenceLine);
             answer.AddRange(SouthFenceLine);
-            if (Orientation == SadConsole.Orientation.Horizontal)
+
+            List<Coord> lowerBoundary = new List<Coord>();
+            List<Coord> upperBoundary = new List<Coord>();
+
+            switch (Orientation)
             {
-                answer.AddRange(Calculate.PointsAlongStraightLine(EastFenceLine[EastFenceLine.Count / 2], WestFenceLine[WestFenceLine.Count / 2]));
-                for (int i = 0; i < NorthFenceLine.Count - 12; i += 16) //for now
-                {
-                    Coord start = NorthFenceLine[i];
-                    Coord stop = SouthFenceLine[i];
-                    answer.AddRange(Calculate.PointsAlongStraightLine(start, stop));
-                    Addresses.Add(start/* + new Coord(3, 3)*/);
-                    Addresses.Add(stop/* + new Coord(3, -13)*/);
-                }
+                default:
+                case SadConsole.Orientation.Horizontal:
+                    lowerBoundary = WestFenceLine;
+                    upperBoundary = EastFenceLine;  
+                    answer.AddRange(Calculate.PointsAlongStraightLine(NorthFenceLine[NorthFenceLine.Count / 2], SouthFenceLine[SouthFenceLine.Count / 2]));                  
+                    break;
+                case SadConsole.Orientation.Vertical:
+                    lowerBoundary = NorthFenceLine; //because lower refers to numerically, not geographically
+                    upperBoundary = SouthFenceLine;
+                    answer.AddRange(Calculate.PointsAlongStraightLine(EastFenceLine[EastFenceLine.Count / 2], WestFenceLine[WestFenceLine.Count / 2]));
+                    break;
             }
-            else
+
+
+            if (length <= 73) //one fence block
+                return answer;
+
+
+            int halfNumOfAddresses = length / houseDistance;
+            Coord offset = Orientation == SadConsole.Orientation.Horizontal ? new Coord(8, 0) : new Coord(0, 8);
+            for (int i = 0; i < halfNumOfAddresses; i++)
             {
-                answer.AddRange(Calculate.PointsAlongStraightLine(NorthFenceLine[NorthFenceLine.Count / 2], SouthFenceLine[SouthFenceLine.Count / 2]));
-                for (int i = 0; i < WestFenceLine.Count - 12; i += 16) //for now
-                {
-                    Coord start = WestFenceLine[i];
-                    Coord stop = EastFenceLine[i];
-                    answer.AddRange(Calculate.PointsAlongStraightLine(start, stop));
-                    Addresses.Add(start + new Coord(-3, 3));
-                    Addresses.Add(stop + new Coord(-13, 3));
-                }
+                int targetIndex = i * houseDistance;
+                Coord start = lowerBoundary[targetIndex];
+                Coord stop = upperBoundary[targetIndex];
+                Addresses.Add(start - offset);
+                Addresses.Add(stop - offset);
+
+                answer.AddRange(Calculate.PointsAlongStraightLine(start, stop));
             }
             return answer;
         }

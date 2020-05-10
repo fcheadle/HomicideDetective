@@ -298,15 +298,6 @@ namespace Engine.Maps
     {
         public Coord Start { get; }
         public Coord Stop { get; }
-        public int Value
-        {
-            get
-            {
-                try { return Convert.ToInt32(StreetName); }
-                catch { return Convert.ToInt32(StreetNumber); }
-
-            }
-        }
         public RoadNames StreetName { get; }
         public RoadNumbers StreetNumber { get; }
         public List<RoadIntersection> Intersections { get; private set; } = new List<RoadIntersection>();

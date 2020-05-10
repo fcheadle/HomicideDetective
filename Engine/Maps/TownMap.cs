@@ -40,7 +40,7 @@ namespace Engine.Maps
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
             MakeOutdoors();
             MakeRoadsAndBlocks();
-            MakeHouses();
+            //MakeHouses();
             //MakePeople();
         }
         private void MakeRoadsAndBlocks()
