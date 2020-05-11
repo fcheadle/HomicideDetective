@@ -19,88 +19,27 @@ namespace Engine
         };
         internal static List<Func<int, int, double>> Functions3d = new List<Func<int, int, double>>
         {
-            (x,y) => //pretty, simple, fast
-            {
-                return (Math.Sin(x + (x * 2.25)) + Math.Cos(y + (y/7))) * 7;
-            },
-
-            //(x,y) => //beautiful, but slow
-            //{
-            //    double answer = Math.Sin(Math.Sin(Math.Sin(x))) * Math.Sin(Math.Sin(Math.Sin(y)));
-            //    answer += (x / 5) + (y / 13);
-            //    return answer;
-            //},
-
-            (x,y) => //nice, simple, fast
-            {
-                double answer = Math.Exp(Math.Sin(x)) - (2*Math.Cos(4* y)) + Math.Pow(Math.Sin((2*x*y - Math.PI)/24), 5);
-                answer *= 3;
-                return answer;
-            },
-
-            //(x,y) => //nice and simple
-            //{
-            //    double answer = (x *x) + (y * y);
-            //    answer = Math.Cos(answer);
-            //    answer *= 5.55;
-            //    return answer;
-            //},
-
-            //(x,y) =>
-            //{
-            //    return Math.Cos(x + y * Math.PI / 180) + Math.Sin(x + y * Math.PI / 180) * 3.33;
-            //},
-
-            //(x,y) => 
-            //{
-            //    return Math.Tan(x) - Math.Tan(y) / 4;
-            //},
-
-            //(x,y) => //beautiful, quite slow
-            //{
-            //    return Math.Tan(x) - Math.Tan(y) + x;
-            //},
-
-            //(x,y) => //beautiful, quite slow
-            //{
-            //    return Math.Tan(x) - Math.Tan(y) + y;
-            //},
-
-            //(x,y) => //beautiful, quite slow
-            //{
-            //    return Math.Tan(x) + Math.Tan(y) + x + y;
-            //},
-
-            //(x,y) => //beautiful, but slow
-            //{
-            //    double sin = Math.Sin(x);
-            //    double cos = Math.Cos(y);
-            //    double answer = sin + cos + (x / 3) + (y / 5);
-            //    //answer *= -1;
-            //    return answer;
-            //},
-
-            //(x, y) => //beautiful, but slow
-            //{
-            //    double sin = Math.Sin(x);
-            //    double cos = Math.Cos(y);
-            //    double answer = sin + cos + x + y;
-            //    //answer *= 15;
-            //    return answer;
-            //},
-
-            //(x,y) => //too slow
-            //{
-            //    //y *= -1;
-            //    double sin = Math.Sin(x * Math.PI / 180);
-            //    double cos = Math.Cos(y * Math.PI / 180);
-            //    double answer = sin + cos  + (x) + (y);
-            //    answer *= 3;
-            //    return answer;
-            //},
+            //(x,y) => 0.00, //for testing purposes
+            (x,y) => (Math.Sin(x + (x * 2.25)) + Math.Cos(y + (y/7))) * 7, //strange curves
+            (x,y) => (Math.Sin(x) - (2*Math.Cos(4* y))) * 4.5, //freckles
+            (x,y) =>  Math.Cos((x *x) + (y * y)) * 7.77, //static
+            (x,y) => Math.Cos(x + y * Math.PI / 180) + Math.Sin(x + y * Math.PI / 180) * 4.44, //smooth vertical lines
+            (x,y) =>  Math.Tan(x / 13 % 1.99) + Math.Tan(y % 1.91) * 8.88, //horizontal lines
+            (x,y) => 5 * Math.Cos(Math.Sqrt(Math.Abs((x*x) + (y*y)))), //concentric circles origination from the top left
+            (x,y) => 8.75 * Math.Cos(Math.Sqrt(Math.Abs((-x*x) + (y*y)))), //strange, curved lines
+            (x,y) => 13 * Math.Tan((-2 * x * y) % 1.99), //a little slow, but produces a sunburst pattern
+            (x,y) => 11.11 * Math.Tan(Math.Sqrt(x*y)), //nice, indiscernible pattern
+            (x,y) => 11.11 * (Math.Tan(x/(y+1)) / (Math.Abs(y/3 - x / 17) +1)), //odd cones
+            (x,y) => 13.31 * Math.Tan(-x/(y+1)), //more cones
+            (x,y) => Math.Cos(y) * Math.Tan(x) * 12, //looks natural
+            (x,y) => Math.Sin(x) * Math.Tan(y) * 15, //looks natural
+            (x,y) => Math.Sin(x / (y+1)) * Math.Tan(y * x) * 8.88, //looks natural
+            (x,y) => Math.Sin(x + y) * Math.Cos(y * x) * 19, //looks natural
         };
         public static List<Func<int, int, TimeSpan, bool>> Functions4d = new List<Func<int, int, TimeSpan, bool>> //for future shenanigans
         {
+            //(x,y,t) => false, //for testing purposes
+            //(x,y,t) => true, //for testing purposes
             (x,y,t) => Math.Cos(t.TotalMilliseconds / 222 + Math.Sqrt((x*x) + (y*y))) > 0.95, //concentric waves converging on 0,0
             (x,y,t) => Math.Cos(-t.TotalMilliseconds / 333 - Math.Sqrt(Math.Abs((-x*x) + (y*y)))) > 0.9, //spiraling waves converging on 0,max
             (x,y,t) => Math.Cos(-t.TotalMilliseconds / 444 + Math.Sqrt((x*x) + (y*y))) > 0.9, //concentric waves diverging from 0,0

@@ -45,7 +45,7 @@ namespace Engine.Maps
         }
         private void MakeRoadsAndBlocks()
         {
-            RoadNames roadName = 0;
+            RoadNames roadName = (RoadNames)Calculate.Percent();
             RoadNumbers roadNum = 0;
             int offset = (Calculate.Percent() - 50) * 2;
             Road road;
@@ -55,9 +55,12 @@ namespace Engine.Maps
                 HorizontalRoads.Add(roadNum, road);
                 roadNum++;
 
-                road = new Road(new Coord(i, -100), new Coord(i - offset, _height + 100), roadName);
-                VerticalRoads.Add(roadName, road);
-                roadName++;
+                if ((int)roadNum % 2 == 1)
+                {
+                    road = new Road(new Coord(i, -100), new Coord(i - offset, _height + 100), roadName);
+                    VerticalRoads.Add(roadName, road);
+                    roadName++;
+                }
             }
             foreach (Road hRoad in HorizontalRoads.Values)
             {
@@ -93,26 +96,10 @@ namespace Engine.Maps
 
             foreach (Block block in Blocks)
             {
-                foreach (Coord c in block.WestBoundary)
-                    if (this.Contains(c))
-                        SetTerrain(TerrainFactory.Test(4, c));
-                foreach (Coord c in block.NorthBoundary)
-                    if (this.Contains(c))
-                        SetTerrain(TerrainFactory.Test(5, c));
-                foreach (Coord c in block.EastBoundary)
-                    if (this.Contains(c))
-                        SetTerrain(TerrainFactory.Test(6, c));
-                foreach (Coord c in block.SouthBoundary)
-                    if (this.Contains(c))
-                        SetTerrain(TerrainFactory.Test(3, c));
                 foreach (Coord c in block.GetFenceLocations())
                     if (this.Contains(c))
                         SetTerrain(TerrainFactory.Fence(c));
             }
-            //foreach (RoadIntersection ri in Intersections.Values)
-            //    foreach (Coord c in ri.OuterPoints)
-            //        if (this.Contains(c))
-            //            SetTerrain(TerrainFactory.TestSquare5(c));
         }
         private void MakeHouses()
         {
@@ -123,7 +110,7 @@ namespace Engine.Maps
                 int i = 1;
                 foreach (Coord houseOrigin in block.Addresses)
                 {
-                    string address = block.Name[0] + "0" + i.ToString() + block.Name.Substring(9);
+                    string address = block.Name[0] + block.Name[1] + i.ToString() + block.Name.Substring(9);
                     house = new House(houseOrigin, Calculate.RandomEnumValue<HouseTypes>(), address/*, Direction.Types.RIGHT*/);
                     
                     Houses.Add(house);
