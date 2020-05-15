@@ -10,10 +10,13 @@ namespace Engine.Maps
     {
         public string Name { get; set; }
         public Coord Origin { get; set; }
+        public int Rise { get; internal set; }
+        public int Run { get; internal set; }
+        public SadConsole.Orientation Orientation { get; }
         public Dictionary<Enum, Area> SubAreas { get; set; } = new Dictionary<Enum, Area>();
         public List<Coord> OuterPoints { get; set; } = new List<Coord>();
         public List<Coord> InnerPoints { get; set; } = new List<Coord>();
-        public List<Coord> SouthBoundary { get; }
+        public List<Coord> SouthBoundary { get; } //or southeast boundary in the case of diamonds
         public List<Coord> NorthBoundary { get; }
         public List<Coord> EastBoundary { get; }
         public List<Coord> WestBoundary { get; }
@@ -25,7 +28,6 @@ namespace Engine.Maps
         public Coord SouthWestCorner { get; }
         public Coord NorthWestCorner { get; }
         public Coord NorthEastCorner { get; }
-        public SadConsole.Orientation Orientation { get; }
         public int Width { get => Right - Left; }
         public int Height { get => Bottom - Top; }
         public int LeftAt(int y) => OuterPoints.LeftAt(y);
@@ -41,23 +43,27 @@ namespace Engine.Maps
             NorthEastCorner = ne;
             NorthWestCorner = nw;
             SouthWestCorner = sw;
+            
             WestBoundary = Calculate.PointsAlongStraightLine(NorthWestCorner, SouthWestCorner).ToList();
             SouthBoundary = Calculate.PointsAlongStraightLine(SouthWestCorner, SouthEastCorner).ToList();
             EastBoundary = Calculate.PointsAlongStraightLine(SouthEastCorner, NorthEastCorner).ToList();
             NorthBoundary = Calculate.PointsAlongStraightLine(NorthEastCorner, NorthWestCorner).ToList();
+            
+            Rise = se.Y - ne.Y;
+            Run = se.X - sw.X;
 
             Top = ne.Y < nw.Y ? ne.Y : nw.Y;
             Right = se.X > ne.X ? se.X : ne.X;
             Left = sw.X < nw.X ? sw.X : nw.X;
             Bottom = se.Y < sw.Y ? sw.Y : se.Y;
 
-
             OuterPoints.AddRange(SouthBoundary);
             OuterPoints.AddRange(NorthBoundary);
             OuterPoints.AddRange(EastBoundary);
             OuterPoints.AddRange(WestBoundary);
-            InnerPoints = InnerFromOuterPoints(OuterPoints).ToList();
-            Orientation = se.X + sw.X > se.Y + sw.Y ? SadConsole.Orientation.Horizontal : SadConsole.Orientation.Vertical;
+            OuterPoints = OuterPoints.Distinct().ToList();
+            InnerPoints = InnerFromOuterPoints(OuterPoints).Distinct().ToList();
+            Orientation = (NorthBoundary.Count() + SouthBoundary.Count()) / 2 > (EastBoundary.Count() + WestBoundary.Count()) / 2 ? SadConsole.Orientation.Horizontal : SadConsole.Orientation.Vertical;
         }
 
         public override string ToString()
@@ -100,6 +106,35 @@ namespace Engine.Maps
             }
         }
 
+        public void DistinguishSubAreas()
+        {
+            List<Coord> existing = new List<Coord>();
+            foreach(Area area in SubAreas.Values)
+            {
+                List<Coord> remove = new List<Coord>();
+                List<Coord> removeOuter = new List<Coord>();
 
+                foreach (Coord point in area.InnerPoints)
+                {
+                    if (!existing.Contains(point))
+                        existing.Add(point);
+                    else if (!area.OuterPoints.Contains(point))
+                        remove.Add(point);
+                }
+
+                foreach (Coord point in remove)
+                {
+                    while (area.InnerPoints.Contains(point))
+                        area.InnerPoints.Remove(point);
+                    while (area.OuterPoints.Contains(point))
+                        area.OuterPoints.Remove(point);
+                }
+
+
+                foreach (Coord point in removeOuter)
+                    while (area.OuterPoints.Contains(point))
+                        area.OuterPoints.Remove(point);
+            }
+        }
     }
 }

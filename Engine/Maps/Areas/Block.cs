@@ -32,12 +32,10 @@ namespace Engine.Maps
             {
                 default:
                 case SadConsole.Orientation.Horizontal:
-                    length += NorthBoundary.Count + SouthBoundary.Count;
-                    length /= 2;
+                    length += (NorthBoundary.Count + SouthBoundary.Count) / 2;
                     break;
                 case SadConsole.Orientation.Vertical:
-                    length += WestBoundary.Count + EastBoundary.Count;
-                    length /= 2;
+                    length += (WestBoundary.Count + EastBoundary.Count) / 2;
                     break;
             }
 
@@ -69,14 +67,14 @@ namespace Engine.Maps
             {
                 default:
                 case SadConsole.Orientation.Horizontal:
-                    lowerBoundary = WestFenceLine;
-                    upperBoundary = EastFenceLine;
-                    answer.AddRange(Calculate.PointsAlongStraightLine(NorthFenceLine[NorthFenceLine.Count / 2], SouthFenceLine[SouthFenceLine.Count / 2]));
-                    break;
-                case SadConsole.Orientation.Vertical:
-                    lowerBoundary = NorthFenceLine; //because lower refers to numerically, not geographically
+                    lowerBoundary = NorthFenceLine;
                     upperBoundary = SouthFenceLine;
                     answer.AddRange(Calculate.PointsAlongStraightLine(EastFenceLine[EastFenceLine.Count / 2], WestFenceLine[WestFenceLine.Count / 2]));
+                    break;
+                case SadConsole.Orientation.Vertical:
+                    lowerBoundary = WestFenceLine; 
+                    upperBoundary = EastFenceLine;
+                    answer.AddRange(Calculate.PointsAlongStraightLine(NorthFenceLine[NorthFenceLine.Count / 2], SouthFenceLine[SouthFenceLine.Count / 2]));
                     break;
             }
 

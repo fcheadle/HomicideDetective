@@ -25,7 +25,7 @@ namespace Tests
         [Test]
         public void AreaTest()
         {
-            Assert.AreEqual(18, area.OuterPoints.Count);
+            Assert.AreEqual(14, area.OuterPoints.Count);
             Assert.AreEqual(23, area.InnerPoints.Count);
             Assert.AreEqual(5, area.NorthBoundary.Count);
             Assert.AreEqual(4, area.WestBoundary.Count);
@@ -125,7 +125,6 @@ namespace Tests
                 Assert.IsTrue(a1.Contains(inner - one));
 
         }
-        
         [Test]
         public void ShiftWithParametersTest()
         {
@@ -135,6 +134,60 @@ namespace Tests
 
             foreach (Coord inner in a2.InnerPoints)
                 Assert.IsTrue(a1.Contains(inner - two));
+        }
+
+        [Test]
+        public void DistinguishSubAreasTest()
+        {
+            /*
+             * XXXXXXX
+             * X     X
+             * X     X
+             * X     X
+             * X     Xxxx
+             * X     X  x
+             * XXXXXXX  x
+             *    x     x
+             *    xxxxxxx
+             */
+
+            Coord nw = new Coord(0, 0);
+            Coord sw = new Coord(0, 9);
+            Coord se = new Coord(9, 9);
+            Coord ne = new Coord(9, 0);
+            Area mainArea = new Area("parent area", ne: ne, nw: nw, se: se, sw: sw);
+
+            nw = new Coord(1, 1);
+            se = new Coord(5, 5);
+            sw = new Coord(1, 5);
+            ne = new Coord(5, 1);
+            Area imposingSubArea = new Area("imposing sub area", ne: ne, nw: nw, se: se, sw: sw);
+
+            nw = new Coord(4, 4);
+            se = new Coord(8, 8);
+            sw = new Coord(4, 8);
+            ne = new Coord(8, 4);
+            Area hostSubArea = new Area("host sub area", ne: ne, nw: nw, se: se, sw: sw);
+
+            mainArea.SubAreas.Add(RoomType.GuestBathroom, imposingSubArea);
+            mainArea.SubAreas.Add(RoomType.Parlor, hostSubArea);
+
+            List<Coord> coords = new List<Coord>();
+            mainArea.DistinguishSubAreas();
+            foreach (Coord c in imposingSubArea.InnerPoints)
+            {
+                Assert.IsTrue(mainArea.Contains(c));
+                Assert.IsFalse(hostSubArea.Contains(c));
+                if (!imposingSubArea.OuterPoints.Contains(c))
+                    coords.Add(c);
+            }
+            foreach (Coord c in hostSubArea.InnerPoints)
+            {
+                Assert.IsTrue(mainArea.Contains(c));
+                Assert.IsFalse(imposingSubArea.Contains(c));
+                if (!hostSubArea.OuterPoints.Contains(c))
+                    coords.Add(c);
+            }
         }
     }
 }

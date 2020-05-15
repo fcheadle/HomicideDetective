@@ -114,7 +114,7 @@ namespace Tests
 
             block = new Block(nwIntersection, swIntersection, seIntersection, neIntersection); 
             locations = block.GetFenceLocations().ToList();
-            Assert.IsEmpty(locations);
+            Assert.IsNotEmpty(locations);
 
             swIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
             {

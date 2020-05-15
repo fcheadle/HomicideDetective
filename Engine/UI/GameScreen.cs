@@ -99,7 +99,10 @@ namespace Engine.UI
             List<string> output = new List<string>();
             output.Add("At coordinate " + Player.Position.X + ", " + Player.Position.Y);
             foreach (Area area in Player.GetCurrentRegions())
+            {
                 output.Add(area.ToString());
+                output.Add(area.Orientation.ToString());
+            }
             Messages.Print(output.ToArray());
             Health.Print();
             MapRenderer.CenterViewPortOnPoint(TownMap.ControlledGameObject.Position);
