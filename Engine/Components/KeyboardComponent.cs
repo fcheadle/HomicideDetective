@@ -1,4 +1,5 @@
-﻿using Engine.Maps;
+﻿using Engine.Extensions;
+using Engine.Maps;
 using GoRogue;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
@@ -39,9 +40,10 @@ namespace Engine.Components
                     break;
                 }
             }
-            if(Program.MapScreen.TownMap.GetTerrain(Position + moveDirection) != null)
-                if(Program.MapScreen.TownMap.GetTerrain(Position + moveDirection).IsWalkable)
-                    Parent.Position += moveDirection;
+            if(Program.MapScreen.TownMap.Contains(Position + moveDirection))
+                if(Program.MapScreen.TownMap.GetTerrain(Position + moveDirection) != null)
+                    if(Program.MapScreen.TownMap.GetTerrain(Position + moveDirection).IsWalkable)
+                        Parent.Position += moveDirection;
 
             if (moveDirection != Direction.NONE)
                 handled = true;

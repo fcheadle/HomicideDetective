@@ -32,12 +32,10 @@ namespace Engine.Maps
             {
                 default:
                 case SadConsole.Orientation.Horizontal:
-                    length += NorthBoundary.Count + SouthBoundary.Count;
-                    length /= 2;
+                    length += (NorthBoundary.Count + SouthBoundary.Count) / 2;
                     break;
                 case SadConsole.Orientation.Vertical:
-                    length += WestBoundary.Count + EastBoundary.Count;
-                    length /= 2;
+                    length += (WestBoundary.Count + EastBoundary.Count) / 2;
                     break;
             }
 
@@ -59,6 +57,9 @@ namespace Engine.Maps
             answer.AddRange(NorthFenceLine);
             answer.AddRange(SouthFenceLine);
 
+            if (length <= 73) //one fence block
+                return answer;
+
             List<Coord> lowerBoundary = new List<Coord>();
             List<Coord> upperBoundary = new List<Coord>();
 
@@ -66,28 +67,26 @@ namespace Engine.Maps
             {
                 default:
                 case SadConsole.Orientation.Horizontal:
-                    lowerBoundary = WestFenceLine;
-                    upperBoundary = EastFenceLine;  
-                    answer.AddRange(Calculate.PointsAlongStraightLine(NorthFenceLine[NorthFenceLine.Count / 2], SouthFenceLine[SouthFenceLine.Count / 2]));                  
-                    break;
-                case SadConsole.Orientation.Vertical:
-                    lowerBoundary = NorthFenceLine; //because lower refers to numerically, not geographically
+                    lowerBoundary = NorthFenceLine;
                     upperBoundary = SouthFenceLine;
                     answer.AddRange(Calculate.PointsAlongStraightLine(EastFenceLine[EastFenceLine.Count / 2], WestFenceLine[WestFenceLine.Count / 2]));
                     break;
+                case SadConsole.Orientation.Vertical:
+                    lowerBoundary = WestFenceLine; 
+                    upperBoundary = EastFenceLine;
+                    answer.AddRange(Calculate.PointsAlongStraightLine(NorthFenceLine[NorthFenceLine.Count / 2], SouthFenceLine[SouthFenceLine.Count / 2]));
+                    break;
             }
-
-
-            if (length <= 73) //one fence block
-                return answer;
-
 
             int halfNumOfAddresses = length / houseDistance;
             Coord offset = Orientation == SadConsole.Orientation.Horizontal ? new Coord(8, 0) : new Coord(0, 8);
             for (int i = 0; i < halfNumOfAddresses; i++)
             {
-                int targetIndex = i * houseDistance;
+                int targetIndex = lowerBoundary.Count / halfNumOfAddresses;
+                targetIndex *= i;
                 Coord start = lowerBoundary[targetIndex];
+                targetIndex = upperBoundary.Count / halfNumOfAddresses;
+                targetIndex *= i;
                 Coord stop = upperBoundary[targetIndex];
                 Addresses.Add(start - offset);
                 Addresses.Add(stop - offset);
