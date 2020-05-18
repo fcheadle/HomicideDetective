@@ -17,16 +17,15 @@ namespace Tests
         private readonly int height = 7;
         private readonly int rise = 1;
         private readonly int run = 4;
-        Area room;
-
         [SetUp]
         public void SetUp()
         {
-            room = AreaFactory.Rectangle("my office", start, width, height, rise, run);
         }
         [Test]
         public void RoomTest()
         {
+            Area room = AreaFactory.Rectangle("my office", start, width, height, rise, run);
+
             Coord nw = room.NorthWestCorner;
             Coord sw = room.SouthWestCorner;
             Coord se = room.SouthEastCorner;

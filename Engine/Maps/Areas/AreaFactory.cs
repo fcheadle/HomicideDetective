@@ -8,7 +8,7 @@ namespace Engine.Maps.Areas
         public static Area Rectangle(string name, Coord start, int width, int height, int rise = 0, int run = 1)
         {
             if (run <= 0)
-                throw new ArgumentOutOfRangeException("`run` must be a positive, non-zero integer.");
+                throw new ArgumentOutOfRangeException("`run` must be a non-zero integer.");
             
             int hRatio = height * rise / run;
             int wRatio = width * rise / run;
@@ -27,7 +27,18 @@ namespace Engine.Maps.Areas
 
         internal static Area Closet(string name, Coord origin)
         {
-            return new Area(name, origin + 2, origin + new Coord(2, 0), origin, origin + new Coord(0, 2));
+            return Rectangle(name, origin, 2,2,0,1);
+        }
+
+        internal static Area RegularParallelogram(string name, Coord origin, int width, int height, int rotationDegrees)
+        {
+            Coord nw = new Coord(0, 0);
+            Coord ne = new Coord(width, height);
+            Coord se = new Coord(width, height * 2);
+            Coord sw = new Coord(0, height);
+            Area area = new Area(name, se, ne, nw, sw);
+            //area = area.Rotate(rotationDegrees);
+            return area;
         }
     }
 }

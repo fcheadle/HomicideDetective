@@ -1,4 +1,5 @@
 ﻿using Engine.Maps;
+using Engine.Maps.Areas;
 using GoRogue;
 using NUnit.Framework;
 using System;
@@ -139,7 +140,7 @@ namespace Tests
         [Test]
         public void DistinguishSubAreasTest()
         {
-            /*
+            /* 0123456
              * XXXXXXX
              * X     X
              * X     X
@@ -150,7 +151,6 @@ namespace Tests
              *    x     x
              *    xxxxxxx
              */
-
             Coord nw = new Coord(0, 0);
             Coord sw = new Coord(0, 9);
             Coord se = new Coord(9, 9);
@@ -169,25 +169,31 @@ namespace Tests
             ne = new Coord(8, 4);
             Area hostSubArea = new Area("host sub area", ne: ne, nw: nw, se: se, sw: sw);
 
-            mainArea.SubAreas.Add(RoomType.GuestBathroom, imposingSubArea);
             mainArea.SubAreas.Add(RoomType.Parlor, hostSubArea);
+            mainArea.SubAreas.Add(RoomType.GuestBathroom, imposingSubArea);
 
             List<Coord> coords = new List<Coord>();
             mainArea.DistinguishSubAreas();
             foreach (Coord c in imposingSubArea.InnerPoints)
             {
-                Assert.IsTrue(mainArea.Contains(c));
-                Assert.IsFalse(hostSubArea.Contains(c));
-                if (!imposingSubArea.OuterPoints.Contains(c))
-                    coords.Add(c);
+                Assert.IsTrue(mainArea.Contains(c), "Main area somehow had a coord removed.");
+                Assert.IsFalse(hostSubArea.Contains(c), "sub area contains a coordinate in imposing area.");
             }
             foreach (Coord c in hostSubArea.InnerPoints)
             {
-                Assert.IsTrue(mainArea.Contains(c));
-                Assert.IsFalse(imposingSubArea.Contains(c));
-                if (!hostSubArea.OuterPoints.Contains(c))
-                    coords.Add(c);
+                Assert.IsTrue(mainArea.Contains(c), "Main area somehow lost a coord.");
+                Assert.IsFalse(imposingSubArea.Contains(c), "a coord should have been removed from the sub area but was not.");
             }
+        }
+
+        [Test]
+        public void AddConnectionBetweenTest()
+        {
+            Area a = AreaFactory.Rectangle("test-tangle", new Coord(0, 0), 4,4);
+            Area b = AreaFactory.Rectangle("rest-ert", new Coord(a.Right, a.Top + 1), 3, 3);
+            Area.AddConnectionBetween(a, b);
+            Assert.AreEqual(1, a.Connections.Count());
+            Assert.AreEqual(1, b.Connections.Count());
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Engine.Extensions;
 using GoRogue;
+using SadConsole;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Engine.Maps
         public List<Coord> NorthBoundary { get; }
         public List<Coord> EastBoundary { get; }
         public List<Coord> WestBoundary { get; }
+        public List<Coord> Connections { get; private set; } = new List<Coord>();
         public int Left { get; }
         public int Right { get; }
         public int Top { get; }
@@ -66,10 +68,21 @@ namespace Engine.Maps
             Orientation = (NorthBoundary.Count() + SouthBoundary.Count()) / 2 > (EastBoundary.Count() + WestBoundary.Count()) / 2 ? SadConsole.Orientation.Horizontal : SadConsole.Orientation.Vertical;
         }
 
+        #region miscellaneous features
         public override string ToString()
         {
             return Name;
         }
+
+        public IEnumerable<Coord> SurroundingPoints(Coord point)
+        {
+            for (int i = -1; i <= 1; i++)
+                for (int j = -1; j <= 1; j++)
+                    yield return new Coord(i, j);
+        }
+        #endregion
+
+        #region utilities
         public IEnumerable<Coord> Overlap(Area other)
         {
             foreach (Coord c in InnerPoints)
@@ -109,32 +122,69 @@ namespace Engine.Maps
         public void DistinguishSubAreas()
         {
             List<Coord> existing = new List<Coord>();
-            foreach(Area area in SubAreas.Values)
+            foreach(Area area in SubAreas.Values.Reverse())
             {
-                List<Coord> remove = new List<Coord>();
+                List<Coord> removeInner = new List<Coord>();
                 List<Coord> removeOuter = new List<Coord>();
 
-                foreach (Coord point in area.InnerPoints)
+                foreach (Coord point in area.InnerPoints.Distinct())
                 {
                     if (!existing.Contains(point))
                         existing.Add(point);
-                    else if (!area.OuterPoints.Contains(point))
-                        remove.Add(point);
+                    else
+                    {
+                        if (area.OuterPoints.Contains(point))
+                            removeInner.Add(point);
+                        if (area.InnerPoints.Contains(point))
+                            removeOuter.Add(point);
+
+
+                            
+                    }
                 }
 
-                foreach (Coord point in remove)
+                foreach(Coord point in area.OuterPoints.Distinct())
                 {
-                    while (area.InnerPoints.Contains(point))
-                        area.InnerPoints.Remove(point);
-                    while (area.OuterPoints.Contains(point))
-                        area.OuterPoints.Remove(point);
+                    if (!existing.Contains(point))
+                        existing.Add(point);
+                    else
+                    {
+                        int count = area.SurroundingPoints(point).Where(cell => area.Contains(cell)).Count();
+                        if (count <= 2)
+                            removeOuter.Add(point);
+                    }
                 }
 
 
                 foreach (Coord point in removeOuter)
                     while (area.OuterPoints.Contains(point))
                         area.OuterPoints.Remove(point);
+
+                foreach (Coord point in removeInner)
+                    while (area.InnerPoints.Contains(point))
+                        area.InnerPoints.Remove(point);
             }
         }
+
+        public static void AddConnectionBetween(Area a, Area b)
+        {
+            List<Coord> possible = new List<Coord>();
+
+            foreach(Coord coord in a.OuterPoints.Where(here => b.OuterPoints.Contains(here)))
+            {
+                possible.Add(coord);
+            }
+
+            possible.Remove(possible.First());
+            possible.Remove(possible.Last());
+
+            Coord connection = possible.RandomItem();
+
+            a.OuterPoints.Remove(connection);
+            a.Connections.Add(connection);
+            b.OuterPoints.Remove(connection);
+            b.Connections.Add(connection);
+        }
+        #endregion
     }
 }

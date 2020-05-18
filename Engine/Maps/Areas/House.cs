@@ -10,9 +10,14 @@ using Rectangle = GoRogue.Rectangle;
 
 namespace Engine.Maps
 {
-    internal class House : Area
+
+    //TODO:
+    //Need to rewrite houses entirely
+    //first, get the tests passing
+    //then, just delete all house stuff and start from scratch
+    public class House : Area
     {
-        internal BasicMap Map;
+        public BasicMap Map;
         new internal Coord Origin;
         private const int _minRoomSize = 3;
         private const int _maxRoomSize = 7;
@@ -42,7 +47,7 @@ namespace Engine.Maps
         private List<Area> Bathrooms { get => new List<Area>() { SubAreas[RoomType.MasterBathroom], SubAreas[RoomType.GuestBathroom] }; }
         internal string Address { get; set; }
 
-        internal House(Coord origin, HouseTypes type, string name = null, Direction.Types facing = Direction.Types.DOWN): base(
+        public House(Coord origin, HouseTypes type, string name = null, Direction.Types facing = Direction.Types.DOWN): base(
             name ?? origin.X.ToString() + origin.Y.ToString(),
             new Coord(24, 24) + origin,
             new Coord(24, 0) + origin,
@@ -113,38 +118,35 @@ namespace Engine.Maps
             }
 
 
-            DistinguishSubAreas(); //doesnt work
 
             foreach (KeyValuePair<Enum, Area> room in SubAreas)
             {
                 DrawRoom(room.Value, (RoomType)room.Key);
             }
-            if (Calculate.Percent() % 2 == 1)
-                Map = Map.ReverseHorizontal();
-            foreach (var area in SubAreas)
-                if (!area.Key.ToString().Contains("Closet"))
-                    AddDoorBetween(Hallway, area.Value);
 
+            AddConnectionBetween(Hallway, MasterBedroom);
+            //AddConnectionBetween(Hallway, BoysBedroom);
+            //AddConnectionBetween(Hallway, GirlsBedroom);
+            //AddConnectionBetween(Hallway, DiningRoom);
+            //AddConnectionBetween(Hallway, Kitchen);
+            //AddDoorBetween(Hallway, GuestBathroom);
+
+            //AddDoorBetween(GuestBathroom, MasterBedroom);
+            DistinguishSubAreas();
             Map.SetTerrain(TerrainFactory.Door(new Coord(Hallway.Left + 1, Hallway.Bottom)));
+            Map.SetTerrain(TerrainFactory.Door(new Coord(MasterBedCloset.Left + 1, MasterBedCloset.Top)));
+            Map.SetTerrain(TerrainFactory.Door(new Coord(BoysCloset.Left, BoysCloset.Top + 1)));
+            Map.SetTerrain(TerrainFactory.Door(new Coord(GirlsCloset.Right, GirlsCloset.Top+1)));
+            Map.SetTerrain(TerrainFactory.Door(new Coord(ParlorCloset.Right - 1, ParlorCloset.Bottom)));
         }
 
         private void AddDoorBetween(Area hallway, Area area)
         {
-            List<Coord> overlap = hallway.Overlap(area).ToList();
+            List<Coord> overlap = hallway.OuterPoints.Where(point => area.OuterPoints.Contains(point)).ToList();
             Coord point = overlap.RandomItem();
 
-            //can't be equal to an areas top AND side
-            if (
-                (point.X == hallway.Left && point.Y == hallway.Top) ||
-                (point.X == hallway.Right && point.Y == Hallway.Top) ||
-                (point.X == area.Left && point.Y == area.Top) ||
-                (point.X == area.Right && point.Y == area.Top) ||
-                (point.X == hallway.Left && point.Y == hallway.Bottom) ||
-                (point.X == hallway.Right && point.Y == hallway.Bottom) ||
-                (point.X == area.Left && point.Y == area.Bottom) ||
-                (point.X == area.Right && point.Y == area.Bottom))
-                point = overlap.RandomItem();    
-            Map.SetTerrain(TerrainFactory.Door(point));
+            if(Map.Contains(point))
+                Map.SetTerrain(TerrainFactory.Door(point));
         }
 
         private void CreateCentralPassageHouse()
@@ -160,7 +162,7 @@ namespace Engine.Maps
             tempH = Settings.Random.Next(-1, 2);
 
             //parlor
-            area = new Rectangle(new Coord(mid - roomW, mid - tempH), new Coord(mid, mid - tempH + roomH));
+            area = new Rectangle(new Coord(mid - roomW - (roomW/2), mid - tempH), new Coord(mid - roomW/2, mid - tempH + roomH));
             SetCorners(area);
             SubAreas.Add(RoomType.Parlor, new Area(RoomType.Parlor.ToString() + suffix, _se, _ne, _nw, _sw));
             SubAreas.Add(RoomType.ParlorCloset, AreaFactory.Closet(RoomType.ParlorCloset.ToString() + suffix, _nw));
@@ -170,82 +172,53 @@ namespace Engine.Maps
             area = new Rectangle(new Coord(Parlor.Left, Parlor.Top - roomH), new Coord(Parlor.Right, Parlor.Top));
             SetCorners(area);
             SubAreas.Add(RoomType.MasterBedroom, new Area(RoomType.MasterBedroom.ToString() + suffix, _se, _ne, _nw, _sw));
-            SubAreas.Add(RoomType.MasterBedCloset, AreaFactory.Closet(RoomType.MasterBedCloset.ToString() + suffix, _nw));
+            SubAreas.Add(RoomType.MasterBedCloset, AreaFactory.Closet(RoomType.MasterBedCloset.ToString() + suffix, _sw - new Coord(0, 2)));
 
             //Dining & Kitchen
             tempH = roomW;
             roomW = roomH;
             roomH = tempH;
             if (Calculate.Percent() % 2 == 1)
-            {
-                //dining on bottom, kitchen on top
-                area = new Rectangle(new Coord(mid, mid), new Coord(mid + roomW, mid + roomH));
-                SetCorners(area);
-                SubAreas.Add(RoomType.DiningRoom, new Area(RoomType.DiningRoom.ToString() + suffix, _se, _ne, _nw, _sw));
+                Map = Map.ReverseVertical();
 
-                area = new Rectangle(new Coord(mid, mid - roomH), new Coord(mid + roomW, mid));
-                SetCorners(area);
-                SubAreas.Add(RoomType.Kitchen, new Area(RoomType.Kitchen.ToString() + suffix, _se, _ne, _nw, _sw));
-            }
-            else
-            {
-                //dining on top, kitchen on bottom
-                area = new Rectangle(new Coord(mid, mid), new Coord(mid + roomW, mid + roomH));
-                SetCorners(area);
-                SubAreas.Add(RoomType.Kitchen, new Area(RoomType.Kitchen.ToString() + suffix, _se, _ne, _nw, _sw));
+            area = new Rectangle(new Coord(mid + 2, mid), new Coord(mid + roomW + 2, mid + roomH));
+            SetCorners(area);
+            SubAreas.Add(RoomType.DiningRoom, new Area(RoomType.DiningRoom.ToString() + suffix, _se, _ne, _nw, _sw));
+            
+            area = new Rectangle(new Coord(mid + 2, mid - roomH), new Coord(mid + roomW + 2, mid));
+            SetCorners(area);
+            SubAreas.Add(RoomType.Kitchen, new Area(RoomType.Kitchen.ToString() + suffix, _se, _ne, _nw, _sw));
 
-                area = new Rectangle(new Coord(mid, mid - roomH), new Coord(mid + roomW, mid));
-                SetCorners(area);
-                SubAreas.Add(RoomType.DiningRoom, new Area(RoomType.DiningRoom.ToString() + suffix, _se, _ne, _nw, _sw));
-            }
             CreateArch(DiningRoom, Kitchen);
 
-            tempH = mid - roomH;
+            if (Calculate.Percent() % 2 == 1)
+                Map = Map.ReverseHorizontal();
+
+            //first bathroom then hall
+            //area = new Rectangle(new Coord(mid - roomW - 5, mid - 2), new Coord(mid - 3, mid + 2));
+            //SetCorners(area);
+            //SubAreas.Add(RoomType.GuestBathroom, new Area(RoomType.GuestBathroom.ToString() + suffix, _se, _ne, _nw, _sw));
+
+            area = new Rectangle(new Coord(mid - roomH/2, mid - roomW), new Coord(mid + roomH/ 2, mid + roomH));
+            SetCorners(area);
+            SubAreas.Add(RoomType.Hall, new Area(RoomType.Hall.ToString() + suffix, _se, _ne, _nw, _sw));
+
+            CreateArch(Parlor, Hallway);
+
+            ////kids bedrooms
 
             while (roomH >= Parlor.Height)
                 roomH = RandomRoomDimension();
             while (roomW >= Parlor.Width)
                 roomW = RandomRoomDimension();
-
-            ////kids bedrooms
-            area = new Rectangle(new Coord(mid - roomW, tempH - roomH), new Coord(mid, tempH));
+            area = new Rectangle(new Coord(mid - roomW, mid - roomH - roomH * 2), new Coord(mid, mid - roomH));
             SetCorners(area);
             SubAreas.Add(RoomType.BoysBedroom, new Area(RoomType.BoysBedroom.ToString() + suffix, _se, _ne, _nw, _sw));
-            SubAreas.Add(RoomType.BoysCloset, AreaFactory.Closet(RoomType.BoysCloset.ToString() + suffix, _ne + new Coord(-1, 1)));
-            area = new Rectangle(new Coord(mid, tempH - roomH), new Coord(mid + roomW, tempH));
+            SubAreas.Add(RoomType.BoysCloset, AreaFactory.Closet(RoomType.BoysCloset.ToString() + suffix, _ne + new Coord(1, 1)));
+            area = new Rectangle(new Coord(mid, mid - roomH - roomH), new Coord(mid + roomW, mid - roomH));
             SetCorners(area);
             SubAreas.Add(RoomType.GirlsBedroom, new Area(RoomType.GirlsBedroom.ToString() + suffix, _se, _ne, _nw, _sw));
-            SubAreas.Add(RoomType.GirlsCloset, AreaFactory.Closet(RoomType.GirlsCloset.ToString() + suffix, _nw + new Coord(-1, 3)));
-
-            if (Calculate.Percent() % 2 == 1)
-            {
-                //first bathroom then hall
-                area = new Rectangle(new Coord(Parlor.Left, mid - (roomH / 2)), new Coord(Parlor.Left + roomW, mid + (roomH / 2)));
-                SetCorners(area);
-                SubAreas.Add(RoomType.GuestBathroom, new Area(RoomType.GuestBathroom.ToString() + suffix, _se, _ne, _nw, _sw));
-
-                area = new Rectangle(new Coord(Parlor.Right - 2, GirlsBedroom.Bottom), new Coord(DiningRoom.Left + 2, DiningRoom.Bottom));
-                SetCorners(area);
-                SubAreas.Add(RoomType.Hall, new Area(RoomType.Hall.ToString() + suffix, _se, _ne, _nw, _sw));
-            }
-            else
-            {
-                //first hall then bathroom
-                area = new Rectangle(new Coord(Parlor.Right - 2, GirlsBedroom.Bottom), new Coord(DiningRoom.Left + 2, DiningRoom.Bottom));
-                SetCorners(area);
-                SubAreas.Add(RoomType.Hall, new Area(RoomType.Hall.ToString() + suffix, _se, _ne, _nw, _sw));
-
-                area = new Rectangle(new Coord(Hallway.Left - roomW, mid - (roomH / 2)), new Coord(Hallway.Left, mid + (roomH / 2)));
-                SetCorners(area);
-                SubAreas.Add(RoomType.GuestBathroom, new Area(RoomType.GuestBathroom.ToString() + suffix, _se, _ne, _nw, _sw));
-            }
-
-
-            //Dictionary<Enum, Area> reversed = new Dictionary<Enum, Area>();
-            //foreach(KeyValuePair<Enum, Area> kvp in SubAreas.Reverse())            
-            //    reversed.Add(kvp.Key, kvp.Value);
-
-            //SubAreas = reversed;
+            SubAreas.Add(RoomType.GirlsCloset, AreaFactory.Closet(RoomType.GirlsCloset.ToString() + suffix, _nw + new Coord(0, 3)));
         }
 
         private void SetCorners(Rectangle area)
@@ -292,11 +265,11 @@ namespace Engine.Maps
                     Map.SetTerrain(TerrainFactory.Wall(location));
             
         }
-        private int RandomRoomDimension()
+        public int RandomRoomDimension()
         {
             return Settings.Random.Next(_minRoomSize, _maxRoomSize);
         }
-        private void CreateArch(Area host, Area imposing)
+        public void CreateArch(Area host, Area imposing)
         {
             List<Coord> walls = new List<Coord>();
 
