@@ -1,5 +1,6 @@
 ﻿using Engine.Entities;
 using Engine.Maps;
+using Engine.Maps.Areas;
 using GoRogue;
 using GoRogue.Pathing;
 using NUnit.Framework;
@@ -17,7 +18,7 @@ namespace Tests
         [Test]
         public void NewHouseTest()
         {
-            House house = new House(new Coord(0,0), HouseTypes.CentralPassageHouse);
+            House house = new House(new Coord(0,0), HouseType.CentralPassageHouse);
             for (int i = 0; i < house.Map.Width; i++)
             {
                 for (int j = 0; j < house.Map.Height; j++)
@@ -37,16 +38,11 @@ namespace Tests
                 }
             }
         }
-        [Test]
-        public void DrawRoomTest()
-        {
-            Assert.Fail();
-        }
 
         [Test]
         public void RandomRoomDimensionTest()
         {
-            House house = new House(new Coord(0, 0), HouseTypes.CentralPassageHouse);
+            House house = new House(new Coord(0, 0), HouseType.CentralPassageHouse);
             for (int i = 0; i < 25; i++)
             {
                 int dim = house.RandomRoomDimension();
@@ -54,14 +50,5 @@ namespace Tests
                 Assert.LessOrEqual(dim, 7);
             }
         }
-
-        [Test]
-        public void CreateArchTest()
-        {
-            Assert.Fail();
-
-        }
-
-
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Engine.Components.Creature
 {
-    class SpeechComponent : ComponentBase
+    public class SpeechComponent : ComponentBase
     {
         internal SpeechConsole Dialogue;
         internal readonly Font Voice;

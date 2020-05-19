@@ -32,6 +32,8 @@ namespace Engine.Maps
         public Coord NorthEastCorner { get; }
         public int Width { get => Right - Left; }
         public int Height { get => Bottom - Top; }
+        public List<Coord> Points { get => OuterPoints.Concat(InnerPoints).ToList(); }
+
         public int LeftAt(int y) => OuterPoints.LeftAt(y);
         public int RightAt(int y) => OuterPoints.RightAt(y);
         public int TopAt(int x) => OuterPoints.TopAt(x);
@@ -121,48 +123,25 @@ namespace Engine.Maps
 
         public void DistinguishSubAreas()
         {
-            List<Coord> existing = new List<Coord>();
-            foreach(Area area in SubAreas.Values.Reverse())
+            List<Area> areasDistinguished = new List<Area>();
+            foreach (Area area in SubAreas.Values.Reverse())
             {
-                List<Coord> removeInner = new List<Coord>();
-                List<Coord> removeOuter = new List<Coord>();
-
-                foreach (Coord point in area.InnerPoints.Distinct())
+                foreach (Coord point in area.Points.Distinct())
                 {
-                    if (!existing.Contains(point))
-                        existing.Add(point);
-                    else
+                    foreach (Area distinguishedArea in areasDistinguished)
                     {
-                        if (area.OuterPoints.Contains(point))
-                            removeInner.Add(point);
-                        if (area.InnerPoints.Contains(point))
-                            removeOuter.Add(point);
+                        if (distinguishedArea.Contains(point))
+                        {
+                            while (area.OuterPoints.Contains(point))
+                                area.OuterPoints.Remove(point);
 
-
-                            
+                            while (area.InnerPoints.Contains(point))
+                                area.InnerPoints.Remove(point);
+                        }
                     }
                 }
 
-                foreach(Coord point in area.OuterPoints.Distinct())
-                {
-                    if (!existing.Contains(point))
-                        existing.Add(point);
-                    else
-                    {
-                        int count = area.SurroundingPoints(point).Where(cell => area.Contains(cell)).Count();
-                        if (count <= 2)
-                            removeOuter.Add(point);
-                    }
-                }
-
-
-                foreach (Coord point in removeOuter)
-                    while (area.OuterPoints.Contains(point))
-                        area.OuterPoints.Remove(point);
-
-                foreach (Coord point in removeInner)
-                    while (area.InnerPoints.Contains(point))
-                        area.InnerPoints.Remove(point);
+                areasDistinguished.Add(area);
             }
         }
 
@@ -184,6 +163,36 @@ namespace Engine.Maps
             a.Connections.Add(connection);
             b.OuterPoints.Remove(connection);
             b.Connections.Add(connection);
+        }
+        public void RemoveOverlappingOuterpoints(Area imposing)
+        {
+            foreach (Coord c in imposing.OuterPoints)
+            {
+                while (OuterPoints.Contains(c))
+                    OuterPoints.Remove(c);
+                while (InnerPoints.Contains(c))
+                    InnerPoints.Remove(c);
+            }
+        }
+        public void RemoveOverlappingInnerpoints(Area imposing)
+        {
+            foreach (Coord c in imposing.InnerPoints)
+            {
+                while (OuterPoints.Contains(c))
+                    OuterPoints.Remove(c);
+                while (InnerPoints.Contains(c))
+                    InnerPoints.Remove(c);
+            }
+        }
+        public void RemoveOverlappingPoints(Area imposing)
+        {
+            foreach (Coord c in imposing.OuterPoints.Concat(imposing.InnerPoints))
+            {
+                while (OuterPoints.Contains(c))
+                    OuterPoints.Remove(c);
+                while (InnerPoints.Contains(c))
+                    InnerPoints.Remove(c);
+            }
         }
         #endregion
     }

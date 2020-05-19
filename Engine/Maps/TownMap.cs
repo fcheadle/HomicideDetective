@@ -111,7 +111,7 @@ namespace Engine.Maps
                 foreach (Coord houseOrigin in block.Addresses)
                 {
                     string address = block.Name[0] + block.Name[1] + i.ToString() + block.Name.Substring(9);
-                    house = new House(houseOrigin, Calculate.RandomEnumValue<HouseTypes>(), address/*, Direction.Types.RIGHT*/);
+                    house = new House(houseOrigin, Calculate.RandomEnumValue<HouseType>(), address/*, Direction.Types.RIGHT*/);
                     
                     Houses.Add(house);
                     i++;

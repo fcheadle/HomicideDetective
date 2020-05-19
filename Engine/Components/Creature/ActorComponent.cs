@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Engine.Components.Creature
 {
-    internal class ActorComponent : ComponentBase
+    public class ActorComponent : ComponentBase
     {
         private Path _path;
         private BasicEntity _target;

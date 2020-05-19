@@ -114,45 +114,10 @@ namespace Engine
             int index = Settings.Random.Next(0, Functions3d.Count);
             return Functions3d[index];
         }
-        public static T RandomEnumValue<T>()
-        {
-            var v = Enum.GetValues(typeof(T));
-            return (T)v.GetValue(new Random().Next(v.Length));
-        }
-        public static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
-        {
-            List<Coord> inner = new List<Coord>();
-            outer = outer.OrderBy(x => x.X).ToList();
-            for (int i = outer.First().X; i <= outer.Last().X; i++)
-            {
-                List<Coord> chunk = outer.Where(w => w.X == i).OrderBy(o => o.Y).ToList();
-                for (int j = chunk.First().Y; j <= chunk.Last().Y; j++)
-                {
-                    yield return new Coord(i, j);
-                }
-            }
-        }
-
-        public static T EnumValueFromIndex<T>(int i) where T : Enum
-        {
-            Array values = Enum.GetValues(typeof(T));
-            T value = (T)values.GetValue(i);
-            return value;
-        }
-
-        public static int EnumLength<T>()
-        {
-            return Enum.GetNames(typeof(T)).Length;
-        }
         public static Func<int, int, TimeSpan, bool> RandomFunction4d()
         {
             int index = Settings.Random.Next(0, Functions4d.Count);
             return Functions4d[index];
-        }
-
-        internal static int EnumIndexFromValue<T>(T mune) 
-        {
-            return Convert.ToInt32(mune);
         }
         public static Func<int, int, double> MasterFormula()
         {
@@ -212,6 +177,42 @@ namespace Engine
 
             return p;
         }
+        public static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
+        {
+            List<Coord> inner = new List<Coord>();
+            outer = outer.OrderBy(x => x.X).ToList();
+            for (int i = outer.First().X; i <= outer.Last().X; i++)
+            {
+                List<Coord> chunk = outer.Where(w => w.X == i).OrderBy(o => o.Y).ToList();
+                for (int j = chunk.First().Y; j <= chunk.Last().Y; j++)
+                {
+                    yield return new Coord(i, j);
+                }
+            }
+        }
+
+        public static T EnumValueFromIndex<T>(int i) where T : Enum
+        {
+            Array values = Enum.GetValues(typeof(T));
+            T value = (T)values.GetValue(i);
+            return value;
+        }
+
+        public static int EnumLength<T>()
+        {
+            return Enum.GetNames(typeof(T)).Length;
+        }
+        public static T RandomEnumValue<T>()
+        {
+            var v = Enum.GetValues(typeof(T));
+            return (T)v.GetValue(new Random().Next(v.Length));
+        }
+
+        internal static int EnumIndexFromValue<T>(T mune) 
+        {
+            return Convert.ToInt32(mune);
+        }
+        
         #endregion
 
         #region chances
@@ -261,6 +262,14 @@ namespace Engine
                     yOrigin = yOrigin + sy;
                 }
             }
+        }
+
+        public static double DistanceBetween(Coord start, Coord stop)
+        {
+            //a^2 + b^2 = c^2
+            int xdiff = start.X > stop.X ? start.X - stop.X : stop.X - start.X;
+            int ydiff = start.Y > stop.Y ? start.Y - stop.Y : stop.Y - start.Y;
+            return Math.Sqrt(xdiff * xdiff + ydiff * ydiff);
         }
         public static List<Coord> PointsAlongStraightLine(Coord start, Coord stop, int width)
         {

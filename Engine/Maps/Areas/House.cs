@@ -21,7 +21,7 @@ namespace Engine.Maps
         new internal Coord Origin;
         private const int _minRoomSize = 3;
         private const int _maxRoomSize = 7;
-        private readonly HouseTypes StructureType;
+        private readonly HouseType StructureType;
         private readonly Direction.Types _facing;
         private Coord _se;
         private Coord _ne;
@@ -47,7 +47,7 @@ namespace Engine.Maps
         private List<Area> Bathrooms { get => new List<Area>() { SubAreas[RoomType.MasterBathroom], SubAreas[RoomType.GuestBathroom] }; }
         internal string Address { get; set; }
 
-        public House(Coord origin, HouseTypes type, string name = null, Direction.Types facing = Direction.Types.DOWN): base(
+        public House(Coord origin, HouseType type, string name = null, Direction.Types facing = Direction.Types.DOWN): base(
             name ?? origin.X.ToString() + origin.Y.ToString(),
             new Coord(24, 24) + origin,
             new Coord(24, 0) + origin,
@@ -59,16 +59,16 @@ namespace Engine.Maps
             Map = new BasicMap(25, 25, 1, Distance.MANHATTAN);
             Origin = origin;
             _facing = facing;
-            Generate();
+            //Generate();
         }
 
-        internal void Generate()
+        public void Generate()
         {
             switch (StructureType)
             {
-                //case StructureTypes.Testing: CreateTestingStructure(); break;
-                case HouseTypes.CentralPassageHouse: CreateCentralPassageHouse(); break;
-                default: break;
+                default:
+                case HouseType.PrairieHome: CreatePrairieHome(); break;
+                case HouseType.CentralPassageHouse: CreateCentralPassageHouse(); break;
             }
             int chance = Calculate.Percent();
             
@@ -140,6 +140,21 @@ namespace Engine.Maps
             Map.SetTerrain(TerrainFactory.Door(new Coord(ParlorCloset.Right - 1, ParlorCloset.Bottom)));
         }
 
+        private void CreatePrairieHome()
+        {
+            string suffix = ", " + Name;
+            int mid = Map.Width / 2;
+            int roomW = _maxRoomSize;
+            int roomH = _maxRoomSize - 2;
+            int tempH = roomW;
+            roomW = roomW > roomH ? roomW : roomH;
+            roomH = roomH < tempH ? roomH : tempH;
+            tempH = Settings.Random.Next(-1, 2);
+            Rectangle wholeHouse = new Rectangle(0, roomH, Map.Width, Map.Height - roomH);
+            List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
+
+        }
+
         private void AddDoorBetween(Area hallway, Area area)
         {
             List<Coord> overlap = hallway.OuterPoints.Where(point => area.OuterPoints.Contains(point)).ToList();
@@ -151,6 +166,7 @@ namespace Engine.Maps
 
         private void CreateCentralPassageHouse()
         {
+            //throw new NotImplementedException("Central Passage Houses are just fucked up right now. Do not use.");
             string suffix = ", " + Name;
             int mid = Map.Width / 2;
             int roomW = _maxRoomSize;
@@ -189,7 +205,8 @@ namespace Engine.Maps
             SetCorners(area);
             SubAreas.Add(RoomType.Kitchen, new Area(RoomType.Kitchen.ToString() + suffix, _se, _ne, _nw, _sw));
 
-            CreateArch(DiningRoom, Kitchen);
+            DiningRoom.RemoveOverlappingOuterpoints(Kitchen);
+            Kitchen.RemoveOverlappingOuterpoints(DiningRoom);
 
             if (Calculate.Percent() % 2 == 1)
                 Map = Map.ReverseHorizontal();
@@ -203,7 +220,8 @@ namespace Engine.Maps
             SetCorners(area);
             SubAreas.Add(RoomType.Hall, new Area(RoomType.Hall.ToString() + suffix, _se, _ne, _nw, _sw));
 
-            CreateArch(Parlor, Hallway);
+            Parlor.RemoveOverlappingOuterpoints(Hallway);
+            Hallway.RemoveOverlappingOuterpoints(Parlor);
 
             ////kids bedrooms
 
@@ -269,27 +287,6 @@ namespace Engine.Maps
         {
             return Settings.Random.Next(_minRoomSize, _maxRoomSize);
         }
-        public void CreateArch(Area host, Area imposing)
-        {
-            List<Coord> walls = new List<Coord>();
 
-            foreach (Coord c in imposing.OuterPoints)
-            {
-                if(host.Contains(c))
-                    walls.Add(c);
-            }
-
-            foreach(Coord arch in walls)
-            {
-                if (Map.Contains(arch))
-                    Map.SetTerrain(TerrainFactory.HardwoodFloor(arch));
-            }
-
-            foreach(Coord c in host.OuterPoints)
-            {
-                if (walls.Contains(c) && Map.Contains(c))
-                    Map.SetTerrain(TerrainFactory.Wall(c));
-            }
-        }
     }
 }

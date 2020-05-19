@@ -5,13 +5,13 @@ namespace Engine.Maps.Areas
 {
     public static class AreaFactory
     {
-        public static Area Rectangle(string name, Coord start, int width, int height, int rise = 0, int run = 1)
+        public static Area Rectangle(string name, Coord start, int width, int height, double angleRads = 0)
         {
-            if (run <= 0)
-                throw new ArgumentOutOfRangeException("`run` must be a non-zero integer.");
-            
-            int hRatio = height * rise / run;
-            int wRatio = width * rise / run;
+            if (angleRads <= -1 || angleRads >= 1)
+                throw new ArgumentOutOfRangeException("angleRads must be between -1 and 1.");
+
+            int hRatio = (int)(height * angleRads);
+            int wRatio = (int)(width * angleRads);
             int east = start.X + width - wRatio;
             int west = start.X - wRatio;
             int north = start.Y + hRatio;
@@ -24,18 +24,20 @@ namespace Engine.Maps.Areas
                 sw: new Coord(west, south - hRatio)
             );
         }
-
-        internal static Area Closet(string name, Coord origin)
+        public static Area Closet(string name, Coord origin)
         {
-            return Rectangle(name, origin, 2,2,0,1);
+            return Rectangle(name, origin, 3,3,0);
         }
-
-        internal static Area RegularParallelogram(string name, Coord origin, int width, int height, int rotationDegrees)
+        public static Area FromRectangle(string name, Rectangle rectangle)
         {
-            Coord nw = new Coord(0, 0);
-            Coord ne = new Coord(width, height);
-            Coord se = new Coord(width, height * 2);
-            Coord sw = new Coord(0, height);
+            return Rectangle(name, new Coord(rectangle.MinExtentX, rectangle.MinExtentY), rectangle.MaxExtentX, rectangle.MaxExtentY); 
+        }
+        public static Area RegularParallelogram(string name, Coord origin, int width, int height, int rotationDegrees)
+        {
+            Coord nw = origin;
+            Coord ne = origin + new Coord(width, 0);
+            Coord se = origin + new Coord(width * 2, height);
+            Coord sw = origin + new Coord(width, height);
             Area area = new Area(name, se, ne, nw, sw);
             //area = area.Rotate(rotationDegrees);
             return area;
