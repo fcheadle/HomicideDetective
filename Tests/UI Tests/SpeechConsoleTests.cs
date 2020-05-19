@@ -5,20 +5,20 @@ using System.Text;
 
 namespace Tests
 {
-    class SettingsTests
+    class SpeechConsoleTests
     {
         [Test]
-        public void GetSettingsTest()
+        public void NewSpeechConsoleTest()
         {
             Assert.Fail();
         }
         [Test]
-        public void ToggleMenuTest()
+        public void PrintTest()
         {
             Assert.Fail();
         }
         [Test]
-        public void TogglePauseTest()
+        public void UpdateTest()
         {
             Assert.Fail();
         }

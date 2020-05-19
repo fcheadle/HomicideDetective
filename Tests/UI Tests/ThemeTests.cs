@@ -5,20 +5,20 @@ using System.Text;
 
 namespace Tests
 {
-    class SettingsTests
+    class ThemeTests
     {
         [Test]
-        public void GetSettingsTest()
+        public void NewThemeTest()
         {
             Assert.Fail();
         }
         [Test]
-        public void ToggleMenuTest()
+        public void CloneTest()
         {
             Assert.Fail();
         }
         [Test]
-        public void TogglePauseTest()
+        public void UpdateAndDrawTest()
         {
             Assert.Fail();
         }
