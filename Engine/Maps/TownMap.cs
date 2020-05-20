@@ -10,7 +10,7 @@ using System;
 
 namespace Engine.Maps
 {
-    internal class TownMap : BasicMap
+    public class TownMap : BasicMap
     {
         private int _width;
         private int _height;

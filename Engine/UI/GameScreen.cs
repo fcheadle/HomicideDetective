@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace Engine.UI
 {
-    internal class GameScreen : ContainerConsole
+    public class GameScreen : ContainerConsole
     {
         TimeSpan _elapsed = default;
         TimeSpan _windCounter = default;
@@ -21,13 +21,13 @@ namespace Engine.UI
         int _xOffset;
         int _yOffset;
         Func<int, int, TimeSpan, bool> f = Calculate.RandomFunction4d();
-        internal TownMap TownMap { get; }
-        internal ScrollingConsole MapRenderer { get; }
-        internal MessageConsole Messages { get; }
-        internal DisplayStatsComponent Health { get => Player.GetGoRogueComponent<DisplayStatsComponent>(); }
-        internal BasicEntity Player { get; }
-        internal ActorComponent Actor { get => Player.GetGoRogueComponent<ActorComponent>(); }
-        internal GameScreen(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight)
+        public TownMap TownMap { get; }
+        public ScrollingConsole MapRenderer { get; }
+        public MessageConsole Messages { get; }
+        public DisplayStatsComponent Health { get => Player.GetGoRogueComponent<DisplayStatsComponent>(); }
+        public BasicEntity Player { get; }
+        public ActorComponent Actor { get => Player.GetGoRogueComponent<ActorComponent>(); }
+        public GameScreen(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight)
         {
             TownMap = new TownMap(mapWidth, mapHeight);
             Player = CreatureFactory.Player(new Coord(15, 15));

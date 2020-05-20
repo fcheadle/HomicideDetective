@@ -18,7 +18,10 @@ namespace Tests
         [Test]
         public void NewHouseTest()
         {
-            House house = new House(new Coord(0,0), HouseType.CentralPassageHouse);
+            House house = new House(new Coord(0,0), HouseType.PrairieHome);
+            int nonWalkableCount = 0;
+            int doorCount = 0;
+            
             for (int i = 0; i < house.Map.Width; i++)
             {
                 for (int j = 0; j < house.Map.Height; j++)
@@ -31,12 +34,28 @@ namespace Tests
                     terrain = house.Map.GetTerrain<BasicTerrain>(target);
                     if (terrain.IsWalkable)
                     {
-                        Path path = house.Map.AStar.ShortestPath(new Coord(0, 0), target);
-                        Assert.NotNull("House produced inaccessible locations");
-                        Assert.Greater(path.Length, 0, "Path returned no steps");
+                        if (target != new Coord(0, 0))
+                        {
+                            Path path = house.Map.AStar.ShortestPath(new Coord(0, 0), target);
+                            Assert.NotNull("House produced inaccessible locations");
+                            Assert.Greater(path.Length, 0, "Path returned no steps");
+                        }
+                        if (!terrain.IsTransparent)
+                        {
+                            //it's a door
+                            doorCount++;
+                        }
+                    }
+                    else
+                    {
+                        nonWalkableCount++;
                     }
                 }
             }
+
+            Assert.Greater(house.SubAreas.Count(), 5);
+            Assert.Greater(nonWalkableCount, 25); //i mean, statistically....
+            Assert.Greater(doorCount, 6); //i mean, statistically....
         }
 
         [Test]

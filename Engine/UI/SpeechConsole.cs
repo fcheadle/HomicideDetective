@@ -7,12 +7,12 @@ using Engine.Extensions;
 
 namespace Engine.UI
 {
-    internal class SpeechConsole : Console
+    public class SpeechConsole : Console
     {
         private ColoredString _message;
         private Color fore;
         private Color back;
-        internal SpeechConsole(Font voice, string statement, Coord position) : base(statement.Length, 1, voice)//for now
+        public SpeechConsole(Font voice, string statement, Coord position) : base(statement.Length, 1, voice)//for now
         {
             Position = position;
             fore = Color.White;

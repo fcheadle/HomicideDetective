@@ -10,50 +10,62 @@ namespace Engine.Extensions
     {
         public static IEnumerable<Rectangle> RecursiveBisect(this Rectangle parent, int minimumDimension)
         {
-            List<Rectangle> children = Bisect(parent).ToList();
-            foreach(Rectangle child in children)
-                if(child.Width > minimumDimension && child.Height > minimumDimension)
+            List<Rectangle> ogChildren = Bisect(parent).ToList();
+            List<Rectangle> children = new List<Rectangle>(); //so that we can modify children during the loop
+            foreach (Rectangle child in ogChildren)
+            {
+                if (child.Width > minimumDimension && child.Height > minimumDimension)
                 {
                     children.AddRange(RecursiveBisect(child, minimumDimension));
                 }
+                else
+                {
+                    children.Add(child);
+                }
+            }
+
             return children;
         }
 
-        public static IEnumerable<Rectangle> Bisect(Rectangle parent)
+        public static IEnumerable<Rectangle> Bisect(this Rectangle parent)
         {
             if (parent.Width > parent.Height)
-                return BisectHorizontally(parent);
+                return parent.BisectVertically();
 
             else if (parent.Width < parent.Height)
-                return BisectVertically(parent);
+                return parent.BisectHorizontally();
 
             else
                 return Calculate.Percent() % 2 == 1 ? BisectHorizontally(parent) : BisectVertically(parent);
         }
 
+        //puts a horizontal line through the rectangle
         public static IEnumerable<Rectangle> BisectHorizontally(this Rectangle rectangle)
         {
-            int startY = rectangle.MinExtentY;
+            int startX = rectangle.MinExtentX;
             int stopY = rectangle.MaxExtentY;
-            int startX = 0;
-            while (startX < rectangle.MinExtentX - rectangle.Width / 5 || startX > rectangle.MaxExtentX - rectangle.Width / 5)
-                startX = rectangle.RandomPosition().X;
+            int stopX = rectangle.MaxExtentX;
+            int startY = rectangle.MinExtentY;
+            int bisection = 0;
+            while (bisection < rectangle.MinExtentY + rectangle.Height / 5 || bisection > rectangle.MaxExtentY - rectangle.Height / 5)
+                bisection = rectangle.RandomPosition().Y;
 
-            int stopX = startX;
-            yield return new Rectangle(new Coord(rectangle.MinExtentX, startY), new Coord(stopX, stopY));
-            yield return new Rectangle(new Coord(startX, startY), new Coord(rectangle.MaxExtentX, stopY));
+            
+            yield return new Rectangle(new Coord(startX, startY), new Coord(stopX, bisection));
+            yield return new Rectangle(new Coord(startX, bisection), new Coord(stopX, stopY));
         }
         public static IEnumerable<Rectangle> BisectVertically(this Rectangle rectangle)
         {
+            int startY = rectangle.MinExtentY;
+            int stopY = rectangle.MaxExtentY;
             int startX = rectangle.MinExtentX;
             int stopX = rectangle.MaxExtentX;
-            int startY = 0;
-            while (startY < rectangle.MinExtentX - rectangle.Width / 5 || startY > rectangle.MaxExtentX - rectangle.Width / 5)
-                startY = rectangle.RandomPosition().X;
+            int bisection = 0;
+            while (bisection < rectangle.MinExtentX + rectangle.Width / 5 || bisection > rectangle.MaxExtentX - rectangle.Width / 5)
+                bisection = rectangle.RandomPosition().X;
 
-            int stopY = startY;
-            yield return new Rectangle(new Coord(startX, rectangle.MinExtentY), new Coord(stopX, startY));
-            yield return new Rectangle(new Coord(startX, startY), new Coord(stopX, rectangle.MaxExtentY));
+            yield return new Rectangle(new Coord(startX, startY), new Coord(bisection, stopY));
+            yield return new Rectangle(new Coord(bisection, startY), new Coord(stopX, stopY));
         }
     }
 }

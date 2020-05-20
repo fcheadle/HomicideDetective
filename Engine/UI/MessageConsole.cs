@@ -9,9 +9,9 @@ namespace Engine.UI
         Problem,
         Battle
     }
-    internal class MessageConsole : Console
+    public class MessageConsole : Console
     {
-        internal MessageConsole(int width, int height) : base(width, height)
+        public MessageConsole(int width, int height) : base(width, height)
         {
             IsCursorDisabled = false;
             Cursor.IsVisible = false;
@@ -23,7 +23,7 @@ namespace Engine.UI
             this[0].CopyAppearanceTo(Cursor.PrintAppearance);
         }
 
-        internal void Print(string[] text, MessageTypes type = MessageTypes.Warning)
+        public void Print(string[] text, MessageTypes type = MessageTypes.Warning)
         {
             Fill(Color.Blue, Color.Tan, '_');
             for (int i = 0; i < text.Length; i++)
@@ -31,7 +31,7 @@ namespace Engine.UI
                 base.Print(0, i, new SadConsole.ColoredString(text[i], Color.DarkBlue, Color.Transparent));
             }
         }
-        internal void Print(Maps.Area[] areas, MessageTypes type = MessageTypes.Warning)
+        public void Print(Maps.Area[] areas, MessageTypes type = MessageTypes.Warning)
         {
             Fill(Color.Blue, Color.Tan, '_');
             for (int i = 0; i < areas.Length; i++)
