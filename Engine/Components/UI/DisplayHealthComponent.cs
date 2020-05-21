@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Engine.Components.UI
 {
-    internal class DisplayStatsComponent : ComponentBase
+    public class DisplayStatsComponent : ComponentBase
     {
         internal MessageConsole Console;
         internal HealthComponent Health => Parent.GetComponent<HealthComponent>();

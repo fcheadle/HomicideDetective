@@ -20,21 +20,21 @@ namespace Engine
         ToggleInventory,
         ToggleMenu,
     }
-    internal class Settings : ISettings
+    public class Settings : ISettings
     {
+        public static int MapWidth { get; set; } = 360;
+        public static int MapHeight { get; set; } = 360;
+        public static int GameWidth { get; set; } = 120;
+        public static int GameHeight { get; set; } = 40;
+        public static bool IsPaused { get; private set; } = false;
         public static bool ShowingMenu { get; private set; } = false;
-        internal static int MapWidth { get; set; } = 360;
-        internal static int MapHeight { get; set; } = 360;
-        internal static int GameWidth { get; set; } = 120;
-        internal static int GameHeight { get; set; } = 40;
-        internal static bool IsPaused { get; private set; } = false;
-        internal static Random Random { get; set; } = new Random();
-        internal static Radius FOVRadius { get; set; } = Radius.CIRCLE;
-        internal static FontMaster FontMaster { get; set; }
-        internal static Font Font { get; set; }
+        public static Random Random { get; set; } = new Random();
+        public static Radius FOVRadius { get; set; } = Radius.CIRCLE;
+        public static FontMaster FontMaster { get; set; }
+        public static Font Font { get; set; }
         public static Func<int, int, TimeSpan, bool> Wind { get; set; } = Calculate.RandomFunction4d();
 
-        internal static Dictionary<Keys, Direction> MovementKeyBindings { get; } = new Dictionary<Keys, Direction>
+        public static Dictionary<Keys, Direction> MovementKeyBindings { get; } = new Dictionary<Keys, Direction>
         {
             { Keys.NumPad7, Direction.UP_LEFT },    { Keys.NumPad8, Direction.UP },     { Keys.NumPad9, Direction.UP_RIGHT },
             { Keys.NumPad4, Direction.LEFT },                                           { Keys.NumPad6, Direction.RIGHT },
@@ -43,7 +43,7 @@ namespace Engine
             { Keys.W, Direction.UP }, { Keys.S, Direction.DOWN }, { Keys.A, Direction.LEFT }, { Keys.D, Direction.RIGHT }
         };
 
-        internal static Dictionary<Keys, GameActions> KeyBindings { get; } = new Dictionary<Keys, GameActions>
+        public static Dictionary<Keys, GameActions> KeyBindings { get; } = new Dictionary<Keys, GameActions>
         {
             {Keys.Space, GameActions.TogglePause }, //not implements
             {Keys.Escape, GameActions.ToggleMenu }, //not implemented
@@ -58,13 +58,13 @@ namespace Engine
             {Keys.A, GameActions.LookAtPerson },//not implemented
         };
 
-        internal static void ToggleMenu()
+        public static void ToggleMenu()
         {
             ShowingMenu = !ShowingMenu;
             IsPaused = ShowingMenu;
         }
 
-        internal static void TogglePause()
+        public static void TogglePause()
         {
             IsPaused = !IsPaused;
         }

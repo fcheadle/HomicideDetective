@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Engine.Components.Creature
 {
-    internal class ActorComponent : ComponentBase
+    public class ActorComponent : ComponentBase
     {
         private Path _path;
         private BasicEntity _target;
@@ -28,7 +28,7 @@ namespace Engine.Components.Creature
             //Determine whether or not we have a path
             if (_path == null)
             {
-
+                DecideWhatToDo();
             }
             //just move in a random direction for now
             List<Direction> directions = new List<Direction>();
@@ -39,6 +39,12 @@ namespace Engine.Components.Creature
             Direction d = directions.RandomItem();
             Parent.MoveIn(d);
         }
+
+        private void DecideWhatToDo()
+        {
+            //throw new NotImplementedException();
+        }
+
         public void Interact(BasicEntity sender)
         {
         }

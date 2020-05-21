@@ -13,7 +13,7 @@ namespace Engine.Components.Creature
         B,
         AB
     }
-    class HealthComponent : ComponentBase
+    public class HealthComponent : ComponentBase
     {
         public int SystoleBloodPressure { get; private set; }
         public int DiastoleBloodPressure { get; private set; }

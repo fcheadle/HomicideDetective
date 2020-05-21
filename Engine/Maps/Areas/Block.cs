@@ -23,6 +23,7 @@ namespace Engine.Maps
                 )
         { }
 
+        //this reads like the drunken noodling of a redneck whose had one too many. fix it later.
         public IEnumerable<Coord> GetFenceLocations()
         {
             List<Coord> answer = new List<Coord>();
@@ -79,7 +80,7 @@ namespace Engine.Maps
             }
 
             int halfNumOfAddresses = length / houseDistance;
-            Coord offset = Orientation == SadConsole.Orientation.Horizontal ? new Coord(8, 0) : new Coord(0, 8);
+            Coord offset = Orientation == SadConsole.Orientation.Horizontal ? new Coord(0, 12) : new Coord(12, 0);
             for (int i = 0; i < halfNumOfAddresses; i++)
             {
                 int targetIndex = lowerBoundary.Count / halfNumOfAddresses;

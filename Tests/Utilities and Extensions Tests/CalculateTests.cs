@@ -227,5 +227,11 @@ namespace Tests
 
             Assert.Greater(previousChances.Distinct().Count(), 12);
         }
+        [Test]
+        public void DistanceBetweenTest()
+        {
+            double five = Calculate.DistanceBetween(new Coord(0, 0), new Coord(3, 4));
+            Assert.AreEqual(5, five, "Got an answer other than 5");
+        }
     }
 }

@@ -21,7 +21,6 @@ namespace Tests
         public void SetUp()
         {
             area = new Area("forbidden zone", se, ne, nw, sw);
-            area.Origin = new Coord(1, 1);
         }
         [Test]
         public void AreaTest()
@@ -116,17 +115,6 @@ namespace Tests
             Assert.AreEqual(7, area.Right);
         }
         [Test]
-        public void ShiftTest()
-        {
-            Area a1 = area;
-            Area a2 = area.Shift();
-            Coord one = new Coord(1, 1);
-
-            foreach (Coord inner in a2.InnerPoints)
-                Assert.IsTrue(a1.Contains(inner - one));
-
-        }
-        [Test]
         public void ShiftWithParametersTest()
         {
             Coord two = new Coord(2, 2);
@@ -172,8 +160,9 @@ namespace Tests
             mainArea.SubAreas.Add(RoomType.Parlor, hostSubArea);
             mainArea.SubAreas.Add(RoomType.GuestBathroom, imposingSubArea);
 
-            List<Coord> coords = new List<Coord>();
             mainArea.DistinguishSubAreas();
+            hostSubArea = mainArea[RoomType.Parlor];
+            imposingSubArea = mainArea[RoomType.GuestBathroom];
             foreach (Coord c in imposingSubArea.InnerPoints)
             {
                 Assert.IsTrue(mainArea.Contains(c), "Main area somehow had a coord removed.");
@@ -189,11 +178,55 @@ namespace Tests
         [Test]
         public void AddConnectionBetweenTest()
         {
-            Area a = AreaFactory.Rectangle("test-tangle", new Coord(0, 0), 4,4);
-            Area b = AreaFactory.Rectangle("rest-ert", new Coord(a.Right, a.Top + 1), 3, 3);
+            Area a = AreaFactory.Rectangle("test-tangle", new Coord(0, 0), 6,6);
+            Area b = AreaFactory.Rectangle("rest-ert", new Coord(a.Right, a.Top), 5, 5);
+            int aCountBefore = a.OuterPoints.Count();
+            int bCountBefore = b.OuterPoints.Count();
             Area.AddConnectionBetween(a, b);
             Assert.AreEqual(1, a.Connections.Count());
             Assert.AreEqual(1, b.Connections.Count());
+
+            Assert.AreEqual(aCountBefore - 1, a.OuterPoints.Count());
+            Assert.AreEqual(bCountBefore - 1, b.OuterPoints.Count());
+
+        }
+        [Test]
+        public void RemoveOverlappingOuterpointsTest()
+        {
+            Area a = AreaFactory.FromRectangle("Area A", new Rectangle(new Coord(1, 1), new Coord(3, 4)));
+            Area b = AreaFactory.FromRectangle("Area B", new Rectangle(new Coord(3, 0), new Coord(6, 5)));
+
+            int aCountBefore = a.OuterPoints.Count();
+            int bCountBefore = b.OuterPoints.Count();
+            a.RemoveOverlappingOuterpoints(b);
+            Assert.Less(a.OuterPoints.Count(), aCountBefore, "No connecting points were removed from Area A");
+            Assert.AreEqual(b.OuterPoints.Count(), bCountBefore, "Connecting points were unexpectedly removed from Area b");
+        }
+        [Test]
+        public void RemoveOverlappingInnerpointsTest()
+        {
+            Area a = AreaFactory.FromRectangle("Area A", new Rectangle(new Coord(1, 1), new Coord(3, 4)));
+            Area b = AreaFactory.FromRectangle("Area B", new Rectangle(new Coord(3, 0), new Coord(6, 5)));
+
+            int aCountBefore = a.OuterPoints.Count();
+            int bCountBefore = b.OuterPoints.Count();
+            a.RemoveOverlappingInnerpoints(b);
+            Assert.Less(a.OuterPoints.Count(), aCountBefore, "No connecting points were removed from Area A");
+            Assert.AreEqual(b.OuterPoints.Count(), bCountBefore, "Connecting points were unexpectedly removed from Area b");
+        }
+        [Test]
+        public void RemoveOverlappingPointsTest()
+        {
+            Area a = AreaFactory.FromRectangle("Area A", new Rectangle(new Coord(3, 3), new Coord(5, 5)));
+            Area b = AreaFactory.FromRectangle("Area B", new Rectangle(new Coord(1, 1), new Coord(7, 7)));
+
+            int aCountBefore = a.OuterPoints.Count();
+            int bCountBefore = b.OuterPoints.Count();
+            a.RemoveOverlappingPoints(b);
+
+            Assert.AreEqual(0, a.OuterPoints.Count());
+            Assert.AreEqual(0, a.InnerPoints.Count());
+            Assert.AreEqual(b.OuterPoints.Count(), bCountBefore, "Connecting points were unexpectedly removed from Area b");
         }
     }
 }
