@@ -111,14 +111,14 @@ namespace Engine.Maps
                 foreach (Coord houseOrigin in block.Addresses)
                 {
                     string address = block.Name[0] + block.Name[1] + i.ToString() + block.Name.Substring(9);
-                    house = new House(houseOrigin, Calculate.RandomEnumValue<HouseType>(), address/*, Direction.Types.RIGHT*/);
-                    
+                    house = new House(address, houseOrigin, HouseType.PrairieHome, Direction.Types.DOWN);
+                    house.Generate();
                     Houses.Add(house);
                     i++;
                     
-                    foreach(Area r in house.SubAreas.Values)
+                    foreach(Area room in house.SubAreas.Values)
                     {
-                        Rooms.Add((Area)r.Shift());
+                        Rooms.Add(room);
                     }
                     
                     for (int j = 0; j < houseDistance; j++)

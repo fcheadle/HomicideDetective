@@ -21,7 +21,6 @@ namespace Tests
         public void SetUp()
         {
             area = new Area("forbidden zone", se, ne, nw, sw);
-            area.Origin = new Coord(1, 1);
         }
         [Test]
         public void AreaTest()
@@ -116,17 +115,6 @@ namespace Tests
             Assert.AreEqual(7, area.Right);
         }
         [Test]
-        public void ShiftTest()
-        {
-            Area a1 = area;
-            Area a2 = area.Shift();
-            Coord one = new Coord(1, 1);
-
-            foreach (Coord inner in a2.InnerPoints)
-                Assert.IsTrue(a1.Contains(inner - one));
-
-        }
-        [Test]
         public void ShiftWithParametersTest()
         {
             Coord two = new Coord(2, 2);
@@ -190,8 +178,8 @@ namespace Tests
         [Test]
         public void AddConnectionBetweenTest()
         {
-            Area a = AreaFactory.Rectangle("test-tangle", new Coord(0, 0), 4,4);
-            Area b = AreaFactory.Rectangle("rest-ert", new Coord(a.Right, a.Top + 1), 3, 3);
+            Area a = AreaFactory.Rectangle("test-tangle", new Coord(0, 0), 6,6);
+            Area b = AreaFactory.Rectangle("rest-ert", new Coord(a.Right, a.Top), 5, 5);
             int aCountBefore = a.OuterPoints.Count();
             int bCountBefore = b.OuterPoints.Count();
             Area.AddConnectionBetween(a, b);

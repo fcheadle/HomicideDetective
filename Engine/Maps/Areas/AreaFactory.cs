@@ -30,7 +30,7 @@ namespace Engine.Maps.Areas
         }
         public static Area FromRectangle(string name, Rectangle rectangle)
         {
-            return Rectangle(name, new Coord(rectangle.MinExtentX, rectangle.MinExtentY), rectangle.MaxExtentX, rectangle.MaxExtentY); 
+            return Rectangle(name, rectangle.MinExtent, rectangle.Width, rectangle.Height); 
         }
         public static Area RegularParallelogram(string name, Coord origin, int width, int height, int rotationDegrees)
         {

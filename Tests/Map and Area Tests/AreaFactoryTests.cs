@@ -65,7 +65,8 @@ namespace Tests
             Rectangle rectangle = new Rectangle(new Coord(1, 1), new Coord(5, 5));
             Area area = AreaFactory.FromRectangle("square", rectangle);
             //Assert.AreEqual(25, area.OuterPoints.Count());
-
+            Assert.AreEqual(rectangle.Width, area.Width);
+            Assert.AreEqual(rectangle.Height, area.Height);
             Assert.AreEqual(20, area.OuterPoints.Count());
             Assert.AreEqual(6, area.NorthBoundary.Count());
             Assert.AreEqual(6, area.SouthBoundary.Count());

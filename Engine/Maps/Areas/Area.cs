@@ -10,10 +10,9 @@ namespace Engine.Maps
     public class Area
     {
         public string Name { get; set; }
-        public Coord Origin { get; set; }
         public int Rise { get; internal set; }
         public int Run { get; internal set; }
-        public SadConsole.Orientation Orientation { get; }
+        public Orientation Orientation { get; }
         public Dictionary<Enum, Area> SubAreas { get; set; } = new Dictionary<Enum, Area>();
         public List<Coord> OuterPoints { get; set; } = new List<Coord>();
         public List<Coord> InnerPoints { get; set; } = new List<Coord>();
@@ -56,18 +55,17 @@ namespace Engine.Maps
             Rise = se.Y - ne.Y;
             Run = se.X - sw.X;
 
-            Top = ne.Y < nw.Y ? ne.Y : nw.Y;
-            Right = se.X > ne.X ? se.X : ne.X;
-            Left = sw.X < nw.X ? sw.X : nw.X;
-            Bottom = se.Y < sw.Y ? sw.Y : se.Y;
-
+            Top = ne.Y <= nw.Y ? ne.Y : nw.Y;
+            Right = se.X >= ne.X ? se.X : ne.X;
+            Left = sw.X <= nw.X ? sw.X : nw.X;
+            Bottom = se.Y <= sw.Y ? sw.Y : se.Y;
             OuterPoints.AddRange(SouthBoundary);
             OuterPoints.AddRange(NorthBoundary);
             OuterPoints.AddRange(EastBoundary);
             OuterPoints.AddRange(WestBoundary);
             OuterPoints = OuterPoints.Distinct().ToList();
             InnerPoints = InnerFromOuterPoints(OuterPoints).Distinct().ToList();
-            Orientation = (NorthBoundary.Count() + SouthBoundary.Count()) / 2 > (EastBoundary.Count() + WestBoundary.Count()) / 2 ? SadConsole.Orientation.Horizontal : SadConsole.Orientation.Vertical;
+            Orientation = (NorthBoundary.Count() + SouthBoundary.Count()) / 2 > (EastBoundary.Count() + WestBoundary.Count()) / 2 ? Orientation.Horizontal : Orientation.Vertical;
         }
 
         #region miscellaneous features
@@ -99,12 +97,12 @@ namespace Engine.Maps
         }
         public Area Shift(Coord origin)
         {
-            return new Area(Name, SouthEastCorner + origin, NorthEastCorner + origin, NorthWestCorner + origin, SouthWestCorner + origin);
-        }
-
-        public Area Shift()
-        {
-            return Shift(Origin);
+            Area area = new Area(Name, SouthEastCorner + origin, NorthEastCorner + origin, NorthWestCorner + origin, SouthWestCorner + origin);
+            foreach(var subArea in SubAreas)
+            {
+                area.SubAreas.Add(subArea.Key, subArea.Value);
+            }
+            return area;
         }
 
         public static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
@@ -148,12 +146,12 @@ namespace Engine.Maps
         public static void AddConnectionBetween(Area a, Area b)
         {
             List<Coord> possible = new List<Coord>();
-
-            foreach(Coord coord in a.OuterPoints.Where(here => b.OuterPoints.Contains(here)))
+            List<Coord> coords = a.OuterPoints.Where(here => b.OuterPoints.Contains(here) && !a.IsCorner(here) && !b.IsCorner(here)).ToList();
+            foreach (Coord coord in coords)
             {
                 possible.Add(coord);
             }
-
+            if (possible.Count() <= 2) return;
             possible.Remove(possible.First());
             possible.Remove(possible.Last());
 
@@ -164,6 +162,12 @@ namespace Engine.Maps
             b.OuterPoints.Remove(connection);
             b.Connections.Add(connection);
         }
+
+        private bool IsCorner(Coord here)
+        {
+            return (here == NorthEastCorner || here == NorthWestCorner || here == SouthEastCorner || here == SouthWestCorner);
+        }
+
         public void RemoveOverlappingOuterpoints(Area imposing)
         {
             foreach (Coord c in imposing.OuterPoints)

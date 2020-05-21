@@ -14,13 +14,13 @@ namespace Engine.Extensions
             List<Rectangle> children = new List<Rectangle>(); //so that we can modify children during the loop
             foreach (Rectangle child in ogChildren)
             {
-                if (child.Width > minimumDimension && child.Height > minimumDimension)
+                if (child.Width <= minimumDimension *2 && child.Height <= minimumDimension * 2)
                 {
-                    children.AddRange(RecursiveBisect(child, minimumDimension));
+                    children.Add(child);
                 }
                 else
                 {
-                    children.Add(child);
+                    children.AddRange(RecursiveBisect(child, minimumDimension));
                 }
             }
 
@@ -47,12 +47,12 @@ namespace Engine.Extensions
             int stopX = rectangle.MaxExtentX;
             int startY = rectangle.MinExtentY;
             int bisection = 0;
-            while (bisection < rectangle.MinExtentY + rectangle.Height / 5 || bisection > rectangle.MaxExtentY - rectangle.Height / 5)
+            while (bisection < rectangle.MinExtentY + rectangle.Height / 4 || bisection > rectangle.MaxExtentY - rectangle.Height / 4)
                 bisection = rectangle.RandomPosition().Y;
 
             
             yield return new Rectangle(new Coord(startX, startY), new Coord(stopX, bisection));
-            yield return new Rectangle(new Coord(startX, bisection), new Coord(stopX, stopY));
+            yield return new Rectangle(new Coord(startX, bisection + 1), new Coord(stopX, stopY));
         }
         public static IEnumerable<Rectangle> BisectVertically(this Rectangle rectangle)
         {
@@ -61,11 +61,11 @@ namespace Engine.Extensions
             int startX = rectangle.MinExtentX;
             int stopX = rectangle.MaxExtentX;
             int bisection = 0;
-            while (bisection < rectangle.MinExtentX + rectangle.Width / 5 || bisection > rectangle.MaxExtentX - rectangle.Width / 5)
+            while (bisection < rectangle.MinExtentX + rectangle.Width / 4 || bisection > rectangle.MaxExtentX - rectangle.Width / 4)
                 bisection = rectangle.RandomPosition().X;
 
             yield return new Rectangle(new Coord(startX, startY), new Coord(bisection, stopY));
-            yield return new Rectangle(new Coord(bisection, startY), new Coord(stopX, stopY));
+            yield return new Rectangle(new Coord(bisection + 1, startY), new Coord(stopX, stopY));
         }
     }
 }

@@ -15,59 +15,49 @@ namespace Tests
     [TestFixture]
     public class HouseTests
     {
+        [Datapoints]
+
         [Test]
         public void NewHouseTest()
         {
-            House house = new House(new Coord(0,0), HouseType.PrairieHome);
-            int nonWalkableCount = 0;
-            int doorCount = 0;
-            
-            for (int i = 0; i < house.Map.Width; i++)
+            House house = new House("humble abode", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
+            Assert.AreEqual("humble abode", house.Name);
+            Assert.AreEqual(new Coord(5, 5), house.Origin);
+            for (int x = 0; x < 24; x++)
             {
-                for (int j = 0; j < house.Map.Height; j++)
+                for (int y = 0; y < 24; y++)
                 {
-                    Coord target = new Coord(i, j);
-                    BasicTerrain terrain = house.Map.GetTerrain<BasicTerrain>(target);
-                    if (terrain == null)
-                        house.Map.SetTerrain(TerrainFactory.Pavement(target));
-
-                    terrain = house.Map.GetTerrain<BasicTerrain>(target);
-                    if (terrain.IsWalkable)
-                    {
-                        if (target != new Coord(0, 0))
-                        {
-                            Path path = house.Map.AStar.ShortestPath(new Coord(0, 0), target);
-                            Assert.NotNull("House produced inaccessible locations");
-                            Assert.Greater(path.Length, 0, "Path returned no steps");
-                        }
-                        if (!terrain.IsTransparent)
-                        {
-                            //it's a door
-                            doorCount++;
-                        }
-                    }
-                    else
-                    {
-                        nonWalkableCount++;
-                    }
+                    Assert.IsTrue(house.Contains(new Coord(x, y) + 5));
                 }
             }
-
-            Assert.Greater(house.SubAreas.Count(), 5);
-            Assert.Greater(nonWalkableCount, 25); //i mean, statistically....
-            Assert.Greater(doorCount, 6); //i mean, statistically....
         }
 
         [Test]
-        public void RandomRoomDimensionTest()
+        public void ConnectRoomToNeighborsTest() 
         {
-            House house = new House(new Coord(0, 0), HouseType.CentralPassageHouse);
-            for (int i = 0; i < 25; i++)
-            {
-                int dim = house.RandomRoomDimension();
-                Assert.GreaterOrEqual(dim, 3);
-                Assert.LessOrEqual(dim, 7);
-            }
+            House house = new House("party mansion", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
+            Rectangle parlor = new Rectangle(0, 0, 12, 18);
+            Rectangle dining = new Rectangle(parlor.Width, 7, 5, 5);
+            house.CreateRoom(RoomType.Parlor, parlor);
+            house.CreateRoom(RoomType.DiningRoom, dining);
+            house.ConnectRoomToNeighbors(house[RoomType.Parlor]);
+            Assert.AreEqual(2, house.Doors.Count(), "Did not add the both points");
+            Assert.AreEqual(house.Doors.ToList()[0], house.Doors.ToList()[1], "Did not add the same connection point to both areas");
+            Assert.AreNotEqual(new Coord(0, 0), house.Doors.ToList()[0]);
+            Assert.AreNotEqual(new Coord(0, 0), house.Doors.ToList()[1]);
+        }
+        [Test]
+        public void CreateRoomTest()
+        {
+            House house = new House("party mansion", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
+            Rectangle room = new Rectangle(6, 9, 12, 18);
+            house.CreateRoom(RoomType.Parlor, room);
+            Assert.AreEqual(1, house.SubAreas.Count());
+            Area parlor = house[RoomType.Parlor];
+            Assert.NotNull(parlor);
+            Assert.AreEqual(room.Width, parlor.Width);
+            Assert.AreEqual(room.Height, parlor.Height);
+            //add another room
         }
     }
 }
