@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests
+namespace Tests.Utilities
 {
     [TestFixture]
     public class ColorExtensionsTests
@@ -34,7 +34,7 @@ namespace Tests
             Assert.Less(c.A, Color.Black.A);
         }
         [Test]
-        public void FadeInTest() 
+        public void FadeInTest()
         {
             Color c = Color.Transparent.FadeIn();
             Assert.Greater(c.A, Color.Transparent.A);
@@ -60,7 +60,7 @@ namespace Tests
         }
 
         [Test]
-        public void MutateByTest() 
+        public void MutateByTest()
         {
             Color c = Color.Red.MutateBy(Color.Blue);
             Assert.Greater(c.B, Color.Red.B);
@@ -69,7 +69,7 @@ namespace Tests
         }
 
         [Test]
-        public void HalfTest() 
+        public void HalfTest()
         {
             Color c = Color.Red.Half();
             Assert.AreEqual(c.B, Color.Red.B);
@@ -77,7 +77,7 @@ namespace Tests
             Assert.AreEqual(c.G, Color.Red.G);
             Assert.AreEqual(c.B, Color.Red.B);
         }
-        
+
         [Test]
         public void DoubleTest()
         {

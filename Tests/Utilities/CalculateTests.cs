@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tests
+namespace Tests.Utilities
 {
     [TestFixture]
     public class CalculateTests
@@ -67,10 +67,10 @@ namespace Tests
             List<Coord> line = Calculate.PointsAlongStraightLine(start, stop).ToList();
             Assert.Contains(start, line);
             Assert.Contains(stop, line);
-            Assert.Contains(new Coord(3,2), line);
-            Assert.Contains(new Coord(4,2), line);
-            Assert.Contains(new Coord(6,3), line);
-            Assert.Contains(new Coord(7,3), line);
+            Assert.Contains(new Coord(3, 2), line);
+            Assert.Contains(new Coord(4, 2), line);
+            Assert.Contains(new Coord(6, 3), line);
+            Assert.Contains(new Coord(7, 3), line);
             Assert.Contains(new Coord(9, 4), line);
         }
         [Test]
@@ -98,10 +98,10 @@ namespace Tests
                 {
                     Coord c = new Coord(i, j);
                     if (
-                        (i == xmin && (j == ymin || j == ymax)) ||
-                        (j == ymin && (i == xmin || i == xmax)) ||
-                        (i == xmax && (j == ymin || j == ymax)) ||
-                        (j == ymax && (i == xmin || i == xmax)))
+                        i == xmin && (j == ymin || j == ymax) ||
+                        j == ymin && (i == xmin || i == xmax) ||
+                        i == xmax && (j == ymin || j == ymax) ||
+                        j == ymax && (i == xmin || i == xmax))
                     {
                         Assert.Contains(c, answer);
                     }
@@ -159,8 +159,8 @@ namespace Tests
             Assert.IsTrue(makesO);
 
         }
-        
-        //[Test] //skip for now
+
+        [Test] //skip for now
         public void MasterFormulaTest()
         {
             var f = Calculate.MasterFormula();
@@ -180,7 +180,7 @@ namespace Tests
             Coord origin = new Coord(5, 5);
             PolarCoord target = Calculate.CartesianToPolar(origin);
             double expectedRadius = Math.Sqrt(50);
-            double expectedTheta = 1/Math.Tan(1);
+            double expectedTheta = 1 / Math.Tan(1);
 
 
             Assert.Less(expectedTheta - 0.01, target.Theta);

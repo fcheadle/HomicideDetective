@@ -10,6 +10,7 @@ using Engine.Components.Creature;
 using System;
 using Engine.Components.Terrain;
 using System.Collections.Generic;
+using Engine.Maps.Areas;
 
 namespace Engine.UI
 {
@@ -49,7 +50,7 @@ namespace Engine.UI
             MapRenderer.CenterViewPortOnPoint(TownMap.ControlledGameObject.Position);
         }
 
-        internal void BlowWind(TimeSpan t)
+        public void BlowWind(TimeSpan t)
         {
             _elapsed += t;
             _windCounter += t;
@@ -98,7 +99,7 @@ namespace Engine.UI
             TownMap.CalculateFOV(TownMap.ControlledGameObject.Position, Actor.FOVRadius, Settings.FOVRadius);
             List<string> output = new List<string>();
             output.Add("At coordinate " + Player.Position.X + ", " + Player.Position.Y);
-            foreach (Area area in Player.GetCurrentRegions())
+            foreach (Area area in GetRegions(Player.Position))
             {
                 output.Add(area.ToString());
                 output.Add(area.Orientation.ToString());
@@ -106,6 +107,15 @@ namespace Engine.UI
             Messages.Print(output.ToArray());
             Health.Print();
             MapRenderer.CenterViewPortOnPoint(TownMap.ControlledGameObject.Position);
+        }
+
+        private IEnumerable<Area> GetRegions(Coord position)
+        {
+            foreach (Area area in TownMap.Regions)
+            {
+                if (area.InnerPoints.Contains(position))
+                    yield return area;
+            }
         }
     }
 }

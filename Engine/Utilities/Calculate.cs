@@ -86,6 +86,7 @@ namespace Engine
             //(x,y,t) => (int)(y*4.4 + Math.Tan(x*0.666) - t.TotalMilliseconds / 188) % 69 == 1,//gentle south waves
             //(x,y,t) => Math.Cos(Math.Sqrt(2 * t.TotalSeconds * t.TotalSeconds + x*y)) > 0.5,//counterclockwise spiral from a center of the southeast corner, speeds up over time
         };
+
         public static List<Func<double, Point>> FunctionsPolar = new List<Func<double, Point>> 
         {
             (theta) => //the butterfly curve
@@ -175,6 +176,15 @@ namespace Engine
 
             return p;
         }
+
+        public static double BoundedTan(int height)
+        {
+            //returns a tangent that is between -1 and 1
+
+            return Math.Tan(height % 45);
+
+        }
+
         public static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
         {
             List<Coord> inner = new List<Coord>();

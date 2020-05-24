@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tests
+namespace Tests.Map.Areas
 {
     [TestFixture]
     class AreaTests
@@ -40,7 +40,7 @@ namespace Tests
         [Test]
         public void ContainsTest()
         {
-            Area area = new Area("forbidden zone", se, ne, nw, sw); 
+            Area area = new Area("forbidden zone", se, ne, nw, sw);
             Assert.IsFalse(area.Contains(new Coord(-5, -5)));
             Assert.IsFalse(area.Contains(new Coord(1, 2)));
             Assert.IsFalse(area.Contains(new Coord(9, 8)));
@@ -77,7 +77,7 @@ namespace Tests
         public void RightAtTest()
         {
             Assert.AreEqual(ne.X, area.RightAt(ne.Y));
-            Assert.AreEqual(5, area.RightAt(area.Top)); 
+            Assert.AreEqual(5, area.RightAt(area.Top));
             Assert.AreEqual(5, area.RightAt(area.Bottom));
         }
         [Test]
@@ -178,7 +178,7 @@ namespace Tests
         [Test]
         public void AddConnectionBetweenTest()
         {
-            Area a = AreaFactory.Rectangle("test-tangle", new Coord(0, 0), 6,6);
+            Area a = AreaFactory.Rectangle("test-tangle", new Coord(0, 0), 6, 6);
             Area b = AreaFactory.Rectangle("rest-ert", new Coord(a.Right, a.Top), 5, 5);
             int aCountBefore = a.OuterPoints.Count();
             int bCountBefore = b.OuterPoints.Count();

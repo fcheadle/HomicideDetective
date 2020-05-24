@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tests
+namespace Tests.Map
 {
     [TestFixture]
     public class RectangleExtensionsTests
@@ -84,7 +84,7 @@ namespace Tests
             Assert.LessOrEqual(rectangles[1].Height, 10);
             Assert.AreEqual(5, rectangles[0].Width);
             Assert.AreEqual(5, rectangles[1].Width);
-            
+
         }
         [Test]
         public void BisectVerticallyTest()

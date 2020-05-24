@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tests
+namespace Tests.Map.Areas
 {
     [TestFixture]
     public class BlockTests
@@ -67,10 +67,10 @@ namespace Tests
         [Test]
         public void NewBlockTest()
         {
-            Assert.AreEqual(new Coord(5,3), block.NorthEastCorner);
-            Assert.AreEqual(new Coord(6,8), block.SouthEastCorner);
-            Assert.AreEqual(new Coord(2,2), block.NorthWestCorner);
-            Assert.AreEqual(new Coord(5,6), block.SouthWestCorner);
+            Assert.AreEqual(new Coord(5, 3), block.NorthEastCorner);
+            Assert.AreEqual(new Coord(6, 8), block.SouthEastCorner);
+            Assert.AreEqual(new Coord(2, 2), block.NorthWestCorner);
+            Assert.AreEqual(new Coord(5, 6), block.SouthWestCorner);
         }
         [Test]
         public void ToStringOverrideTest()
@@ -112,7 +112,7 @@ namespace Tests
                 new Coord(51, 51),
             });
 
-            block = new Block(nwIntersection, swIntersection, seIntersection, neIntersection); 
+            block = new Block(nwIntersection, swIntersection, seIntersection, neIntersection);
             locations = block.GetFenceLocations().ToList();
             Assert.IsNotEmpty(locations);
 

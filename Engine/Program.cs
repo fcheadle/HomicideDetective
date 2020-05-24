@@ -10,8 +10,7 @@ namespace Engine
 {
     public class Program
     {
-        private static GameState _state;
-        internal static GameScreen MapScreen { get; private set; }
+        public static GameScreen MapScreen { get; private set; }
         internal static TimeSpan ActCounter { get; private set; } = TimeSpan.FromSeconds(0);
 
         internal static void Main()
@@ -26,7 +25,7 @@ namespace Engine
         private static void Update(GameTime obj)
         {
             ActCounter += obj.ElapsedGameTime;
-            MapScreen.BlowWind(obj.ElapsedGameTime);
+            //MapScreen.BlowWind(obj.ElapsedGameTime);
             MapScreen.Player.GetGoRogueComponent<KeyboardComponent>().ProcessGameFrame();
             MapScreen.MapRenderer.IsDirty = true;// (obj.ElapsedGameTime);
             if (ActCounter > TimeSpan.FromMilliseconds(250))

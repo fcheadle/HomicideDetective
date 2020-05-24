@@ -6,11 +6,11 @@ using System;
 using Engine.Entities;
 using Engine.Extensions;
 
-namespace Tests
+namespace Tests.Map
 {
-    public class MapExtensionTests
+    public class BasicMapExtensionTests
     {
-        BasicMap _map;        
+        BasicMap _map;
 
         [SetUp]
         public void Setup()
@@ -22,11 +22,10 @@ namespace Tests
                 {
                     int glyph = i + j;
                     Coord c = new Coord(i, j);
-                    _map.SetTerrain(TerrainFactory.Test(i+j, c));
+                    _map.SetTerrain(TerrainFactory.Test(i + j, c));
                 }
             }
         }
-
         [Test]
         public void SubsectionTest()
         {
@@ -42,7 +41,6 @@ namespace Tests
                 }
             }
         }
-
         [Test]
         public void ContainsTest()
         {
@@ -58,7 +56,6 @@ namespace Tests
             Assert.IsFalse(_map.Contains(new Coord(5, 19)));
             Assert.IsFalse(_map.Contains(new Coord(9, 4)));
         }
-
         [Test]
         public void ReverseHorizontalTest()
         {
@@ -76,7 +73,6 @@ namespace Tests
                 }
             }
         }
-
         [Test]
         public void ReverseVerticalTest()
         {
@@ -94,7 +90,6 @@ namespace Tests
                 }
             }
         }
-
         [Test]
         public void SwapXYTest()
         {
@@ -112,12 +107,10 @@ namespace Tests
                 }
             }
         }
-
-        [Test] //not yet implemented
-        public void RotateTest()
+        [Test]
+        public void RotateDiscreetTest()
         {
-            BasicMap rotated = _map.Rotate(90);
-
+            BasicMap rotated = _map.RotateDiscreet(90);
             //Top left corner becomes top right corner
             Coord a = new Coord(0, 0);
             Coord b = new Coord(_map.Width - 1, 0);
@@ -146,7 +139,6 @@ namespace Tests
             t2 = _map.GetTerrain<BasicTerrain>(b);
             Assert.AreEqual(t1.Glyph, t2.Glyph, "Bottom left quadrant didn't move to the top left.");
         }
-
         [Test]
         public void AddTest()
         {
@@ -177,7 +169,6 @@ namespace Tests
                 }
             }
         }
-
         [Test]
         public void AddDoesntOverWriteTest()
         {
@@ -217,7 +208,7 @@ namespace Tests
                 newMap.SetTerrain(TerrainFactory.Test('#', new Coord(i, i)));
             }
 
-            newMap.ReplaceTiles(_map, new Coord(0,0));
+            newMap.ReplaceTiles(_map, new Coord(0, 0));
 
             for (int i = 0; i < _map.Width; i++)
             {
@@ -232,7 +223,7 @@ namespace Tests
         [Test]
         public void IsClearOfObstructionsTest()
         {
-            Assert.IsTrue(_map.IsClearOfObstructions(new Coord(0,0), 8));
+            Assert.IsTrue(_map.IsClearOfObstructions(new Coord(0, 0), 8));
 
             _map.SetTerrain(TerrainFactory.Wall(new Coord(0, 0)));
 
@@ -241,20 +232,23 @@ namespace Tests
             Assert.IsTrue(_map.IsClearOfObstructions(new Coord(1, 1), 8));
         }
 
-        //[Test]//currently, unable to test because adding entities
-        public void GetCreaturesTest()
+        [Test]
+        public void CropTest()
         {
-            _map.AddEntity(CreatureFactory.Person(new Coord(0, 0)));
-            _map.AddEntity(CreatureFactory.Person(new Coord(1, 1)));
-            _map.AddEntity(CreatureFactory.Person(new Coord(2, 2)));
-            _map.AddEntity(CreatureFactory.Person(new Coord(3, 3)));
-            _map.AddEntity(CreatureFactory.Person(new Coord(4, 4)));
-
-            Assert.AreEqual(_map.GetCreatures().Count(), 0);
-            foreach (BasicEntity c in _map.GetCreatures())
+            BasicMap map = new BasicMap(8, 8, 2, Distance.MANHATTAN);
+            for (int i = 1; i < map.Width - 1; i++)
             {
-                Assert.IsNotNull(c);
+                for (int j = 1; j < map.Height - 1; j++)
+                {
+                    Coord c = new Coord(i, j);
+                    map.SetTerrain(TerrainFactory.Test(i + j, c));
+                }
             }
+
+            map = map.Crop();
+            Assert.AreEqual(_map.Width - 2, map.Width);
+            Assert.AreEqual(_map.Height - 2, map.Height);
+            Assert.AreEqual(2, map.GetTerrain<BasicTerrain>(0, 0).Glyph);
         }
     }
 }

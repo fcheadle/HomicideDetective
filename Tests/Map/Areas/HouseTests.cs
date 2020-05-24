@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tests
+namespace Tests.Map.Areas
 {
     [TestFixture]
     public class HouseTests
@@ -33,7 +33,7 @@ namespace Tests
         }
 
         [Test]
-        public void ConnectRoomToNeighborsTest() 
+        public void ConnectRoomToNeighborsTest()
         {
             House house = new House("party mansion", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
             Rectangle parlor = new Rectangle(0, 0, 12, 18);

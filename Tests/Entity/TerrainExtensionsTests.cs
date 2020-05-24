@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests.Utilities_and_Extensions_Tests
+namespace Tests.Entity
 {
     class TerrainExtensionsTests
     {

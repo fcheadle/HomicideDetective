@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tests
+namespace Tests.Map.Areas
 {
     [TestFixture]
     class AreaFactoryTests
@@ -26,7 +26,7 @@ namespace Tests
         [Test]
         public void RectangleTest()
         {
-            
+
             Area room = AreaFactory.Rectangle("my office", start, width, height, angleRadians);
 
             Coord nw = room.NorthWestCorner;
@@ -34,7 +34,7 @@ namespace Tests
             Coord se = room.SouthEastCorner;
             Coord ne = room.NorthEastCorner;
 
-            Assert.AreEqual(nw, new Coord(1,1));
+            Assert.AreEqual(nw, new Coord(1, 1));
 
             Assert.Greater(nw.X, sw.X);
             Assert.Greater(sw.Y, nw.Y);
@@ -55,11 +55,11 @@ namespace Tests
         [Test]
         public void ClosetTest()
         {
-            Area closet = AreaFactory.Closet("pantry", new Coord(0,0));
+            Area closet = AreaFactory.Closet("pantry", new Coord(0, 0));
             Assert.AreEqual(3, closet.Right);
             Assert.AreEqual(3, closet.Bottom);
         }
-        [Test] 
+        [Test]
         public static void FromRectangleTest()
         {
             Rectangle rectangle = new Rectangle(new Coord(1, 1), new Coord(5, 5));
@@ -84,7 +84,7 @@ namespace Tests
             Assert.IsTrue(parallelogram.Contains(origin), "Didn't contain the origin.");
             Assert.IsTrue(parallelogram.Contains(origin + length), "Didn't contain expected coordinate of " + (origin + length).ToString());
             Assert.IsTrue(parallelogram.Contains(horizontalBound), "Didn't contain expected top-right corner");
-            Assert.IsFalse(parallelogram.Contains(origin + new Coord(0,2)), "Contained unexpected spot due south of the origin.");
+            Assert.IsFalse(parallelogram.Contains(origin + new Coord(0, 2)), "Contained unexpected spot due south of the origin.");
         }
     }
 }

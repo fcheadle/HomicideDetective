@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tests
+namespace Tests.Map
 {
     [TestFixture]
     public class ListOfCoordExtensionsTests
@@ -32,14 +32,14 @@ namespace Tests
         public void LeftAtTest()
         {
             Assert.AreEqual(nw.X, _hardCodedRange.LeftAt(nw.Y));
-            Assert.AreEqual(4, _hardCodedRange.LeftAt(0)); 
+            Assert.AreEqual(4, _hardCodedRange.LeftAt(0));
             Assert.AreEqual(3, _hardCodedRange.LeftAt(4));
         }
         [Test]
         public void RightAtTest()
         {
             Assert.AreEqual(ne.X, _hardCodedRange.RightAt(ne.Y));
-            Assert.AreEqual(se.X, _hardCodedRange.RightAt(se.Y)); 
+            Assert.AreEqual(se.X, _hardCodedRange.RightAt(se.Y));
         }
         [Test]
         public void TopAtTest()
@@ -54,5 +54,5 @@ namespace Tests
             Assert.AreEqual(sw.Y, _hardCodedRange.BottomAt(sw.X));
         }
     }
-    
+
 }

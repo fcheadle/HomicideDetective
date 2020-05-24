@@ -9,6 +9,7 @@ namespace Engine.Maps
         //Testing,
         CentralPassageHouse,
         PrairieHome,
+        Backrooms,
         //CourtyardHouse,
         //Konak,
         //LogHouse,

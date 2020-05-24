@@ -1,0 +1,10 @@
+{
+  "Name": "font-sample",
+  "FilePath": "font-sample.png",
+  "GlyphHeight": 16,
+  "GlyphPadding": 1,
+  "GlyphWidth": 8,
+  "SolidGlyphIndex": 219,
+  "Columns": 16,
+  "IsSadExtended": false
+}

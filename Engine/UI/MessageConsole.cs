@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Engine.Maps.Areas;
+using Microsoft.Xna.Framework;
 using Console = SadConsole.Console;
 namespace Engine.UI
 {
@@ -28,10 +29,10 @@ namespace Engine.UI
             Fill(Color.Blue, Color.Tan, '_');
             for (int i = 0; i < text.Length; i++)
             {
-                base.Print(0, i, new SadConsole.ColoredString(text[i], Color.DarkBlue, Color.Transparent));
+                base.Print(1, i, new SadConsole.ColoredString(text[i].ToString(), Color.DarkBlue, Color.Transparent));
             }
         }
-        public void Print(Maps.Area[] areas, MessageTypes type = MessageTypes.Warning)
+        public void Print(Area[] areas, MessageTypes type = MessageTypes.Warning)
         {
             Fill(Color.Blue, Color.Tan, '_');
             for (int i = 0; i < areas.Length; i++)

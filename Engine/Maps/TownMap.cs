@@ -7,6 +7,10 @@ using SadConsole;
 using Engine.Entities;
 using Engine.Extensions;
 using System;
+using Engine.Maps.Areas;
+using XnaRect = Microsoft.Xna.Framework.Rectangle;
+using Rectangle = GoRogue.Rectangle;
+using GoRogue.GameFramework;
 
 namespace Engine.Maps
 {
@@ -38,11 +42,49 @@ namespace Engine.Maps
             _width = width;
             _height = height;
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
-            MakeOutdoors();
-            MakeRoadsAndBlocks();
-            MakeHouses();
+
+            FloodWithSimpleTiles();
+            MakeBackrooms();
+            //MakeOutdoors();
+            //MakeRoadsAndBlocks();
+            //MakeHouses();
             //MakePeople();
         }
+
+        private void FloodWithSimpleTiles()
+        {
+            for (int x = 0; x < Settings.MapWidth; x++)
+            {
+                for (int y = 0; y < Settings.MapWidth; y++)
+                {
+                    SetTerrain(TerrainFactory.BathroomLinoleum(new Coord(x, y)));
+                }
+            }
+        }
+
+        private void MakeBackrooms()
+        {
+            House backrooms = new House("Backrooms", new Coord(0,0), HouseType.Backrooms, Direction.Types.DOWN);
+            backrooms.Generate();
+            Houses.Add(backrooms);
+            this.ForXForY(
+                (Coord point) => {
+                    try
+                    {
+                        BasicTerrain t = backrooms.Map.GetTerrain<BasicTerrain>(point);
+                        if(t != null)
+                            SetTerrain(TerrainFactory.Copy(t, point));
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+
+                }
+            );
+        }
+
         private void MakeRoadsAndBlocks()
         {
             RoadNames roadName = (RoadNames)Calculate.Percent();

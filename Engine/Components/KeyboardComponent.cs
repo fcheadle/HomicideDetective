@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Engine.Components
 {
-    class KeyboardComponent : ComponentBase
+    public class KeyboardComponent : ComponentBase
     {
         public Coord Position { get => Parent.Position;}
         public KeyboardComponent() : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)

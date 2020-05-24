@@ -64,6 +64,7 @@ namespace Engine.Maps
             {
                 default:
                 case HouseType.PrairieHome: CreatePrairieHome(); break;
+                case HouseType.Backrooms: CreateBackrooms(); break;
                 //case HouseType.CentralPassageHouse: CreateCentralPassageHouse(); break;
             }
             int chance = Calculate.Percent();
@@ -119,6 +120,20 @@ namespace Engine.Maps
             {
                 ConnectRoomToNeighbors(room.Value);
                 DrawRoom(room.Value, (RoomType)room.Key);
+            }
+        }
+
+        private void CreateBackrooms()
+        {
+            Map = new BasicMap(Settings.MapWidth, Settings.MapHeight, 1, Distance.EUCLIDEAN);
+            Rectangle wholeHouse = new Rectangle(0, 0, Map.Width, Map.Height); //six is the magic number for some reason
+            List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
+
+            int index = 0;
+            foreach (Rectangle plan in rooms.OrderBy(r => r.Area).ToArray())
+            {
+                CreateRoom((RoadNumbers)index, plan);
+                index++;
             }
         }
 
@@ -179,7 +194,7 @@ namespace Engine.Maps
             }
         }
 
-        public void CreateRoom(RoomType type, Rectangle plan)
+        public void CreateRoom(Enum type, Rectangle plan)
         {
             plan = new Rectangle(Origin + plan.MinExtent, Origin + plan.MaxExtent);
             Area room = AreaFactory.FromRectangle(type.ToString() + ", " + Name, plan);
@@ -272,18 +287,31 @@ namespace Engine.Maps
                     if (Map.Contains(location))
                     {
                         BasicTerrain floor;
-                        switch (type)
-                        {
-                            case RoomType.BoysBedroom:
-                            case RoomType.GirlsBedroom:
-                            case RoomType.HallCloset:
-                            case RoomType.MasterBedroom:
-                            case RoomType.GuestBedroom: floor = TerrainFactory.Carpet(location); break;
-                            case RoomType.Kitchen:
-                            case RoomType.GuestBathroom: floor = TerrainFactory.Linoleum(location); break;
-                            default: floor = TerrainFactory.HardwoodFloor(location); break;
-                        }
+                        ////Don't delete this, I'll come back to it later
+                        //switch (type)
+                        //{
+                        //    case RoomType.BoysBedroom:
+                        //    case RoomType.GirlsBedroom:
+                        //    case RoomType.HallCloset:
+                        //    case RoomType.MasterBedroom:
+                        //    case RoomType.GuestBedroom: floor = TerrainFactory.OliveCarpet(location); break;
+                        //    case RoomType.Kitchen:
+                        //    case RoomType.GuestBathroom: floor = TerrainFactory.BathroomLinoleum(location); break;
+                        //    default: floor = TerrainFactory.DarkHardwoodFloor(location); break;
+                        //}
 
+                        switch ((int)type % 8)
+                        {
+                            default:
+                            case 0: floor = TerrainFactory.OliveCarpet(location); break;
+                            case 1: floor = TerrainFactory.LightCarpet(location); break;
+                            case 2: floor = TerrainFactory.ShagCarpet(location); break;
+                            case 3: floor = TerrainFactory.BathroomLinoleum(location); break;
+                            case 4: floor = TerrainFactory.KitchenLinoleum(location); break;
+                            case 5: floor = TerrainFactory.DarkHardwoodFloor(location); break;
+                            case 6: floor = TerrainFactory.MediumHardwoodFloor(location); break;
+                            case 7: floor = TerrainFactory.LightHardwoodFloor(location); break;
+                        }
                         Map.SetTerrain(floor);
                     }
                 }

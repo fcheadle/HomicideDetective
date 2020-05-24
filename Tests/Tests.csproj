@@ -23,4 +23,13 @@
     <ProjectReference Include="..\HomicideDetective\HomicideDetective.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="font-sample.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="font-sample.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

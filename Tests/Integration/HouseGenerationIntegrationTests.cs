@@ -1,6 +1,7 @@
 ﻿using Engine.Entities;
 using Engine.Extensions;
 using Engine.Maps;
+using Engine.Maps.Areas;
 using GoRogue;
 using GoRogue.Pathing;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ namespace Tests.Integration
 {
     class HouseGenerationIntegrationTests
     {
-        //[Test] //houses generate successfully, IDK what this test is on about
+        [Test]
         public void GenerateTest()
         {
             House house = new House("paddys pub", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
