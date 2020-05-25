@@ -2,6 +2,7 @@
 using Engine.Extensions;
 using Engine.Maps.Areas;
 using GoRogue;
+using GoRogue.Pathing;
 using SadConsole;
 using System;
 using System.Collections.Generic;
@@ -78,32 +79,22 @@ namespace Engine.Maps
                 case Direction.Types.LEFT:
                     if (chance < 50)
                     {
-                        Map = Map.Rotate(270);
+                        Map = Map.RotateDiscreet(270);
                     }
-                    else
-                    {
-                        Map = Map.SwapXY();
-                        Map = Map.ReverseHorizontal();
-                        if (Calculate.Percent() < 50)
-                            Map = Map.ReverseVertical();
-                    }
+                    if (chance < 50)
+                        Map = Map.ReverseVertical();
+             
                     break;
                 case Direction.Types.RIGHT:
+                    Map = Map.RotateDiscreet(90);
+
                     if (chance < 50)
-                    {
-                        Map = Map.Rotate(90);
-                    }
-                    else
-                    {
-                        Map = Map.SwapXY();
-                        if (Calculate.Percent() < 50)
-                            Map = Map.ReverseVertical();
-                    }
+                        Map = Map.ReverseVertical();
                     break;
                 case Direction.Types.UP:
                     if (chance < 50)
                     {
-                        Map = Map.Rotate(180);
+                        Map = Map.RotateDiscreet(180);
                     }
                     else
                     {
@@ -120,6 +111,31 @@ namespace Engine.Maps
             {
                 ConnectRoomToNeighbors(room.Value);
                 DrawRoom(room.Value, (RoomType)room.Key);
+            }
+
+            for (int i = 0; i < Map.Width; i++)
+            {
+                for (int j = 0; j < Map.Height; j++)
+                {
+                    Coord here = new Coord(i, j);
+                    BasicTerrain terrain = Map.GetTerrain<BasicTerrain>(here);
+                    if (terrain != null)
+                    {
+                        if (terrain.IsWalkable)
+                        {
+                            Path path = Map.AStar.ShortestPath(new Coord(Map.Width/2, Map.Height /2), here);
+                            if(path == null)
+                            {
+                                foreach(Coord neighbor in here.Neighbors())
+                                {
+                                    if(Map.Contains(neighbor))
+                                        if (!Map.GetTerrain<BasicTerrain>(neighbor).IsWalkable)
+                                            Map.SetTerrain(TerrainFactory.Door(neighbor));
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 

@@ -9,7 +9,29 @@ namespace Engine.Entities
 {
     public class TerrainFactory
     {
-        public static BasicTerrain Copy(BasicTerrain source, Coord target) => new BasicTerrain(source.Foreground, source.Background, source.Glyph, target, source.IsWalkable, source.IsTransparent);
+        public static BasicTerrain Test(int glyph, Coord position)
+        {
+            Color fore;
+            Color back;
+            double z = Settings.Random.NextDouble() * glyph;
+            if(position.Y % 2 == 0)
+            {
+                fore = Color.Cyan.MutateToIndex(-z);
+            }
+            else
+            {
+                fore = Color.White.MutateToIndex(-z);
+            }
+            if(position.X % 2 == 0)
+            {
+                back = Color.Magenta.MutateToIndex(z);
+            }
+            else
+            {
+                back = Color.DarkMagenta.MutateToIndex(z);
+            }
+            return new BasicTerrain(fore, back, glyph, position, true, true);
+        }
         public static BasicTerrain Grass(Coord position, double z = 0)
         {
             Color color = Color.Green.MutateToIndex(z);
@@ -32,6 +54,7 @@ namespace Engine.Entities
             t.AddComponent(new BlowsInWindComponent(glyph));
             return t;
         }
+        public static BasicTerrain Copy(BasicTerrain source, Coord target) => new BasicTerrain(source.Foreground, source.Background, source.Glyph, target, source.IsWalkable, source.IsTransparent);
         public static BasicTerrain Pavement(Coord position) => new BasicTerrain(Color.DarkGray, Color.Black, 247, position, true, true);
         public static BasicTerrain Wall(Coord position) => new BasicTerrain(Color.White, Color.Black, '#', position, false, false);
         public static BasicTerrain Fence(Coord position) => new BasicTerrain(Color.LightGray, Color.Black, 140, position, false, true);
@@ -47,6 +70,5 @@ namespace Engine.Entities
         public static BasicTerrain MediumHardwoodFloor(Coord position) => new BasicTerrain(Color.SaddleBrown, Color.Brown.Half(), 240, position, true, true);
         public static BasicTerrain LightHardwoodFloor(Coord position) => new BasicTerrain(Color.RosyBrown, Color.Brown, position.Y % 2 == 1 ? 242 : 243, position, true, true);
         public static BasicTerrain Tree(Coord position) => new BasicTerrain(Color.Brown.MutateBy(Color.Black), Color.Black, '0', position, false, false);
-        public static BasicTerrain Test(int glyph, Coord position) => new BasicTerrain(Color.Cyan, Color.Magenta, glyph, position, true, true);
     }
 }

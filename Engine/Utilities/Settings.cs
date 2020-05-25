@@ -22,8 +22,8 @@ namespace Engine
     }
     public class Settings : ISettings
     {
-        public static int MapWidth { get; set; } = 200;//360;
-        public static int MapHeight { get; set; } = 200;//360;
+        public static int MapWidth { get; set; } = 360;
+        public static int MapHeight { get; set; } = 360;
         public static int GameWidth { get; set; } = 120;
         public static int GameHeight { get; set; } = 40;
         public static bool IsPaused { get; private set; } = false;

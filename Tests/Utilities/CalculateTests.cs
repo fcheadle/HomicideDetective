@@ -233,5 +233,16 @@ namespace Tests.Utilities
             double five = Calculate.DistanceBetween(new Coord(0, 0), new Coord(3, 4));
             Assert.AreEqual(5, five, "Got an answer other than 5");
         }
+
+        [Test]
+        public void BoundedTanTest()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                double fx = Calculate.BoundedTan(i);
+                Assert.Greater(1.01, fx);
+                Assert.Less(-1.01, fx);
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Tests.Utilities
 {
     class SettingsTests
     {
-        int size = 200;//360;
+        int size = 360;
         [Test]
         public void GetSettingsTest()
         {

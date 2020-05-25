@@ -177,11 +177,11 @@ namespace Engine
             return p;
         }
 
-        public static double BoundedTan(int height)
+        public static double BoundedTan(double radians)
         {
             //returns a tangent that is between -1 and 1
-
-            return Math.Tan(height % 45);
+            var safeRads = radians % (Math.PI / 4);
+            return Math.Tan(safeRads);
 
         }
 

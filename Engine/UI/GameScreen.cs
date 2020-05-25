@@ -30,7 +30,8 @@ namespace Engine.UI
         public ActorComponent Actor { get => Player.GetGoRogueComponent<ActorComponent>(); }
         public GameScreen(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight)
         {
-            TownMap = new TownMap(mapWidth, mapHeight);
+            TownMap = new TownMap(42, 42);
+            //TownMap = new TownMap(mapWidth, mapHeight);
             Player = CreatureFactory.Player(new Coord(15, 15));
             TownMap.ControlledGameObject = Player;
             TownMap.AddEntity(TownMap.ControlledGameObject);

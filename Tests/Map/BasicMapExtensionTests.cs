@@ -5,10 +5,13 @@ using System.Linq;
 using System;
 using Engine.Entities;
 using Engine.Extensions;
+using System.Collections.Generic;
+using Engine.Maps.Areas;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace Tests.Map
 {
-    public class BasicMapExtensionTests
+    class BasicMapExtensionTests : TestBase
     {
         BasicMap _map;
 
@@ -139,6 +142,137 @@ namespace Tests.Map
             t2 = _map.GetTerrain<BasicTerrain>(b);
             Assert.AreEqual(t1.Glyph, t2.Glyph, "Bottom left quadrant didn't move to the top left.");
         }
+        
+        [Test]
+        public void RotateTest()
+        {
+            _game = new MockGame(Rotate);
+            MockGame.RunOnce();
+            Assert.Pass();
+        }
+        private static void Rotate(Microsoft.Xna.Framework.GameTime time)
+        {
+            BasicMap map = new BasicMap(42, 42, 1, Distance.EUCLIDEAN);
+            int radius = 20;
+            for (int i = 0; i < map.Width; i++)
+            {
+                for (int j = 0; j < map.Height; j++)
+                {
+                    BasicTerrain t = new BasicTerrain(Color.White, Color.Black, (i*j + j) % 256, new Coord(i, j), true, true);
+                    map.SetTerrain(t);
+                }
+            }
+
+            Coord origin = new Coord(21, 21);
+            BasicMap rotated = map.Rotate(origin, radius, 45);
+
+            Assert.AreNotEqual(map, rotated, "map.Rotate() did not transform the map in any way.");
+            BasicTerrain terrain = rotated.GetTerrain<BasicTerrain>(new Coord());
+            Assert.IsNotNull(terrain, "somehow removed the NW corner of the map.");
+            terrain = rotated.GetTerrain<BasicTerrain>(new Coord(0, 29));
+            Assert.IsNotNull(terrain, "removed the NE corner of the map.");
+            terrain = rotated.GetTerrain<BasicTerrain>(new Coord(29, 0));
+            Assert.IsNotNull(terrain, "removed the SW corner of the map.");
+            terrain = rotated.GetTerrain<BasicTerrain>(new Coord(29,29));
+            Assert.IsNotNull(terrain, "removed the SE corner of the map.");
+
+            for (int x = 0; x < map.Width; x++)
+            {
+                for (int y = 0; y < map.Height; y++)
+                {
+                    Coord here = new Coord(x, y);
+                    Coord delta = origin - here;
+                    if(radius > Math.Sqrt(delta.X*delta.X + delta.Y* delta.Y) + 1)
+                    {
+                        Assert.AreNotEqual(Math.Abs(x * y + y) % 256, rotated.GetTerrain<BasicTerrain>(x, y).Glyph);
+                        Assert.AreEqual(Math.Abs(x * y + y) % 256, map.GetTerrain<BasicTerrain>(x, y).Glyph);
+                    }
+                    else
+                    {
+                        Assert.AreEqual(Math.Abs(x * y + y) % 256, rotated.GetTerrain<BasicTerrain>(x, y).Glyph);
+                        Assert.AreEqual(Math.Abs(x * y + y) % 256, map.GetTerrain<BasicTerrain>(x, y).Glyph);
+                    }
+                }
+            }
+        }
+        [Test]
+        public void ForXTest()
+        {
+
+            int width = 33;
+            int height = 80;
+            BasicMap map = new BasicMap(width, height, 1, Distance.EUCLIDEAN);
+            List<Coord> pointsSet = new List<Coord>();
+            int counter = 0;
+            map.ForX((int x) =>
+            {
+                double y  = 14.75 * Math.Sin(x / 30.0) + width / 2;
+                Coord fx = new Coord(x, (int)y);
+                pointsSet.Add(fx);
+                map.SetTerrain(TerrainFactory.Test(counter, fx));
+                counter++;
+            });
+
+            counter = 0;
+            for (int x = 0; x < width; x++)
+            {
+                double y = 14.75 * Math.Sin(x / 30.0) + width / 2;
+                Coord fx = new Coord(x, (int)y);
+                BasicTerrain terrain = map.GetTerrain<BasicTerrain>(fx);
+                Assert.NotNull(terrain);
+                Assert.AreEqual(counter, terrain.Glyph);
+                counter++;
+            }
+        }
+        [Test]
+        public void ForYTest()
+        {
+            int width = 33;
+            int height = 80;
+            BasicMap map = new BasicMap(width, height, 1, Distance.EUCLIDEAN);
+            List<Coord> pointsSet = new List<Coord>();
+            int counter = 0;
+            map.ForY((int y) =>
+            {
+                double x = 14.75 * Math.Sin(y / 30.0) + width / 2;
+                Coord fy = new Coord((int)x, y);
+                pointsSet.Add(fy);
+                map.SetTerrain(TerrainFactory.Test(counter, fy));
+                counter++;
+            });
+
+            counter = 0;
+            for (int y = 0; y < height; y++)
+            {
+                double x = 14.75 * Math.Sin(y / 30.0) + width / 2;
+                BasicTerrain terrain = map.GetTerrain<BasicTerrain>(new Coord((int)x, y));
+                Assert.NotNull(terrain);
+                Assert.AreEqual(counter, terrain.Glyph);
+                counter++;
+            }
+        }
+        [Test]
+        public void ForXForYTest()
+        {
+            BasicMap map = new BasicMap(25, 25, 1, Distance.EUCLIDEAN);
+            int counter = 0;
+            map.ForXForY((Coord point) =>
+            {
+                map.SetTerrain(TerrainFactory.Test(counter, point));
+                counter++;
+            });
+            counter = 0;
+            for(int i = 0; i < map.Width; i++)
+            {
+                for (int j = 0; j < map.Height; j++)
+                {
+                    BasicTerrain t = map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    Assert.AreEqual(counter, t.Glyph);
+                    counter++;
+                }
+            }
+        }
+
         [Test]
         public void AddTest()
         {
@@ -150,6 +284,27 @@ namespace Tests.Map
                 {
                     BasicTerrain t1 = _map.GetTerrain<BasicTerrain>(new Coord(i, j));
                     BasicTerrain t2 = largeMap.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    Assert.AreEqual(t1.Glyph, t2.Glyph);
+                }
+            }
+            BasicMap map = new BasicMap(8, 8, 2, Distance.MANHATTAN);
+            map.Add(_map);
+            for (int i = 0; i < _map.Width; i++)
+            {
+                for (int j = 0; j < _map.Height; j++)
+                {
+                    BasicTerrain t1 = _map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t2 = map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    Assert.AreEqual(t1.Glyph, t2.Glyph);
+                }
+            }
+
+            for (int i = 0; i < map.Width; i++)
+            {
+                for (int j = 0; j < map.Height; j++)
+                {
+                    BasicTerrain t1 = _map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t2 = map.GetTerrain<BasicTerrain>(new Coord(i, j));
                     Assert.AreEqual(t1.Glyph, t2.Glyph);
                 }
             }
@@ -205,7 +360,7 @@ namespace Tests.Map
 
             for (int i = 0; i < 8; i++)
             {
-                newMap.SetTerrain(TerrainFactory.Test('#', new Coord(i, i)));
+                newMap.SetTerrain(TerrainFactory.Test(i, new Coord(i, i)));
             }
 
             newMap.ReplaceTiles(_map, new Coord(0, 0));
@@ -233,7 +388,7 @@ namespace Tests.Map
         }
 
         [Test]
-        public void CropTest()
+        public void CropToContentTest()
         {
             BasicMap map = new BasicMap(8, 8, 2, Distance.MANHATTAN);
             for (int i = 1; i < map.Width - 1; i++)
@@ -245,10 +400,12 @@ namespace Tests.Map
                 }
             }
 
-            map = map.Crop();
+            map = map.CropToContent();
             Assert.AreEqual(_map.Width - 2, map.Width);
             Assert.AreEqual(_map.Height - 2, map.Height);
             Assert.AreEqual(2, map.GetTerrain<BasicTerrain>(0, 0).Glyph);
+
+
         }
     }
 }

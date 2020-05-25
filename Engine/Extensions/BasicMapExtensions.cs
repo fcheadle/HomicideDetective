@@ -114,47 +114,62 @@ namespace Engine.Extensions
 
             return map;
         }
-        public static BasicMap Rotate(this BasicMap m,/* Coord origin, */int degrees)
+        public static BasicMap Rotate(this BasicMap m, Coord origin, int radius, int degrees)
         {
+            BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.EUCLIDEAN);
+            BasicMap rotated = new BasicMap(m.Width, m.Height, 1, Distance.EUCLIDEAN);
+            double tan = Math.Tan(Calculate.DegreesToRadians(degrees));
+
+            //only rotating the bottom right corner, and not even rotating it correctly
             if (degrees % 90 == 0)
-                return m.RotateDiscreet(degrees);
-                
-            
+            {
+                //this rotates more than just the circle - bug, deal with it later
+                rotated.Add(m.RotateDiscreet(degrees));
+            }
             else
             {
-
+                if (degrees <= 45 || degrees > -45)
+                {
+                    map.Add(m);
+                }
                 while (degrees > 45)
                 {
                     degrees -= 90;
-                    m.Rotate(/*origin, */90);
+                    //rotates more than just this circle - bug - deal with it later
+                    map.Add(m.RotateDiscreet(90));
+                }
+                while (degrees <= -45)
+                {
+                    degrees += 90;
+                    //rotates more than just the circle - bug, fix later
+                    map.Add(m.RotateDiscreet(270));
                 }
 
-                //since degrees is guaranteed to be betwee 45 and -45, it's safe to take the tangent
-                double radians = Calculate.DegreesToRadians(degrees);
-                int xHeightRatio = m.Height * (int)Calculate.BoundedTan(m.Height);
-                int yHeightRatio = m.Width * (int)Calculate.BoundedTan(m.Width);
-                BasicMap map = new BasicMap(m.Width + xHeightRatio * 3, m.Height + yHeightRatio * 3, Calculate.EnumLength<MapLayer>(), Distance.EUCLIDEAN);
-                int newX = xHeightRatio > 0 ? xHeightRatio : 0;
-                int newY = yHeightRatio > 0 ? xHeightRatio : 0;
-                Coord offset = new Coord(newX, newY);
-                m.ForXForY((Coord point) =>
+                for (int x = -radius; x < radius; x++)
                 {
-                    int xRatio = point.Y * (int)Math.Tan(radians);
-                    int yRatio = point.X * (int)Math.Tan(radians);
-                    int yPosition = point.X + (int)yRatio;
-                    int xPosition = point.Y - (int)xRatio;
-                    Coord position = new Coord(xPosition, yPosition) + offset;
-                    BasicTerrain t = m.GetTerrain<BasicTerrain>(point);
-                    t = TerrainFactory.Copy(t, position);
-                    map.SetTerrain(t);
-                    return true;
-                });
-
-                map = map.Crop();
-                return map;
+                    for (int y = -radius; y < radius; y++)
+                    {
+                        Coord here = new Coord(x, y) + origin;
+                        double sqrt = Math.Sqrt(Math.Abs(x * x - y * y));
+                        if (radius >= -sqrt && radius <= sqrt)
+                        {
+                            int xRatio = (int)(here.Y * tan);
+                            int yRatio = (int)(here.X * tan);
+                            int yPosition = here.X + yRatio;
+                            int xPosition = here.Y - xRatio;
+                            Coord position = new Coord(xPosition, yPosition);
+                            BasicTerrain t = map.GetTerrain<BasicTerrain>(here);
+                            if (t != null && rotated.Contains(position))
+                            {
+                                t = TerrainFactory.Copy(t, position);
+                                rotated.SetTerrain(t);
+                            }
+                        }
+                    }
+                }
             }
+            return rotated;
         }
-        
         public static void Add(this BasicMap m, BasicMap map) => Add(m, map, new Coord(0, 0));
         public static void Add(this BasicMap m, BasicMap map, Coord origin)
         {
@@ -177,8 +192,6 @@ namespace Engine.Extensions
         }
         public static void ReplaceTiles(this BasicMap m, BasicMap map, Coord origin)
         {
-            if ((m.Width > map.Width + origin.X && m.Height > map.Height + origin.X))
-                throw new ArgumentOutOfRangeException("Map raplacing must be larger than or equal to the map we're replacing tiles with");
             for (int i = 0; i < map.Width; i++)
             {
                 for (int j = 0; j < map.Height; j++)
@@ -227,7 +240,7 @@ namespace Engine.Extensions
 
             return true;
         }
-        public static BasicMap Crop(this BasicMap m)
+        public static BasicMap CropToContent(this BasicMap m)
         {
             int minX = m.Width;
             int maxX = 0;
@@ -248,31 +261,53 @@ namespace Engine.Extensions
                 }
             }
 
-            int dx = minX - maxX;
-            int dy = minY - maxY;
-            Coord delta = new Coord(dx, dy);
+            int dx = Math.Abs(maxX - minX + 1);
+            int dy = Math.Abs(maxY - minY + 1);
+            Coord offset = new Coord(-minX, -minY);
 
-            BasicMap map = new BasicMap(m.Width - dx, m.Height - dy, Calculate.EnumLength<MapLayer>(), Distance.EUCLIDEAN);
-
-            map.Add(m, delta);
-
+            BasicMap map = new BasicMap(dx, dy, Calculate.EnumLength<MapLayer>(), Distance.EUCLIDEAN);
+            map.ForXForY((Coord point) =>
+            {
+                if (m.Contains(point - offset))
+                {
+                    BasicTerrain terrain = m.GetTerrain<BasicTerrain>(point - offset);
+                    if (terrain != null)
+                    {
+                        map.SetTerrain(TerrainFactory.Copy(terrain, point));
+                    }
+                }
+            });
+            
             return map;
         }
-        public static bool ForXForY(this BasicMap m, Func<Coord, bool> thingToDo)
-        {
+        public static bool ForXForY(this BasicMap m, Action<Coord> f)
+        {//makes it hard to debug, so I don't really recommend using this one any more.
             bool success = true;
-            for (int i = 0; i < Settings.MapWidth; i++)
+            for (int i = 0; i < m.Width; i++)
             {
-                for (int j = 0; j < Settings.MapHeight; j++)
+                for (int j = 0; j < m.Height; j++)
                 {
                     Coord point = new Coord(i, j);
-                    if (!thingToDo(point))
-                    {
-                        success = false;
-                    }
+                    f(point);
                 }
             }
             return success;
+        }
+        public static bool ForX(this BasicMap m, Action<int> f)
+        {
+            for (int i = 0; i < m.Width; i++)
+            {
+                f(i);
+            }
+            return true;
+        }
+        public static bool ForY(this BasicMap m, Action<int> f)
+        {
+            for (int i = 0; i < m.Height; i++)
+            {
+                f(i);
+            }
+            return true;
         }
     }
 }

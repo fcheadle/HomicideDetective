@@ -15,18 +15,25 @@ namespace Tests.Entity
     {
         static BasicEntity critter { get; set; }
         static string expectedName { get; } = "elder thing";
-        private static void Update(GameTime time)
+
+        [TearDown]
+        public void TearDown()
+        {
+            MockGame.Stop();
+
+        }
+        
+        private static void Person(GameTime time)
         {
             critter = CreatureFactory.Person(new Coord(0, 0));
         }
         [Test]
         public void PersonTest()
         {
-            _game = new MockGame(Update);
+            _game = new MockGame(Person);
             MockGame.RunOnce();
             Assert.IsNotNull(critter.GetGoRogueComponent<HealthComponent>(), "Person was born without a health component");
             Assert.IsNotNull(critter.GetGoRogueComponent<ActorComponent>(), "Person was born unable to move around or take actions");
-            MockGame.Stop();
         }
     }
 }
