@@ -14,7 +14,6 @@ namespace Engine.UI
 {
     class DebuggingState : GameState
     {
-        public TestMap Map { get; }
         public ScrollingConsole MapRenderer { get; }
         public DisplayComponent<ThoughtsComponent> Thoughts { get => Player.GetGoRogueComponent<DisplayComponent<ThoughtsComponent>>(); }
         public DisplayComponent<HealthComponent> Health { get => Player.GetGoRogueComponent<DisplayComponent<HealthComponent>>(); }

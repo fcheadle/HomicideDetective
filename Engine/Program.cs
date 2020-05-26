@@ -19,8 +19,8 @@ namespace Engine
         internal static void Main()
         {
             SadConsole.Game.Create(Settings.GameWidth, Settings.GameHeight);
-            //SadConsole.Game.OnInitialize = Init;
-            SadConsole.Game.OnInitialize = DebugInit;
+            SadConsole.Game.OnInitialize = Init;
+            //SadConsole.Game.OnInitialize = DebugInit;
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
         }
@@ -36,7 +36,8 @@ namespace Engine
 
         private static void DebugUpdate(GameTime time)
         {
-            Debug.Player.GetGoRogueComponent<KeyboardComponent>().ProcessGameFrame(); //doesnt work for some reason?
+            var kbc = Debug.Player.GetGoRogueComponent<KeyboardComponent>();
+            kbc.ProcessGameFrame(); //doesnt work for some reason?
 
             BasicMap rotated = debugOriginalMap.Rotate(Debug.Player.Position, 33, (int)time.ElapsedGameTime.TotalSeconds);
             Debug.Map.ReplaceTiles(rotated, new GoRogue.Coord(0, 0));
@@ -51,7 +52,7 @@ namespace Engine
             CrimeSceneInvestigation.MapRenderer.IsDirty = true;// (obj.ElapsedGameTime);
             if (ActCounter > TimeSpan.FromMilliseconds(250))
             {
-                foreach (SadConsole.BasicEntity creature in CrimeSceneInvestigation.Map.GetCreatures())
+                foreach (SadConsole.BasicEntity creature in CrimeSceneInvestigation.TownMap.GetCreatures())
                 {
                     creature.GetGoRogueComponent<ActorComponent>().Act();
                 }

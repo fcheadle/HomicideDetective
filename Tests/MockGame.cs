@@ -39,7 +39,7 @@ namespace Tests
             SadConsole.Global.Fonts.Remove("IBM_16x8_ext");// = new Dictionary<string, FontMaster>();
             MapScreen = new CrimeSceneInvestigationState(Engine.Settings.MapWidth, Engine.Settings.MapHeight, Engine.Settings.GameWidth, Engine.Settings.GameHeight);
             SadConsole.Global.CurrentScreen = MapScreen;
-            Player = MapScreen.Map.ControlledGameObject;
+            Player = MapScreen.TownMap.ControlledGameObject;
         }
     }
 }

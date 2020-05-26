@@ -41,8 +41,8 @@ namespace Engine.Components
             }
             if(Program.CurrentState.Map != null)
                 if(Program.CurrentState.Map.Contains(Position + moveDirection))
-                    if(Program.CrimeSceneInvestigation.Map.GetTerrain(Position + moveDirection) != null)
-                        if(Program.CrimeSceneInvestigation.Map.GetTerrain(Position + moveDirection).IsWalkable)
+                    if(Program.CurrentState.Map.GetTerrain(Position + moveDirection) != null)
+                        if(Program.CurrentState.Map.GetTerrain(Position + moveDirection).IsWalkable)
                             Parent.Position += moveDirection;
 
             if (moveDirection != Direction.NONE)

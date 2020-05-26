@@ -7,7 +7,7 @@ namespace Engine.UI
 {
     public abstract class GameState : ContainerConsole
     {
-        public BasicMap Map;
+        public BasicMap Map { get; set; }
         public abstract void OnEnter();
         public abstract void OnUpdate();
         public abstract void OnExit();
