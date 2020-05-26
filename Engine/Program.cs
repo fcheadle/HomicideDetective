@@ -10,27 +10,48 @@ namespace Engine
 {
     public class Program
     {
-        public static GameScreen MapScreen { get; private set; }
+        internal static CrimeSceneInvestigationState CrimeSceneInvestigation { get; private set; }
+        internal static DebuggingState Debug { get; private set; }
+        internal static MenuState Menu { get; private set; }
+        internal static GameState CurrentState { get; private set; }
         internal static TimeSpan ActCounter { get; private set; } = TimeSpan.FromSeconds(0);
-
+        private static BasicMap debugOriginalMap;
         internal static void Main()
         {
             SadConsole.Game.Create(Settings.GameWidth, Settings.GameHeight);
-            SadConsole.Game.OnInitialize = Init;
-            SadConsole.Game.OnUpdate = Update;
+            //SadConsole.Game.OnInitialize = Init;
+            SadConsole.Game.OnInitialize = DebugInit;
             SadConsole.Game.Instance.Run();
             SadConsole.Game.Instance.Dispose();
         }
 
-        private static void Update(GameTime obj)
+        private static void DebugInit()
         {
-            ActCounter += obj.ElapsedGameTime;
-            //MapScreen.BlowWind(obj.ElapsedGameTime);
-            MapScreen.Player.GetGoRogueComponent<KeyboardComponent>().ProcessGameFrame();
-            MapScreen.MapRenderer.IsDirty = true;// (obj.ElapsedGameTime);
+            Debug = new DebuggingState();
+            Global.CurrentScreen = Debug;
+            CurrentState = Debug;
+            SadConsole.Game.OnUpdate = DebugUpdate;
+            debugOriginalMap = Debug.Map;
+        }
+
+        private static void DebugUpdate(GameTime time)
+        {
+            Debug.Player.GetGoRogueComponent<KeyboardComponent>().ProcessGameFrame(); //doesnt work for some reason?
+
+            BasicMap rotated = debugOriginalMap.Rotate(Debug.Player.Position, 33, (int)time.ElapsedGameTime.TotalSeconds);
+            Debug.Map.ReplaceTiles(rotated, new GoRogue.Coord(0, 0));
+            Debug.MapRenderer.IsDirty = true;
+        }
+
+        private static void Update(GameTime time)
+        {
+            ActCounter += time.ElapsedGameTime;
+            CrimeSceneInvestigation.BlowWind(time.ElapsedGameTime);
+            CrimeSceneInvestigation.Player.GetGoRogueComponent<KeyboardComponent>().ProcessGameFrame();
+            CrimeSceneInvestigation.MapRenderer.IsDirty = true;// (obj.ElapsedGameTime);
             if (ActCounter > TimeSpan.FromMilliseconds(250))
             {
-                foreach (SadConsole.BasicEntity creature in MapScreen.TownMap.GetCreatures())
+                foreach (SadConsole.BasicEntity creature in CrimeSceneInvestigation.Map.GetCreatures())
                 {
                     creature.GetGoRogueComponent<ActorComponent>().Act();
                 }
@@ -40,40 +61,15 @@ namespace Engine
 
         private static void Init()
         {
-            //SetColors();
-            //SadConsole.Themes.Library.Default.SetControlTheme(typeof(SadConsole.Controls.DrawingSurface) ,new Theme());
-            MapScreen = new GameScreen(Settings.MapWidth, Settings.MapHeight, Settings.GameWidth, Settings.GameHeight);
-            SadConsole.Global.CurrentScreen = MapScreen;
+            SadConsole.Game.OnUpdate = Update;
+            CrimeSceneInvestigation = new CrimeSceneInvestigationState(Settings.MapWidth, Settings.MapHeight, Settings.GameWidth, Settings.GameHeight);
+            Global.CurrentScreen = CrimeSceneInvestigation;
+            CurrentState = CrimeSceneInvestigation;
         }
-
-        //private static void SetColors()
-        //{
-        //    var colors = SadConsole.Themes.Library.Default.Colors.Clone();
-        //    colors.Appearance_ControlNormal = new Cell(Color.White, Color.Black);
-        //    colors.Appearance_ControlFocused = new Cell(Color.White, Color.Gray);
-        //    colors.Appearance_ControlMouseDown = new Cell(Color.White, Color.DarkGray);
-        //    colors.Appearance_ControlOver = new Cell(Color.White, Color.Gray);
-        //    colors.Appearance_ControlSelected = new Cell(Color.White, Color.Gray);
-        //    colors.TextLight = Color.LightBlue;
-        //    colors.ControlBack = Color.Tan;
-        //    colors.ControlHostBack = Color.Tan;
-        //    colors.Text = Color.DarkBlue;
-        //    colors.TitleText = Color.DarkBlue;
-
-        //    SadConsole.Themes.Library.Default.Colors = colors;
-        //}
 
         public static void Start()
         {
             Main();
         }
-
-
-        //static void SwitchState(GameState newState)
-        //{
-        //    if (_state != null) _state.OnExit();
-        //    _state = newState;
-        //    _state.OnEnter();
-        //}
     }
 }

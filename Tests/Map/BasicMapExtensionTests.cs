@@ -165,31 +165,29 @@ namespace Tests.Map
 
             Coord origin = new Coord(21, 21);
             BasicMap rotated = map.Rotate(origin, radius, 45);
-
+            List<Coord> nullTerrain = new List<Coord>();
             Assert.AreNotEqual(map, rotated, "map.Rotate() did not transform the map in any way.");
-            BasicTerrain terrain = rotated.GetTerrain<BasicTerrain>(new Coord());
-            Assert.IsNotNull(terrain, "somehow removed the NW corner of the map.");
-            terrain = rotated.GetTerrain<BasicTerrain>(new Coord(0, 29));
-            Assert.IsNotNull(terrain, "removed the NE corner of the map.");
-            terrain = rotated.GetTerrain<BasicTerrain>(new Coord(29, 0));
-            Assert.IsNotNull(terrain, "removed the SW corner of the map.");
-            terrain = rotated.GetTerrain<BasicTerrain>(new Coord(29,29));
-            Assert.IsNotNull(terrain, "removed the SE corner of the map.");
-
             for (int x = 0; x < map.Width; x++)
             {
                 for (int y = 0; y < map.Height; y++)
                 {
                     Coord here = new Coord(x, y);
                     Coord delta = origin - here;
-                    if(radius > Math.Sqrt(delta.X*delta.X + delta.Y* delta.Y) + 1)
+                    if(radius > Math.Sqrt(delta.X*delta.X + delta.Y* delta.Y))
                     {
-                        Assert.AreNotEqual(Math.Abs(x * y + y) % 256, rotated.GetTerrain<BasicTerrain>(x, y).Glyph);
+                        if (rotated.GetTerrain<BasicTerrain>(x, y) == null)
+                        {
+                            nullTerrain.Add(new Coord(x, y));
+                        }
+                        else
+                        {
+                            Assert.AreNotEqual(Math.Abs(x * y + y) % 256, rotated.GetTerrain<BasicTerrain>(x, y).Glyph);
+                        }
                         Assert.AreEqual(Math.Abs(x * y + y) % 256, map.GetTerrain<BasicTerrain>(x, y).Glyph);
                     }
                     else
                     {
-                        Assert.AreEqual(Math.Abs(x * y + y) % 256, rotated.GetTerrain<BasicTerrain>(x, y).Glyph);
+                        Assert.IsNull(rotated.GetTerrain<BasicTerrain>(x, y));
                         Assert.AreEqual(Math.Abs(x * y + y) % 256, map.GetTerrain<BasicTerrain>(x, y).Glyph);
                     }
                 }

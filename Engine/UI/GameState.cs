@@ -1,11 +1,13 @@
-﻿using System;
+﻿using SadConsole;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Engine.UI
 {
-    abstract class GameState
+    public abstract class GameState : ContainerConsole
     {
+        public BasicMap Map;
         public abstract void OnEnter();
         public abstract void OnUpdate();
         public abstract void OnExit();

@@ -7,7 +7,8 @@ namespace Tests
 {
     class MockGame
     {
-        public static GameScreen MapScreen { get; private set; }
+        public static CrimeSceneInvestigationState MapScreen { get; private set; }
+        public static MenuState Menu { get; private set; }
         public static BasicEntity Player { get; private set; }
         
         public MockGame(Action<GameTime> update)
@@ -36,9 +37,9 @@ namespace Tests
         {
             SadConsole.Global.Fonts.Remove("IBM_16x8");// = new Dictionary<string, FontMaster>();
             SadConsole.Global.Fonts.Remove("IBM_16x8_ext");// = new Dictionary<string, FontMaster>();
-            MapScreen = new GameScreen(Engine.Settings.MapWidth, Engine.Settings.MapHeight, Engine.Settings.GameWidth, Engine.Settings.GameHeight);
+            MapScreen = new CrimeSceneInvestigationState(Engine.Settings.MapWidth, Engine.Settings.MapHeight, Engine.Settings.GameWidth, Engine.Settings.GameHeight);
             SadConsole.Global.CurrentScreen = MapScreen;
-            Player = MapScreen.TownMap.ControlledGameObject;
+            Player = MapScreen.Map.ControlledGameObject;
         }
     }
 }

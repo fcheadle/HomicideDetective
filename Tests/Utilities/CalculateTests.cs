@@ -164,7 +164,7 @@ namespace Tests.Utilities
         public void MasterFormulaTest()
         {
             var f = Calculate.MasterFormula();
-            double z = f(34, -77);
+            double z = f(304, -77);
             Assert.NotZero(z); //i mean, statistically...
         }
         [Test]
@@ -243,6 +243,54 @@ namespace Tests.Utilities
                 Assert.Greater(1.01, fx);
                 Assert.Less(-1.01, fx);
             }
+        }
+
+        [Test]
+        public void CircleTest()
+        {
+            List<Coord> circle = Calculate.Circle(new Coord(0,0), 5).ToList();
+            Assert.AreEqual(79, circle.Count);
+
+            Assert.IsTrue(circle.Contains(new Coord(0, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(0, 1)));
+            Assert.IsTrue(circle.Contains(new Coord(0, 2)));
+            Assert.IsTrue(circle.Contains(new Coord(0, 3)));
+            Assert.IsTrue(circle.Contains(new Coord(0, 4)));
+            Assert.IsFalse(circle.Contains(new Coord(0, 5)));
+            Assert.IsFalse(circle.Contains(new Coord(0, 6)));
+            Assert.IsFalse(circle.Contains(new Coord(0, 7)));
+            Assert.IsFalse(circle.Contains(new Coord(0, 8)));
+            Assert.IsFalse(circle.Contains(new Coord(0, 9)));
+            Assert.IsTrue(circle.Contains(new Coord(0, -0)));
+            Assert.IsTrue(circle.Contains(new Coord(0, -1)));
+            Assert.IsTrue(circle.Contains(new Coord(0, -2)));
+            Assert.IsTrue(circle.Contains(new Coord(0, -3)));
+            Assert.IsTrue(circle.Contains(new Coord(0, -4)));
+            Assert.IsTrue(circle.Contains(new Coord(0,- 5)));
+            Assert.IsFalse(circle.Contains(new Coord(0,- 6)));
+            Assert.IsFalse(circle.Contains(new Coord(0,- 7)));
+            Assert.IsFalse(circle.Contains(new Coord(0,- 8)));
+            Assert.IsFalse(circle.Contains(new Coord(0,- 9)));
+            Assert.IsTrue(circle.Contains(new Coord(0, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(1, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(2, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(3, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(4, 0)));
+            Assert.IsFalse(circle.Contains(new Coord(5, 0)));
+            Assert.IsFalse(circle.Contains(new Coord(6, 0)));
+            Assert.IsFalse(circle.Contains(new Coord(7, 0)));
+            Assert.IsFalse(circle.Contains(new Coord(8, 0)));
+            Assert.IsFalse(circle.Contains(new Coord(9, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(-0, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(-1, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(-2, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(-3, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(-4, 0)));
+            Assert.IsTrue(circle.Contains(new Coord(-5, 0)));
+            Assert.IsFalse(circle.Contains(new Coord(-6, 0)));
+            Assert.IsFalse(circle.Contains(new Coord(-7, 0)));
+            Assert.IsFalse(circle.Contains(new Coord(-8, 0)));
+            Assert.IsFalse(circle.Contains(new Coord(-9, 0)));
         }
     }
 }

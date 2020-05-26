@@ -74,5 +74,20 @@ namespace Engine.Components.Creature
             //this person is the picture of health...
             return base.ToString();
         }
+
+        internal string[] Details()
+        {
+            string[] message =
+            {
+                    "Current Body Temp is " + CurrentBodyTemperature + ", while normal is " + NormalBodyTemperature,
+                    "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
+                    "Pulse: " + Pulse + "bpm",
+                    "Breathing " + BreathRate + " times per minute",
+                    "Blood: "+ BloodVolume +"ml",
+                    "Lungs have "+ CurrentBreathVolume + ", and their capacity is " + MaximumBreathVolume
+            };
+
+            return message;
+        }
     }
 }

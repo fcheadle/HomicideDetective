@@ -103,6 +103,19 @@ namespace Engine
                 return new Point((int)x, (int)y);
             }
         };
+
+        public static IEnumerable<Coord> Circle(Coord center, int radius)
+        {
+            for (int x = -radius; x < radius; x++)
+            {
+                for (int y = -radius; y < radius; y++)
+                {
+                    if (radius >= Math.Sqrt(x * x + y * y))
+                        yield return new Coord(x, y);
+                }
+            }
+        }
+
         public static Func<double, double> RandomFunction2d()
         {
             int index = Settings.Random.Next(0, Functions2d.Count);

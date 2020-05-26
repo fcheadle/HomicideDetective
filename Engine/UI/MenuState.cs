@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Engine.UI.GameStates
+namespace Engine.UI
 {
-    class MainMenu : GameState
+    public class MenuState : GameState
     {
         public override void OnEnter()
         {

@@ -116,9 +116,7 @@ namespace Engine.Extensions
         }
         public static BasicMap Rotate(this BasicMap m, Coord origin, int radius, int degrees)
         {
-            BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.EUCLIDEAN);
             BasicMap rotated = new BasicMap(m.Width, m.Height, 1, Distance.EUCLIDEAN);
-            double tan = Math.Tan(Calculate.DegreesToRadians(degrees));
 
             //only rotating the bottom right corner, and not even rotating it correctly
             if (degrees % 90 == 0)
@@ -128,41 +126,35 @@ namespace Engine.Extensions
             }
             else
             {
-                if (degrees <= 45 || degrees > -45)
-                {
-                    map.Add(m);
-                }
+                BasicMap map = m.RotateDiscreet(360);
                 while (degrees > 45)
                 {
                     degrees -= 90;
                     //rotates more than just this circle - bug - deal with it later
-                    map.Add(m.RotateDiscreet(90));
+                    map = m.RotateDiscreet(90);
                 }
                 while (degrees <= -45)
                 {
                     degrees += 90;
                     //rotates more than just the circle - bug, fix later
-                    map.Add(m.RotateDiscreet(270));
+                    map = m.RotateDiscreet(270);
                 }
+                double radians = Calculate.DegreesToRadians(degrees);
 
                 for (int x = -radius; x < radius; x++)
                 {
                     for (int y = -radius; y < radius; y++)
                     {
-                        Coord here = new Coord(x, y) + origin;
-                        double sqrt = Math.Sqrt(Math.Abs(x * x - y * y));
-                        if (radius >= -sqrt && radius <= sqrt)
+                        if (radius > Math.Sqrt(x*x + y*y))
                         {
-                            int xRatio = (int)(here.Y * tan);
-                            int yRatio = (int)(here.X * tan);
-                            int yPosition = here.X + yRatio;
-                            int xPosition = here.Y - xRatio;
-                            Coord position = new Coord(xPosition, yPosition);
-                            BasicTerrain t = map.GetTerrain<BasicTerrain>(here);
-                            if (t != null && rotated.Contains(position))
+                            int xPrime = (int)(x * Math.Cos(radians) - y * Math.Sin(radians));
+                            int yPrime = (int)(x * Math.Sin(radians) + y * Math.Cos(radians));
+                            Coord source = new Coord(x, y) + origin;
+                            Coord target = new Coord(xPrime, yPrime) + origin;
+                            BasicTerrain terrain = map.GetTerrain<BasicTerrain>(source);
+                            if (terrain != null && rotated.Contains(target))
                             {
-                                t = TerrainFactory.Copy(t, position);
-                                rotated.SetTerrain(t);
+                                rotated.SetTerrain(TerrainFactory.Copy(terrain, target));
                             }
                         }
                     }
@@ -173,7 +165,7 @@ namespace Engine.Extensions
         public static void Add(this BasicMap m, BasicMap map) => Add(m, map, new Coord(0, 0));
         public static void Add(this BasicMap m, BasicMap map, Coord origin)
         {
-            if ((m.Width < map.Width + origin.X && m.Height < map.Height + origin.X))
+            if (m.Width < map.Width + origin.X && m.Height < map.Height + origin.X)
                 throw new ArgumentOutOfRangeException("Parent Map must be larger than or equal to the map we're adding.");
             for (int i = 0; i < map.Width; i++)
             {
