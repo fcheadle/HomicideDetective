@@ -1,9 +1,11 @@
 # _Homicide Detective_
-_A Procedurally Generated Murder-Mystery Game_ where you are investigate small-town murders. These homicides are procedurally generated from ranges given in the .json files^(Coming Soon).
+_A Procedurally Generated Murder-Mystery Game_ 
 
-[This project has a board on Trello for development](https://trello.com/invite/b/qngR0CGL/35e762327185af78bdd2959332b87e0d/homicide-detective). This board is up to date, but perhaps not granular enough on what I'm working on _right now_.
+Investigate small-town murders. These homicides are procedurally generated from ranges given in the .json files^(Coming Soon).
 
-[And a subreddit!](https://www.reddit.com/r/HomicideDetective)
+[Trello Board](https://trello.com/invite/b/qngR0CGL/35e762327185af78bdd2959332b87e0d/homicide-detective ). 
+
+[Subreddit](https://www.reddit.com/r/HomicideDetective)
 
 ### Playing
 Clone it, run it. More later.
@@ -13,24 +15,23 @@ Clone it, run it. More later.
 
 - Normal game mode is Crime Scene Investigation
 	- Search crimes scenes carefully for clues:
-	- Photograph scenes or items
-	- Dust for Prints/Check for tracks
-		- Fingerprints are proc-genned arrays of glyphs
-		- partial fingerprints (only a small subset of the whole) will be left on most items a person touches, and can be collected as evidence
-		- if you choose, you can combine the partial prints they've collected. If you do this carelessly, you will destroy evidence, and give the killer precious time to evade justice
-	- Check for tracks
-	- Stake out and see if anyone returns to the scene
-	- bring in the K9 Unit to search by scent
+		- Photograph scenes or items
+		- Dust for Prints/Check for tracks
+			- Fingerprints are proc-genned arrays of glyphs
+			- partial fingerprints (only a small subset of the whole) will be left on most items a person touches, and can be collected as evidence
+			- if you choose, you can combine the partial prints they've collected. If you do this carelessly, you will destroy evidence, and give the killer precious time to evade justice
+		- Check for tracks
+		- Stake out and see if anyone returns to the scene
+	- Bring in the K9 Unit to search by scent
 		- Scent spreads around and decays quickly, so hurry while the scent is strong!
-	- perpetrators who cover their tracks
+	- Perpetrators who cover their tracks
 		- different perpetrators have varying degrees of attention to detail
-	
-- Intricate NPC Dialogue:
-	- Input is basic for now, will become much more complicated as time goes on
-	- NPCs will figure out what you mean and respond in character
-	- NPCs will have an ability to detect lies that varies according to skill
-	- NPCs will have multiple different reasons why they might lie
-	- NPCs will remember who/what they saw at any given point that they've walked before (maybe not correctly)
+	- Interview Witnesses
+		- Input is basic for now, will become much more complicated as time goes on
+		- NPCs will figure out what you mean and respond in character
+		- NPCs will have an ability to detect lies that varies according to skill
+		- NPCs will have multiple different reasons why they might lie
+		- NPCs will remember who/what they saw at any given point that they've walked before (maybe not correctly)
 
 - Customizeable Settings:
 	- Blind mode / screen reader
@@ -125,3 +126,8 @@ To reduce the amount of clutter in my abstractions, I've decided to enforce a fe
 - __Keep it Simple, Stupid___ - In my earlier iterations, I quickly found myself several layers of inheritance deep, and constantly needing to reexamine and simplify. Thanks to the concept of an [entity-component system](https://en.wikipedia.org/wiki/Entity_component_system ), It is now trivially easy to keep all of my code within a component that lives on an entity, and new components can be added quickly. It is possible that I may create three new classes (`Creature : BasicEntity`, `Item : BasicEntity`, and `Tile : BasicTerrain`), but to stick with this concept, I'm not going to do that until absolutely necessary.
 - ___Open Source___ - any Tom, Dick, and Harry and [check out the code for themselves](https://github.com/fcheadle/HomicideDetective ), and it is published under the MIT open source license.
 - ___Play the long game___ - since I'm developing this for fun and not really with intentions to sell it, then it's more important that I do things _the right way now_ than _quickly now and refactor later_. Refactors will always be necessary periodically, but I can reduce their frequency by adhering to best practices always.
+
+## Credits
+
+[GoRogue](https://github.com/Chris3606/GoRogue )
+[SadConsole](https://github.com/SadConsole/SadConsole )

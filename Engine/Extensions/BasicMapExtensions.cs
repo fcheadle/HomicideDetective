@@ -4,8 +4,10 @@ using Engine.Maps;
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
+using SadConsole.Maps.Generators.World;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Engine.Extensions
@@ -98,48 +100,72 @@ namespace Engine.Extensions
 
             return map;
         }
-        public static BasicMap Rotate(this BasicMap m, int degrees)
+        public static BasicMap RotateDiscreet(this BasicMap m, int degrees)
         {
             if (degrees % 90 != 0)
-                throw new ArgumentOutOfRangeException("Degrees must be a multiple of 90.");
+                throw new ArgumentOutOfRangeException("degrees must be some multiple of 90.");
 
-            if (m.Width != m.Height)
-                throw new Exception("Map must be square (Width == Height) to rotate");
-
-            BasicMap map = m.SwapXY();
-            map = map.ReverseVertical();
-            if (degrees > 0)
-                map.Rotate(degrees - 90);
-
-
-
-            //int size = m.Width;
-            //BasicMap map = new BasicMap(size, size, 1, Distance.MANHATTAN);
-            //int half = size / 2;
-            //for (int homeX = -half; homeX < half; homeX++)
-            //{
-            //    for (int homeY = -half; homeY < half; homeY++)
-            //    {
-            //        //where x was 0, is now y at 0 (left side to top side)
-            //        //where was x at max is now y at max (right side to bottom side) 
-
-            //        Coord original = new Coord(homeX + half, homeY + half);
-            //        Coord target = new Coord(size - 1 - (homeY + half), homeX + half);
-            //        BasicTerrain t = m.GetTerrain<BasicTerrain>(original);
-            //        if (t != null)
-            //        {
-            //            t = TerrainFactory.Copy(t, target);
-            //            map.SetTerrain(t);
-            //        }
-            //    }
-            //}
+            BasicMap map = m;
+            for (int i = degrees; i > 0; i -= 90)
+            {
+                map = map.SwapXY();
+                map = map.ReverseVertical();
+            }
 
             return map;
+        }
+        public static BasicMap Rotate(this BasicMap m, Coord origin, int radius, int degrees)
+        {
+            BasicMap rotated = new BasicMap(m.Width, m.Height, 1, Distance.EUCLIDEAN);
+
+            //only rotating the bottom right corner, and not even rotating it correctly
+            if (degrees % 90 == 0)
+            {
+                //this rotates more than just the circle - bug, deal with it later
+                rotated.Add(m.RotateDiscreet(degrees));
+            }
+            else
+            {
+                BasicMap map = m.RotateDiscreet(360);
+                while (degrees > 45)
+                {
+                    degrees -= 90;
+                    //rotates more than just this circle - bug - deal with it later
+                    map = m.RotateDiscreet(90);
+                }
+                while (degrees <= -45)
+                {
+                    degrees += 90;
+                    //rotates more than just the circle - bug, fix later
+                    map = m.RotateDiscreet(270);
+                }
+                double radians = Calculate.DegreesToRadians(degrees);
+
+                for (int x = -radius; x < radius; x++)
+                {
+                    for (int y = -radius; y < radius; y++)
+                    {
+                        if (radius > Math.Sqrt(x*x + y*y))
+                        {
+                            int xPrime = (int)(x * Math.Cos(radians) - y * Math.Sin(radians));
+                            int yPrime = (int)(x * Math.Sin(radians) + y * Math.Cos(radians));
+                            Coord source = new Coord(x, y) + origin;
+                            Coord target = new Coord(xPrime, yPrime) + origin;
+                            BasicTerrain terrain = map.GetTerrain<BasicTerrain>(source);
+                            if (terrain != null && rotated.Contains(target))
+                            {
+                                rotated.SetTerrain(TerrainFactory.Copy(terrain, target));
+                            }
+                        }
+                    }
+                }
+            }
+            return rotated;
         }
         public static void Add(this BasicMap m, BasicMap map) => Add(m, map, new Coord(0, 0));
         public static void Add(this BasicMap m, BasicMap map, Coord origin)
         {
-            if ((m.Width < map.Width + origin.X && m.Height < map.Height + origin.X))
+            if (m.Width < map.Width + origin.X && m.Height < map.Height + origin.X)
                 throw new ArgumentOutOfRangeException("Parent Map must be larger than or equal to the map we're adding.");
             for (int i = 0; i < map.Width; i++)
             {
@@ -158,8 +184,6 @@ namespace Engine.Extensions
         }
         public static void ReplaceTiles(this BasicMap m, BasicMap map, Coord origin)
         {
-            if ((m.Width > map.Width + origin.X && m.Height > map.Height + origin.X))
-                throw new ArgumentOutOfRangeException("Map raplacing must be larger than or equal to the map we're replacing tiles with");
             for (int i = 0; i < map.Width; i++)
             {
                 for (int j = 0; j < map.Height; j++)
@@ -206,6 +230,75 @@ namespace Engine.Extensions
                 }
             }
 
+            return true;
+        }
+        public static BasicMap CropToContent(this BasicMap m)
+        {
+            int minX = m.Width;
+            int maxX = 0;
+            int minY = m.Height;
+            int maxY = 0;
+
+            for (int x = 0; x < m.Width; x++)
+            {
+                for (int y = 0; y < m.Height; y++)
+                {
+                    if(m.GetTerrain<BasicTerrain>(new Coord(x,y)) != null)
+                    {
+                        if (minX > x) minX = x;
+                        if (minY > y) minY = y;
+                        if (maxX < x) maxX = x;
+                        if (maxY < y) maxY = y;
+                    }
+                }
+            }
+
+            int dx = Math.Abs(maxX - minX + 1);
+            int dy = Math.Abs(maxY - minY + 1);
+            Coord offset = new Coord(-minX, -minY);
+
+            BasicMap map = new BasicMap(dx, dy, Calculate.EnumLength<MapLayer>(), Distance.EUCLIDEAN);
+            map.ForXForY((Coord point) =>
+            {
+                if (m.Contains(point - offset))
+                {
+                    BasicTerrain terrain = m.GetTerrain<BasicTerrain>(point - offset);
+                    if (terrain != null)
+                    {
+                        map.SetTerrain(TerrainFactory.Copy(terrain, point));
+                    }
+                }
+            });
+            
+            return map;
+        }
+        public static bool ForXForY(this BasicMap m, Action<Coord> f)
+        {//makes it hard to debug, so I don't really recommend using this one any more.
+            bool success = true;
+            for (int i = 0; i < m.Width; i++)
+            {
+                for (int j = 0; j < m.Height; j++)
+                {
+                    Coord point = new Coord(i, j);
+                    f(point);
+                }
+            }
+            return success;
+        }
+        public static bool ForX(this BasicMap m, Action<int> f)
+        {
+            for (int i = 0; i < m.Width; i++)
+            {
+                f(i);
+            }
+            return true;
+        }
+        public static bool ForY(this BasicMap m, Action<int> f)
+        {
+            for (int i = 0; i < m.Height; i++)
+            {
+                f(i);
+            }
             return true;
         }
     }

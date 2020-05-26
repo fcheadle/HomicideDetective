@@ -7,42 +7,37 @@ using System.Text;
 
 namespace Engine.Components.UI
 {
-    public class DisplayStatsComponent : ComponentBase
-    {
-        internal MessageConsole Console;
-        internal HealthComponent Health => Parent.GetComponent<HealthComponent>();
-        internal PhysicalComponent PhysicalStats => Parent.GetComponent<PhysicalComponent>();
-        public DisplayStatsComponent(Coord position) : base(true, false, true, false)
-        {
-            Console = new MessageConsole(24, 24);
-            Console.Position = position;
-            Console.IsVisible = true;
-        }
+    //public class DisplayHealthComponent : DisplayComponent
+    //{
+    //    internal HealthComponent Health => Parent.GetComponent<HealthComponent>();
+    //    public DisplayHealthComponent(Coord position) : base(position)
+    //    {
+    //    }
 
-        public override void ProcessGameFrame()
-        {
+    //    public override void ProcessGameFrame()
+    //    {
 
-        }
+    //    }
 
-        public override void Draw(SadConsole.Console console, TimeSpan delta)
-        {
-            //base.Draw(console, delta);
-        }
+    //    public override void Draw(SadConsole.Console console, TimeSpan delta)
+    //    {
+    //        //base.Draw(console, delta);
+    //    }
 
-        internal void Print()
-        {
-            string[] message =
-            {
-                "Current Body Temp is " + Health.CurrentBodyTemperature + ", while normal is " + Health.NormalBodyTemperature,
-                "Blood Pressure: " + Health.SystoleBloodPressure + "/" + Health.DiastoleBloodPressure,
-                "Pulse: " + Health.Pulse + "bpm",
-                "Breathing " + Health.BreathRate + " times per minute",
-                "Blood: "+ Health.BloodVolume +"ml",
-                "Lungs have "+ Health.CurrentBreathVolume + ", and their capacity is " + Health.MaximumBreathVolume
-            };
+    //    internal void Print()
+    //    {
+    //        string[] message =
+    //        {
+    //            "Current Body Temp is " + Health.CurrentBodyTemperature + ", while normal is " + Health.NormalBodyTemperature,
+    //            "Blood Pressure: " + Health.SystoleBloodPressure + "/" + Health.DiastoleBloodPressure,
+    //            "Pulse: " + Health.Pulse + "bpm",
+    //            "Breathing " + Health.BreathRate + " times per minute",
+    //            "Blood: "+ Health.BloodVolume +"ml",
+    //            "Lungs have "+ Health.CurrentBreathVolume + ", and their capacity is " + Health.MaximumBreathVolume
+    //        };
 
 
-            Console.Print(message);
-        }
-    }
+    //        Print(message);
+    //    }
+    //}
 }

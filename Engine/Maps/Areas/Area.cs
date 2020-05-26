@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Engine.Maps
+namespace Engine.Maps.Areas
 {
     public class Area
     {
@@ -46,12 +46,12 @@ namespace Engine.Maps
             NorthEastCorner = ne;
             NorthWestCorner = nw;
             SouthWestCorner = sw;
-            
+
             WestBoundary = Calculate.PointsAlongStraightLine(NorthWestCorner, SouthWestCorner).ToList();
             SouthBoundary = Calculate.PointsAlongStraightLine(SouthWestCorner, SouthEastCorner).ToList();
             EastBoundary = Calculate.PointsAlongStraightLine(SouthEastCorner, NorthEastCorner).ToList();
             NorthBoundary = Calculate.PointsAlongStraightLine(NorthEastCorner, NorthWestCorner).ToList();
-            
+
             Rise = se.Y - ne.Y;
             Run = se.X - sw.X;
 
@@ -98,7 +98,7 @@ namespace Engine.Maps
         public Area Shift(Coord origin)
         {
             Area area = new Area(Name, SouthEastCorner + origin, NorthEastCorner + origin, NorthWestCorner + origin, SouthWestCorner + origin);
-            foreach(var subArea in SubAreas)
+            foreach (var subArea in SubAreas)
             {
                 area.SubAreas.Add(subArea.Key, subArea.Value);
             }
@@ -165,7 +165,7 @@ namespace Engine.Maps
 
         private bool IsCorner(Coord here)
         {
-            return (here == NorthEastCorner || here == NorthWestCorner || here == SouthEastCorner || here == SouthWestCorner);
+            return here == NorthEastCorner || here == NorthWestCorner || here == SouthEastCorner || here == SouthWestCorner;
         }
 
         public void RemoveOverlappingOuterpoints(Area imposing)

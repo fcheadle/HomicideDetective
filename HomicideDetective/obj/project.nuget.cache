@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ovC91zlWvAhTg3o3dUb6jfBId2AmVzVQsmz0ipUdnQwgloec1PYnH6gVW9yjPBXX1rcglBHwDdt9rOPd2AoA+A==",
+  "dgSpecHash": "TM0oeNSY/ig7NPMQgk7a4mnAtt38FAzXDE3/+0tQlg86GprSrQj4Adjck7WmlNr/MYT+hEpRuZUXThVmj+iUKg==",
   "success": true,
   "projectFilePath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\HomicideDetective\\HomicideDetective.csproj",
   "expectedPackageFiles": [
@@ -10,7 +10,8 @@
     "C:\\Users\\fchea\\.nuget\\packages\\optimizedpriorityqueue\\4.2.0\\optimizedpriorityqueue.4.2.0.nupkg.sha512",
     "C:\\Users\\fchea\\.nuget\\packages\\sadconsole\\8.99.1\\sadconsole.8.99.1.nupkg.sha512",
     "C:\\Users\\fchea\\.nuget\\packages\\sadconsole.goroguehelpers\\1.0.0\\sadconsole.goroguehelpers.1.0.0.nupkg.sha512",
-    "C:\\Users\\fchea\\.nuget\\packages\\troschuetz.random\\4.3.1\\troschuetz.random.4.3.1.nupkg.sha512"
+    "C:\\Users\\fchea\\.nuget\\packages\\troschuetz.random\\4.3.1\\troschuetz.random.4.3.1.nupkg.sha512",
+    "C:\\Users\\fchea\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
   ],
   "logs": []
 }

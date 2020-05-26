@@ -12,6 +12,8 @@ namespace Engine.UI
         private ColoredString _message;
         private Color fore;
         private Color back;
+        private Coord coord;
+
         public SpeechConsole(Font voice, string statement, Coord position) : base(statement.Length, 1, voice)//for now
         {
             Position = position;
@@ -21,6 +23,11 @@ namespace Engine.UI
             IsVisible = true;
             _message = new ColoredString(statement, fore, back);
             Print(0,0,_message);
+        }
+
+        public SpeechConsole(int width, int height, Coord coord) : base(width, height)
+        {
+            this.coord = coord;
         }
 
         public override void Update(TimeSpan timeElapsed)

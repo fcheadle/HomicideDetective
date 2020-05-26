@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Engine.Components
 {
-    class KeyboardComponent : ComponentBase
+    public class KeyboardComponent : ComponentBase
     {
         public Coord Position { get => Parent.Position;}
         public KeyboardComponent() : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
@@ -19,8 +19,7 @@ namespace Engine.Components
 
         public override void ProcessGameFrame()
         {
-            bool answer;
-            ProcessKeyboard((SadConsole.Console)Parent, Global.KeyboardState, out answer);
+            ProcessKeyboard((SadConsole.Console)Parent, Global.KeyboardState, out _);
         }
 
         public override void ProcessKeyboard(SadConsole.Console console, SadConsole.Input.Keyboard info, out bool handled)
@@ -40,10 +39,11 @@ namespace Engine.Components
                     break;
                 }
             }
-            if(Program.MapScreen.TownMap.Contains(Position + moveDirection))
-                if(Program.MapScreen.TownMap.GetTerrain(Position + moveDirection) != null)
-                    if(Program.MapScreen.TownMap.GetTerrain(Position + moveDirection).IsWalkable)
-                        Parent.Position += moveDirection;
+            if(Program.CurrentState.Map != null)
+                if(Program.CurrentState.Map.Contains(Position + moveDirection))
+                    if(Program.CurrentState.Map.GetTerrain(Position + moveDirection) != null)
+                        if(Program.CurrentState.Map.GetTerrain(Position + moveDirection).IsWalkable)
+                            Parent.Position += moveDirection;
 
             if (moveDirection != Direction.NONE)
                 handled = true;

@@ -2,6 +2,7 @@
 using Engine.Extensions;
 using Engine.Maps.Areas;
 using GoRogue;
+using GoRogue.Pathing;
 using SadConsole;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,7 @@ namespace Engine.Maps
             {
                 default:
                 case HouseType.PrairieHome: CreatePrairieHome(); break;
+                case HouseType.Backrooms: CreateBackrooms(); break;
                 //case HouseType.CentralPassageHouse: CreateCentralPassageHouse(); break;
             }
             int chance = Calculate.Percent();
@@ -77,32 +79,22 @@ namespace Engine.Maps
                 case Direction.Types.LEFT:
                     if (chance < 50)
                     {
-                        Map = Map.Rotate(270);
+                        Map = Map.RotateDiscreet(270);
                     }
-                    else
-                    {
-                        Map = Map.SwapXY();
-                        Map = Map.ReverseHorizontal();
-                        if (Calculate.Percent() < 50)
-                            Map = Map.ReverseVertical();
-                    }
+                    if (chance < 50)
+                        Map = Map.ReverseVertical();
+             
                     break;
                 case Direction.Types.RIGHT:
+                    Map = Map.RotateDiscreet(90);
+
                     if (chance < 50)
-                    {
-                        Map = Map.Rotate(90);
-                    }
-                    else
-                    {
-                        Map = Map.SwapXY();
-                        if (Calculate.Percent() < 50)
-                            Map = Map.ReverseVertical();
-                    }
+                        Map = Map.ReverseVertical();
                     break;
                 case Direction.Types.UP:
                     if (chance < 50)
                     {
-                        Map = Map.Rotate(180);
+                        Map = Map.RotateDiscreet(180);
                     }
                     else
                     {
@@ -119,6 +111,45 @@ namespace Engine.Maps
             {
                 ConnectRoomToNeighbors(room.Value);
                 DrawRoom(room.Value, (RoomType)room.Key);
+            }
+
+            for (int i = 0; i < Map.Width; i++)
+            {
+                for (int j = 0; j < Map.Height; j++)
+                {
+                    Coord here = new Coord(i, j);
+                    BasicTerrain terrain = Map.GetTerrain<BasicTerrain>(here);
+                    if (terrain != null)
+                    {
+                        if (terrain.IsWalkable)
+                        {
+                            Path path = Map.AStar.ShortestPath(new Coord(Map.Width/2, Map.Height /2), here);
+                            if(path == null)
+                            {
+                                foreach(Coord neighbor in here.Neighbors())
+                                {
+                                    if(Map.Contains(neighbor))
+                                        if (!Map.GetTerrain<BasicTerrain>(neighbor).IsWalkable)
+                                            Map.SetTerrain(TerrainFactory.Door(neighbor));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CreateBackrooms()
+        {
+            Map = new BasicMap(Settings.MapWidth, Settings.MapHeight, 1, Distance.EUCLIDEAN);
+            Rectangle wholeHouse = new Rectangle(0, 0, Map.Width, Map.Height); //six is the magic number for some reason
+            List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
+
+            int index = 0;
+            foreach (Rectangle plan in rooms.OrderBy(r => r.Area).ToArray())
+            {
+                CreateRoom((RoadNumbers)index, plan);
+                index++;
             }
         }
 
@@ -179,7 +210,7 @@ namespace Engine.Maps
             }
         }
 
-        public void CreateRoom(RoomType type, Rectangle plan)
+        public void CreateRoom(Enum type, Rectangle plan)
         {
             plan = new Rectangle(Origin + plan.MinExtent, Origin + plan.MaxExtent);
             Area room = AreaFactory.FromRectangle(type.ToString() + ", " + Name, plan);
@@ -272,18 +303,31 @@ namespace Engine.Maps
                     if (Map.Contains(location))
                     {
                         BasicTerrain floor;
-                        switch (type)
-                        {
-                            case RoomType.BoysBedroom:
-                            case RoomType.GirlsBedroom:
-                            case RoomType.HallCloset:
-                            case RoomType.MasterBedroom:
-                            case RoomType.GuestBedroom: floor = TerrainFactory.Carpet(location); break;
-                            case RoomType.Kitchen:
-                            case RoomType.GuestBathroom: floor = TerrainFactory.Linoleum(location); break;
-                            default: floor = TerrainFactory.HardwoodFloor(location); break;
-                        }
+                        ////Don't delete this, I'll come back to it later
+                        //switch (type)
+                        //{
+                        //    case RoomType.BoysBedroom:
+                        //    case RoomType.GirlsBedroom:
+                        //    case RoomType.HallCloset:
+                        //    case RoomType.MasterBedroom:
+                        //    case RoomType.GuestBedroom: floor = TerrainFactory.OliveCarpet(location); break;
+                        //    case RoomType.Kitchen:
+                        //    case RoomType.GuestBathroom: floor = TerrainFactory.BathroomLinoleum(location); break;
+                        //    default: floor = TerrainFactory.DarkHardwoodFloor(location); break;
+                        //}
 
+                        switch ((int)type % 8)
+                        {
+                            default:
+                            case 0: floor = TerrainFactory.OliveCarpet(location); break;
+                            case 1: floor = TerrainFactory.LightCarpet(location); break;
+                            case 2: floor = TerrainFactory.ShagCarpet(location); break;
+                            case 3: floor = TerrainFactory.BathroomLinoleum(location); break;
+                            case 4: floor = TerrainFactory.KitchenLinoleum(location); break;
+                            case 5: floor = TerrainFactory.DarkHardwoodFloor(location); break;
+                            case 6: floor = TerrainFactory.MediumHardwoodFloor(location); break;
+                            case 7: floor = TerrainFactory.LightHardwoodFloor(location); break;
+                        }
                         Map.SetTerrain(floor);
                     }
                 }
