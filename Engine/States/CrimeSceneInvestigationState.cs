@@ -1,17 +1,16 @@
-﻿using Engine.Maps;
+﻿using Engine.Components.Creature;
+using Engine.Components.Terrain;
+using Engine.Components.UI;
+using Engine.Entities;
+using Engine.Maps;
+using Engine.Maps.Areas;
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
-using Engine.Entities;
-using Engine.Components.UI;
-using Engine.Components.Creature;
 using System;
-using Engine.Components.Terrain;
 using System.Collections.Generic;
-using Engine.Maps.Areas;
-using Console = SadConsole.Console;
 
-namespace Engine.UI
+namespace Engine.States
 {
     public class CrimeSceneInvestigationState : GameState
     {
@@ -36,8 +35,8 @@ namespace Engine.UI
             Children.Add(MapRenderer);
             Children.Add(Thoughts.Display);
             Children.Add(Health.Display);
-            
-            TownMap.ControlledGameObject.IsFocused = true; 
+
+            TownMap.ControlledGameObject.IsFocused = true;
             TownMap.ControlledGameObject.Moved += Player_Moved;
             TownMap.ControlledGameObjectChanged += ControlledGameObjectChanged;
 

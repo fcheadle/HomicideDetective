@@ -1,9 +1,6 @@
 ﻿using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Engine.UI
+namespace Engine.States
 {
     public abstract class GameState : ContainerConsole
     {

@@ -1,8 +1,4 @@
-﻿using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
-using SadConsole.Components;
-using SadConsole.Components.GoRogue;
-using System;
+﻿using System;
 
 namespace Engine.Components.Creature
 {
@@ -82,7 +78,7 @@ namespace Engine.Components.Creature
                 "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
                 "Pulse: " + Pulse + "bpm"
             };
-            
+
 
             return message;
         }

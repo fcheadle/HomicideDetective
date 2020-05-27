@@ -2,13 +2,11 @@
 using GoRogue.GameFramework.Components;
 using SadConsole;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Engine.Components.Terrain
 {
     //Can't add IGameFramProcessor to terrain objects
-    class BlowsInWindComponent : IGameObjectComponent//ComponentBase
+    public class BlowsInWindComponent : IGameObjectComponent//ComponentBase
     {
         //AnimatedConsole animation;
         int _ogGlyph;
@@ -40,6 +38,11 @@ namespace Engine.Components.Terrain
 
                 }
             }
+        }
+
+        public string[] GetDetails()
+        {
+            throw new NotImplementedException();
         }
 
         public void Blow()

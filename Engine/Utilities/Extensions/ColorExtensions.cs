@@ -173,7 +173,7 @@ namespace Engine.Extensions
 
                 color = color.MutateBy(target);
             }
-            
+
             return color;
         }
 

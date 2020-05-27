@@ -22,14 +22,14 @@ namespace Engine.Maps
         private readonly Direction.Types _facing;
         internal string Address { get => Name; }
         public Coord Origin { get; set; }
-        public IEnumerable<Coord> Walls 
-        { 
-            get 
+        public IEnumerable<Coord> Walls
+        {
+            get
             {
                 foreach (Area area in SubAreas.Values)
                     foreach (Coord point in area.OuterPoints)
                         yield return point;
-            } 
+            }
         }
 
         public IEnumerable<Coord> Doors
@@ -43,13 +43,13 @@ namespace Engine.Maps
             }
         }
 
-        public House(string name, Coord origin, HouseType type, Direction.Types facing): 
+        public House(string name, Coord origin, HouseType type, Direction.Types facing) :
             base(
                 name ?? origin.X.ToString() + origin.Y.ToString(),
                 se: origin + new Coord(_width, _height),
                 ne: origin + new Coord(_width, 0),
                 nw: origin,
-                sw: origin + new Coord(0,_height)
+                sw: origin + new Coord(0, _height)
             )
         {
             StructureType = type;
@@ -66,10 +66,10 @@ namespace Engine.Maps
                 default:
                 case HouseType.PrairieHome: CreatePrairieHome(); break;
                 case HouseType.Backrooms: CreateBackrooms(); break;
-                //case HouseType.CentralPassageHouse: CreateCentralPassageHouse(); break;
+                    //case HouseType.CentralPassageHouse: CreateCentralPassageHouse(); break;
             }
             int chance = Calculate.Percent();
-            
+
             switch (_facing)
             {
                 default:
@@ -83,7 +83,7 @@ namespace Engine.Maps
                     }
                     if (chance < 50)
                         Map = Map.ReverseVertical();
-             
+
                     break;
                 case Direction.Types.RIGHT:
                     Map = Map.RotateDiscreet(90);
@@ -123,12 +123,12 @@ namespace Engine.Maps
                     {
                         if (terrain.IsWalkable)
                         {
-                            Path path = Map.AStar.ShortestPath(new Coord(Map.Width/2, Map.Height /2), here);
-                            if(path == null)
+                            Path path = Map.AStar.ShortestPath(new Coord(Map.Width / 2, Map.Height / 2), here);
+                            if (path == null)
                             {
-                                foreach(Coord neighbor in here.Neighbors())
+                                foreach (Coord neighbor in here.Neighbors())
                                 {
-                                    if(Map.Contains(neighbor))
+                                    if (Map.Contains(neighbor))
                                         if (!Map.GetTerrain<BasicTerrain>(neighbor).IsWalkable)
                                             Map.SetTerrain(TerrainFactory.Door(neighbor));
                                 }
@@ -170,7 +170,7 @@ namespace Engine.Maps
                     }
                 }
             }
-            foreach(Area area in neighbors)
+            foreach (Area area in neighbors)
             {
                 AddConnectionBetween(area, subArea);
             }
@@ -183,7 +183,7 @@ namespace Engine.Maps
                 WestBoundary.RandomItem(),
             };
 
-            foreach(Coord door in doors)
+            foreach (Coord door in doors)
             {
                 Map.SetTerrain(TerrainFactory.Door(door - Origin));
             }
@@ -203,9 +203,9 @@ namespace Engine.Maps
             List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
 
             int index = 0;
-            foreach(Rectangle plan in rooms.OrderBy(r => r.Area).ToArray())
+            foreach (Rectangle plan in rooms.OrderBy(r => r.Area).ToArray())
             {
-                CreateRoom((RoomType) index, plan);
+                CreateRoom((RoomType)index, plan);
                 index++;
             }
         }

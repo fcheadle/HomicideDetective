@@ -1,9 +1,6 @@
 ﻿using GoRogue;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Tests.Utilities
 {
@@ -13,7 +10,7 @@ namespace Tests.Utilities
         [Test]
         public void GetSettingsTest()
         {
-            
+
             Assert.AreEqual(size, Engine.Settings.MapWidth);
             Assert.AreEqual(size, Engine.Settings.MapHeight);
             Assert.AreEqual(120, Engine.Settings.GameWidth);

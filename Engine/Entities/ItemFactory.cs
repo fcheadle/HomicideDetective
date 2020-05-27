@@ -1,13 +1,8 @@
 ﻿using Engine.Components;
-using Engine.Components.Terrain;
-using Engine.Extensions;
 using Engine.Maps;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Engine.Entities
 {

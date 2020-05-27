@@ -1,5 +1,4 @@
-﻿using Engine.Components;
-using Engine.Components.Terrain;
+﻿using Engine.Components.Terrain;
 using Engine.Extensions;
 using GoRogue;
 using Microsoft.Xna.Framework;
@@ -14,7 +13,7 @@ namespace Engine.Entities
             Color fore;
             Color back;
             double z = Settings.Random.NextDouble() * glyph;
-            if(position.Y % 2 == 0)
+            if (position.Y % 2 == 0)
             {
                 fore = Color.Cyan.MutateToIndex(-z);
             }
@@ -22,7 +21,7 @@ namespace Engine.Entities
             {
                 fore = Color.White.MutateToIndex(-z);
             }
-            if(position.X % 2 == 0)
+            if (position.X % 2 == 0)
             {
                 back = Color.Magenta.MutateToIndex(z);
             }
@@ -64,7 +63,7 @@ namespace Engine.Entities
         public static BasicTerrain LightCarpet(Coord position) => new BasicTerrain((position.X + position.Y) % 2 == 1 ? Color.Gray : Color.GhostWhite, (position.X + position.Y) % 2 == 1 ? Color.GhostWhite : Color.Gray, 177, position, true, true);
         public static BasicTerrain ShagCarpet(Coord position) => new BasicTerrain(Color.DarkOrange, Color.Maroon, (position.X + position.Y) % 2 == 1 ? 178 : 176, position, true, true);
         public static BasicTerrain BathroomLinoleum(Coord position) => new BasicTerrain(Color.LightGray, Color.DarkGray, 4, position, true, true);
-        public static BasicTerrain KitchenLinoleum(Coord position) => new BasicTerrain(Color.LightYellow, Color.DarkGoldenrod, (position.X + position.Y) % 2 == 1? 9 : 10, position, true, true);
+        public static BasicTerrain KitchenLinoleum(Coord position) => new BasicTerrain(Color.LightYellow, Color.DarkGoldenrod, (position.X + position.Y) % 2 == 1 ? 9 : 10, position, true, true);
         public static BasicTerrain Window(Coord position) => new BasicTerrain(Color.Transparent, Color.Black, 0, position, false, true);
         public static BasicTerrain DarkHardwoodFloor(Coord position) => new BasicTerrain(Color.SaddleBrown.Half(), Color.Brown.Half().Half(), position.Y % 2 == 1 ? 174 : 175, position, true, true);
         public static BasicTerrain MediumHardwoodFloor(Coord position) => new BasicTerrain(Color.SaddleBrown, Color.Brown.Half(), 240, position, true, true);

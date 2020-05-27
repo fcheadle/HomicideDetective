@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Engine.Components.Creature
+﻿namespace Engine.Components.Creature
 {
     public class ThoughtsComponent : ComponentBase
     {

@@ -1,8 +1,6 @@
 ﻿using GoRogue;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Engine.Extensions
 {
@@ -14,7 +12,7 @@ namespace Engine.Extensions
             List<Rectangle> children = new List<Rectangle>(); //so that we can modify children during the loop
             foreach (Rectangle child in ogChildren)
             {
-                if (child.Width <= minimumDimension *2 && child.Height <= minimumDimension * 2)
+                if (child.Width <= minimumDimension * 2 && child.Height <= minimumDimension * 2)
                 {
                     children.Add(child);
                 }
@@ -50,7 +48,7 @@ namespace Engine.Extensions
             while (bisection < rectangle.MinExtentY + rectangle.Height / 4 || bisection > rectangle.MaxExtentY - rectangle.Height / 4)
                 bisection = rectangle.RandomPosition().Y;
 
-            
+
             yield return new Rectangle(new Coord(startX, startY), new Coord(stopX, bisection));
             yield return new Rectangle(new Coord(startX, bisection + 1), new Coord(stopX, stopY));
         }

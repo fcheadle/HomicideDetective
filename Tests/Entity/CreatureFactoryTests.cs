@@ -4,9 +4,6 @@ using GoRogue;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Entity
 {
@@ -22,7 +19,7 @@ namespace Tests.Entity
             MockGame.Stop();
 
         }
-        
+
         private static void Person(GameTime time)
         {
             critter = CreatureFactory.Person(new Coord(0, 0));

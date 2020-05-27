@@ -2,15 +2,11 @@
 using Engine.Components.UI;
 using Engine.Entities;
 using Engine.Maps;
-using Engine.Maps.Areas;
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Engine.UI
+namespace Engine.States
 {
     public class DebuggingState : GameState
     {

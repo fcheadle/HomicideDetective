@@ -1,17 +1,15 @@
 ﻿using Engine.Maps.Areas;
-using Engine.UI;
 using GoRogue;
-using System;
 using Color = Microsoft.Xna.Framework.Color;
 using Console = SadConsole.Console;
 
 namespace Engine.Components.UI
 {
-    public class DisplayComponent<T> : ComponentBase where T : ComponentBase 
+    public class DisplayComponent<T> : ComponentBase where T : ComponentBase
     {
         public Console Display;
         internal T Component => Parent.GetComponent<T>();
-         
+
         public DisplayComponent(Coord position) : base(true, false, true, false)
         {
             Display = new Console(24, 36)

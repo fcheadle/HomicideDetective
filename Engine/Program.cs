@@ -1,7 +1,7 @@
 ﻿using Engine.Components;
 using Engine.Components.Creature;
 using Engine.Extensions;
-using Engine.UI;
+using Engine.States;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;

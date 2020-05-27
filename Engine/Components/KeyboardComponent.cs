@@ -1,17 +1,14 @@
 ﻿using Engine.Extensions;
-using Engine.Maps;
 using GoRogue;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Engine.Components
 {
     public class KeyboardComponent : ComponentBase
     {
-        public Coord Position { get => Parent.Position;}
+        public Coord Position { get => Parent.Position; }
         public KeyboardComponent() : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
         {
         }
@@ -39,10 +36,10 @@ namespace Engine.Components
                     break;
                 }
             }
-            if(Program.CurrentState.Map != null)
-                if(Program.CurrentState.Map.Contains(Position + moveDirection))
-                    if(Program.CurrentState.Map.GetTerrain(Position + moveDirection) != null)
-                        if(Program.CurrentState.Map.GetTerrain(Position + moveDirection).IsWalkable)
+            if (Program.CurrentState.Map != null)
+                if (Program.CurrentState.Map.Contains(Position + moveDirection))
+                    if (Program.CurrentState.Map.GetTerrain(Position + moveDirection) != null)
+                        if (Program.CurrentState.Map.GetTerrain(Position + moveDirection).IsWalkable)
                             Parent.Position += moveDirection;
 
             if (moveDirection != Direction.NONE)

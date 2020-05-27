@@ -1,12 +1,11 @@
+using Engine.Entities;
+using Engine.Extensions;
 using GoRogue;
 using NUnit.Framework;
 using SadConsole;
-using System.Linq;
 using System;
-using Engine.Entities;
-using Engine.Extensions;
 using System.Collections.Generic;
-using Engine.Maps.Areas;
+using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Tests.Map
@@ -142,7 +141,7 @@ namespace Tests.Map
             t2 = _map.GetTerrain<BasicTerrain>(b);
             Assert.AreEqual(t1.Glyph, t2.Glyph, "Bottom left quadrant didn't move to the top left.");
         }
-        
+
         [Test]
         public void RotateTest()
         {
@@ -158,7 +157,7 @@ namespace Tests.Map
             {
                 for (int j = 0; j < map.Height; j++)
                 {
-                    BasicTerrain t = new BasicTerrain(Color.White, Color.Black, (i*j + j) % 256, new Coord(i, j), true, true);
+                    BasicTerrain t = new BasicTerrain(Color.White, Color.Black, (i * j + j) % 256, new Coord(i, j), true, true);
                     map.SetTerrain(t);
                 }
             }
@@ -173,7 +172,7 @@ namespace Tests.Map
                 {
                     Coord here = new Coord(x, y);
                     Coord delta = origin - here;
-                    if(radius > Math.Sqrt(delta.X*delta.X + delta.Y* delta.Y))
+                    if (radius > Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y))
                     {
                         if (rotated.GetTerrain<BasicTerrain>(x, y) == null)
                         {
@@ -204,7 +203,7 @@ namespace Tests.Map
             int counter = 0;
             map.ForX((int x) =>
             {
-                double y  = 14.75 * Math.Sin(x / 30.0) + width / 2;
+                double y = 14.75 * Math.Sin(x / 30.0) + width / 2;
                 Coord fx = new Coord(x, (int)y);
                 pointsSet.Add(fx);
                 map.SetTerrain(TerrainFactory.Test(counter, fx));
@@ -260,7 +259,7 @@ namespace Tests.Map
                 counter++;
             });
             counter = 0;
-            for(int i = 0; i < map.Width; i++)
+            for (int i = 0; i < map.Width; i++)
             {
                 for (int j = 0; j < map.Height; j++)
                 {

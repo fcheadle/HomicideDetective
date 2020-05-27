@@ -1,9 +1,7 @@
 ﻿using Engine.Extensions;
 using GoRogue;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Utilities
 {
@@ -17,8 +15,8 @@ namespace Tests.Utilities
             Assert.AreEqual(4, neighbors.Count);
             Assert.IsTrue(neighbors.Contains(new Coord(-1, 0)));
             Assert.IsTrue(neighbors.Contains(new Coord(1, 0)));
-            Assert.IsTrue(neighbors.Contains(new Coord(0,1)));
-            Assert.IsTrue(neighbors.Contains(new Coord(0,-1)));
+            Assert.IsTrue(neighbors.Contains(new Coord(0, 1)));
+            Assert.IsTrue(neighbors.Contains(new Coord(0, -1)));
         }
     }
 }

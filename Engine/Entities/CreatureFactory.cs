@@ -1,13 +1,10 @@
 ﻿using Engine.Components;
 using Engine.Components.Creature;
 using Engine.Components.UI;
-using Engine.Extensions;
 using Engine.Maps;
-using Engine.UI;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using System;
 
 namespace Engine.Entities
 {

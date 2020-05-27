@@ -1,7 +1,5 @@
 ﻿using GoRogue;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Engine.Extensions
 {
@@ -12,8 +10,8 @@ namespace Engine.Extensions
             List<Coord> neighbors = new List<Coord>();
             neighbors.Add(new Coord(here.X - 1, here.Y));
             neighbors.Add(new Coord(here.X + 1, here.Y));
-            neighbors.Add(new Coord(here.X, here.Y+1));
-            neighbors.Add(new Coord(here.X, here.Y-1));
+            neighbors.Add(new Coord(here.X, here.Y + 1));
+            neighbors.Add(new Coord(here.X, here.Y - 1));
             return neighbors;
         }
     }

@@ -1,13 +1,8 @@
-﻿using Engine.UI;
-using GoRogue;
+﻿using Engine.States;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Tests.UI
+namespace Tests.States
 {
     class CrimeSceneInvestigationStateTests : TestBase
     {
@@ -33,7 +28,14 @@ namespace Tests.UI
         }
         private void NewCsi(GameTime time)
         {
+            Rectangle r = new Rectangle(0, 0, 8, 16);
+
             csi = new CrimeSceneInvestigationState(100, 100, 100, 100);
+            Assert.AreEqual(r, csi.AbsoluteArea);
+            r = new Rectangle(0, 0, 100, 100);
+            Assert.AreEqual(r.Width, csi.Map.Width);
+            Assert.AreEqual(r.Height, csi.Map.Height);
+            Assert.NotNull(csi.Player);
         }
     }
 }

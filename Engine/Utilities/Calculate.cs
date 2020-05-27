@@ -38,7 +38,7 @@ namespace Engine
             (x,y) => 08.88 * (Math.Sin(x / (y+1)) * Math.Tan(y * x)), //subtle
             (x,y) => 19.19 * (Math.Sin(x + y) * Math.Cos(y * x)), //subtle
         };
-        public static List<Func<int, int, TimeSpan, bool>> Functions4d = new List<Func<int, int, TimeSpan, bool>> 
+        public static List<Func<int, int, TimeSpan, bool>> Functions4d = new List<Func<int, int, TimeSpan, bool>>
         {
             //Curently used for wind.
             //TODO:  change the return type from bool to double
@@ -87,7 +87,7 @@ namespace Engine
             //(x,y,t) => Math.Cos(Math.Sqrt(2 * t.TotalSeconds * t.TotalSeconds + x*y)) > 0.5,//counterclockwise spiral from a center of the southeast corner, speeds up over time
         };
 
-        public static List<Func<double, Point>> FunctionsPolar = new List<Func<double, Point>> 
+        public static List<Func<double, Point>> FunctionsPolar = new List<Func<double, Point>>
         {
             (theta) => //the butterfly curve
             {
@@ -158,7 +158,7 @@ namespace Engine
         }
         public static double RadiansToDegrees(double theta)
         {
-            return theta * 180.0f / Math.PI ;
+            return theta * 180.0f / Math.PI;
         }
         public static double DegreesToRadians(int degrees)
         {
@@ -173,7 +173,7 @@ namespace Engine
             radius += Math.Pow(powerBase, 5);
             return PolarToCartesian(radius, theta);
         }
-        public static List<Point> ButterflyCurve() 
+        public static List<Point> ButterflyCurve()
         {
             List<Point> p = new List<Point>();
             Point lastP = new Point();
@@ -229,15 +229,15 @@ namespace Engine
             return (T)v.GetValue(new Random().Next(v.Length));
         }
 
-        internal static int EnumIndexFromValue<T>(T mune) 
+        internal static int EnumIndexFromValue<T>(T mune)
         {
             return Convert.ToInt32(mune);
         }
-        
+
         #endregion
 
         #region chances
-        public static bool Percent(int percentChance)=> percentChance >= Percent();
+        public static bool Percent(int percentChance) => percentChance >= Percent();
         public static int Percent() => Settings.Random.Next(1, 101);
         #endregion
 
@@ -343,7 +343,7 @@ namespace Engine
     }
 
     public class PolarCoord
-    {   
+    {
         public readonly double Radius; //in meters
         public readonly double Theta; //in degrees clockwise
 
@@ -352,7 +352,7 @@ namespace Engine
             Radius = radius;
             Theta = theta;
         }
-        
+
         public static bool operator ==(PolarCoord left, PolarCoord right)
         {
             if (left.Theta > right.Theta - 0.05 && left.Theta < right.Theta - 0.05)

@@ -1,9 +1,6 @@
 ﻿using Engine.Maps;
 using GoRogue;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Map.Areas
 {

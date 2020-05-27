@@ -1,8 +1,5 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using GameTime = Microsoft.Xna.Framework.GameTime;
 
 namespace Tests

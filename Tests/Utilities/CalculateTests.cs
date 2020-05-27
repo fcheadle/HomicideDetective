@@ -5,7 +5,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Tests.Utilities
 {
@@ -248,7 +247,7 @@ namespace Tests.Utilities
         [Test]
         public void CircleTest()
         {
-            List<Coord> circle = Calculate.Circle(new Coord(0,0), 5).ToList();
+            List<Coord> circle = Calculate.Circle(new Coord(0, 0), 5).ToList();
             Assert.AreEqual(79, circle.Count);
 
             Assert.IsTrue(circle.Contains(new Coord(0, 0)));
@@ -266,11 +265,11 @@ namespace Tests.Utilities
             Assert.IsTrue(circle.Contains(new Coord(0, -2)));
             Assert.IsTrue(circle.Contains(new Coord(0, -3)));
             Assert.IsTrue(circle.Contains(new Coord(0, -4)));
-            Assert.IsTrue(circle.Contains(new Coord(0,- 5)));
-            Assert.IsFalse(circle.Contains(new Coord(0,- 6)));
-            Assert.IsFalse(circle.Contains(new Coord(0,- 7)));
-            Assert.IsFalse(circle.Contains(new Coord(0,- 8)));
-            Assert.IsFalse(circle.Contains(new Coord(0,- 9)));
+            Assert.IsTrue(circle.Contains(new Coord(0, -5)));
+            Assert.IsFalse(circle.Contains(new Coord(0, -6)));
+            Assert.IsFalse(circle.Contains(new Coord(0, -7)));
+            Assert.IsFalse(circle.Contains(new Coord(0, -8)));
+            Assert.IsFalse(circle.Contains(new Coord(0, -9)));
             Assert.IsTrue(circle.Contains(new Coord(0, 0)));
             Assert.IsTrue(circle.Contains(new Coord(1, 0)));
             Assert.IsTrue(circle.Contains(new Coord(2, 0)));

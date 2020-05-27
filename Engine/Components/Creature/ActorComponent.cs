@@ -1,12 +1,8 @@
-﻿using Engine.Maps;
-using GoRogue;
-using GoRogue.GameFramework.Components;
+﻿using GoRogue;
 using GoRogue.Pathing;
 using SadConsole;
-using SadConsole.Components.GoRogue;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Engine.Components.Creature
 {

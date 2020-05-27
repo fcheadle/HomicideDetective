@@ -4,11 +4,8 @@ using Engine.Maps;
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
-using SadConsole.Maps.Generators.World;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Engine.Extensions
 {
@@ -57,7 +54,7 @@ namespace Engine.Extensions
                     }
                 }
             }
-            return map;        
+            return map;
         }
         public static BasicMap ReverseVertical(this BasicMap m)
         {
@@ -145,7 +142,7 @@ namespace Engine.Extensions
                 {
                     for (int y = -radius; y < radius; y++)
                     {
-                        if (radius > Math.Sqrt(x*x + y*y))
+                        if (radius > Math.Sqrt(x * x + y * y))
                         {
                             int xPrime = (int)(x * Math.Cos(radians) - y * Math.Sin(radians));
                             int yPrime = (int)(x * Math.Sin(radians) + y * Math.Cos(radians));
@@ -243,7 +240,7 @@ namespace Engine.Extensions
             {
                 for (int y = 0; y < m.Height; y++)
                 {
-                    if(m.GetTerrain<BasicTerrain>(new Coord(x,y)) != null)
+                    if (m.GetTerrain<BasicTerrain>(new Coord(x, y)) != null)
                     {
                         if (minX > x) minX = x;
                         if (minY > y) minY = y;
@@ -269,7 +266,7 @@ namespace Engine.Extensions
                     }
                 }
             });
-            
+
             return map;
         }
         public static bool ForXForY(this BasicMap m, Action<Coord> f)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Engine.Maps
+﻿namespace Engine.Maps
 {
     public enum MapLayer
     {

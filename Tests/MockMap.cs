@@ -6,9 +6,6 @@ using Engine.Maps.Areas;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests
 {

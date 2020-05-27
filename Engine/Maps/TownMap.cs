@@ -1,16 +1,12 @@
-﻿using System.Collections.Generic;
-using Engine;
-using System.Linq;
+﻿using Engine.Entities;
+using Engine.Extensions;
+using Engine.Maps.Areas;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using Engine.Entities;
-using Engine.Extensions;
 using System;
-using Engine.Maps.Areas;
-using XnaRect = Microsoft.Xna.Framework.Rectangle;
-using Rectangle = GoRogue.Rectangle;
-using GoRogue.GameFramework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Engine.Maps
 {
@@ -18,8 +14,8 @@ namespace Engine.Maps
     {
         private int _width;
         private int _height;
-        public List<Area> Regions 
-        { 
+        public List<Area> Regions
+        {
             get => new List<Area>()
                 .Concat(Roads)
                 .Concat(Blocks)
@@ -27,7 +23,7 @@ namespace Engine.Maps
                 .Concat(Intersections.Values)
                 .Concat(Rooms)
                 .ToList()
-                ; 
+                ;
         }
         internal List<Road> Roads { get => HorizontalRoads.Values.ToList().Concat(VerticalRoads.Values).ToList(); }
         internal Dictionary<KeyValuePair<RoadNumbers, RoadNames>, RoadIntersection> Intersections { get; private set; } = new Dictionary<KeyValuePair<RoadNumbers, RoadNames>, RoadIntersection>();
@@ -53,15 +49,16 @@ namespace Engine.Maps
 
         private void MakeBackrooms()
         {
-            House backrooms = new House("Backrooms", new Coord(0,0), HouseType.Backrooms, Direction.Types.DOWN);
+            House backrooms = new House("Backrooms", new Coord(0, 0), HouseType.Backrooms, Direction.Types.DOWN);
             backrooms.Generate();
             Houses.Add(backrooms);
             this.ForXForY(
-                (Coord point) => {
+                (Coord point) =>
+                {
                     try
                     {
                         BasicTerrain t = backrooms.Map.GetTerrain<BasicTerrain>(point);
-                        if(t != null)
+                        if (t != null)
                             SetTerrain(TerrainFactory.Copy(t, point));
                     }
                     catch
@@ -104,7 +101,7 @@ namespace Engine.Maps
                 }
             }
 
-            for(int i = 0; i < HorizontalRoads.Count - 1; i++)
+            for (int i = 0; i < HorizontalRoads.Count - 1; i++)
             {
                 Road h = HorizontalRoads[(RoadNumbers)i];
                 for (int j = 0; j < h.Intersections.Count - 1; j++)
@@ -145,12 +142,12 @@ namespace Engine.Maps
                     house.Generate();
                     Houses.Add(house);
                     i++;
-                    
-                    foreach(Area room in house.SubAreas.Values)
+
+                    foreach (Area room in house.SubAreas.Values)
                     {
                         Rooms.Add(room);
                     }
-                    
+
                     for (int j = 0; j < houseDistance; j++)
                     {
                         for (int k = 0; k < houseDistance; k++)
@@ -187,14 +184,14 @@ namespace Engine.Maps
             //    }
             //    SetTerrain(TerrainFactory.Tree(tree));
             //}
-         
+
             var f = Calculate.MasterFormula();
             for (int i = 0; i < Width; i++)
             {
                 for (int j = 0; j < Height; j++)
                 {
                     Coord pos = new Coord(i, j);
-                    SetTerrain(TerrainFactory.Grass(pos, f(i, j))) ;
+                    SetTerrain(TerrainFactory.Grass(pos, f(i, j)));
                 }
             }
         }
