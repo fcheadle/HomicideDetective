@@ -101,7 +101,7 @@ namespace Engine.UI
                 output.Add(area.Orientation.ToString());
             }
             Thoughts.Print(output.ToArray());
-            Health.Print(Health.Component.Details());
+            Health.Print();
             MapRenderer.CenterViewPortOnPoint(TownMap.ControlledGameObject.Position);
         }
 

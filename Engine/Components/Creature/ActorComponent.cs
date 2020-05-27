@@ -51,7 +51,17 @@ namespace Engine.Components.Creature
 
         public override void ProcessGameFrame()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException();//not getting called?
+        }
+
+        public override string[] GetDetails()
+        {
+            string[] answer = {
+                "This is an actor.",
+                "It can move from place to place.",
+                "Current target: " + _target.Name
+            };
+            return answer;
         }
     }
 }

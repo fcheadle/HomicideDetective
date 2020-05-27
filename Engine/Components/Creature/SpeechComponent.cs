@@ -28,5 +28,15 @@ namespace Engine.Components.Creature
         {
 
         }
+
+        public override string[] GetDetails()
+        {
+            string[] answer =
+            {
+                "this is a speech component.",
+                "The entity with this component can speak."
+            };
+            return answer;//
+        }
     }
 }

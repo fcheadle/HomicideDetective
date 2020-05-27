@@ -75,17 +75,14 @@ namespace Engine.Components.Creature
             return base.ToString();
         }
 
-        internal string[] Details()
+        public override string[] GetDetails()
         {
-            string[] message =
-            {
-                    "Current Body Temp is " + CurrentBodyTemperature + ", while normal is " + NormalBodyTemperature,
-                    "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
-                    "Pulse: " + Pulse + "bpm",
-                    "Breathing " + BreathRate + " times per minute",
-                    "Blood: "+ BloodVolume +"ml",
-                    "Lungs have "+ CurrentBreathVolume + ", and their capacity is " + MaximumBreathVolume
+            string[] message = {
+                "Body Temp: " + CurrentBodyTemperature,
+                "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
+                "Pulse: " + Pulse + "bpm"
             };
+            
 
             return message;
         }

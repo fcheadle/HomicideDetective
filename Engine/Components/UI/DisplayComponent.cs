@@ -50,5 +50,15 @@ namespace Engine.Components.UI
                 Display.Print(0, i, new SadConsole.ColoredString(areas[i].Name, Color.DarkBlue, Color.Transparent));
             }
         }
+
+        public override string[] GetDetails()
+        {
+            return Component.GetDetails();
+        }
+
+        internal void Print()
+        {
+
+        }
     }
 }

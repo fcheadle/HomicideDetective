@@ -3,8 +3,6 @@ using SadConsole.Components;
 using SadConsole.Components.GoRogue;
 using SadConsole.Input;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Engine.Components
 {
@@ -29,7 +27,7 @@ namespace Engine.Components
         public virtual void Draw(SadConsole.Console console, TimeSpan delta) => throw new NotImplementedException();
         public virtual void OnAdded(SadConsole.Console console) => throw new NotImplementedException();
         public virtual void OnRemoved(SadConsole.Console console) => throw new NotImplementedException();
-        public virtual string Describe() => "";
+        public abstract string[] GetDetails();
         public abstract override void ProcessGameFrame();
         public virtual void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled) => throw new NotImplementedException();
         public virtual void ProcessMouse(SadConsole.Console console, MouseConsoleState state, out bool handled) => throw new NotImplementedException();

@@ -50,5 +50,14 @@ namespace Engine.Components
             else
                 handled = ((BasicEntity)Parent).MoveIn(moveDirection);
         }
+
+        public override string[] GetDetails()
+        {
+            string[] answer = {
+                "This is a keyboard component.",
+                "This entity listens/responds to keyboard input."
+            };
+            return answer;
+        }
     }
 }

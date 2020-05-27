@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Engine.UI
 {
-    class DebuggingState : GameState
+    public class DebuggingState : GameState
     {
         public ScrollingConsole MapRenderer { get; }
         public DisplayComponent<ThoughtsComponent> Thoughts { get => Player.GetGoRogueComponent<DisplayComponent<ThoughtsComponent>>(); }

@@ -7,7 +7,7 @@ namespace Tests
 {
     class MockGame
     {
-        public static CrimeSceneInvestigationState MapScreen { get; private set; }
+        public static DebuggingState DebugState{ get; private set; }
         public static MenuState Menu { get; private set; }
         public static BasicEntity Player { get; private set; }
         
@@ -37,9 +37,10 @@ namespace Tests
         {
             SadConsole.Global.Fonts.Remove("IBM_16x8");// = new Dictionary<string, FontMaster>();
             SadConsole.Global.Fonts.Remove("IBM_16x8_ext");// = new Dictionary<string, FontMaster>();
-            MapScreen = new CrimeSceneInvestigationState(Engine.Settings.MapWidth, Engine.Settings.MapHeight, Engine.Settings.GameWidth, Engine.Settings.GameHeight);
-            SadConsole.Global.CurrentScreen = MapScreen;
-            Player = MapScreen.TownMap.ControlledGameObject;
+            DebugState = new DebuggingState();
+            SadConsole.Global.CurrentScreen = DebugState;
+            Player = DebugState.Map.ControlledGameObject;
+            Player.AddGoRogueComponent(new MockComponent());
         }
     }
 }
