@@ -14,6 +14,7 @@ namespace Engine.Maps
     {
         private int _width;
         private int _height;
+        TerrainFactory _factory = new TerrainFactory();
         public List<Area> Regions
         {
             get => new List<Area>()
@@ -59,7 +60,7 @@ namespace Engine.Maps
                     {
                         BasicTerrain t = backrooms.Map.GetTerrain<BasicTerrain>(point);
                         if (t != null)
-                            SetTerrain(TerrainFactory.Copy(t, point));
+                            SetTerrain(_factory.Copy(t, point));
                     }
                     catch
                     {
@@ -118,14 +119,14 @@ namespace Engine.Maps
             {
                 foreach (Coord c in r.InnerPoints)
                     if (this.Contains(c))
-                        SetTerrain(TerrainFactory.Pavement(c));
+                        SetTerrain(_factory.Pavement(c));
             }
 
             foreach (Block block in Blocks)
             {
                 foreach (Coord c in block.GetFenceLocations())
                     if (this.Contains(c))
-                        SetTerrain(TerrainFactory.Fence(c));
+                        SetTerrain(_factory.Fence(c));
             }
         }
         private void MakeHouses()
@@ -155,7 +156,7 @@ namespace Engine.Maps
                             Coord c = new Coord(j, k);
                             if (house.Map.GetTerrain(c) != null && this.Contains(house.Origin + c))
                             {
-                                SetTerrain(TerrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
+                                SetTerrain(_factory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
                             }
                         }
                     }
@@ -191,7 +192,7 @@ namespace Engine.Maps
                 for (int j = 0; j < Height; j++)
                 {
                     Coord pos = new Coord(i, j);
-                    SetTerrain(TerrainFactory.Grass(pos, f(i, j)));
+                    SetTerrain(_factory.Grass(pos, f(i, j)));
                 }
             }
         }

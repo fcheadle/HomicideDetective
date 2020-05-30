@@ -9,6 +9,7 @@ namespace Engine.Maps
 {
     public class TestMap : BasicMap
     {
+        TerrainFactory _factory = new TerrainFactory();
         public FOVVisibilityHandler FovVisibilityHandler { get; }
         internal TestMap() : base(100, 100, Calculate.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {
@@ -35,9 +36,9 @@ namespace Engine.Maps
             foreach (Coord c in room.Points)
             {
                 if (c.X == map.Width / 2 || c.Y == map.Height / 2)
-                    map.SetTerrain(TerrainFactory.ShagCarpet(c));
+                    map.SetTerrain(_factory.ShagCarpet(c));
                 else
-                    map.SetTerrain(TerrainFactory.MediumHardwoodFloor(c));
+                    map.SetTerrain(_factory.MediumHardwoodFloor(c));
             }
             var rotated = map.Rotate(origin, radius, 22);
             this.ReplaceTiles(rotated, new Coord(0, 0));

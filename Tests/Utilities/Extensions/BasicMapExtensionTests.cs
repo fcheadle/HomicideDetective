@@ -13,7 +13,7 @@ namespace Tests.Map
     class BasicMapExtensionTests : TestBase
     {
         BasicMap _map;
-
+        TerrainFactory _factory = new TerrainFactory();
         [SetUp]
         public void Setup()
         {
@@ -24,7 +24,7 @@ namespace Tests.Map
                 {
                     int glyph = i + j;
                     Coord c = new Coord(i, j);
-                    _map.SetTerrain(TerrainFactory.Test(i + j, c));
+                    _map.SetTerrain(_factory.Test(i + j, c));
                 }
             }
         }
@@ -206,7 +206,7 @@ namespace Tests.Map
                 double y = 14.75 * Math.Sin(x / 30.0) + width / 2;
                 Coord fx = new Coord(x, (int)y);
                 pointsSet.Add(fx);
-                map.SetTerrain(TerrainFactory.Test(counter, fx));
+                map.SetTerrain(_factory.Test(counter, fx));
                 counter++;
             });
 
@@ -234,7 +234,7 @@ namespace Tests.Map
                 double x = 14.75 * Math.Sin(y / 30.0) + width / 2;
                 Coord fy = new Coord((int)x, y);
                 pointsSet.Add(fy);
-                map.SetTerrain(TerrainFactory.Test(counter, fy));
+                map.SetTerrain(_factory.Test(counter, fy));
                 counter++;
             });
 
@@ -255,7 +255,7 @@ namespace Tests.Map
             int counter = 0;
             map.ForXForY((Coord point) =>
             {
-                map.SetTerrain(TerrainFactory.Test(counter, point));
+                map.SetTerrain(_factory.Test(counter, point));
                 counter++;
             });
             counter = 0;
@@ -328,7 +328,7 @@ namespace Tests.Map
 
             for (int i = 0; i < 8; i++)
             {
-                newMap.SetTerrain(TerrainFactory.Test('#', new Coord(i, i)));
+                newMap.SetTerrain(_factory.Test('#', new Coord(i, i)));
             }
 
             newMap.Add(_map);
@@ -357,7 +357,7 @@ namespace Tests.Map
 
             for (int i = 0; i < 8; i++)
             {
-                newMap.SetTerrain(TerrainFactory.Test(i, new Coord(i, i)));
+                newMap.SetTerrain(_factory.Test(i, new Coord(i, i)));
             }
 
             newMap.ReplaceTiles(_map, new Coord(0, 0));
@@ -377,7 +377,7 @@ namespace Tests.Map
         {
             Assert.IsTrue(_map.IsClearOfObstructions(new Coord(0, 0), 8));
 
-            _map.SetTerrain(TerrainFactory.Wall(new Coord(0, 0)));
+            _map.SetTerrain(_factory.Wall(new Coord(0, 0)));
 
             Assert.IsFalse(_map.IsClearOfObstructions(new Coord(0, 0), 8));
 
@@ -393,7 +393,7 @@ namespace Tests.Map
                 for (int j = 1; j < map.Height - 1; j++)
                 {
                     Coord c = new Coord(i, j);
-                    map.SetTerrain(TerrainFactory.Test(i + j, c));
+                    map.SetTerrain(_factory.Test(i + j, c));
                 }
             }
 
@@ -401,8 +401,6 @@ namespace Tests.Map
             Assert.AreEqual(_map.Width - 2, map.Width);
             Assert.AreEqual(_map.Height - 2, map.Height);
             Assert.AreEqual(2, map.GetTerrain<BasicTerrain>(0, 0).Glyph);
-
-
         }
     }
 }

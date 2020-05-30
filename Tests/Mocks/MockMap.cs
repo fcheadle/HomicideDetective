@@ -11,6 +11,7 @@ namespace Tests
 {
     class MockMap : BasicMap
     {
+        TerrainFactory _factory = new TerrainFactory();
         public FOVVisibilityHandler FovVisibilityHandler { get; }
         internal MockMap() : base(100, 100, Calculate.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {
@@ -35,9 +36,9 @@ namespace Tests
             Coord origin = new Coord(21, 21);
             Area room = new Area("wiseau's room", new Coord(30, 30), new Coord(30, 10), new Coord(10, 10), new Coord(10, 30));
             foreach (Coord c in room.InnerPoints)
-                map.SetTerrain(TerrainFactory.MediumHardwoodFloor(c));
+                map.SetTerrain(_factory.MediumHardwoodFloor(c));
             foreach (Coord c in room.OuterPoints)
-                map.SetTerrain(TerrainFactory.ShagCarpet(c));
+                map.SetTerrain(_factory.ShagCarpet(c));
             this.ReplaceTiles(map, new Coord(0, 0));
 
 

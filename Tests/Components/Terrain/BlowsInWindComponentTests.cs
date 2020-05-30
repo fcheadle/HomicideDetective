@@ -1,4 +1,6 @@
 ﻿using Engine.Components.Terrain;
+using Engine.Entities;
+using GoRogue;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -8,11 +10,12 @@ namespace Tests.Components.Terrain
 {
     class BlowsInWindComponentTests : TestBase
     {
+        TerrainFactory factory = new TerrainFactory();
         BlowsInWindComponent _base;
         string[] _answer;
 
         [Test]
-        public void NewKeyBoardComponentTests()
+        public void NewBlowsInWindComponentTests()
         {
             _game = new MockGame(NewKeyboardComponent);
             MockGame.RunOnce();
@@ -20,9 +23,10 @@ namespace Tests.Components.Terrain
         }
         private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<BlowsInWindComponent>();
+            _base = factory.Grass(new Coord()).GetComponent<BlowsInWindComponent>();
             Assert.NotNull(_base);
         }
+
         [Test]
         public void GetDetailsTest()
         {
@@ -32,9 +36,9 @@ namespace Tests.Components.Terrain
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<BlowsInWindComponent>();
+            _base = factory.Grass(new Coord()).GetComponent<BlowsInWindComponent>();
             _answer = _base.GetDetails();
-            Assert.AreEqual(2, _answer.Length);
+            Assert.AreEqual(1, _answer.Length);
         }
     }
 }

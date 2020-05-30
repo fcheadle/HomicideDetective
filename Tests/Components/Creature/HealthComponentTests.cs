@@ -34,7 +34,7 @@ namespace Tests.Components.Creature
         {
             _base = MockGame.Player.GetGoRogueComponent<HealthComponent>();
             _answer = _base.GetDetails();
-            Assert.AreEqual(2, _answer.Length);
+            Assert.AreEqual(3, _answer.Length);
         }
     }
 }

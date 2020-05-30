@@ -11,6 +11,7 @@ namespace Engine.Extensions
 {
     public static class BasicMapExtensions
     {
+        static TerrainFactory _factory = new TerrainFactory();
         public static BasicMap Subsection(this BasicMap m, Coord start, Coord stop)
         {
             int xDiff = stop.X - start.X;
@@ -24,7 +25,7 @@ namespace Engine.Extensions
                     if (t != null)
                     {
                         Coord c = new Coord(i - start.X, j - start.Y);
-                        t = TerrainFactory.Copy(t, c);
+                        t = _factory.Copy(t, c);
                         if (map.Contains(c))
                             map.SetTerrain(t);
                     }
@@ -49,7 +50,7 @@ namespace Engine.Extensions
                     BasicTerrain t = m.GetTerrain<BasicTerrain>(source);
                     if (t != null)
                     {
-                        t = TerrainFactory.Copy(t, target);
+                        t = _factory.Copy(t, target);
                         map.SetTerrain(t);
                     }
                 }
@@ -68,7 +69,7 @@ namespace Engine.Extensions
                     BasicTerrain t = m.GetTerrain<BasicTerrain>(source);
                     if (t != null)
                     {
-                        t = TerrainFactory.Copy(t, target);
+                        t = _factory.Copy(t, target);
                         map.SetTerrain(t);
                     }
                 }
@@ -89,7 +90,7 @@ namespace Engine.Extensions
                     BasicTerrain t = m.GetTerrain<BasicTerrain>(original);
                     if (t != null)
                     {
-                        t = TerrainFactory.Copy(t, target);
+                        t = _factory.Copy(t, target);
                         map.SetTerrain(t);
                     }
                 }
@@ -151,7 +152,7 @@ namespace Engine.Extensions
                             BasicTerrain terrain = map.GetTerrain<BasicTerrain>(source);
                             if (terrain != null && rotated.Contains(target))
                             {
-                                rotated.SetTerrain(TerrainFactory.Copy(terrain, target));
+                                rotated.SetTerrain(_factory.Copy(terrain, target));
                             }
                         }
                     }
@@ -173,7 +174,7 @@ namespace Engine.Extensions
                     BasicTerrain t2 = m.GetTerrain<BasicTerrain>(new Coord(i, j));
                     if (t1 != null && t2 == null && m.Contains(target))
                     {
-                        t1 = TerrainFactory.Copy(t1, target);
+                        t1 = _factory.Copy(t1, target);
                         m.SetTerrain(t1);
                     }
                 }
@@ -189,7 +190,7 @@ namespace Engine.Extensions
                     BasicTerrain t = map.GetTerrain<BasicTerrain>(new Coord(i, j));
                     if (t != null && m.Contains(target))
                     {
-                        t = TerrainFactory.Copy(t, target);
+                        t = _factory.Copy(t, target);
                         m.SetTerrain(t);
                     }
                 }
@@ -220,7 +221,7 @@ namespace Engine.Extensions
                         {
                             if (!t.IsWalkable)
                                 return false;
-                            else if (TerrainFactory.Pavement(c) == TerrainFactory.Copy(t, c)) //todo: fix this shit
+                            else if (_factory.Pavement(c) == _factory.Copy(t, c)) //todo: fix this shit
                                 return false;
                         }
                     }
@@ -262,7 +263,7 @@ namespace Engine.Extensions
                     BasicTerrain terrain = m.GetTerrain<BasicTerrain>(point - offset);
                     if (terrain != null)
                     {
-                        map.SetTerrain(TerrainFactory.Copy(terrain, point));
+                        map.SetTerrain(_factory.Copy(terrain, point));
                     }
                 }
             });

@@ -42,7 +42,11 @@ namespace Engine.Components.Terrain
 
         public string[] GetDetails()
         {
-            throw new NotImplementedException();
+            string[] answer =
+            {
+                "This entity blows in the wind."
+            };
+            return answer;
         }
 
         public void Blow()

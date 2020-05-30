@@ -54,8 +54,7 @@ namespace Engine.Components.Creature
         {
             string[] answer = {
                 "This is an actor.",
-                "It can move from place to place.",
-                "Current target: " + _target.Name
+                "It can move from place to place."                
             };
             return answer;
         }

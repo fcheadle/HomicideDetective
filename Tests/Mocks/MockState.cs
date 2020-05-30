@@ -7,10 +7,10 @@ namespace Tests
 {
     class MockState
     {
-        [Test]
-        public void Fail()
-        {
-            Assert.Fail();
-        }
+        //[Test]
+        //public void Fail()
+        //{
+        //    Assert.Fail();
+        //}
     }
 }

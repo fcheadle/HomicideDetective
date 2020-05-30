@@ -13,6 +13,7 @@ namespace Tests.Integration
 {
     class HouseGenerationIntegrationTests
     {
+        TerrainFactory _factory = new TerrainFactory();
         [Test]
         public void GenerateTest()
         {
@@ -28,7 +29,7 @@ namespace Tests.Integration
                     Coord target = new Coord(i, j);
                     BasicTerrain terrain = house.Map.GetTerrain<BasicTerrain>(target);
                     if (terrain == null)
-                        house.Map.SetTerrain(TerrainFactory.Pavement(target));
+                        house.Map.SetTerrain(_factory.Pavement(target));
 
                     terrain = house.Map.GetTerrain<BasicTerrain>(target);
                     if (terrain.IsWalkable)

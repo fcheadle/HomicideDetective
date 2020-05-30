@@ -1,4 +1,5 @@
 ﻿using Engine.Components;
+using Engine.Components.Creature;
 using Engine.Components.UI;
 using NUnit.Framework;
 using System;
@@ -9,7 +10,7 @@ namespace Tests.Components.UI
 {
     class DisplayComponentTests : TestBase
     {
-        DisplayComponent<PhysicalComponent> _base;
+        DisplayComponent<HealthComponent> _base;
         string[] _answer;
 
         [Test]
@@ -21,7 +22,7 @@ namespace Tests.Components.UI
         }
         private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<DisplayComponent<PhysicalComponent>>();
+            _base = MockGame.Player.GetGoRogueComponent<DisplayComponent<HealthComponent>>();
             Assert.NotNull(_base);
             _base.ProcessGameFrame();
         }
@@ -34,9 +35,9 @@ namespace Tests.Components.UI
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<DisplayComponent<PhysicalComponent>>();
+            _base = MockGame.Player.GetGoRogueComponent<DisplayComponent<HealthComponent>>();
             _answer = _base.GetDetails();
-            Assert.AreEqual(2, _answer.Length);
+            Assert.AreEqual(3, _answer.Length);
         }
     }
 }

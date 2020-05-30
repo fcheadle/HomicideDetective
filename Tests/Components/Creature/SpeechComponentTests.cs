@@ -1,4 +1,6 @@
 ﻿using Engine.Components.Creature;
+using Engine.Entities;
+using GoRogue;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -14,13 +16,13 @@ namespace Tests.Components.Creature
         [Test]
         public void NewKeyBoardComponentTests()
         {
-            _game = new MockGame(NewKeyboardComponent);
+            _game = new MockGame(NewSpeechComponent);
             MockGame.RunOnce();
             MockGame.Stop();
         }
-        private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
+        private void NewSpeechComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<SpeechComponent>();
+            _base = CreatureFactory.Person(new Coord()).GetGoRogueComponent<SpeechComponent>();
             Assert.NotNull(_base);
         }
         [Test]
@@ -32,7 +34,7 @@ namespace Tests.Components.Creature
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<SpeechComponent>();
+            _base = CreatureFactory.Person(new Coord()).GetGoRogueComponent<SpeechComponent>();
             _answer = _base.GetDetails();
             Assert.AreEqual(2, _answer.Length);
         }

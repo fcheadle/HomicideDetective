@@ -12,13 +12,13 @@ namespace Tests.Components.Creature
         string[] _answer;
 
         [Test]
-        public void NewKeyBoardComponentTests()
+        public void NewActorComponentTests()
         {
-            _game = new MockGame(NewKeyboardComponent);
+            _game = new MockGame(NewActorComponent);
             MockGame.RunOnce();
             MockGame.Stop();
         }
-        private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
+        private void NewActorComponent(Microsoft.Xna.Framework.GameTime time)
         {
             _base = MockGame.Player.GetGoRogueComponent<ActorComponent>();
             Assert.NotNull(_base);

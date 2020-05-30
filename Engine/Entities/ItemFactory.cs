@@ -11,6 +11,7 @@ namespace Engine.Entities
         public BasicEntity Generic(Coord position, string name)
         {
             BasicEntity item = new BasicEntity(Color.White, Color.Transparent, name[0], position, (int)MapLayer.Item, true, true);
+            item.Name = name;
             item.AddGoRogueComponent(new PhysicalComponent());
             return item;
         }
