@@ -2,7 +2,7 @@
 
 namespace Tests
 {
-    internal class MockComponent : ComponentBase
+    internal class MockComponent : Component
     {
         public int UpdateCounter = 0;
         internal MockComponent() : base(true, true, true, false)
@@ -19,7 +19,7 @@ namespace Tests
             return answer;
         }
 
-        public override void ProcessGameFrame()
+        public override void ProcessTimeUnit()
         {
             UpdateCounter++;
         }

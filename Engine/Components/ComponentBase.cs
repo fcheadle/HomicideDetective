@@ -1,4 +1,5 @@
-﻿using GoRogue.GameFramework.Components;
+﻿using GoRogue.GameFramework;
+using GoRogue.GameFramework.Components;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Components.GoRogue;
@@ -7,7 +8,7 @@ using System;
 
 namespace Engine.Components
 {
-    public abstract class ComponentBase : GameFrameProcessor, IGameObjectComponent, IConsoleComponent
+    public abstract class Component : ComponentBase<BasicEntity>, IGameObjectComponent, IConsoleComponent
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -17,7 +18,7 @@ namespace Engine.Components
         public bool IsMouse { get; } = false;
         public bool IsKeyboard { get; } = false;
         protected Timer timer;
-        public ComponentBase(bool isUpdate, bool isKeyboard, bool isDraw, bool isMouse)
+        public Component(bool isUpdate, bool isKeyboard, bool isDraw, bool isMouse)
         {
             IsUpdate = isUpdate;
             IsKeyboard = isKeyboard;
@@ -26,12 +27,13 @@ namespace Engine.Components
             if (isUpdate)
             {
                 timer = new Timer(TimeSpan.FromMilliseconds(100));
-                timer.TimerElapsed += (timer, e) => ProcessGameFrame();
+                timer.TimerElapsed += (timer, e) => ProcessTimeUnit();
             }
         }
 
+        public abstract void ProcessTimeUnit();
+
         public abstract string[] GetDetails();
-        public abstract override void ProcessGameFrame();
         public virtual void Draw(SadConsole.Console console, TimeSpan delta) { }
         public virtual void OnAdded(SadConsole.Console console){ }
         public virtual void OnRemoved(SadConsole.Console console){ }

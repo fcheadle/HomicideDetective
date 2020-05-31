@@ -29,8 +29,8 @@ namespace Tests.Entity
         {
             _game = new MockGame(Person);
             MockGame.RunOnce();
-            Assert.IsNotNull(critter.GetGoRogueComponent<HealthComponent>(), "Person was born without a health component");
-            Assert.IsNotNull(critter.GetGoRogueComponent<ActorComponent>(), "Person was born unable to move around or take actions");
+            Assert.IsNotNull((HealthComponent)critter.GetComponent<HealthComponent>(), "Person was born without a health component");
+            Assert.IsNotNull((ActorComponent)critter.GetComponent<ActorComponent>(), "Person was born unable to move around or take actions");
         }
     }
 }

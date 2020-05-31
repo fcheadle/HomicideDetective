@@ -42,7 +42,7 @@ namespace Tests
             DebugState = new DebuggingState();
             SadConsole.Global.CurrentScreen = DebugState;
             Player = DebugState.Map.ControlledGameObject;
-            Player.AddGoRogueComponent(new MockComponent());
+            Player.Components.Add(new MockComponent());
         }
 
         internal void SwapUpdate(Action<GameTime> action)

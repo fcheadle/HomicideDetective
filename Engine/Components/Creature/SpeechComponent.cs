@@ -4,13 +4,14 @@ using SadConsole;
 
 namespace Engine.Components.Creature
 {
-    public class SpeechComponent : ComponentBase
+    public class SpeechComponent : Component
     {
         //internal SpeechConsole Dialogue;
         internal readonly Font Voice;
 
-        public SpeechComponent() : base(isUpdate: true, isKeyboard: false, isDraw: true, isMouse: false)
+        public SpeechComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: false, isDraw: true, isMouse: false)
         {
+            Parent = parent;
         }
 
         //for now, just print something random to the screen
@@ -21,11 +22,6 @@ namespace Engine.Components.Creature
             //Dialogue.Print(0, 0, message);
         }
 
-        public override void ProcessGameFrame()
-        {
-
-        }
-
         public override string[] GetDetails()
         {
             string[] answer =
@@ -34,6 +30,11 @@ namespace Engine.Components.Creature
                 "The entity with this component can speak."
             };
             return answer;//
+        }
+
+        public override void ProcessTimeUnit()
+        {
+            //todo...
         }
     }
 }

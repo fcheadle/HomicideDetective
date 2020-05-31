@@ -22,7 +22,7 @@ namespace Tests.Components.Creature
         }
         private void NewSpeechComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = CreatureFactory.Person(new Coord()).GetGoRogueComponent<SpeechComponent>();
+            _base = (SpeechComponent)CreatureFactory.Person(new Coord()).GetComponent<SpeechComponent>();
             Assert.NotNull(_base);
         }
         [Test]
@@ -34,7 +34,7 @@ namespace Tests.Components.Creature
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = CreatureFactory.Person(new Coord()).GetGoRogueComponent<SpeechComponent>();
+            _base = (SpeechComponent)CreatureFactory.Person(new Coord()).GetComponent<SpeechComponent>();
             _answer = _base.GetDetails();
             Assert.AreEqual(2, _answer.Length);
         }

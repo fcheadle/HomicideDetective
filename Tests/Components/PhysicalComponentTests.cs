@@ -5,7 +5,7 @@ namespace Tests.Components
 {
     class PhysicalComponentTests : TestBase
     {
-        PhysicalComponent _base = new PhysicalComponent();
+        PhysicalComponent _component;
 
         [Test]
         public void NewPhysicalComponentTest()
@@ -16,8 +16,8 @@ namespace Tests.Components
         }
         private void NewPhysicalComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<PhysicalComponent>();
-            _base.ProcessGameFrame();
+            _component = (PhysicalComponent)MockGame.Player.GetComponent<PhysicalComponent>();
+            _component.ProcessTimeUnit();
         }
         [Test]
         public void GetDetailsTest()
@@ -28,8 +28,8 @@ namespace Tests.Components
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<PhysicalComponent>();
-            _base.ProcessGameFrame();
+            _component = (PhysicalComponent)MockGame.Player.GetComponent<PhysicalComponent>();
+            _component.ProcessTimeUnit();
         }
     }
 }

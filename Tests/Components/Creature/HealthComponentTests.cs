@@ -17,7 +17,9 @@ namespace Tests.Components.Creature
         float _breath;
         float _minimum = 0.0f; 
         float _maximum;
-        float _heartBeatStatus;
+        float _minimumHeartStatus = 0;
+        float _currentHeartStatus;
+        float _maximumHeartStatus = 0;
         DateTime _start;
         DateTime _previous;
         [Test]
@@ -27,9 +29,9 @@ namespace Tests.Components.Creature
             MockGame.RunOnce();
             MockGame.Stop();
         }
-        private void NewHealthComponent(Microsoft.Xna.Framework.GameTime time)
+        private void NewHealthComponent(GameTime time)
         {
-            _component = MockGame.Player.GetGoRogueComponent<HealthComponent>();
+            _component = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
             Assert.NotNull(_component);
             Assert.NotNull(_component.SystoleBloodPressure);
             Assert.Less(0, _component.SystoleBloodPressure);
@@ -51,6 +53,9 @@ namespace Tests.Components.Creature
             Assert.Less(0, _component.BloodVolume);
             Assert.NotNull(_component.TypicalBloodVolume);
             Assert.Less(0, _component.TypicalBloodVolume);
+            _component.ProcessTimeUnit();
+            _breath = _component.CurrentBreathVolume;
+            //_currentHeartStatus = _component.MonitorHeart().Y;
         }
         [Test]
         public void GetDetailsTest()
@@ -61,86 +66,68 @@ namespace Tests.Components.Creature
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = MockGame.Player.GetGoRogueComponent<HealthComponent>();
+            _component = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
             _answer = _component.GetDetails();
             _maximum = _component.LungCapacity;
-            Assert.AreEqual(3, _answer.Length);
+            Assert.AreEqual(4, _answer.Length);
         }
 
         [Test]
         public void BreathingTest()
         {
-            _game = new MockGame(StartBreathing);
-            MockGame.RunOnce();
-            _breath = _component.CurrentBreathVolume;
-            Thread.Sleep(100);
+            _game = new MockGame(NewHealthComponent);
             MockGame.RunOnce();
             MockGame.RunOnce();
+            MockGame.RunOnce();
+            _game.SwapUpdate(JustBreathe);
             _start = DateTime.Now;
             _previous = _start;
-            _game.SwapUpdate(JustBreathe);
-            MockGame.Start();
-
+            for (int i = 0; i < 100; i++)
+            {
+                Thread.Sleep(15);
+                MockGame.RunOnce();
+            }
         }
-
-        private void StartBreathing(GameTime time)
-        {
-            _component = MockGame.Player.GetGoRogueComponent<HealthComponent>();
-
-        }
-
         private void JustBreathe(GameTime time)
         {
-            if (DateTime.Now - _previous > TimeSpan.FromSeconds(1))
+            if (DateTime.Now - _previous > TimeSpan.FromSeconds(2))
             {
                 _previous = DateTime.Now;
-                _component = MockGame.Player.GetGoRogueComponent<HealthComponent>();
+                _component = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
                 Assert.AreNotEqual(_breath, _component.CurrentBreathVolume);
                 _breath = _component.CurrentBreathVolume;
                 Assert.Less(0, _breath);
                 Assert.Greater(_maximum, _breath);
-            }
-            if (DateTime.Now - _start > TimeSpan.FromSeconds(5))
-            {
-                MockGame.Stop();
             }
         }
         [Test]
         public void HeartBeatTest()
         {
-            _game = new MockGame(StartBeating);
+            _game = new MockGame(NewHealthComponent);
             MockGame.RunOnce();
-            _breath = _component.CurrentBreathVolume;
+            MockGame.RunOnce();
+            MockGame.RunOnce();
             _game.SwapUpdate(BeatHeart);
-            MockGame.RunOnce();
-            MockGame.RunOnce();
-            MockGame.RunOnce();
-            MockGame.RunOnce();
-            MockGame.RunOnce();
-            MockGame.RunOnce();
+            _start = DateTime.Now;
+            _previous = _start;
+            for (int i = 0; i < 100; i++)
+            {
+                Thread.Sleep(15);
+                MockGame.RunOnce();
+            }
+            Assert.LessOrEqual(-2, Math.Round(_minimumHeartStatus));
+            Assert.GreaterOrEqual(2, Math.Round(_maximumHeartStatus));
         }
-
-        private void StartBeating(GameTime time)
-        {
-            _component = MockGame.Player.GetGoRogueComponent<HealthComponent>();
-            _component.ProcessGameFrame();
-        }
-
         private void BeatHeart(GameTime time)
         {
-            if (DateTime.Now - _previous > TimeSpan.FromMilliseconds(100))
-            {
-                _previous = DateTime.Now;
-                _component = MockGame.Player.GetGoRogueComponent<HealthComponent>();
-                Assert.AreNotEqual(_breath, _component.CurrentBreathVolume);
-                _breath = _component.CurrentBreathVolume;
-                Assert.Less(0, _breath);
-                Assert.Greater(_maximum, _breath);
-            }
-            if(DateTime.Now - _start > TimeSpan.FromSeconds(5))
-            {
-                MockGame.Stop();
-            }
+            _previous = DateTime.Now;
+            _component = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
+            _currentHeartStatus = _component.MonitorHeart().Y;
+            if (_minimumHeartStatus > _currentHeartStatus)
+                _minimumHeartStatus = _currentHeartStatus;
+            if (_maximumHeartStatus < _currentHeartStatus)
+                _maximumHeartStatus = _currentHeartStatus;
+
         }
     }
 }

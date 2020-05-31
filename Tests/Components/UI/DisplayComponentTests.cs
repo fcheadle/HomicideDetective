@@ -22,9 +22,9 @@ namespace Tests.Components.UI
         }
         private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<DisplayComponent<HealthComponent>>();
+            _base = (DisplayComponent<HealthComponent>)MockGame.Player.GetComponent<DisplayComponent<HealthComponent>>();
             Assert.NotNull(_base);
-            _base.ProcessGameFrame();
+            _base.ProcessTimeUnit();
         }
         [Test]
         public void GetDetailsTest()
@@ -35,9 +35,10 @@ namespace Tests.Components.UI
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = MockGame.Player.GetGoRogueComponent<DisplayComponent<HealthComponent>>();
+            _base = (DisplayComponent<HealthComponent>)MockGame.Player.GetComponent<DisplayComponent<HealthComponent>>();
             _answer = _base.GetDetails();
-            Assert.AreEqual(3, _answer.Length);
+            HealthComponent c = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
+            Assert.AreEqual(c.GetDetails().Length, _answer.Length);
         }
     }
 }

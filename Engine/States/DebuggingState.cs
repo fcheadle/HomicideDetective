@@ -11,10 +11,10 @@ namespace Engine.States
     public class DebuggingState : GameState
     {
         public ScrollingConsole MapRenderer { get; }
-        public DisplayComponent<ThoughtsComponent> Thoughts { get => Player.GetGoRogueComponent<DisplayComponent<ThoughtsComponent>>(); }
-        public DisplayComponent<HealthComponent> Health { get => Player.GetGoRogueComponent<DisplayComponent<HealthComponent>>(); }
+        public DisplayComponent<ThoughtsComponent> Thoughts { get => (DisplayComponent<ThoughtsComponent>)Player.GetComponent<DisplayComponent<ThoughtsComponent>>(); }
+        public DisplayComponent<HealthComponent> Health { get => (DisplayComponent<HealthComponent>)Player.GetComponent<DisplayComponent<HealthComponent>>(); }
         public BasicEntity Player { get; }
-        public ActorComponent Actor { get => Player.GetGoRogueComponent<ActorComponent>(); }
+        public ActorComponent Actor { get => (ActorComponent)Player.GetComponent<ActorComponent>(); }
 
         public DebuggingState()
         {

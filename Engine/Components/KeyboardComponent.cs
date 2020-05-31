@@ -7,17 +7,18 @@ using System;
 
 namespace Engine.Components
 {
-    public class KeyboardComponent : ComponentBase
+    public class KeyboardComponent : Component
     {
         public Coord Position { get => Parent.Position; }
-        public KeyboardComponent() : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
+        public KeyboardComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
         {
+            Parent = parent;
         }
 
 
-        public override void ProcessGameFrame()
+        public override void Update(SadConsole.Console console, TimeSpan time)
         {
-            ProcessKeyboard((SadConsole.Console)Parent, Global.KeyboardState, out _);
+            ProcessKeyboard(console, Global.KeyboardState, out _);
         }
 
         public override void ProcessKeyboard(SadConsole.Console console, SadConsole.Input.Keyboard info, out bool handled)
@@ -37,10 +38,11 @@ namespace Engine.Components
                     break;
                 }
             }
-            if (Parent.CurrentMap.Contains(Position + moveDirection))
-                if (Parent.CurrentMap.GetTerrain(Position + moveDirection) != null)
-                    if (Parent.CurrentMap.GetTerrain(Position + moveDirection).IsWalkable)
-                        Parent.Position += moveDirection;
+
+            Coord target = Position + moveDirection;
+            if (Parent.CurrentMap.Contains(target))
+                if (Parent.CurrentMap.GetTerrain(target).IsWalkable)
+                    Parent.Position += moveDirection;
 
             if (moveDirection != Direction.NONE)
                 handled = true;
@@ -55,6 +57,11 @@ namespace Engine.Components
                 "This entity listens/responds to keyboard input."
             };
             return answer;
+        }
+
+        public override void ProcessTimeUnit()
+        {
+            //don't implement this. at least, no need for now
         }
     }
 }

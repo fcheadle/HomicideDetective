@@ -1,28 +1,26 @@
 ﻿using Engine.Maps.Areas;
 using GoRogue;
+using SadConsole;
 using Color = Microsoft.Xna.Framework.Color;
 using Console = SadConsole.Console;
 
 namespace Engine.Components.UI
 {
-    public class DisplayComponent<T> : ComponentBase where T : ComponentBase
+    public class DisplayComponent<T> : Component where T : Component
     {
         public Console Display;
-        internal T Component => Parent.GetComponent<T>();
+        internal T Component; 
 
-        public DisplayComponent(Coord position) : base(true, false, true, false)
+        public DisplayComponent(BasicEntity parent, Coord position) : base(true, false, true, false)
         {
+            Parent = parent; 
+            Component = (T)(Parent.GetConsoleComponent<T>());
             Display = new Console(24, 24)
             {
                 DefaultBackground = Color.Tan,
                 Position = position,
                 IsVisible = true,
             };
-        }
-
-        public override void ProcessGameFrame()
-        {
-            //do nothing... ?
         }
 
         public void Print(string[] text)
@@ -53,6 +51,11 @@ namespace Engine.Components.UI
         internal void Print()
         {
 
+        }
+
+        public override void ProcessTimeUnit()
+        {
+            Print(Component.GetDetails());
         }
     }
 }

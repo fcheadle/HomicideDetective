@@ -1,9 +1,13 @@
-﻿namespace Engine.Components.Creature
+﻿using SadConsole;
+using System;
+
+namespace Engine.Components.Creature
 {
-    public class ThoughtsComponent : ComponentBase
+    public class ThoughtsComponent : Component
     {
-        public ThoughtsComponent() : base(true, false, false, false)
+        public ThoughtsComponent(BasicEntity parent) : base(true, false, false, false)
         {
+            Parent = parent;
         }
 
         public override string[] GetDetails()
@@ -15,9 +19,26 @@
             return answer;
         }
 
-        public override void ProcessGameFrame()
+        public override void ProcessTimeUnit()
         {
-            //throw new NotImplementedException();
+            ThinkAboutSenses();
+            ThinkAboutDesires();
+            DecideWhatToDo();
+        }
+
+        private void ThinkAboutSenses()
+        {
+            //todo...
+        }
+
+        private void ThinkAboutDesires()
+        {
+            //todo...
+        }
+
+        private void DecideWhatToDo()
+        {
+            //todo...
         }
     }
 }

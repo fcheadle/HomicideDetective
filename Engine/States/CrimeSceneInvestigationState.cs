@@ -20,10 +20,10 @@ namespace Engine.States
         Func<int, int, TimeSpan, bool> fxyt = Calculate.RandomFunction4d();
         public TownMap TownMap { get; }
         public ScrollingConsole MapRenderer { get; }
-        public DisplayComponent<ThoughtsComponent> Thoughts { get => Player.GetGoRogueComponent<DisplayComponent<ThoughtsComponent>>(); }
-        public DisplayComponent<HealthComponent> Health { get => Player.GetGoRogueComponent<DisplayComponent<HealthComponent>>(); }
+        public DisplayComponent<ThoughtsComponent> Thoughts { get => (DisplayComponent<ThoughtsComponent>)Player.GetComponent<DisplayComponent<ThoughtsComponent>>(); }
+        public DisplayComponent<HealthComponent> Health { get => (DisplayComponent<HealthComponent>)Player.GetComponent<DisplayComponent<HealthComponent>>(); }
         public BasicEntity Player { get; }
-        public ActorComponent Actor { get => Player.GetGoRogueComponent<ActorComponent>(); }
+        public ActorComponent Actor { get => (ActorComponent)Player.GetComponent<ActorComponent>(); }
         public CrimeSceneInvestigationState(int mapWidth, int mapHeight, int viewportWidth, int viewportHeight)
         {
             TownMap = new TownMap(mapWidth, mapHeight);

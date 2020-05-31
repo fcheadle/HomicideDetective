@@ -1,4 +1,5 @@
 ﻿using GoRogue;
+using SadConsole;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +12,7 @@ namespace Engine.Components.Creature
         B,
         AB
     }
-    public class HealthComponent : ComponentBase
+    public class HealthComponent : Component
     {
         public float SystoleBloodPressure { get; private set; }
         public float DiastoleBloodPressure { get; private set; }
@@ -30,9 +31,10 @@ namespace Engine.Components.Creature
         private float _heartBeatStatus;
         private float _halfBreathVolume;
 
-        public HealthComponent(float systoleBloodPressure = 120, float diastoleBloodPressure = 80, float pulse = 85, float bodyTemperature = 96.7f, float lungCapacity = 1000, float bloodVolume = 6000)
+        public HealthComponent(BasicEntity parent, float systoleBloodPressure = 120, float diastoleBloodPressure = 80, float pulse = 85, float bodyTemperature = 96.7f, float lungCapacity = 1000, float bloodVolume = 6000)
             : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
         {
+            Parent = parent;
             SystoleBloodPressure = systoleBloodPressure;
             DiastoleBloodPressure = diastoleBloodPressure;
             Pulse = pulse;
@@ -47,34 +49,36 @@ namespace Engine.Components.Creature
             CurrentBreathVolume = _halfBreathVolume;
         }
 
-        public override void ProcessGameFrame()
-        {
-            BeatHeart(_totalTime);
-            Breathe(_totalTime);
-        }
         public override void Update(SadConsole.Console console, TimeSpan delta)
         {
-            _totalTime += (float)delta.TotalMilliseconds;
+            _totalTime += (float)delta.TotalSeconds;
             base.Update(console, delta);
         }
 
         private void Breathe(float ms)
         {
             //period is _breathsPerMinute
-            ms /= 100;
+            
             float period = _breathsPerMinute / 60;
             
-            float delta = ms % period;
+            float delta = ms * period;
             float ratio = (float)Math.Sin(delta); //from -1 to 1
             CurrentBreathVolume = _halfBreathVolume * ratio + _halfBreathVolume;
         }
 
+        public Coord MonitorHeart()
+        {
+            //x position is between 0-23
+            int x = (int)Math.Round(_totalTime) % 24;
+            int y = (int)Math.Round(_heartBeatStatus);
+            return new Coord(x, y);
+        }
         private void BeatHeart(float ms)
         {
             //a graph that stays really close to 0 until we get close to zero, then it pulses up and down real quick-like
             //period goes from -15 to 15
-            float period = _heartBeatsPerMinute / 60 * ms;
-            _heartBeatStatus = (float)Math.Sin(Math.Sin(1/period));
+            float period = _heartBeatsPerMinute / 60 * (ms + 1);
+            _heartBeatStatus = 2f * (float)Math.Sin(Math.Sin(10/period));
         }
 
         public override string[] GetDetails()
@@ -82,11 +86,18 @@ namespace Engine.Components.Creature
             string[] message = {
                 "Body Temp: " + CurrentBodyTemperature,
                 "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
-                "Pulse: " + Pulse + "bpm"
+                "Pulse: " + Pulse + "bpm",
+                "Lung Capacity: " + CurrentBreathVolume + "/" + LungCapacity,
             };
 
 
             return message;
+        }
+
+        public override void ProcessTimeUnit()
+        {
+            BeatHeart(_totalTime);
+            Breathe(_totalTime); 
         }
     }
 }

@@ -6,19 +6,20 @@ using System.Collections.Generic;
 
 namespace Engine.Components.Creature
 {
-    public class ActorComponent : ComponentBase
+    public class ActorComponent : Component
     {
         private Path _path;
         private BasicEntity _target;
         public int FOVRadius = 15;
-        public Coord Position => Parent.Position;
-        public ActorComponent() : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
-        {
-        }
 
+        public Coord Position => Parent.Position;
+        public ActorComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
+        {
+            Parent = parent;
+        }
         public void Act()
         {
-            if (((BasicEntity)Parent).GetGoRogueComponent<KeyboardComponent>() != null)
+            if (((BasicEntity)Parent).GetComponent<KeyboardComponent>() != null)
                 return;
 
             //Determine whether or not we have a path
@@ -45,11 +46,6 @@ namespace Engine.Components.Creature
         {
         }
 
-        public override void ProcessGameFrame()
-        {
-            throw new NotImplementedException();//not getting called?
-        }
-
         public override string[] GetDetails()
         {
             string[] answer = {
@@ -57,6 +53,11 @@ namespace Engine.Components.Creature
                 "It can move from place to place."                
             };
             return answer;
+        }
+
+        public override void ProcessTimeUnit()
+        {
+            Act();
         }
     }
 }

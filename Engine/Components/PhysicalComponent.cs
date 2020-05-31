@@ -1,17 +1,17 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
+using SadConsole;
 
 namespace Engine.Components
 {
-    public class PhysicalComponent : ComponentBase
+    public class PhysicalComponent : Component
     {
         public string Description { get; private set; }
         public int Mass { get; set; }
         public int Volume { get; set; }
-        public IGameObject Parent { get; set; }
-        public PhysicalComponent():base(false, false, false, false)
+        public PhysicalComponent(BasicEntity parent):base(false, false, false, false)
         {
-
+            Parent = parent;
         }
         public override string[] GetDetails()
         {
@@ -22,11 +22,6 @@ namespace Engine.Components
             return answer;
         }
 
-        public override void ProcessGameFrame()
-        {
-            //do nothing
-        }
-
         public void SetPhysicalDescription(string description)
         {
             Description = description;
@@ -35,6 +30,11 @@ namespace Engine.Components
         public override string ToString()
         {
             return Description;
+        }
+
+        public override void ProcessTimeUnit()
+        {
+            //eventually, we'll want some physics stuff in here (velocity / direction / hardness / so on)
         }
     }
 }
