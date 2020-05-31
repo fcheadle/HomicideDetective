@@ -12,22 +12,18 @@ namespace Engine.Components.UI
 
         public DisplayComponent(Coord position) : base(true, false, true, false)
         {
-            Display = new Console(24, 36)
+            Display = new Console(24, 24)
             {
-                DefaultBackground = Color.Transparent,
+                DefaultBackground = Color.Tan,
                 Position = position,
                 IsVisible = true,
             };
-
-
         }
 
         public override void ProcessGameFrame()
         {
             //do nothing... ?
         }
-
-
 
         public void Print(string[] text)
         {

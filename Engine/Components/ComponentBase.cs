@@ -1,4 +1,5 @@
 ﻿using GoRogue.GameFramework.Components;
+using SadConsole;
 using SadConsole.Components;
 using SadConsole.Components.GoRogue;
 using SadConsole.Input;
@@ -15,22 +16,27 @@ namespace Engine.Components
         public bool IsDraw { get; } = false;
         public bool IsMouse { get; } = false;
         public bool IsKeyboard { get; } = false;
+        protected Timer timer;
         public ComponentBase(bool isUpdate, bool isKeyboard, bool isDraw, bool isMouse)
         {
             IsUpdate = isUpdate;
             IsKeyboard = isKeyboard;
             IsMouse = isMouse;
             IsDraw = isDraw;
+            if (isUpdate)
+            {
+                timer = new Timer(TimeSpan.FromMilliseconds(100));
+                timer.TimerElapsed += (timer, e) => ProcessGameFrame();
+            }
         }
 
-        //We need to define these and have them throw exceptions, becuse if we leave them abstract, then they require declaration even in classes where they aren't needed.
-        public virtual void Draw(SadConsole.Console console, TimeSpan delta) => throw new NotImplementedException();
-        public virtual void OnAdded(SadConsole.Console console) => throw new NotImplementedException();
-        public virtual void OnRemoved(SadConsole.Console console) => throw new NotImplementedException();
         public abstract string[] GetDetails();
         public abstract override void ProcessGameFrame();
-        public virtual void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled) => throw new NotImplementedException();
-        public virtual void ProcessMouse(SadConsole.Console console, MouseConsoleState state, out bool handled) => throw new NotImplementedException();
-        public virtual void Update(SadConsole.Console console, TimeSpan delta) => throw new NotImplementedException();
+        public virtual void Draw(SadConsole.Console console, TimeSpan delta) { }
+        public virtual void OnAdded(SadConsole.Console console){ }
+        public virtual void OnRemoved(SadConsole.Console console){ }
+        public virtual void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled) { handled = false; }
+        public virtual void ProcessMouse(SadConsole.Console console, MouseConsoleState state, out bool handled) { handled = false; }
+        public virtual void Update(SadConsole.Console console, TimeSpan delta) { timer.Update(console, delta); }
     }
 }

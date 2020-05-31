@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "GoRogue/2.6.0": {
+      "GoRogue/2.6.2": {
         "type": "package",
         "dependencies": {
           "OptimizedPriorityQueue": "4.2.0",
@@ -117,7 +117,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
-          "GoRogue": "2.6.0",
+          "GoRogue": "2.6.2",
           "MonoGame.Framework.DesktopGL.Core": "3.8.0.13",
           "SadConsole": "8.99.1",
           "SadConsole.GoRogueHelpers": "1.0.0"
@@ -132,14 +132,14 @@
     }
   },
   "libraries": {
-    "GoRogue/2.6.0": {
-      "sha512": "xAwX6Ww7HKbYeVFblvIozbLuqeB+uVh0ZbSG2IX0y10fSYjjcrsn68mDHTWsws7B4gnoaX9EMCYzn5Pe2t8kGA==",
+    "GoRogue/2.6.2": {
+      "sha512": "duHCjEGcTP8+XyJwOAw4yeC8qXHs1Pl+aPTZ4Lqd47pj29XnHIQI7Rp0F0lSMpTgN/lJDcQdjVNCjtSWz9i5xA==",
       "type": "package",
-      "path": "gorogue/2.6.0",
+      "path": "gorogue/2.6.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "gorogue.2.6.0.nupkg.sha512",
+        "gorogue.2.6.2.nupkg.sha512",
         "gorogue.nuspec",
         "lib/netstandard2.0/GoRogue.dll",
         "lib/netstandard2.0/GoRogue.xml",

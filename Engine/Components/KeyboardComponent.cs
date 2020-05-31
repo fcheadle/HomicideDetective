@@ -37,11 +37,10 @@ namespace Engine.Components
                     break;
                 }
             }
-            //if (Program.CurrentState.Map != null)
-                if (Parent.CurrentMap.Contains(Position + moveDirection))
-                    if (Parent.CurrentMap.GetTerrain(Position + moveDirection) != null)
-                        if (Parent.CurrentMap.GetTerrain(Position + moveDirection).IsWalkable)
-                            Parent.Position += moveDirection;
+            if (Parent.CurrentMap.Contains(Position + moveDirection))
+                if (Parent.CurrentMap.GetTerrain(Position + moveDirection) != null)
+                    if (Parent.CurrentMap.GetTerrain(Position + moveDirection).IsWalkable)
+                        Parent.Position += moveDirection;
 
             if (moveDirection != Direction.NONE)
                 handled = true;

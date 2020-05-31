@@ -44,5 +44,10 @@ namespace Tests
             Player = DebugState.Map.ControlledGameObject;
             Player.AddGoRogueComponent(new MockComponent());
         }
+
+        internal void SwapUpdate(Action<GameTime> action)
+        {
+            SadConsole.Game.OnUpdate = action;
+        }
     }
 }

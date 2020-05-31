@@ -14,6 +14,7 @@ namespace Engine
         internal static DebuggingState Debug { get; private set; }
         internal static MenuState Menu { get; private set; }
         internal static GameState CurrentState { get; private set; }
+        internal static BasicEntity Player { get => CurrentState.Map.ControlledGameObject; }
         internal static TimeSpan ActCounter { get; private set; } = TimeSpan.FromSeconds(0);
         private static BasicMap debugOriginalMap;
         internal static void Main()
@@ -52,9 +53,9 @@ namespace Engine
             CrimeSceneInvestigation.MapRenderer.IsDirty = true;// (obj.ElapsedGameTime);
             if (ActCounter > TimeSpan.FromMilliseconds(250))
             {
-                foreach (SadConsole.BasicEntity creature in CrimeSceneInvestigation.TownMap.GetCreatures())
+                foreach (BasicEntity creature in CurrentState.Map.GetCreatures())
                 {
-                    creature.GetGoRogueComponent<ActorComponent>().Act();
+                    creature.Update(time.ElapsedGameTime);
                 }
                 ActCounter = TimeSpan.FromMilliseconds(0);
             }
@@ -62,7 +63,7 @@ namespace Engine
 
         private static void Init()
         {
-            SadConsole.Game.OnUpdate = Update;
+            //SadConsole.Game.OnUpdate = Update;
             CrimeSceneInvestigation = new CrimeSceneInvestigationState(Settings.MapWidth, Settings.MapHeight, Settings.GameWidth, Settings.GameHeight);
             Global.CurrentScreen = CrimeSceneInvestigation;
             CurrentState = CrimeSceneInvestigation;
