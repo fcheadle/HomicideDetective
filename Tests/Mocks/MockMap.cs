@@ -1,5 +1,5 @@
 ﻿using Engine;
-using Engine.Entities;
+using Engine.Entities.Terrain;
 using Engine.Extensions;
 using Engine.Maps;
 using Engine.Maps.Areas;
@@ -7,13 +7,13 @@ using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
 
-namespace Tests
+namespace Tests.Mocks
 {
-    class MockMap : BasicMap
+    public class MockMap : SceneMap
     {
         TerrainFactory _factory = new TerrainFactory();
         public FOVVisibilityHandler FovVisibilityHandler { get; }
-        internal MockMap() : base(100, 100, Calculate.EnumLength<MapLayer>(), Distance.MANHATTAN)
+        internal MockMap() : base(100,100)//base(100, 100, Calculate.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
 
@@ -38,9 +38,14 @@ namespace Tests
             foreach (Coord c in room.InnerPoints)
                 map.SetTerrain(_factory.MediumHardwoodFloor(c));
             foreach (Coord c in room.OuterPoints)
-                map.SetTerrain(_factory.ShagCarpet(c));
+            {
+                map.SetTerrain(_factory.BathroomLinoleum(c));
+                if (c.X == map.Width / 2 || c.Y == map.Height / 2)
+                    map.SetTerrain(_factory.ShagCarpet(c));
+                else
+                    map.SetTerrain(_factory.DarkHardwoodFloor(c));
+            }
             this.ReplaceTiles(map, new Coord(0, 0));
-
 
             BasicMap rotated = map.Rotate(origin, radius, 45);
             this.ReplaceTiles(rotated, new Coord(0, 0));
@@ -58,6 +63,5 @@ namespace Tests
                 }
             }
         }
-
     }
 }

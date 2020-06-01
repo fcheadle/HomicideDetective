@@ -1,6 +1,7 @@
 ﻿using Engine.Components.Creature;
-using Engine.Entities;
+using Engine.Entities.Terrain;
 using Engine.Maps;
+using Engine.Utilities;
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
@@ -255,7 +256,7 @@ namespace Engine.Extensions
             int dy = Math.Abs(maxY - minY + 1);
             Coord offset = new Coord(-minX, -minY);
 
-            BasicMap map = new BasicMap(dx, dy, Calculate.EnumLength<MapLayer>(), Distance.EUCLIDEAN);
+            BasicMap map = new BasicMap(dx, dy, EnumUtils.EnumLength<MapLayer>(), Distance.EUCLIDEAN);
             map.ForXForY((Coord point) =>
             {
                 if (m.Contains(point - offset))

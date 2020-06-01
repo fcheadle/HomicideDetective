@@ -18,6 +18,7 @@ namespace Engine.Components
         public bool IsMouse { get; } = false;
         public bool IsKeyboard { get; } = false;
         protected Timer timer;
+        protected TimeSpan _elapsed;
         public Component(bool isUpdate, bool isKeyboard, bool isDraw, bool isMouse)
         {
             IsUpdate = isUpdate;
@@ -26,7 +27,7 @@ namespace Engine.Components
             IsDraw = isDraw;
             if (isUpdate)
             {
-                timer = new Timer(TimeSpan.FromMilliseconds(100));
+                timer = new Timer(TimeSpan.FromMilliseconds(Game.TimeIncrement));
                 timer.TimerElapsed += (timer, e) => ProcessTimeUnit();
             }
         }

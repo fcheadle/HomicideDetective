@@ -26,8 +26,8 @@ namespace Tests.Components.Creature
         public void NewHealthComponentTest()
         {
             _game = new MockGame(NewHealthComponent);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void NewHealthComponent(GameTime time)
         {
@@ -61,8 +61,8 @@ namespace Tests.Components.Creature
         public void GetDetailsTest()
         {
             _game = new MockGame(GetDetails);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
@@ -76,16 +76,15 @@ namespace Tests.Components.Creature
         public void BreathingTest()
         {
             _game = new MockGame(NewHealthComponent);
-            MockGame.RunOnce();
-            MockGame.RunOnce();
-            MockGame.RunOnce();
+            _game.RunOnce();
+            _game.RunOnce();
+            _game.RunOnce();
             _game.SwapUpdate(JustBreathe);
             _start = DateTime.Now;
             _previous = _start;
             for (int i = 0; i < 100; i++)
             {
-                Thread.Sleep(15);
-                MockGame.RunOnce();
+                _game.RunOnce();
             }
         }
         private void JustBreathe(GameTime time)
@@ -104,16 +103,15 @@ namespace Tests.Components.Creature
         public void HeartBeatTest()
         {
             _game = new MockGame(NewHealthComponent);
-            MockGame.RunOnce();
-            MockGame.RunOnce();
-            MockGame.RunOnce();
+            _game.RunOnce();
+            _game.RunOnce();
+            _game.RunOnce();
             _game.SwapUpdate(BeatHeart);
             _start = DateTime.Now;
             _previous = _start;
             for (int i = 0; i < 100; i++)
             {
-                Thread.Sleep(15);
-                MockGame.RunOnce();
+                _game.RunOnce();
             }
             Assert.LessOrEqual(-2, Math.Round(_minimumHeartStatus));
             Assert.GreaterOrEqual(2, Math.Round(_maximumHeartStatus));

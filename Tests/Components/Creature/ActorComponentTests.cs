@@ -15,8 +15,8 @@ namespace Tests.Components.Creature
         public void NewActorComponentTests()
         {
             _game = new MockGame(NewActorComponent);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void NewActorComponent(Microsoft.Xna.Framework.GameTime time)
         {
@@ -27,8 +27,8 @@ namespace Tests.Components.Creature
         public void GetDetailsTest()
         {
             _game = new MockGame(GetDetails);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {

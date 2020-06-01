@@ -1,5 +1,5 @@
 ﻿using Engine.Components.Terrain;
-using Engine.Entities;
+using Engine.Entities.Terrain;
 using GoRogue;
 using NUnit.Framework;
 using System;
@@ -11,19 +11,19 @@ namespace Tests.Components.Terrain
     class BlowsInWindComponentTests : TestBase
     {
         TerrainFactory factory = new TerrainFactory();
-        BlowsInWindComponent _base;
+        AnimateGlyphComponent _base;
         string[] _answer;
 
         [Test]
         public void NewBlowsInWindComponentTests()
         {
-            _game = new MockGame(NewKeyboardComponent);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game = new MockGame(NewBlowsInWindComponent);
+            _game.RunOnce();
+            _game.Stop();
         }
-        private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
+        private void NewBlowsInWindComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = factory.Grass(new Coord()).GetComponent<BlowsInWindComponent>();
+            _base = factory.Grass(new Coord()).GetComponent<AnimateGlyphComponent>();
             Assert.NotNull(_base);
         }
 
@@ -31,12 +31,12 @@ namespace Tests.Components.Terrain
         public void GetDetailsTest()
         {
             _game = new MockGame(GetDetails);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = factory.Grass(new Coord()).GetComponent<BlowsInWindComponent>();
+            _base = factory.Grass(new Coord()).GetComponent<AnimateGlyphComponent>();
             _answer = _base.GetDetails();
             Assert.AreEqual(1, _answer.Length);
         }

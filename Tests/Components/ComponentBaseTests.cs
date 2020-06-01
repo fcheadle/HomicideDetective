@@ -11,11 +11,11 @@ namespace Tests.Components
         public void NewComponentDerivedFromBaseTest()
         {
             _game = new MockGame(NewComponentDerivedFromBased);
-            MockGame.RunOnce();
+            _game.RunOnce();
             Assert.AreEqual(1, _base.UpdateCounter);
-            MockGame.RunOnce();
+            _game.RunOnce();
             Assert.Less(2, _base.UpdateCounter);
-            MockGame.Stop();
+            _game.Stop();
         }
         private void NewComponentDerivedFromBased(GameTime time)
         {

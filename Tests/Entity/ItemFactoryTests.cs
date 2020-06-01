@@ -1,4 +1,4 @@
-﻿using Engine.Entities;
+﻿using Engine.Entities.Items;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
@@ -15,8 +15,8 @@ namespace Tests.Entity
         public void NewGenericItemTest()
         {
             _game = new MockGame(NewGenericItem);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         public void NewGenericItem(GameTime time)
         {

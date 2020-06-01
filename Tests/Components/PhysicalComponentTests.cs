@@ -11,8 +11,8 @@ namespace Tests.Components
         public void NewPhysicalComponentTest()
         {
             _game = new MockGame(NewPhysicalComponent);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void NewPhysicalComponent(Microsoft.Xna.Framework.GameTime time)
         {
@@ -23,8 +23,8 @@ namespace Tests.Components
         public void GetDetailsTest()
         {
             _game = new MockGame(GetDetails);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {

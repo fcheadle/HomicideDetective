@@ -1,5 +1,5 @@
 ﻿using Engine.Components.Creature;
-using Engine.Entities;
+using Engine.Entities.Creatures;
 using GoRogue;
 using NUnit.Framework;
 using System;
@@ -10,33 +10,48 @@ namespace Tests.Components.Creature
 {
     class SpeechComponentTests : TestBase
     {
-        SpeechComponent _base;
+        SpeechComponent _component;
         string[] _answer;
+        CreatureFactory _factory = new CreatureFactory();
 
         [Test]
-        public void NewKeyBoardComponentTests()
+        public void NewSpeechComponentTest()
         {
             _game = new MockGame(NewSpeechComponent);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void NewSpeechComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = (SpeechComponent)CreatureFactory.Person(new Coord()).GetComponent<SpeechComponent>();
-            Assert.NotNull(_base);
+            _component = (SpeechComponent)_factory.Person(new Coord()).GetComponent<SpeechComponent>();
+            Assert.NotNull(_component);
+            Assert.NotNull(_component.TendencyToMinimize);
+            Assert.Less(0, _component.TendencyToMinimize);
+            Assert.NotNull(_component.TendencyToInvalidate);
+            Assert.Less(0, _component.TendencyToInvalidate);
+            Assert.NotNull(_component.TendencyToDeny);
+            Assert.Less(0, _component.TendencyToDeny);
+            Assert.NotNull(_component.TendencyToJustify);
+            Assert.Less(0, _component.TendencyToJustify);
+            Assert.NotNull(_component.TendencyToArgue);
+            Assert.Less(0, _component.TendencyToArgue);
+            Assert.NotNull(_component.TendencyToDefend);
+            Assert.Less(0, _component.TendencyToDefend);
+            Assert.NotNull(_component.TendencyToExplain);
+            Assert.Less(0, _component.TendencyToExplain);
         }
         [Test]
         public void GetDetailsTest()
         {
             _game = new MockGame(GetDetails);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = (SpeechComponent)CreatureFactory.Person(new Coord()).GetComponent<SpeechComponent>();
-            _answer = _base.GetDetails();
-            Assert.AreEqual(2, _answer.Length);
+            _component = (SpeechComponent)_factory.Person(new Coord()).GetComponent<SpeechComponent>();
+            _answer = _component.GetDetails();
+            Assert.Less(2, _answer.Length);
         }
     }
 }

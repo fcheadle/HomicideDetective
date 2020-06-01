@@ -17,8 +17,8 @@ namespace Tests.Components.UI
         public void NewKeyBoardComponentTests()
         {
             _game = new MockGame(NewKeyboardComponent);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
         {
@@ -30,8 +30,8 @@ namespace Tests.Components.UI
         public void GetDetailsTest()
         {
             _game = new MockGame(GetDetails);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {

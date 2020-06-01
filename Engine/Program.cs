@@ -1,7 +1,11 @@
 ﻿using Engine.Components;
 using Engine.Components.Creature;
+using Engine.Entities.Creatures;
+using Engine.Entities.Items;
+using Engine.Entities.Terrain;
 using Engine.Extensions;
 using Engine.States;
+using Engine.Utilities;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
@@ -10,34 +14,45 @@ namespace Engine
 {
     public class Program
     {
-        internal static CrimeSceneInvestigationState CrimeSceneInvestigation { get; private set; }
-        internal static MenuState Menu { get; private set; }
-        internal static GameState CurrentState { get; private set; }
-        internal static BasicEntity Player { get => CurrentState.Map.ControlledGameObject; }
-        private static BasicMap debugOriginalMap;
+        public static MenuState Menu { get; private set; }
+        public static IGame CurrentGame { get; private set; }
+        public static ISettings Settings { get; private set; }
+        public static ICreatureFactory CreatureFactory { get; private set; }
+        public static IItemFactory ItemFactory { get; private set; }
+        public static ITerrainFactory TerrainFactory { get; private set; }
         internal static void Main()
         {
-            SadConsole.Game.Create(Settings.GameWidth, Settings.GameHeight);
-            SadConsole.Game.OnInitialize = Init;
-            SadConsole.Game.OnUpdate = Update;
-            SadConsole.Game.Instance.Run();
-            SadConsole.Game.Instance.Dispose();
+
         }
-        private static void Update(GameTime time)
+        public static void Start(
+            IGame game = null, 
+            ISettings settings = null,
+            ICreatureFactory creatureFactory = null, 
+            IItemFactory itemFactory = null, 
+            ITerrainFactory terrainFactory = null
+            )
         {
-            CrimeSceneInvestigation.BlowWind(time.ElapsedGameTime);
+            Settings = settings ?? new Settings();
+            CreatureFactory = creatureFactory ?? new CreatureFactory();
+            TerrainFactory = terrainFactory ?? new TerrainFactory();
+            ItemFactory = itemFactory ?? new ItemFactory();
+            CurrentGame = new Game(Settings, CreatureFactory, ItemFactory, TerrainFactory);
+            CurrentGame.Start();
+            CurrentGame.Stop();
         }
 
-        private static void Init()
+        public static void RegisterTestGame(
+            IGame game,
+            ISettings settings,
+            ICreatureFactory creatureFactory,
+            IItemFactory itemFactory,
+            ITerrainFactory terrainFactory)
         {
-            CrimeSceneInvestigation = new CrimeSceneInvestigationState(Settings.MapWidth, Settings.MapHeight, Settings.GameWidth, Settings.GameHeight);
-            Global.CurrentScreen = CrimeSceneInvestigation;
-            CurrentState = CrimeSceneInvestigation;
-        }
-
-        public static void Start()
-        {
-            Main();
+            CurrentGame = game;
+            Settings = settings ?? new Settings();
+            CreatureFactory = creatureFactory ?? new CreatureFactory();
+            TerrainFactory = terrainFactory ?? new TerrainFactory();
+            ItemFactory = itemFactory ?? new ItemFactory();
         }
     }
 }

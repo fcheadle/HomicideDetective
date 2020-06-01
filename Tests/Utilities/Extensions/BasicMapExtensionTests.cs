@@ -1,4 +1,4 @@
-using Engine.Entities;
+using Engine.Entities.Terrain;
 using Engine.Extensions;
 using GoRogue;
 using NUnit.Framework;
@@ -24,7 +24,7 @@ namespace Tests.Map
                 {
                     int glyph = i + j;
                     Coord c = new Coord(i, j);
-                    _map.SetTerrain(_factory.Test(i + j, c));
+                    _map.SetTerrain(_factory.Generic(c, i + j));
                 }
             }
         }
@@ -146,7 +146,7 @@ namespace Tests.Map
         public void RotateTest()
         {
             _game = new MockGame(Rotate);
-            MockGame.RunOnce();
+            _game.RunOnce();
             Assert.Pass();
         }
         private static void Rotate(Microsoft.Xna.Framework.GameTime time)
@@ -206,7 +206,7 @@ namespace Tests.Map
                 double y = 14.75 * Math.Sin(x / 30.0) + width / 2;
                 Coord fx = new Coord(x, (int)y);
                 pointsSet.Add(fx);
-                map.SetTerrain(_factory.Test(counter, fx));
+                map.SetTerrain(_factory.Generic(fx, counter));
                 counter++;
             });
 
@@ -234,7 +234,7 @@ namespace Tests.Map
                 double x = 14.75 * Math.Sin(y / 30.0) + width / 2;
                 Coord fy = new Coord((int)x, y);
                 pointsSet.Add(fy);
-                map.SetTerrain(_factory.Test(counter, fy));
+                map.SetTerrain(_factory.Generic(fy, counter));
                 counter++;
             });
 
@@ -255,7 +255,7 @@ namespace Tests.Map
             int counter = 0;
             map.ForXForY((Coord point) =>
             {
-                map.SetTerrain(_factory.Test(counter, point));
+                map.SetTerrain(_factory.Generic(point, counter));
                 counter++;
             });
             counter = 0;
@@ -328,7 +328,7 @@ namespace Tests.Map
 
             for (int i = 0; i < 8; i++)
             {
-                newMap.SetTerrain(_factory.Test('#', new Coord(i, i)));
+                newMap.SetTerrain(_factory.Generic(new Coord(i, i), '#'));
             }
 
             newMap.Add(_map);
@@ -357,7 +357,7 @@ namespace Tests.Map
 
             for (int i = 0; i < 8; i++)
             {
-                newMap.SetTerrain(_factory.Test(i, new Coord(i, i)));
+                newMap.SetTerrain(_factory.Generic(new Coord(i, i), i));
             }
 
             newMap.ReplaceTiles(_map, new Coord(0, 0));
@@ -393,7 +393,7 @@ namespace Tests.Map
                 for (int j = 1; j < map.Height - 1; j++)
                 {
                     Coord c = new Coord(i, j);
-                    map.SetTerrain(_factory.Test(i + j, c));
+                    map.SetTerrain(_factory.Generic(c, i+j));
                 }
             }
 

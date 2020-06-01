@@ -9,6 +9,7 @@ namespace Engine
     public static class Calculate
     {
         #region map generation
+        private static Random _random = new Random();
         internal static List<Func<double, double>> Functions2d = new List<Func<double, double>>
         {
             //Not sure that I'm using these for ANYTHING right now
@@ -103,32 +104,19 @@ namespace Engine
                 return new Point((int)x, (int)y);
             }
         };
-
-        public static IEnumerable<Coord> Circle(Coord center, int radius)
-        {
-            for (int x = -radius; x < radius; x++)
-            {
-                for (int y = -radius; y < radius; y++)
-                {
-                    if (radius >= Math.Sqrt(x * x + y * y))
-                        yield return new Coord(x, y);
-                }
-            }
-        }
-
         public static Func<double, double> RandomFunction2d()
         {
-            int index = Settings.Random.Next(0, Functions2d.Count);
+            int index = _random.Next(0, Functions2d.Count);
             return Functions2d[index];
         }
         public static Func<int, int, double> RandomFunction3d()
         {
-            int index = Settings.Random.Next(0, Functions3d.Count);
+            int index = _random.Next(0, Functions3d.Count);
             return Functions3d[index];
         }
         public static Func<int, int, TimeSpan, bool> RandomFunction4d()
         {
-            int index = Settings.Random.Next(0, Functions4d.Count);
+            int index = _random.Next(0, Functions4d.Count);
             return Functions4d[index];
         }
         public static Func<int, int, double> MasterFormula()
@@ -143,12 +131,10 @@ namespace Engine
             double y = radius * Math.Sin(theta);
             return new Coord((int)x, (int)y);
         }
-
         public static Coord PolarToCartesian(PolarCoord pc)
         {
             return PolarToCartesian(pc.Radius, pc.Theta);
         }
-
         public static PolarCoord CartesianToPolar(Coord c)
         {
             double radius = (c.X * c.X) + (c.Y * c.Y);
@@ -156,14 +142,8 @@ namespace Engine
             double theta = c.X == 0 ? 0 : 1 / Math.Tan(c.Y / c.X);
             return new PolarCoord(radius, theta);
         }
-        public static double RadiansToDegrees(double theta)
-        {
-            return theta * 180.0f / Math.PI;
-        }
-        public static double DegreesToRadians(int degrees)
-        {
-            return degrees * Math.PI / 180.0f;
-        }
+        public static double RadiansToDegrees(double theta) => theta * 180.0f / Math.PI;
+        public static double DegreesToRadians(int degrees) =>  degrees * Math.PI / 180.0f;
         public static Point ButterflyCurve(double theta)
         {
             double radius = Math.Exp(Math.Sin(theta));
@@ -186,16 +166,13 @@ namespace Engine
                     lastP = thisP;
                 }
             }
-
             return p;
         }
-
         public static double BoundedTan(double radians)
         {
             //returns a tangent that is between -1 and 1
             var safeRads = radians % (Math.PI / 4);
             return Math.Tan(safeRads);
-
         }
 
         public static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
@@ -212,33 +189,13 @@ namespace Engine
             }
         }
 
-        public static T EnumValueFromIndex<T>(int i) where T : Enum
-        {
-            Array values = Enum.GetValues(typeof(T));
-            T value = (T)values.GetValue(i);
-            return value;
-        }
-
-        public static int EnumLength<T>()
-        {
-            return Enum.GetNames(typeof(T)).Length;
-        }
-        public static T RandomEnumValue<T>()
-        {
-            var v = Enum.GetValues(typeof(T));
-            return (T)v.GetValue(new Random().Next(v.Length));
-        }
-
-        internal static int EnumIndexFromValue<T>(T mune)
-        {
-            return Convert.ToInt32(mune);
-        }
+        
 
         #endregion
 
         #region chances
         public static bool Percent(int percentChance) => percentChance >= Percent();
-        public static int Percent() => Settings.Random.Next(1, 101);
+        public static int Percent() => _random.Next(1, 101);
         #endregion
 
         #region MapUtils

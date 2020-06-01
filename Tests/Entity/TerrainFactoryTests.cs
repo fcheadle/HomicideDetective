@@ -1,4 +1,4 @@
-﻿using Engine.Entities;
+﻿using Engine.Entities.Terrain;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
@@ -25,12 +25,12 @@ namespace Tests.Entity
         public void NewGenericTerrainTest()
         {
             _game = new MockGame(NewGenericTerrain);
-            MockGame.RunOnce();
-            MockGame.Stop();
+            _game.RunOnce();
+            _game.Stop();
         }
         public void NewGenericTerrain(GameTime time)
         {
-            terrain = factory.Test(14, new Coord(0, 0));
+            terrain = factory.Generic(new Coord(0, 0), 14);
             Assert.NotNull(terrain);
             Assert.AreEqual(new Coord(0, 0), terrain.Position);
             Assert.AreEqual(14, terrain.Glyph);

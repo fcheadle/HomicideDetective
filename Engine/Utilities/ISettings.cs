@@ -4,21 +4,24 @@ using SadConsole;
 using System;
 using System.Collections.Generic;
 
-namespace Engine
+namespace Engine.Utilities
 {
     public interface ISettings
     {
-        public static bool ShowingMenu { get; private set; }
-        internal static int MapWidth { get; set; }
-        internal static int MapHeight { get; set; }
-        internal static int GameWidth { get; set; }
-        internal static int GameHeight { get; set; }
-        internal static bool IsPaused { get; private set; }
-        internal static Random Random { get; set; }
-        internal static Radius FOVRadius { get; set; }
-        internal static FontMaster FontMaster { get; set; }
-        internal static Font Font { get; set; }
-        internal static Dictionary<Keys, Direction> MovementKeyBindings { get; }
-        internal static Dictionary<Keys, GameActions> KeyBindings { get; }
+        public bool ShowingMenu { get; set; }
+        public int MapWidth { get; set; }
+        public int MapHeight { get; set; }
+        public int GameWidth { get; set; }
+        public int GameHeight { get; set; }
+        public bool IsPaused { get; set; }
+        public Random Random { get; set; }
+        public Radius FOVRadius { get; set; }
+        public FontMaster FontMaster { get; set; }
+        public Font Font { get; set; }
+        public Dictionary<Keys, Direction> MovementKeyBindings { get; }
+        public Dictionary<Keys, GameActions> KeyBindings { get; }
+
+        public void TogglePause();
+        public void ToggleMenu();
     }
 }

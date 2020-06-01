@@ -8,10 +8,12 @@ namespace Engine.Components.UI
 {
     public class DisplayComponent<T> : Component where T : Component
     {
+        //todo - left off here, going to create a new class for a draggablle notepad
+        public Window Window;
         public Console Display;
         internal T Component; 
 
-        public DisplayComponent(BasicEntity parent, Coord position) : base(true, false, true, false)
+        public DisplayComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
         {
             Parent = parent; 
             Component = (T)(Parent.GetConsoleComponent<T>());
@@ -20,6 +22,8 @@ namespace Engine.Components.UI
                 DefaultBackground = Color.Tan,
                 Position = position,
                 IsVisible = true,
+                IsExclusiveMouse = true,
+                
             };
         }
 

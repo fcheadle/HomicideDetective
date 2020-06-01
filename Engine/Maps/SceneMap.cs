@@ -1,6 +1,10 @@
-﻿using Engine.Entities;
+﻿using Engine.Components;
+using Engine.Entities.Creatures;
+using Engine.Entities.Items;
+using Engine.Entities.Terrain;
 using Engine.Extensions;
 using Engine.Maps.Areas;
+using Engine.Utilities;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
@@ -10,11 +14,15 @@ using System.Linq;
 
 namespace Engine.Maps
 {
-    public class TownMap : BasicMap
+    public class SceneMap : BasicMap
     {
         private int _width;
         private int _height;
-        TerrainFactory _factory = new TerrainFactory();
+        private ISettings _settings;
+        private ITerrainFactory _terrainFactory;
+        private ICreatureFactory _creatureFactory;
+        private IItemFactory _itemFactory;
+       
         public List<Area> Regions
         {
             get => new List<Area>()
@@ -34,20 +42,22 @@ namespace Engine.Maps
         internal List<House> Houses { get; private set; } = new List<House>();
         internal List<Area> Rooms { get; private set; } = new List<Area>();
         public FOVVisibilityHandler FovVisibilityHandler { get; }
-        internal TownMap(int width, int height) : base(width, height, Calculate.EnumLength<MapLayer>(), Distance.MANHATTAN)
+        public SceneMap(int width, int height, ISettings settings = null, ITerrainFactory tFactory = null, ICreatureFactory cFactory = null, IItemFactory iFactory = null) : base(width, height, EnumUtils.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {
             _width = width;
             _height = height;
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
-
+            _settings = settings ?? new Settings();
+            _terrainFactory = tFactory ?? new TerrainFactory();
+            _creatureFactory = cFactory ?? new CreatureFactory();
+            _itemFactory = iFactory ?? new ItemFactory();
 
             MakeOutdoors();
             //MakeBackrooms();
             MakeRoadsAndBlocks();
             MakeHouses();
-            //MakePeople();
+            MakePeople();
         }
-
         private void MakeBackrooms()
         {
             House backrooms = new House("Backrooms", new Coord(0, 0), HouseType.Backrooms, Direction.Types.DOWN);
@@ -60,7 +70,7 @@ namespace Engine.Maps
                     {
                         BasicTerrain t = backrooms.Map.GetTerrain<BasicTerrain>(point);
                         if (t != null)
-                            SetTerrain(_factory.Copy(t, point));
+                            SetTerrain(_terrainFactory.Copy(t, point));
                     }
                     catch
                     {
@@ -70,7 +80,6 @@ namespace Engine.Maps
                 }
             );
         }
-
         private void MakeRoadsAndBlocks()
         {
             RoadNames roadName = (RoadNames)Calculate.Percent();
@@ -119,14 +128,16 @@ namespace Engine.Maps
             {
                 foreach (Coord c in r.InnerPoints)
                     if (this.Contains(c))
-                        SetTerrain(_factory.Pavement(c));
+                        SetTerrain(_terrainFactory.Floor(c));
+                        //SetTerrain(_terrainFactory.Pavement(c));
             }
 
             foreach (Block block in Blocks)
             {
                 foreach (Coord c in block.GetFenceLocations())
                     if (this.Contains(c))
-                        SetTerrain(_factory.Fence(c));
+                        SetTerrain(_terrainFactory.Generic(c, 44));
+                        //SetTerrain(_terrainFactory.Fence(c));
             }
         }
         private void MakeHouses()
@@ -156,7 +167,7 @@ namespace Engine.Maps
                             Coord c = new Coord(j, k);
                             if (house.Map.GetTerrain(c) != null && this.Contains(house.Origin + c))
                             {
-                                SetTerrain(_factory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
+                                SetTerrain(_terrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
                             }
                         }
                     }
@@ -167,32 +178,22 @@ namespace Engine.Maps
         {
             for (int i = 0; i < 500; i++)
             {
-                AddEntity(CreatureFactory.Person(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
+                AddEntity(_creatureFactory.Person(new Coord(_settings.Random.Next(Width), _settings.Random.Next(Height))));
             }
-            //for (int i = 0; i < 300; i++)
-            //{
-            //    AddEntity(Creature.Animal(new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height))));
-            //}
+            for (int i = 0; i < 300; i++)
+            {
+                AddEntity(_creatureFactory.Animal(new Coord(_settings.Random.Next(Width), _settings.Random.Next(Height))));
+            }
         }
         private void MakeOutdoors()
         {
-            //for (int i = 0; i < 777; i++)
-            //{
-            //    Coord tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
-            //    while (GetTerrain<BasicTerrain>(tree) != null)
-            //    {
-            //        tree = new Coord(Settings.Random.Next(Width), Settings.Random.Next(Height));
-            //    }
-            //    SetTerrain(TerrainFactory.Tree(tree));
-            //}
-
             var f = Calculate.MasterFormula();
             for (int i = 0; i < Width; i++)
             {
                 for (int j = 0; j < Height; j++)
                 {
                     Coord pos = new Coord(i, j);
-                    SetTerrain(_factory.Grass(pos, f(i, j)));
+                    SetTerrain(_terrainFactory.Grass(pos, f(i, j)));
                 }
             }
         }

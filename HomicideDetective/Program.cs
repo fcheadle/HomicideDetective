@@ -2,9 +2,6 @@
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            Engine.Program.Start();
-        }
+        static void Main(string[] args) => Engine.Program.Start();
     }
 }

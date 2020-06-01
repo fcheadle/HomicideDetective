@@ -1,4 +1,4 @@
-﻿using Engine.Entities;
+﻿using Engine.Entities.Terrain;
 using Engine.Extensions;
 using Engine.Maps.Areas;
 using GoRogue;
@@ -142,7 +142,7 @@ namespace Engine.Maps
 
         private void CreateBackrooms()
         {
-            Map = new BasicMap(Settings.MapWidth, Settings.MapHeight, 1, Distance.EUCLIDEAN);
+            Map = new BasicMap(Map.Width, Map.Height, 1, Distance.EUCLIDEAN);
             Rectangle wholeHouse = new Rectangle(0, 0, Map.Width, Map.Height); //six is the magic number for some reason
             List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
 
@@ -199,7 +199,7 @@ namespace Engine.Maps
             int tempH = roomW;
             roomW = roomW > roomH ? roomW : roomH;
             roomH = roomH < tempH ? roomH : tempH;
-            tempH = Settings.Random.Next(-1, 2);
+            tempH = Program.Settings.Random.Next(-1, 2);
             Rectangle wholeHouse = new Rectangle(0, 0, Map.Width - 6, Map.Height / 2); //six is the magic number for some reason
             List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
 
@@ -345,7 +345,7 @@ namespace Engine.Maps
         }
         private int RandomRoomDimension()
         {
-            return Settings.Random.Next(_minRoomSize, _maxRoomSize);
+            return Program.Settings.Random.Next(_minRoomSize, _maxRoomSize);
         }
     }
 }

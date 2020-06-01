@@ -1,4 +1,4 @@
-﻿using Engine.Entities;
+﻿using Engine.Entities.Terrain;
 using Engine.Extensions;
 using Engine.Maps;
 using Engine.Maps.Areas;

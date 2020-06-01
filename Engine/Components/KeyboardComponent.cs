@@ -18,7 +18,7 @@ namespace Engine.Components
 
         public override void Update(SadConsole.Console console, TimeSpan time)
         {
-            ProcessKeyboard(console, Global.KeyboardState, out _);
+            //ProcessKeyboard(console, Global.KeyboardState, out _);
         }
 
         public override void ProcessKeyboard(SadConsole.Console console, SadConsole.Input.Keyboard info, out bool handled)
@@ -30,11 +30,11 @@ namespace Engine.Components
             //        Settings.TogglePause();
             //    }
 
-            foreach (Keys key in Settings.MovementKeyBindings.Keys)
+            foreach (Keys key in Program.Settings.MovementKeyBindings.Keys)
             {
                 if (info.IsKeyPressed(key))
                 {
-                    moveDirection = Settings.MovementKeyBindings[key];
+                    moveDirection = Program.Settings.MovementKeyBindings[key];
                     break;
                 }
             }
@@ -44,10 +44,7 @@ namespace Engine.Components
                 if (Parent.CurrentMap.GetTerrain(target).IsWalkable)
                     Parent.Position += moveDirection;
 
-            if (moveDirection != Direction.NONE)
-                handled = true;
-            else
-                handled = ((BasicEntity)Parent).MoveIn(moveDirection);
+            handled = false;
         }
 
         public override string[] GetDetails()
