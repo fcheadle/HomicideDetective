@@ -1,6 +1,4 @@
-﻿using GoRogue;
-
-namespace Engine.Maps
+﻿namespace Engine.Maps
 {
     public enum RoomType
     {

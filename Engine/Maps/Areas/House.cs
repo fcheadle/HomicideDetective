@@ -1,4 +1,4 @@
-﻿using Engine.Entities;
+﻿using Engine.Entities.Terrain;
 using Engine.Extensions;
 using Engine.Maps.Areas;
 using GoRogue;
@@ -13,6 +13,7 @@ namespace Engine.Maps
 {
     public class House : Area
     {
+        TerrainFactory factory = new TerrainFactory();
         public BasicMap Map;
         private const int _minRoomSize = 4;
         private const int _maxRoomSize = 7;
@@ -22,14 +23,14 @@ namespace Engine.Maps
         private readonly Direction.Types _facing;
         internal string Address { get => Name; }
         public Coord Origin { get; set; }
-        public IEnumerable<Coord> Walls 
-        { 
-            get 
+        public IEnumerable<Coord> Walls
+        {
+            get
             {
                 foreach (Area area in SubAreas.Values)
                     foreach (Coord point in area.OuterPoints)
                         yield return point;
-            } 
+            }
         }
 
         public IEnumerable<Coord> Doors
@@ -43,13 +44,13 @@ namespace Engine.Maps
             }
         }
 
-        public House(string name, Coord origin, HouseType type, Direction.Types facing): 
+        public House(string name, Coord origin, HouseType type, Direction.Types facing) :
             base(
                 name ?? origin.X.ToString() + origin.Y.ToString(),
                 se: origin + new Coord(_width, _height),
                 ne: origin + new Coord(_width, 0),
                 nw: origin,
-                sw: origin + new Coord(0,_height)
+                sw: origin + new Coord(0, _height)
             )
         {
             StructureType = type;
@@ -66,10 +67,10 @@ namespace Engine.Maps
                 default:
                 case HouseType.PrairieHome: CreatePrairieHome(); break;
                 case HouseType.Backrooms: CreateBackrooms(); break;
-                //case HouseType.CentralPassageHouse: CreateCentralPassageHouse(); break;
+                    //case HouseType.CentralPassageHouse: CreateCentralPassageHouse(); break;
             }
             int chance = Calculate.Percent();
-            
+
             switch (_facing)
             {
                 default:
@@ -83,7 +84,7 @@ namespace Engine.Maps
                     }
                     if (chance < 50)
                         Map = Map.ReverseVertical();
-             
+
                     break;
                 case Direction.Types.RIGHT:
                     Map = Map.RotateDiscreet(90);
@@ -123,14 +124,14 @@ namespace Engine.Maps
                     {
                         if (terrain.IsWalkable)
                         {
-                            Path path = Map.AStar.ShortestPath(new Coord(Map.Width/2, Map.Height /2), here);
-                            if(path == null)
+                            Path path = Map.AStar.ShortestPath(new Coord(Map.Width / 2, Map.Height / 2), here);
+                            if (path == null)
                             {
-                                foreach(Coord neighbor in here.Neighbors())
+                                foreach (Coord neighbor in here.Neighbors())
                                 {
-                                    if(Map.Contains(neighbor))
+                                    if (Map.Contains(neighbor))
                                         if (!Map.GetTerrain<BasicTerrain>(neighbor).IsWalkable)
-                                            Map.SetTerrain(TerrainFactory.Door(neighbor));
+                                            Map.SetTerrain(factory.Door(neighbor));
                                 }
                             }
                         }
@@ -141,7 +142,7 @@ namespace Engine.Maps
 
         private void CreateBackrooms()
         {
-            Map = new BasicMap(Settings.MapWidth, Settings.MapHeight, 1, Distance.EUCLIDEAN);
+            Map = new BasicMap(Map.Width, Map.Height, 1, Distance.EUCLIDEAN);
             Rectangle wholeHouse = new Rectangle(0, 0, Map.Width, Map.Height); //six is the magic number for some reason
             List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
 
@@ -170,7 +171,7 @@ namespace Engine.Maps
                     }
                 }
             }
-            foreach(Area area in neighbors)
+            foreach (Area area in neighbors)
             {
                 AddConnectionBetween(area, subArea);
             }
@@ -183,9 +184,9 @@ namespace Engine.Maps
                 WestBoundary.RandomItem(),
             };
 
-            foreach(Coord door in doors)
+            foreach (Coord door in doors)
             {
-                Map.SetTerrain(TerrainFactory.Door(door - Origin));
+                Map.SetTerrain(factory.Door(door - Origin));
             }
         }
 
@@ -198,14 +199,14 @@ namespace Engine.Maps
             int tempH = roomW;
             roomW = roomW > roomH ? roomW : roomH;
             roomH = roomH < tempH ? roomH : tempH;
-            tempH = Settings.Random.Next(-1, 2);
+            tempH = Program.Settings.Random.Next(-1, 2);
             Rectangle wholeHouse = new Rectangle(0, 0, Map.Width - 6, Map.Height / 2); //six is the magic number for some reason
             List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
 
             int index = 0;
-            foreach(Rectangle plan in rooms.OrderBy(r => r.Area).ToArray())
+            foreach (Rectangle plan in rooms.OrderBy(r => r.Area).ToArray())
             {
-                CreateRoom((RoomType) index, plan);
+                CreateRoom((RoomType)index, plan);
                 index++;
             }
         }
@@ -319,14 +320,14 @@ namespace Engine.Maps
                         switch ((int)type % 8)
                         {
                             default:
-                            case 0: floor = TerrainFactory.OliveCarpet(location); break;
-                            case 1: floor = TerrainFactory.LightCarpet(location); break;
-                            case 2: floor = TerrainFactory.ShagCarpet(location); break;
-                            case 3: floor = TerrainFactory.BathroomLinoleum(location); break;
-                            case 4: floor = TerrainFactory.KitchenLinoleum(location); break;
-                            case 5: floor = TerrainFactory.DarkHardwoodFloor(location); break;
-                            case 6: floor = TerrainFactory.MediumHardwoodFloor(location); break;
-                            case 7: floor = TerrainFactory.LightHardwoodFloor(location); break;
+                            case 0: floor = factory.OliveCarpet(location); break;
+                            case 1: floor = factory.LightCarpet(location); break;
+                            case 2: floor = factory.ShagCarpet(location); break;
+                            case 3: floor = factory.BathroomLinoleum(location); break;
+                            case 4: floor = factory.KitchenLinoleum(location); break;
+                            case 5: floor = factory.DarkHardwoodFloor(location); break;
+                            case 6: floor = factory.MediumHardwoodFloor(location); break;
+                            case 7: floor = factory.LightHardwoodFloor(location); break;
                         }
                         Map.SetTerrain(floor);
                     }
@@ -335,16 +336,16 @@ namespace Engine.Maps
 
             foreach (Coord location in room.OuterPoints)
                 if (Map.Contains(location - Origin))
-                    Map.SetTerrain(TerrainFactory.Wall(location - Origin));
+                    Map.SetTerrain(factory.Wall(location - Origin));
 
             foreach (Coord location in room.Connections)
                 if (Map.Contains(location - Origin))
-                    Map.SetTerrain(TerrainFactory.Door(location - Origin));
+                    Map.SetTerrain(factory.Door(location - Origin));
 
         }
         private int RandomRoomDimension()
         {
-            return Settings.Random.Next(_minRoomSize, _maxRoomSize);
+            return Program.Settings.Random.Next(_minRoomSize, _maxRoomSize);
         }
     }
 }

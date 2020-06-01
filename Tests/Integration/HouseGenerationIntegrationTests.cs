@@ -1,4 +1,4 @@
-﻿using Engine.Entities;
+﻿using Engine.Entities.Terrain;
 using Engine.Extensions;
 using Engine.Maps;
 using Engine.Maps.Areas;
@@ -6,15 +6,14 @@ using GoRogue;
 using GoRogue.Pathing;
 using NUnit.Framework;
 using SadConsole;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Tests.Integration
 {
     class HouseGenerationIntegrationTests
     {
+        TerrainFactory _factory = new TerrainFactory();
         [Test]
         public void GenerateTest()
         {
@@ -30,7 +29,7 @@ namespace Tests.Integration
                     Coord target = new Coord(i, j);
                     BasicTerrain terrain = house.Map.GetTerrain<BasicTerrain>(target);
                     if (terrain == null)
-                        house.Map.SetTerrain(TerrainFactory.Pavement(target));
+                        house.Map.SetTerrain(_factory.Pavement(target));
 
                     terrain = house.Map.GetTerrain<BasicTerrain>(target);
                     if (terrain.IsWalkable)
@@ -70,13 +69,13 @@ namespace Tests.Integration
             List<Rectangle> rooms = new Rectangle(0, 0, 24, 24).RecursiveBisect(5).ToList();
             List<Area> areas = new List<Area>();
             int index = 0;
-            foreach(Rectangle room in rooms)
+            foreach (Rectangle room in rooms)
             {
                 house.CreateRoom((RoomType)index, room);
                 index++;
             }
 
-            foreach(Area area in house.SubAreas.Values)
+            foreach (Area area in house.SubAreas.Values)
             {
                 house.ConnectRoomToNeighbors(area);
             }

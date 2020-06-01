@@ -1,35 +1,31 @@
 ﻿using Engine.Maps.Areas;
-using Engine.UI;
 using GoRogue;
-using System;
+using SadConsole;
 using Color = Microsoft.Xna.Framework.Color;
 using Console = SadConsole.Console;
 
 namespace Engine.Components.UI
 {
-    public class DisplayComponent<T> : ComponentBase where T : ComponentBase 
+    public class DisplayComponent<T> : Component where T : Component
     {
+        //todo - left off here, going to create a new class for a draggablle notepad
+        public Window Window;
         public Console Display;
-        internal T Component => Parent.GetComponent<T>();
-         
-        public DisplayComponent(Coord position) : base(true, false, true, false)
+        internal T Component; 
+
+        public DisplayComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
         {
-            Display = new Console(24, 36)
+            Parent = parent; 
+            Component = (T)(Parent.GetConsoleComponent<T>());
+            Display = new Console(24, 24)
             {
-                DefaultBackground = Color.Transparent,
+                DefaultBackground = Color.Tan,
                 Position = position,
                 IsVisible = true,
+                IsExclusiveMouse = true,
+                
             };
-
-
         }
-
-        public override void ProcessGameFrame()
-        {
-            //do nothing... ?
-        }
-
-
 
         public void Print(string[] text)
         {
@@ -49,6 +45,21 @@ namespace Engine.Components.UI
             {
                 Display.Print(0, i, new SadConsole.ColoredString(areas[i].Name, Color.DarkBlue, Color.Transparent));
             }
+        }
+
+        public override string[] GetDetails()
+        {
+            return Component.GetDetails();
+        }
+
+        internal void Print()
+        {
+
+        }
+
+        public override void ProcessTimeUnit()
+        {
+            Print(Component.GetDetails());
         }
     }
 }

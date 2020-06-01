@@ -1,12 +1,9 @@
 ﻿using Engine.Components.Creature;
-using Engine.Entities;
+using Engine.Entities.Creatures;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Entity
 {
@@ -15,25 +12,26 @@ namespace Tests.Entity
     {
         static BasicEntity critter { get; set; }
         static string expectedName { get; } = "elder thing";
+        CreatureFactory _factory = new CreatureFactory();
 
         [TearDown]
         public void TearDown()
         {
-            MockGame.Stop();
+            _game.Stop();
 
         }
-        
-        private static void Person(GameTime time)
+
+        private void Person(GameTime time)
         {
-            critter = CreatureFactory.Person(new Coord(0, 0));
+            critter = _factory.Person(new Coord(0, 0));
         }
         [Test]
         public void PersonTest()
         {
             _game = new MockGame(Person);
-            MockGame.RunOnce();
-            Assert.IsNotNull(critter.GetGoRogueComponent<HealthComponent>(), "Person was born without a health component");
-            Assert.IsNotNull(critter.GetGoRogueComponent<ActorComponent>(), "Person was born unable to move around or take actions");
+            _game.RunOnce();
+            Assert.IsNotNull((HealthComponent)critter.GetComponent<HealthComponent>(), "Person was born without a health component");
+            Assert.IsNotNull((ActorComponent)critter.GetComponent<ActorComponent>(), "Person was born unable to move around or take actions");
         }
     }
 }

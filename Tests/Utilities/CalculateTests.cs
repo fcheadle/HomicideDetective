@@ -5,7 +5,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Tests.Utilities
 {
@@ -110,56 +109,6 @@ namespace Tests.Utilities
 
             Assert.AreEqual(12, answer.Count);
         }
-        [Test]
-        public void EnumValueFromIndexTest()
-        {
-            BloodType first = Calculate.EnumValueFromIndex<BloodType>(0);
-            int amountOfTypes = Calculate.EnumLength<BloodType>();
-            BloodType last = Calculate.EnumValueFromIndex<BloodType>(amountOfTypes - 1);
-            Assert.AreNotEqual(first, last);
-            last -= amountOfTypes;
-            last++;
-            Assert.AreEqual(first, last);
-        }
-        [Test]
-        public void EnumLengthTest()
-        {
-            int answer = Calculate.EnumLength<BloodType>();
-            Assert.AreEqual(4, answer);
-        }
-        [Test]
-        public void RandomEnumValueTest()
-        {
-            BloodType type = Calculate.RandomEnumValue<BloodType>();
-            bool makesnew = false;
-            bool makesA = false;
-            bool makesAB = false;
-            bool makesO = false;
-            bool makesB = false;
-            for (int i = 0; i < 50; i++)
-            {
-                if (Calculate.RandomEnumValue<BloodType>() != type)
-                    makesnew = true;
-                if (type == BloodType.A)
-                    makesA = true;
-                if (type == BloodType.B)
-                    makesB = true;
-                if (type == BloodType.AB)
-                    makesAB = true;
-                if (type == BloodType.O)
-                    makesO = true;
-
-                type = Calculate.RandomEnumValue<BloodType>();
-            }
-
-            Assert.IsTrue(makesnew);
-            Assert.IsTrue(makesA);
-            Assert.IsTrue(makesB);
-            Assert.IsTrue(makesAB);
-            Assert.IsTrue(makesO);
-
-        }
-
         [Test] //skip for now
         public void MasterFormulaTest()
         {
@@ -245,52 +194,52 @@ namespace Tests.Utilities
             }
         }
 
-        [Test]
-        public void CircleTest()
-        {
-            List<Coord> circle = Calculate.Circle(new Coord(0,0), 5).ToList();
-            Assert.AreEqual(79, circle.Count);
+        //[Test]
+        //public void CircleTest()
+        //{
+        //    List<Coord> circle = Calculate.Circle(new Coord(0, 0), 5).ToList();
+        //    Assert.AreEqual(79, circle.Count);
 
-            Assert.IsTrue(circle.Contains(new Coord(0, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(0, 1)));
-            Assert.IsTrue(circle.Contains(new Coord(0, 2)));
-            Assert.IsTrue(circle.Contains(new Coord(0, 3)));
-            Assert.IsTrue(circle.Contains(new Coord(0, 4)));
-            Assert.IsFalse(circle.Contains(new Coord(0, 5)));
-            Assert.IsFalse(circle.Contains(new Coord(0, 6)));
-            Assert.IsFalse(circle.Contains(new Coord(0, 7)));
-            Assert.IsFalse(circle.Contains(new Coord(0, 8)));
-            Assert.IsFalse(circle.Contains(new Coord(0, 9)));
-            Assert.IsTrue(circle.Contains(new Coord(0, -0)));
-            Assert.IsTrue(circle.Contains(new Coord(0, -1)));
-            Assert.IsTrue(circle.Contains(new Coord(0, -2)));
-            Assert.IsTrue(circle.Contains(new Coord(0, -3)));
-            Assert.IsTrue(circle.Contains(new Coord(0, -4)));
-            Assert.IsTrue(circle.Contains(new Coord(0,- 5)));
-            Assert.IsFalse(circle.Contains(new Coord(0,- 6)));
-            Assert.IsFalse(circle.Contains(new Coord(0,- 7)));
-            Assert.IsFalse(circle.Contains(new Coord(0,- 8)));
-            Assert.IsFalse(circle.Contains(new Coord(0,- 9)));
-            Assert.IsTrue(circle.Contains(new Coord(0, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(1, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(2, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(3, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(4, 0)));
-            Assert.IsFalse(circle.Contains(new Coord(5, 0)));
-            Assert.IsFalse(circle.Contains(new Coord(6, 0)));
-            Assert.IsFalse(circle.Contains(new Coord(7, 0)));
-            Assert.IsFalse(circle.Contains(new Coord(8, 0)));
-            Assert.IsFalse(circle.Contains(new Coord(9, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(-0, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(-1, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(-2, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(-3, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(-4, 0)));
-            Assert.IsTrue(circle.Contains(new Coord(-5, 0)));
-            Assert.IsFalse(circle.Contains(new Coord(-6, 0)));
-            Assert.IsFalse(circle.Contains(new Coord(-7, 0)));
-            Assert.IsFalse(circle.Contains(new Coord(-8, 0)));
-            Assert.IsFalse(circle.Contains(new Coord(-9, 0)));
-        }
+        //    Assert.IsTrue(circle.Contains(new Coord(0, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, 1)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, 2)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, 3)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, 4)));
+        //    Assert.IsFalse(circle.Contains(new Coord(0, 5)));
+        //    Assert.IsFalse(circle.Contains(new Coord(0, 6)));
+        //    Assert.IsFalse(circle.Contains(new Coord(0, 7)));
+        //    Assert.IsFalse(circle.Contains(new Coord(0, 8)));
+        //    Assert.IsFalse(circle.Contains(new Coord(0, 9)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, -0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, -1)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, -2)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, -3)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, -4)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, -5)));
+        //    Assert.IsFalse(circle.Contains(new Coord(0, -6)));
+        //    Assert.IsFalse(circle.Contains(new Coord(0, -7)));
+        //    Assert.IsFalse(circle.Contains(new Coord(0, -8)));
+        //    Assert.IsFalse(circle.Contains(new Coord(0, -9)));
+        //    Assert.IsTrue(circle.Contains(new Coord(0, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(1, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(2, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(3, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(4, 0)));
+        //    Assert.IsFalse(circle.Contains(new Coord(5, 0)));
+        //    Assert.IsFalse(circle.Contains(new Coord(6, 0)));
+        //    Assert.IsFalse(circle.Contains(new Coord(7, 0)));
+        //    Assert.IsFalse(circle.Contains(new Coord(8, 0)));
+        //    Assert.IsFalse(circle.Contains(new Coord(9, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(-0, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(-1, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(-2, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(-3, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(-4, 0)));
+        //    Assert.IsTrue(circle.Contains(new Coord(-5, 0)));
+        //    Assert.IsFalse(circle.Contains(new Coord(-6, 0)));
+        //    Assert.IsFalse(circle.Contains(new Coord(-7, 0)));
+        //    Assert.IsFalse(circle.Contains(new Coord(-8, 0)));
+        //    Assert.IsFalse(circle.Contains(new Coord(-9, 0)));
+        //}
     }
 }

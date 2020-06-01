@@ -1,9 +1,7 @@
 ﻿using Engine.Maps.Areas;
 using GoRogue;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Engine.Maps
 {
@@ -312,11 +310,11 @@ namespace Engine.Maps
             )
         {
             Start = start;
-            Stop = stop; 
+            Stop = stop;
             StreetName = name;
             InnerPoints = Calculate.PointsAlongStraightLine(start, stop, 8);
             switch (Orientation)
-            {                
+            {
                 default:
                 case SadConsole.Orientation.Vertical:
                     OuterPoints = Calculate.PointsAlongStraightLine(new Coord(start.X - 4, start.Y), new Coord(stop.X - 4, stop.Y)).ToList();
@@ -331,7 +329,7 @@ namespace Engine.Maps
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(stop.X, stop.Y - 4), new Coord(stop.X, stop.Y + 4)).ToList());
                     break;
 
-            }            
+            }
         }
 
 
@@ -406,7 +404,7 @@ namespace Engine.Maps
             int right = byX.Last().X;
             for (int i = left; i < right; i++)
             {
-                int top =  byY.Where(p => p.X == i).First().Y;
+                int top = byY.Where(p => p.X == i).First().Y;
                 int bottom = byY.Where(p => p.X == i).Last().Y;
                 OuterPoints.Add(new Coord(i, top));
                 OuterPoints.Add(new Coord(i, bottom));

@@ -1,14 +1,8 @@
-﻿using Engine.Entities;
-using Engine.Maps;
+﻿using Engine.Maps;
 using Engine.Maps.Areas;
 using GoRogue;
-using GoRogue.Pathing;
 using NUnit.Framework;
-using SadConsole;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Tests.Map.Areas
 {

@@ -74,7 +74,7 @@ namespace Engine.Maps
                     answer.AddRange(Calculate.PointsAlongStraightLine(EastFenceLine[EastFenceLine.Count / 2], WestFenceLine[WestFenceLine.Count / 2]));
                     break;
                 case SadConsole.Orientation.Vertical:
-                    lowerBoundary = WestFenceLine; 
+                    lowerBoundary = WestFenceLine;
                     upperBoundary = EastFenceLine;
                     answer.AddRange(Calculate.PointsAlongStraightLine(NorthFenceLine[NorthFenceLine.Count / 2], SouthFenceLine[SouthFenceLine.Count / 2]));
                     break;

@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Mf//QgXGVExqJpgAfJim8TQsMuWQSfoXm6ZBIB8iFmGgJ3XjFKBMuNgtrqU0fUtKZ5SYMDY2iKnTV15VfLsxYQ==",
+  "dgSpecHash": "7dVMbKaFVgX36O9ehPPsONzw7IZdQLic1cTARpJ/lOcSnwHqYpomHvxWpa3J2w2AWX8l1y7ejid4ArAoHhQc1g==",
   "success": true,
   "projectFilePath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\Engine.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\fchea\\.nuget\\packages\\gorogue\\2.6.0\\gorogue.2.6.0.nupkg.sha512",
+    "C:\\Users\\fchea\\.nuget\\packages\\gorogue\\2.6.2\\gorogue.2.6.2.nupkg.sha512",
     "C:\\Users\\fchea\\.nuget\\packages\\monogame.framework.desktopgl.core\\3.8.0.13\\monogame.framework.desktopgl.core.3.8.0.13.nupkg.sha512",
     "C:\\Users\\fchea\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
     "C:\\Users\\fchea\\.nuget\\packages\\optimizedpriorityqueue\\4.2.0\\optimizedpriorityqueue.4.2.0.nupkg.sha512",

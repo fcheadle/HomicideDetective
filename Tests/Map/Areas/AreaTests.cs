@@ -2,10 +2,8 @@
 using Engine.Maps.Areas;
 using GoRogue;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Tests.Map.Areas
 {

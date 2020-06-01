@@ -26,11 +26,11 @@ namespace Engine.Maps.Areas
         }
         public static Area Closet(string name, Coord origin)
         {
-            return Rectangle(name, origin, 3,3,0);
+            return Rectangle(name, origin, 3, 3, 0);
         }
         public static Area FromRectangle(string name, Rectangle rectangle)
         {
-            return Rectangle(name, rectangle.MinExtent, rectangle.Width, rectangle.Height); 
+            return Rectangle(name, rectangle.MinExtent, rectangle.Width, rectangle.Height);
         }
         public static Area RegularParallelogram(string name, Coord origin, int width, int height, int rotationDegrees)
         {
