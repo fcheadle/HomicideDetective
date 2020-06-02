@@ -11,7 +11,7 @@ namespace Engine.Components.UI
     public class DisplayComponent<T> : Component where T : Component
     {
         //todo - left off here, going to create a new class for a draggable notepad
-        public Notepad Display;
+        public Notebook Display;
         internal T Component; 
 
         public DisplayComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
@@ -19,7 +19,7 @@ namespace Engine.Components.UI
             Parent = parent;
             Component = (T)(Parent.GetConsoleComponent<T>());
             Name = "Display for " + Component.Name;
-            Display = new Notepad(Name);
+            Display = new Notebook(Name);
             //Display.Position = new Coord(0, 0);
             Display.IsVisible = true;
             Display.IsFocused = true;

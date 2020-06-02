@@ -65,7 +65,7 @@ namespace Engine
             Container.Children.Add(MapRenderer);
             //Container.Children.Add(Thoughts.Display);
 
-            Notepad test = new Notepad("testing");
+            Notebook test = new Notebook("testing");
             test.Position = new Coord(1, 1);
             test.IsFocused = true;
             Container.Children.Add(test);

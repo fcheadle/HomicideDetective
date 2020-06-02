@@ -10,7 +10,7 @@ using Rectangle = GoRogue.Rectangle;
 
 namespace Engine.Components.UI
 {
-    public class Notepad : Window
+    public class Notebook : Window
     {
         private const int _width = 24;
         private const int _height = 24;
@@ -22,9 +22,10 @@ namespace Engine.Components.UI
         public Button BackPageButton;
         //next page button?
         public Button NextPageButton;
-        public Notepad(string title) : base(_width, _height)
+        public Notebook(string title) : base(_width, _height)
         {
-            Title = title;
+            Title = "//////////////////////////";
+            //Title = title;
             TitleAlignment = HorizontalAlignment.Stretch;
             GenerateTheme();
             Console = new ScrollingConsole(_width, _maxLines);
@@ -35,7 +36,7 @@ namespace Engine.Components.UI
             Console.IsExclusiveMouse = true;
 
             //Print(0, 0, Title.Align(HorizontalAlignment.Stretch, Width), Color.Black, Color.Tan);
-            Theme.TitleAreaY = 0;
+
 
             //back/next buttons
             BackPageButton = new Button(1) { Position = new Coord(0, _height - 1) , Text = "<" };
@@ -56,10 +57,27 @@ namespace Engine.Components.UI
 
         private void GenerateTheme()
         {
-            Theme = SadConsole.Themes.Library.Default.WindowTheme.Clone();
-            Theme.BorderLineStyle = CellSurface.ConnectedLineThick;
-            Theme.FillStyle = new Cell(Color.Blue, Color.Tan, '_');
-            
+            Theme = new NotepadTheme();
+            ThemeColors = new Colors()
+            {
+                TitleText = Color.DarkGray,
+                Lines = Color.Blue,
+                TextBright = Color.LightBlue,
+                Text = Color.Blue,
+                TextSelected = Color.Cyan,
+                TextSelectedDark = Color.DarkBlue,
+                TextLight = Color.White,
+                TextDark = Color.Black,
+                TextFocused = Color.Blue,
+                ControlBack = Color.Tan,
+                ControlBackLight = Color.Khaki,
+                ControlBackSelected = Color.DarkKhaki,
+                ControlBackDark = Color.SaddleBrown,
+                ControlHostBack = Color.Tan,
+                ControlHostFore = Color.Blue,
+            };
+
+            ThemeColors.RebuildAppearances();
         }
 
         private void NextButton_Clicked(object sender, MouseEventArgs e)
@@ -92,4 +110,20 @@ namespace Engine.Components.UI
             Console.Cursor.Print(output + "\n");
         }
     }
+
+    class NotepadTheme : WindowTheme
+    {
+        public NotepadTheme()
+        {
+            ModalTint = Color.Tan;
+            FillStyle = new Cell(Color.Blue, Color.Tan, '_');
+            //BorderLineStyle = CellSurface.ConnectedLineThick;
+            BorderLineStyle = CellSurface.ConnectedLineEmpty;
+            TitleAreaY = 0;
+            
+        }
+    }
+
+    
+
 }
