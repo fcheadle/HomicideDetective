@@ -35,6 +35,7 @@ namespace Engine.Components.Creature
             : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
         {
             Parent = parent;
+            Name = "Health Component";
             SystoleBloodPressure = systoleBloodPressure;
             DiastoleBloodPressure = diastoleBloodPressure;
             Pulse = pulse;

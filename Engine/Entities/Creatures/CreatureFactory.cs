@@ -24,8 +24,8 @@ namespace Engine.Entities.Creatures
             BasicEntity critter = new BasicEntity(Color.White, Color.Black, 1, position, 3, true, true);
             AllCreaturesComponents(critter);
             PersonComponents(critter);
-            critter.Components.Add(new DisplayComponent<HealthComponent>(critter, position + 1));
-            critter.Components.Add(new DisplayComponent<ThoughtsComponent>(critter, position + 1));
+            //critter.Components.Add(new DisplayComponent<HealthComponent>(critter, position + 1));
+            //critter.Components.Add(new DisplayComponent<ThoughtsComponent>(critter, position + 1));
             critter.Components.Add(new KeyboardComponent(critter));
             critter.SetGlyph(0, 0, 1);
             critter.IsDirty = true;

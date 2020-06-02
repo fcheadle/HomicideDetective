@@ -13,10 +13,10 @@ namespace Engine.Components
         public string Name { get; set; }
         public string Description { get; set; }
         public int SortOrder { get; set; } = 9;
-        public bool IsUpdate { get; } = false;
-        public bool IsDraw { get; } = false;
-        public bool IsMouse { get; } = false;
-        public bool IsKeyboard { get; } = false;
+        public bool IsUpdate { get; }
+        public bool IsDraw { get; }
+        public bool IsMouse { get; }
+        public bool IsKeyboard { get; }
         protected Timer timer;
         protected TimeSpan _elapsed;
         public Component(bool isUpdate, bool isKeyboard, bool isDraw, bool isMouse)

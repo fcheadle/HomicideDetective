@@ -16,6 +16,7 @@ namespace Engine.Components.Creature
         public ActorComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
         {
             Parent = parent;
+            Name = "Actor Component";
         }
         public void Act()
         {

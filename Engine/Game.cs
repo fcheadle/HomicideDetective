@@ -49,19 +49,27 @@ namespace Engine
             //readonly fields
             Map = new SceneMap(Settings.MapWidth, Settings.MapHeight);
             var player = CreatureFactory.Player(new Coord(15, 15));
-            MapRenderer = Map.CreateRenderer(new Microsoft.Xna.Framework.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault);
-            Container = new ContainerConsole();
             Map.ControlledGameObject = player;
-            Map.AddEntity(Map.ControlledGameObject);
-            Container.Children.Add(MapRenderer);
-            Container.Children.Add(Thoughts.Display);
-            Container.Children.Add(Health.Display);
-
-            Map.ControlledGameObject.IsFocused = true;
+            //Map.ControlledGameObject.IsFocused = true;
+            Map.ControlledGameObject.IsFocused = false; //while debugging notepads
             Map.ControlledGameObject.Moved += Player_Moved;
             Map.ControlledGameObjectChanged += ControlledGameObjectChanged;
-
+            Map.AddEntity(Map.ControlledGameObject);
             Map.CalculateFOV(Actor.Position, Actor.FOVRadius);
+            MapRenderer = Map.CreateRenderer(new GoRogue.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault);
+            MapRenderer.UseMouse = true;
+            Container = new ContainerConsole
+            {
+                UseMouse = true
+            };
+            Container.Children.Add(MapRenderer);
+            //Container.Children.Add(Thoughts.Display);
+
+            Notepad test = new Notepad("testing");
+            test.Position = new Coord(1, 1);
+            test.IsFocused = true;
+            Container.Children.Add(test);
+            test.Show();
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
             Global.CurrentScreen = Container;
         }
