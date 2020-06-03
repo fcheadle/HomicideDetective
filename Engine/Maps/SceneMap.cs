@@ -57,6 +57,7 @@ namespace Engine.Maps
             MakeRoadsAndBlocks();
             MakeHouses();
             MakePeople();
+            
         }
         private void MakeBackrooms()
         {

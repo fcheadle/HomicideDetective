@@ -1,4 +1,5 @@
 ﻿using Engine.Maps.Areas;
+using Engine.UI;
 using GoRogue;
 using SadConsole;
 using SadConsole.Input;
@@ -8,10 +9,11 @@ using Console = SadConsole.Console;
 
 namespace Engine.Components.UI
 {
-    public class DisplayComponent<T> : Component where T : Component
+    public class DisplayComponent<T> : Component, IDisplay where T : Component
     {
-        //todo - left off here, going to create a new class for a draggable notepad
-        public Notebook Display;
+        public ScrollingConsole Console { get => Page.Console; }
+        public Window Window { get => Page; }
+        public Page Page;
         internal T Component; 
 
         public DisplayComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
@@ -19,49 +21,58 @@ namespace Engine.Components.UI
             Parent = parent;
             Component = (T)(Parent.GetConsoleComponent<T>());
             Name = "Display for " + Component.Name;
-            Display = new Notebook(Name);
+            Page = new Page(Component.Name, GetDetail());
             //Display.Position = new Coord(0, 0);
-            Display.IsVisible = true;
-            Display.IsFocused = true;
-            Display.FocusOnMouseClick = true;
-            //OnClick
+            Page.IsVisible = true;
+            Page.IsFocused = true;
+            Page.FocusOnMouseClick = true;
+            Page.Position = position;
+        }
+
+        private string GetDetail()
+        {
+            string answer = "";
+
+            foreach (string s in GetDetails())
+                answer += s + ". ";
+
+            return answer;
         }
 
         public void Print(string[] text)
         {
-            //Display.Fill(Color.Blue, Color.Tan, '_');
-            //Display.Fill(Color.Transparent, Display.DefaultBackground, 0);
+            Page.Fill(Color.Blue, Color.Tan, '_');
             for (int i = 0; i < text.Length; i++)
             {
-                //Display.Print(1, i, new SadConsole.ColoredString(text[i].ToString(), Color.DarkBlue, Color.Transparent));
-                Display.Add(text[i]);
+                Page.Print(0, i, new SadConsole.ColoredString(text[i].ToString(), Color.DarkBlue, Color.Transparent));
+                //Display.Add(text[i]);
             }
         }
         public void Print(Area[] areas)
         {
-            Display.Fill(Color.Blue, Color.Tan, '_');
+            Page.Fill(Color.Blue, Color.Tan, '_');
             //Display.Fill(Color.Transparent, Display.DefaultBackground, 0);
             for (int i = 0; i < areas.Length; i++)
             {
-                //Display.Print(0, i, new SadConsole.ColoredString(areas[i].Name, Color.DarkBlue, Color.Transparent));
-                Display.Add(areas[i].Name);
+                Page.Print(0, i, new SadConsole.ColoredString(areas[i].Name, Color.DarkBlue, Color.Transparent));
+                //Display.Add(areas[i].Name);
             }
         }
         public override void Draw(Console console, TimeSpan delta)
         {
-            Display.Draw(delta);
+            Page.Draw(delta);
             base.Draw(console, delta);
         }
 
         public override void Update(Console console, TimeSpan delta)
         {
-            Display.Update(delta);
+            Page.Update(delta);
             base.Update(console, delta);
         }
 
         public override void ProcessMouse(Console console, MouseConsoleState state, out bool handled)
         {
-            Display.ProcessMouse(state);
+            Page.ProcessMouse(state);
             base.ProcessMouse(console, state, out handled);
         }
         public override string[] GetDetails()

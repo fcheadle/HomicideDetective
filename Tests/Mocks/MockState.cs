@@ -28,8 +28,8 @@ namespace Tests.Mocks
             Map.AddEntity(Map.ControlledGameObject);
             MapRenderer = Map.CreateRenderer(new Microsoft.Xna.Framework.Rectangle(0, 0, 80, 25), Global.FontDefault);
             Children.Add(MapRenderer);
-            Children.Add(Thoughts.Display);
-            Children.Add(Health.Display);
+            Children.Add(Thoughts.Page);
+            Children.Add(Health.Page);
 
             Map.ControlledGameObject.IsFocused = true;
             Map.ControlledGameObject.Moved += Player_Moved;

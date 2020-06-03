@@ -1,16 +1,19 @@
-﻿using Engine.Components.Creature;
+﻿using Engine.Components;
+using Engine.Components.Creature;
 using Engine.Components.UI;
 using Engine.Entities.Creatures;
 using Engine.Entities.Items;
 using Engine.Entities.Terrain;
 using Engine.Maps;
 using Engine.Maps.Areas;
+using Engine.UI;
 using Engine.Utilities;
 using GoRogue;
 using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Engine
 {
@@ -50,26 +53,34 @@ namespace Engine
             Map = new SceneMap(Settings.MapWidth, Settings.MapHeight);
             var player = CreatureFactory.Player(new Coord(15, 15));
             Map.ControlledGameObject = player;
-            //Map.ControlledGameObject.IsFocused = true;
-            Map.ControlledGameObject.IsFocused = false; //while debugging notepads
+            Map.ControlledGameObject.IsFocused = true;
             Map.ControlledGameObject.Moved += Player_Moved;
             Map.ControlledGameObjectChanged += ControlledGameObjectChanged;
             Map.AddEntity(Map.ControlledGameObject);
             Map.CalculateFOV(Actor.Position, Actor.FOVRadius);
             MapRenderer = Map.CreateRenderer(new GoRogue.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault);
             MapRenderer.UseMouse = true;
+            MapRenderer.FocusOnMouseClick = true;
             Container = new ContainerConsole
             {
                 UseMouse = true
             };
             Container.Children.Add(MapRenderer);
-            //Container.Children.Add(Thoughts.Display);
 
-            Notebook test = new Notebook("testing");
-            test.Position = new Coord(1, 1);
-            test.IsFocused = true;
-            Container.Children.Add(test);
-            test.Show();
+            foreach(Component visible in Player.Components)
+            {
+                try
+                {
+                    IDisplay display = (IDisplay)visible;
+                    if (display != null)
+                    {
+                        Container.Children.Add(display.Window);
+                    }
+                }
+                catch { } //dont care
+            }
+            //Container.Children.Add(Thoughts.Display);//if you don't add a component to a console, it won't update
+            //Container.Children.Add(Health.Display);//if you don't add a component to a console, it won't update
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
             Global.CurrentScreen = Container;
         }
