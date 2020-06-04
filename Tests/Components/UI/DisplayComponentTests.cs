@@ -10,7 +10,7 @@ namespace Tests.Components.UI
 {
     class DisplayComponentTests : TestBase
     {
-        DisplayComponent<HealthComponent> _base;
+        PageComponent<HealthComponent> _base;
         string[] _answer;
 
         [Test]
@@ -22,7 +22,7 @@ namespace Tests.Components.UI
         }
         private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = (DisplayComponent<HealthComponent>)MockGame.Player.GetComponent<DisplayComponent<HealthComponent>>();
+            _base = (PageComponent<HealthComponent>)MockGame.Player.GetComponent<PageComponent<HealthComponent>>();
             Assert.NotNull(_base);
             _base.ProcessTimeUnit();
         }
@@ -35,7 +35,7 @@ namespace Tests.Components.UI
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = (DisplayComponent<HealthComponent>)MockGame.Player.GetComponent<DisplayComponent<HealthComponent>>();
+            _base = (PageComponent<HealthComponent>)MockGame.Player.GetComponent<PageComponent<HealthComponent>>();
             _answer = _base.GetDetails();
             HealthComponent c = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
             Assert.AreEqual(c.GetDetails().Length, _answer.Length);

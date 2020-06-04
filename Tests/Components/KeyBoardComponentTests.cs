@@ -22,20 +22,20 @@ namespace Tests.Components
         {
             _base = (KeyboardComponent)MockGame.Player.GetComponent<KeyboardComponent>();
             Assert.NotNull(_base);
-            _base.ProcessTimeUnit();
+            //_base.ProcessTimeUnit();
         }
-        [Test]
-        public void GetDetailsTest()
-        {
-            _game = new MockGame(GetDetails);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void GetDetails(Microsoft.Xna.Framework.GameTime time)
-        {
-            _base = (KeyboardComponent)MockGame.Player.GetComponent<KeyboardComponent>();
-            _answer = _base.GetDetails();
-            Assert.AreEqual(2, _answer.Length);
-        }
+        //[Test]
+        //public void GetDetailsTest()
+        //{
+        //    _game = new MockGame(GetDetails);
+        //    _game.RunOnce();
+        //    _game.Stop();
+        //}
+        //private void GetDetails(Microsoft.Xna.Framework.GameTime time)
+        //{
+        //    _base = (KeyboardComponent)MockGame.Player.GetComponent<KeyboardComponent>();
+        //    _answer = _base.GetDetails();
+        //    Assert.AreEqual(2, _answer.Length);
+        //}
     }
 }

@@ -6,12 +6,12 @@ using Engine.Entities.Items;
 using Engine.Entities.Terrain;
 using Engine.Maps;
 using Engine.Maps.Areas;
-using Engine.UI;
 using Engine.Utilities;
 using GoRogue;
 using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
+using SadConsole.Components;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,24 +20,27 @@ namespace Engine
     public class Game : IGame
     {
         public const double TimeIncrement = 100;
-        public ISettings Settings { get; }
-        public ICreatureFactory CreatureFactory { get; }
-        public IItemFactory ItemFactory { get; }
-        public ITerrainFactory TerrainFactory { get; }
+        public ISettings Settings { get => _settings; }
+        public ICreatureFactory CreatureFactory { get => _creatureFactory; }
+        public IItemFactory ItemFactory { get => _itemFactory; }
+        public ITerrainFactory TerrainFactory { get => _terrainFactory; }
         public SceneMap Map { get; private set; }
         public ScrollingConsole MapRenderer { get; private set; }
         public ContainerConsole Container { get; private set; }
-        public DisplayComponent<ThoughtsComponent> Thoughts { get => (DisplayComponent<ThoughtsComponent>)Player.GetComponent<DisplayComponent<ThoughtsComponent>>(); }
-        public DisplayComponent<HealthComponent> Health { get => (DisplayComponent<HealthComponent>)Player.GetComponent<DisplayComponent<HealthComponent>>(); }
+        public PageComponent<ThoughtsComponent> Thoughts { get => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>(); }
+        public PageComponent<HealthComponent> Health { get => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>(); }
         public BasicEntity Player { get => Map.ControlledGameObject; }
         public ActorComponent Actor { get => (ActorComponent)Player.GetComponent<ActorComponent>(); }
-
+        private static ISettings _settings;
+        private static ICreatureFactory _creatureFactory;
+        private static ITerrainFactory _terrainFactory;
+        private static IItemFactory _itemFactory;
         public Game(ISettings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, ITerrainFactory terrainFactory) 
         {
-            Settings = settings;
-            CreatureFactory = creatureFactory;
-            ItemFactory = itemFactory;
-            TerrainFactory = terrainFactory;
+            _settings = settings;
+            _creatureFactory = creatureFactory;
+            _itemFactory = itemFactory;
+            _terrainFactory = terrainFactory;
             Setup();
         }
 
@@ -54,6 +57,7 @@ namespace Engine
             var player = CreatureFactory.Player(new Coord(15, 15));
             Map.ControlledGameObject = player;
             Map.ControlledGameObject.IsFocused = true;
+            Map.ControlledGameObject.FocusOnMouseClick = true;
             Map.ControlledGameObject.Moved += Player_Moved;
             Map.ControlledGameObjectChanged += ControlledGameObjectChanged;
             Map.AddEntity(Map.ControlledGameObject);
@@ -61,13 +65,11 @@ namespace Engine
             MapRenderer = Map.CreateRenderer(new GoRogue.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault);
             MapRenderer.UseMouse = true;
             MapRenderer.FocusOnMouseClick = true;
-            Container = new ContainerConsole
-            {
-                UseMouse = true
-            };
+            
+            Container = new ContainerConsole();
             Container.Children.Add(MapRenderer);
-
-            foreach(Component visible in Player.Components)
+            IDisplay previousControl = null;
+            foreach(IConsoleComponent visible in Player.Components)
             {
                 try
                 {
@@ -76,11 +78,22 @@ namespace Engine
                     {
                         Container.Children.Add(display.Window);
                     }
+
+                    if(previousControl != null)
+                    {
+                        previousControl.Window.NextTabConsole = (ControlsConsole)display;
+                        display.Window.PreviousTabConsole = (ControlsConsole)previousControl;
+                        Container.Children.Add(display.Window);
+                    }
+                    else
+                    {
+                        Map.ControlledGameObject.MoveToFrontOnMouseClick = true;
+                        
+                    }
+                    previousControl = display;
                 }
                 catch { } //dont care
             }
-            //Container.Children.Add(Thoughts.Display);//if you don't add a component to a console, it won't update
-            //Container.Children.Add(Health.Display);//if you don't add a component to a console, it won't update
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
             Global.CurrentScreen = Container;
         }
@@ -94,7 +107,8 @@ namespace Engine
         }
         public void Update(GameTime time)
         {
-
+            //trying to wrest control away from the windows any way I can...
+            Player.IsFocused = true;
         }
         private void ControlledGameObjectChanged(object s, ControlledGameObjectChangedArgs e)
         {

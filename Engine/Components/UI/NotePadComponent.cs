@@ -1,73 +1,68 @@
 ﻿using Engine.Maps.Areas;
-using Engine.UI;
 using GoRogue;
 using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Input;
 using System;
-using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 using Console = SadConsole.Console;
 
 namespace Engine.Components.UI
 {
-    public class NotebookComponent : Component, IDisplay
+    public class NotePadComponent : Component, IDisplay
     {
-        public Page CurrentPage { get => Pages[PageNumber]; }
-        public ScrollingConsole Console { get => CurrentPage.Console; }
-        public Window Window { get => CurrentPage; }
+        const int _width = 32;
+        const int _height = 32;
+        const int _maxLines = 100 * _height;
+        public Window Window { get; }
         public int PageNumber;
-        public List<Page> Pages = new List<Page>();
         public Button BackPageButton;
         public Button NextPageButton;
         private const string _title = "////////////////////////////////";
-        public NotebookComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
+        public NotePadComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
         {
+            
             Parent = parent;
-            Pages.Add(new Page(_title, GetDetail()));
-            //Display = new ScrollingConsole(32, 32);// new Page(_title, GetDetail());
-            //Display.Position = new Coord(0, 0);
-            Console.IsVisible = true;
-            Console.IsFocused = true;
-            Console.FocusOnMouseClick = true;
-            Console.Position = position;
-            BackPageButton = new Button(1) { Position = new Coord(0, CurrentPage.Height - 1), Text = "<" };
+            Name = "Notepad";
+            Window = new Window(_width, _height)
+            {
+                DefaultBackground = Color.Tan,
+                Title = Name,
+                TitleAlignment = HorizontalAlignment.Center,
+                IsVisible = true,
+                IsFocused = false,
+                FocusOnMouseClick = false,
+                Position = position,
+                ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
+                Theme = new PaperTheme(),
+                ThemeColors = PaperTheme.Colors,
+                CanTabToNextConsole = true,
+            };
+            BackPageButton = new Button(1) { Position = new Coord(0, _height - 1), Text = "<" };
             BackPageButton.MouseButtonClicked += BackButton_Clicked;
-            CurrentPage.Add(BackPageButton);
+            Window.Add(BackPageButton);
 
-            NextPageButton = new Button(1) { Position = new Coord(CurrentPage.Width - 1, CurrentPage.Height - 1), Text = ">" };
+            NextPageButton = new Button(1) { Position = new Coord(_width - 1, _height - 1), Text = ">" };
             NextPageButton.MouseButtonClicked += NextButton_Clicked;
-            CurrentPage.Add(NextPageButton);
+            Window.Add(NextPageButton); 
             Window.Show();
-        }
-
-        private string GetDetail()
-        {
-            string answer = "";
-
-            foreach (string s in GetDetails())
-                answer += s + ". ";
-
-            return answer;
         }
 
         public void Print(string[] text)
         {
-            Console.Fill(Color.Blue, Color.Tan, '_');
+            Window.Fill(Color.Blue, Color.Tan, '_');
             for (int i = 0; i < text.Length; i++)
             {
-                Console.Print(0, i, new SadConsole.ColoredString(text[i].ToString(), Color.DarkBlue, Color.Transparent));
-                //Display.Add(text[i]);
+                Window.Print(0, i, new ColoredString(text[i].ToString(), Color.DarkBlue, Color.Transparent));
             }
         }
         public void Print(Area[] areas)
         {
-            Console.Fill(Color.Blue, Color.Tan, '_');
+            Window.Fill(Color.Blue, Color.Tan, '_');
             //Display.Fill(Color.Transparent, Display.DefaultBackground, 0);
             for (int i = 0; i < areas.Length; i++)
             {
-                Console.Print(0, i, new SadConsole.ColoredString(areas[i].Name, Color.DarkBlue, Color.Transparent));
-                //Display.Add(areas[i].Name);
+                Window.Print(0, i, new ColoredString(areas[i].Name, Color.DarkBlue, Color.Transparent));
             }
         }
         public override void Draw(Console console, TimeSpan delta)
@@ -78,14 +73,14 @@ namespace Engine.Components.UI
 
         public override void Update(Console console, TimeSpan delta)
         {
-            Window.Title = CurrentPage.Title;
+            //Window.Title = CurrentPage.Title;
             Window.Update(delta);
             base.Update(console, delta);
         }
 
         public override void ProcessMouse(Console console, MouseConsoleState state, out bool handled)
         {
-            Console.ProcessMouse(state);
+            //Console.ProcessMouse(state);
             Window.ProcessMouse(state);
             base.ProcessMouse(console, state, out handled);
         }

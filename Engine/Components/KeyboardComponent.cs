@@ -3,23 +3,27 @@ using GoRogue;
 using GoRogue.MapViews;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
+using SadConsole.Components;
+using SadConsole.Controls;
+using SadConsole.Renderers;
 using System;
 
 namespace Engine.Components
 {
-    public class KeyboardComponent : Component
+    public class KeyboardComponent : KeyboardConsoleComponent //as opposed to my own `component` class, which i should really refactor out
     {
+        BasicEntity Parent { get; }
         public Coord Position { get => Parent.Position; }
-        public KeyboardComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
+        public KeyboardComponent(BasicEntity parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
         {
             Parent = parent;
         }
 
 
-        public override void Update(SadConsole.Console console, TimeSpan time)
-        {
-            //ProcessKeyboard(console, Global.KeyboardState, out _);
-        }
+        //public override void Update(SadConsole.Console console, TimeSpan time)
+        //{
+        //    //ProcessKeyboard(console, Global.KeyboardState, out _);
+        //}
 
         public override void ProcessKeyboard(SadConsole.Console console, SadConsole.Input.Keyboard info, out bool handled)
         {
@@ -47,18 +51,18 @@ namespace Engine.Components
             handled = false;
         }
 
-        public override string[] GetDetails()
-        {
-            string[] answer = {
-                "This is a keyboard component.",
-                "This entity listens/responds to keyboard input."
-            };
-            return answer;
-        }
+        //public override string[] GetDetails()
+        //{
+        //    string[] answer = {
+        //        "This is a keyboard component.",
+        //        "This entity listens/responds to keyboard input."
+        //    };
+        //    return answer;
+        //}
 
-        public override void ProcessTimeUnit()
-        {
-            //don't implement this. at least, no need for now
-        }
+        //public override void ProcessTimeUnit()
+        //{
+        //    //don't implement this. at least, no need for now
+        //}
     }
 }

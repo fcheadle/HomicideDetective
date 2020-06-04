@@ -7,7 +7,6 @@ namespace Engine.Components.UI
 {
     interface IDisplay
     {
-        ScrollingConsole Console { get; }
         Window Window { get; }
     }
 }

@@ -15,8 +15,8 @@ namespace Tests.Mocks
     public class MockState : GameState
     {
         public ScrollingConsole MapRenderer { get; }
-        public DisplayComponent<ThoughtsComponent> Thoughts { get => (DisplayComponent<ThoughtsComponent>)Player.GetComponent<DisplayComponent<ThoughtsComponent>>(); }
-        public DisplayComponent<HealthComponent> Health { get => (DisplayComponent<HealthComponent>)Player.GetComponent<DisplayComponent<HealthComponent>>(); }
+        public PageComponent<ThoughtsComponent> Thoughts { get => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>(); }
+        public PageComponent<HealthComponent> Health { get => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>(); }
         public BasicEntity Player { get; }
         public ActorComponent Actor { get => (ActorComponent)Player.GetComponent<ActorComponent>(); }
         private CreatureFactory creatureFactory = new CreatureFactory();
@@ -28,8 +28,8 @@ namespace Tests.Mocks
             Map.AddEntity(Map.ControlledGameObject);
             MapRenderer = Map.CreateRenderer(new Microsoft.Xna.Framework.Rectangle(0, 0, 80, 25), Global.FontDefault);
             Children.Add(MapRenderer);
-            Children.Add(Thoughts.Page);
-            Children.Add(Health.Page);
+            Children.Add(Thoughts.Window);
+            Children.Add(Health.Window);
 
             Map.ControlledGameObject.IsFocused = true;
             Map.ControlledGameObject.Moved += Player_Moved;

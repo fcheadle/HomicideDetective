@@ -8,7 +8,7 @@ using System;
 
 namespace Engine.Components
 {
-    public abstract class Component : ComponentBase<BasicEntity>, IGameObjectComponent, IConsoleComponent
+    public abstract class Component : ComponentBase<BasicEntity>, IConsoleComponent
     {
         public string Name { get; set; }
         public string Description { get; set; }
