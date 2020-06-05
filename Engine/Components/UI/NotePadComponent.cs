@@ -35,7 +35,7 @@ namespace Engine.Components.UI
                 Position = position,
                 ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
                 Theme = new PaperTheme(),
-                ThemeColors = PaperTheme.Colors,
+                ThemeColors = ThemeColor.Paper,
                 CanTabToNextConsole = true,
             };
             BackPageButton = new Button(1) { Position = new Coord(0, _height - 1), Text = "<" };

@@ -1,6 +1,8 @@
 ﻿using GoRogue;
 using SadConsole;
+using SadConsole.Controls;
 using SadConsole.Input;
+using SadConsole.Themes;
 using System;
 using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
@@ -14,6 +16,8 @@ namespace Engine.Components.UI
         const int _height = 24;
         private string[] _content = { };
         public Window Window { get; }
+        public Button MinMaxButton { get; }
+        
         internal T Component;
 
         public PageComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
@@ -33,8 +37,15 @@ namespace Engine.Components.UI
                 ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
                 CanTabToNextConsole = true,
                 Theme = new PaperTheme(),
-                ThemeColors = PaperTheme.Colors
+                ThemeColors = ThemeColor.Paper
             };
+
+            MinMaxButton = new Button(Name.Length + 2, 3)
+            {
+                Theme = new PaperButtonTheme(),
+                ThemeColors = ThemeColor.Paper
+            };
+
         }
         public void AddContent(string content)
         {
