@@ -12,6 +12,7 @@ using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,14 +28,17 @@ namespace Engine
         public SceneMap Map { get; private set; }
         public ScrollingConsole MapRenderer { get; private set; }
         public ContainerConsole Container { get; private set; }
-        public PageComponent<ThoughtsComponent> Thoughts { get => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>(); }
-        public PageComponent<HealthComponent> Health { get => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>(); }
         public BasicEntity Player { get => Map.ControlledGameObject; }
         public ActorComponent Actor { get => (ActorComponent)Player.GetComponent<ActorComponent>(); }
+        public KeyboardComponent KeyBoardComponent { get => (KeyboardComponent)Player.GetComponent<KeyboardComponent>(); }
+        public PageComponent<ThoughtsComponent> Thoughts { get => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>(); }
+        public PageComponent<HealthComponent> Health { get => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>(); }
         private static ISettings _settings;
         private static ICreatureFactory _creatureFactory;
         private static ITerrainFactory _terrainFactory;
         private static IItemFactory _itemFactory;
+        public bool IsPaused { get => SadConsole.Global.CurrentScreen.IsPaused; set => SadConsole.Global.CurrentScreen.IsPaused = value; }
+        private int _fovRadius;
         public Game(ISettings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, ITerrainFactory terrainFactory) 
         {
             _settings = settings;
@@ -52,23 +56,23 @@ namespace Engine
         }
         public void Init()
         {
-            //readonly fields
             Map = new SceneMap(Settings.MapWidth, Settings.MapHeight);
-            var player = CreatureFactory.Player(new Coord(15, 15));
-            Map.ControlledGameObject = player;
+            //just in case weird things happened, move this to after player declaration?
+            MapRenderer = Map.CreateRenderer(new GoRogue.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault); 
+            MapRenderer.UseMouse = true;
+            MapRenderer.FocusOnMouseClick = false;
+            Map.ControlledGameObject = CreatureFactory.Player(new Coord(15, 15));
             Map.ControlledGameObject.IsFocused = true;
             Map.ControlledGameObject.FocusOnMouseClick = true;
             Map.ControlledGameObject.Moved += Player_Moved;
             Map.ControlledGameObjectChanged += ControlledGameObjectChanged;
             Map.AddEntity(Map.ControlledGameObject);
             Map.CalculateFOV(Actor.Position, Actor.FOVRadius);
-            MapRenderer = Map.CreateRenderer(new GoRogue.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault);
-            MapRenderer.UseMouse = true;
-            MapRenderer.FocusOnMouseClick = true;
+            _fovRadius = Actor.FOVRadius;
             
             Container = new ContainerConsole();
             Container.Children.Add(MapRenderer);
-            IDisplay previousControl = null;
+
             foreach(IConsoleComponent visible in Player.Components)
             {
                 try
@@ -78,19 +82,6 @@ namespace Engine
                     {
                         Container.Children.Add(display.Window);
                     }
-
-                    if(previousControl != null)
-                    {
-                        previousControl.Window.NextTabConsole = (ControlsConsole)display;
-                        display.Window.PreviousTabConsole = (ControlsConsole)previousControl;
-                        Container.Children.Add(display.Window);
-                    }
-                    else
-                    {
-                        Map.ControlledGameObject.MoveToFrontOnMouseClick = true;
-                        
-                    }
-                    previousControl = display;
                 }
                 catch { } //dont care
             }
@@ -107,9 +98,58 @@ namespace Engine
         }
         public void Update(GameTime time)
         {
-            //trying to wrest control away from the windows any way I can...
-            Player.IsFocused = true;
+            //is it good practice to do keyboard interception here?
+            if (Global.KeyboardState.IsKeyReleased(Settings.KeyBindings[GameActions.RefocusOnPlayer]))
+            {
+                Player.IsFocused = true;
+            }
+            foreach (var action in Settings.KeyBindings)
+            {
+                if (Global.KeyboardState.IsKeyReleased(action.Value))
+                {
+                    TakeAction(action.Key);
+                }
+            }
         }
+
+        private void TakeAction(GameActions key)
+        {
+            switch (key)
+            {
+                case GameActions.RefocusOnPlayer: Player.IsFocused = true; break;
+                case GameActions.DustItemForPrints:
+                case GameActions.GetItem:
+                case GameActions.LookAtEverythingInSquare:
+                case GameActions.LookAtPerson:
+                case GameActions.RemoveItemFromInventory:
+                case GameActions.TakePhotograph:
+                case GameActions.Talk:
+                case GameActions.ToggleMenu: ToggleMenu(); break;
+                case GameActions.TogglePause: TogglePause(); break;
+            }
+        }
+
+        private void ToggleMenu()
+        {
+            
+        }
+
+        private void TogglePause()
+        {
+            if (IsPaused)
+            {
+                Actor.FOVRadius = _fovRadius;
+                IsPaused = false;
+                Map.CalculateFOV(Actor.Position, Actor.FOVRadius);
+            }
+            else
+            {
+                Actor.FOVRadius = 0;
+                IsPaused = true;
+                Map.CalculateFOV(new Coord(-0,-0), Actor.FOVRadius);
+            }
+        }
+
         private void ControlledGameObjectChanged(object s, ControlledGameObjectChangedArgs e)
         {
             if (e.OldObject != null)

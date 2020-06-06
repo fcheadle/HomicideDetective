@@ -18,7 +18,8 @@ namespace Engine.Components.UI
         public int PageNumber;
         public Button BackPageButton;
         public Button NextPageButton;
-        private const string _title = "////////////////////////////////";
+        private bool _hasDrawn;
+
         public NotePadComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
         {
             
@@ -46,6 +47,23 @@ namespace Engine.Components.UI
             NextPageButton.MouseButtonClicked += NextButton_Clicked;
             Window.Add(NextPageButton); 
             Window.Show();
+
+
+
+            DrawingSurface ds = new DrawingSurface(_width - 2, _height - 2);
+            ds.Position = new Coord(1, 1);
+            ds.OnDraw = (surface) =>
+            {
+                ds.Surface.Effects.UpdateEffects(Global.GameTimeElapsedUpdate);
+
+                if (_hasDrawn) return;
+
+                ds.Surface.Fill(Color.Blue, Color.Tan, '_');
+                //foreach(string text in )
+                //ds.Surface.Print()
+                _hasDrawn = true;
+            };
+            Window.Add(ds);
         }
 
         public void Print(string[] text)
@@ -86,7 +104,7 @@ namespace Engine.Components.UI
         }
         public override string[] GetDetails()
         {
-            string[] answer = { _title };
+            string[] answer = { Name };
             return answer;
         }
 

@@ -28,19 +28,20 @@ namespace Engine
             { Keys.W, Direction.UP }, { Keys.S, Direction.DOWN }, { Keys.A, Direction.LEFT }, { Keys.D, Direction.RIGHT }
         };
 
-        public Dictionary<Keys, GameActions> KeyBindings { get; } = new Dictionary<Keys, GameActions>
+        public Dictionary<GameActions,Keys> KeyBindings { get; } = new Dictionary<GameActions, Keys>
         {
-            {Keys.Space, GameActions.TogglePause }, //not implements
-            {Keys.Escape, GameActions.ToggleMenu }, //not implemented
-            {Keys.P, GameActions.TakePhotograph }, //not implemented
-            {Keys.L, GameActions.LookAtEverythingInSquare }, //not implemented
-            {Keys.D, GameActions.DustItemForPrints }, //not implemented
-            {Keys.G, GameActions.GetItem },//not implemented
-            {Keys.R, GameActions.RemoveItemFromInventory },//not implemented
-            {Keys.T, GameActions.Talk },//not implemented
-            {Keys.I, GameActions.ToggleInventory },//not implemented
-            {Keys.N, GameActions.ToggleNotes },//not implemented
-            {Keys.A, GameActions.LookAtPerson },//not implemented
+            {GameActions.RefocusOnPlayer,           Keys.Tab},                           
+            {GameActions.TogglePause,               Keys.Space },
+            {GameActions.ToggleMenu,                Keys.Escape},
+            {GameActions.TakePhotograph,            Keys.P },
+            {GameActions.LookAtEverythingInSquare,  Keys.L },
+            {GameActions.DustItemForPrints,         Keys.D },
+            {GameActions.GetItem,                   Keys.G },
+            {GameActions.RemoveItemFromInventory,   Keys.R },
+            {GameActions.Talk,                      Keys.T },
+            {GameActions.ToggleInventory,           Keys.I },
+            {GameActions.ToggleNotes,               Keys.N },
+            {GameActions.LookAtPerson,              Keys.A },
         };
 
         public void ToggleMenu()

@@ -36,7 +36,7 @@ namespace Engine
             CreatureFactory = creatureFactory ?? new CreatureFactory();
             TerrainFactory = terrainFactory ?? new TerrainFactory();
             ItemFactory = itemFactory ?? new ItemFactory();
-            CurrentGame = new Game(Settings, CreatureFactory, ItemFactory, TerrainFactory);
+            CurrentGame = game ?? new Game(Settings, CreatureFactory, ItemFactory, TerrainFactory);
             CurrentGame.Start();
             CurrentGame.Stop();
         }

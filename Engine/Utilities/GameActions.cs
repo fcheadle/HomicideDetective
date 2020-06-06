@@ -17,5 +17,6 @@ namespace Engine.Utilities
         ToggleNotes,
         ToggleInventory,
         ToggleMenu,
+        RefocusOnPlayer,
     }
 }
