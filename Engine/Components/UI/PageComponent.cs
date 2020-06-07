@@ -16,10 +16,10 @@ namespace Engine.Components.UI
         const int _height = 24;
         private string[] _content = { };
         public Window Window { get; }
-        public Button MinMaxButton { get; }
+        public Button MaximizeButton { get; }
         
         internal T Component;
-        internal Viewport Viewport;
+        DrawingSurface _surface;
         bool _hasDrawn;
         public PageComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
         {
@@ -37,37 +37,44 @@ namespace Engine.Components.UI
                 Position = position,
                 ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
                 CanTabToNextConsole = true,
-                Theme = new PaperTheme(),
+                Theme = new PaperWindowTheme(),
                 ThemeColors = ThemeColor.Paper
             };
             Window.ThemeColors.RebuildAppearances();
 
-            MinMaxButton = new Button(Name.Length + 2, 3)
+            MaximizeButton = new Button(Name.Length + 2, 3)
             {
                 Theme = new PaperButtonTheme(),
                 ThemeColors = ThemeColor.Paper
             };
-
-            DrawingSurface ds = new DrawingSurface(_width - 2, _height - 2);
-            ds.Position = new Coord(1, 1);
-            ds.OnDraw = (surface) =>
+            MaximizeButton.MouseButtonClicked += MaximizeButtonClicked;
+            _surface = new DrawingSurface(_width - 2, _height - 2);
+            _surface.Position = new Coord(1, 1);
+            _surface.OnDraw = (surface) =>
             {
-                ds.Surface.Effects.UpdateEffects(Global.GameTimeElapsedUpdate);
+                _surface.Surface.Effects.UpdateEffects(Global.GameTimeElapsedUpdate);
 
                 if (_hasDrawn) return;
 
-                ds.Surface.Fill(Color.Blue, Color.Tan, '_');
+                _surface.Surface.Fill(Color.Blue, Color.Tan, '_');
                 int i = 0;
                 foreach (string text in Component.GetDetails())
                 {
-                    ds.Surface.Print(0, i, text);
+                    _surface.Surface.Print(0, i, text);
                     i++; 
                 }
                 _hasDrawn = true;
             };
-
-            Window.Add(ds);
+            
+            Window.Add(_surface);
         }
+
+        private void MaximizeButtonClicked(object sender, MouseEventArgs e)
+        {
+            Window.Show();
+            MaximizeButton.IsVisible = true;
+        }
+
         public void AddContent(string content)
         {
             _content.Append(content);
@@ -87,11 +94,27 @@ namespace Engine.Components.UI
 
         public override void Update(Console console, TimeSpan delta)
         {
+            //There's probably a better way to do this
+            Window.Remove(_surface);
+            
+            _surface.Surface.Fill(Color.Blue, Color.Tan, '_');
+            int i = 0;
+            foreach (string text in Component.GetDetails())
+            {
+                _surface.Surface.Print(0, i, text);
+                i++;
+            }
+            Window.Add(_surface);
             base.Update(console, delta);
         }
 
         public override void ProcessMouse(Console console, MouseConsoleState state, out bool handled)
         {
+            if (state.IsOnConsole && state.Mouse.RightClicked)
+            {
+                Window.Hide();
+                MaximizeButton.IsVisible = true;
+            }
             handled = true;
         }
         public override string[] GetDetails()

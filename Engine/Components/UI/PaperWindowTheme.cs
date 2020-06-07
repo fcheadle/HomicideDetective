@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Engine.Components.UI
 {
-    class PaperTheme : WindowTheme
+    class PaperWindowTheme : WindowTheme
     {
-        public PaperTheme()
+        public PaperWindowTheme()
         {
             ModalTint = Color.Tan;
             FillStyle = new Cell(Color.Blue, Color.Tan, '_');

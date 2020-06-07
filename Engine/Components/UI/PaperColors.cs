@@ -8,7 +8,6 @@ namespace Engine.Components.UI
 {
     public static class ThemeColor
     {
-
         public static Colors Paper => new Colors()
         {
             TitleText = Color.Black,

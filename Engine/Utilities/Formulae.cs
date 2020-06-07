@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Engine.Utilities
 {
-    internal class Formulae
+    public static class Formulae
     {
-
+        public static float HeartBeat(float period) => 2f * (float)Math.Sin(Math.Sin(10 / period));
     }
 }

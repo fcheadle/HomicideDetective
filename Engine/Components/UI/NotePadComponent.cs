@@ -1,5 +1,6 @@
 ﻿using Engine.Maps.Areas;
 using GoRogue;
+using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Input;
@@ -15,12 +16,14 @@ namespace Engine.Components.UI
         const int _height = 32;
         const int _maxLines = 100 * _height;
         public Window Window { get; }
+        public Button MaximizeButton {get;}
         public int PageNumber;
         public Button BackPageButton;
         public Button NextPageButton;
         private bool _hasDrawn;
+        private DrawingSurface _surface;
 
-        public NotePadComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
+        public NotePadComponent(BasicEntity parent, Coord position) : base(true, true, true, true)
         {
             
             Parent = parent;
@@ -35,7 +38,7 @@ namespace Engine.Components.UI
                 FocusOnMouseClick = false,
                 Position = position,
                 ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
-                Theme = new PaperTheme(),
+                Theme = new PaperWindowTheme(),
                 ThemeColors = ThemeColor.Paper,
                 CanTabToNextConsole = true,
             };
@@ -101,6 +104,13 @@ namespace Engine.Components.UI
             //Console.ProcessMouse(state);
             Window.ProcessMouse(state);
             base.ProcessMouse(console, state, out handled);
+        }
+
+        public override void ProcessKeyboard(Console console, SadConsole.Input.Keyboard state, out bool handled)
+        {
+            //Console.ProcessMouse(state);
+            Window.ProcessKeyboard(state);
+            base.ProcessKeyboard(console, state, out handled);
         }
         public override string[] GetDetails()
         {

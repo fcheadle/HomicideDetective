@@ -103,51 +103,6 @@ namespace Engine
             {
                 Player.IsFocused = true;
             }
-            foreach (var action in Settings.KeyBindings)
-            {
-                if (Global.KeyboardState.IsKeyReleased(action.Value))
-                {
-                    TakeAction(action.Key);
-                }
-            }
-        }
-
-        private void TakeAction(GameActions key)
-        {
-            switch (key)
-            {
-                case GameActions.RefocusOnPlayer: Player.IsFocused = true; break;
-                case GameActions.DustItemForPrints:
-                case GameActions.GetItem:
-                case GameActions.LookAtEverythingInSquare:
-                case GameActions.LookAtPerson:
-                case GameActions.RemoveItemFromInventory:
-                case GameActions.TakePhotograph:
-                case GameActions.Talk:
-                case GameActions.ToggleMenu: ToggleMenu(); break;
-                case GameActions.TogglePause: TogglePause(); break;
-            }
-        }
-
-        private void ToggleMenu()
-        {
-            
-        }
-
-        private void TogglePause()
-        {
-            if (IsPaused)
-            {
-                Actor.FOVRadius = _fovRadius;
-                IsPaused = false;
-                Map.CalculateFOV(Actor.Position, Actor.FOVRadius);
-            }
-            else
-            {
-                Actor.FOVRadius = 0;
-                IsPaused = true;
-                Map.CalculateFOV(new Coord(-0,-0), Actor.FOVRadius);
-            }
         }
 
         private void ControlledGameObjectChanged(object s, ControlledGameObjectChangedArgs e)

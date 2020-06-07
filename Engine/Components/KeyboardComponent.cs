@@ -1,4 +1,5 @@
 ﻿using Engine.Extensions;
+using Engine.Utilities;
 using GoRogue;
 using GoRogue.MapViews;
 using Microsoft.Xna.Framework.Input;
@@ -14,6 +15,12 @@ namespace Engine.Components
     {
         BasicEntity Parent { get; }
         public Coord Position { get => Parent.Position; }
+        public bool IsPaused
+        {
+            get => SadConsole.Global.CurrentScreen.IsPaused;
+            set => SadConsole.Global.CurrentScreen.IsPaused = value;
+        }
+
         public KeyboardComponent(BasicEntity parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
         {
             Parent = parent;
@@ -27,28 +34,45 @@ namespace Engine.Components
 
         public override void ProcessKeyboard(SadConsole.Console console, SadConsole.Input.Keyboard info, out bool handled)
         {
-            Direction moveDirection = Direction.NONE;
-            //foreach (Keys key in Settings.KeyBindings.Keys)
-            //    if (info.IsKeyPressed(key))
-            //    {
-            //        Settings.TogglePause();
-            //    }
-
-            foreach (Keys key in Program.Settings.MovementKeyBindings.Keys)
+            if (!IsPaused)
             {
-                if (info.IsKeyPressed(key))
+                Direction moveDirection = Direction.NONE;
+                //foreach (Keys key in Settings.KeyBindings.Keys)
+                //    if (info.IsKeyPressed(key))
+                //    {
+                //        Settings.TogglePause();
+                //    }
+
+                foreach (Keys key in Program.Settings.MovementKeyBindings.Keys)
                 {
-                    moveDirection = Program.Settings.MovementKeyBindings[key];
-                    break;
+                    if (info.IsKeyPressed(key))
+                    {
+                        moveDirection = Program.Settings.MovementKeyBindings[key];
+                        break;
+                    }
+                }
+
+                Coord target = Position + moveDirection;
+                if (Parent.CurrentMap.Contains(target))
+                    if (Parent.CurrentMap.GetTerrain(target).IsWalkable)
+                        Parent.Position += moveDirection;
+
+                handled = false;
+                foreach (var action in Program.CurrentGame.Settings.KeyBindings)
+                {
+                    if (Global.KeyboardState.IsKeyReleased(action.Value))
+                    {
+                        TakeAction(action.Key);
+                    }
                 }
             }
 
-            Coord target = Position + moveDirection;
-            if (Parent.CurrentMap.Contains(target))
-                if (Parent.CurrentMap.GetTerrain(target).IsWalkable)
-                    Parent.Position += moveDirection;
-
-            handled = false;
+            else
+            {
+                if (Global.KeyboardState.IsKeyReleased(Program.Settings.KeyBindings[GameActions.TogglePause]))
+                    TogglePause();
+            }
+            handled = true;
         }
 
         //public override string[] GetDetails()
@@ -64,5 +88,40 @@ namespace Engine.Components
         //{
         //    //don't implement this. at least, no need for now
         //}
+
+
+
+        private void TakeAction(GameActions key)
+        {
+            switch (key)
+            {
+                case GameActions.RefocusOnPlayer: Parent.IsFocused = true; break;
+                case GameActions.DustItemForPrints:
+                case GameActions.GetItem:
+                case GameActions.LookAtEverythingInSquare:
+                case GameActions.LookAtPerson:
+                case GameActions.RemoveItemFromInventory:
+                case GameActions.TakePhotograph:
+                case GameActions.Talk:
+                case GameActions.ToggleMenu: ToggleMenu(); break;
+                case GameActions.TogglePause: TogglePause(); break;
+            }
+        }
+        private void ToggleMenu()
+        {
+
+        }
+
+        private void TogglePause()
+        {
+            if (IsPaused)
+            {
+                IsPaused = false;
+            }
+            else
+            {
+                IsPaused = true;
+            }
+        }
     }
 }
