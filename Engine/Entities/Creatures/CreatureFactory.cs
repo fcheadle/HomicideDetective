@@ -27,9 +27,7 @@ namespace Engine.Entities.Creatures
             critter.Components.Add(new PageComponent<HealthComponent>(critter, position + 3));
             critter.Components.Add(new PageComponent<ThoughtsComponent>(critter, position + 5));
             critter.Components.Add(new NotePadComponent(critter, critter.Position + 7));
-            critter.Components.Add(new KeyboardComponent(critter));
-            critter.SetGlyph(0, 0, 1);
-            critter.IsDirty = true;
+            critter.Components.Add(new CSIKeyboardComponent(critter));
             return critter;
         }
 

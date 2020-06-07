@@ -41,11 +41,15 @@ namespace Engine.Components.UI
                 ThemeColors = ThemeColor.Paper
             };
             Window.ThemeColors.RebuildAppearances();
+            Window.MouseButtonClicked += MinimizeMaximize;
 
             MaximizeButton = new Button(Name.Length + 2, 3)
             {
                 Theme = new PaperButtonTheme(),
-                ThemeColors = ThemeColor.Paper
+                ThemeColors = ThemeColor.Paper,
+                IsVisible = false,
+                Text = Window.Title,
+                TextAlignment = HorizontalAlignment.Center
             };
             MaximizeButton.MouseButtonClicked += MaximizeButtonClicked;
             _surface = new DrawingSurface(_width - 2, _height - 2);
@@ -74,18 +78,18 @@ namespace Engine.Components.UI
             Window.Show();
             MaximizeButton.IsVisible = true;
         }
-
-        public void AddContent(string content)
-        {
-            _content.Append(content);
-        }
         public void Print(string[] text)
         {
-            Window.Fill(Color.Blue, Color.Tan, '_');
-            for (int i = 0; i < text.Length; i++)
+            Window.Remove(_surface);
+
+            _surface.Surface.Fill(Color.Blue, Color.Tan, '_');
+            int i = 0;
+            foreach (string line in text)
             {
-                Window.Print(1, 1 + i, text[i]);
+                _surface.Surface.Print(0, i, line);
+                i++;
             }
+            Window.Add(_surface);
         }
         public override void Draw(Console console, TimeSpan delta)
         {
@@ -94,28 +98,22 @@ namespace Engine.Components.UI
 
         public override void Update(Console console, TimeSpan delta)
         {
-            //There's probably a better way to do this
-            Window.Remove(_surface);
-            
-            _surface.Surface.Fill(Color.Blue, Color.Tan, '_');
-            int i = 0;
-            foreach (string text in Component.GetDetails())
-            {
-                _surface.Surface.Print(0, i, text);
-                i++;
-            }
-            Window.Add(_surface);
+            Print(Component.GetDetails());
             base.Update(console, delta);
         }
 
-        public override void ProcessMouse(Console console, MouseConsoleState state, out bool handled)
+        public void MinimizeMaximize(object sender, MouseEventArgs args)
         {
-            if (state.IsOnConsole && state.Mouse.RightClicked)
+            if (args.MouseState.Mouse.RightClicked)
             {
-                Window.Hide();
-                MaximizeButton.IsVisible = true;
+                if (Window.IsVisible)
+                    Window.Hide();
+                else
+                    Window.Show();
+
+
+                MaximizeButton.IsVisible = !MaximizeButton.IsVisible;
             }
-            handled = true;
         }
         public override string[] GetDetails()
         {

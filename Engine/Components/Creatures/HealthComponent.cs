@@ -81,7 +81,7 @@ namespace Engine.Components.Creature
             timeUnits = timeUnits % 15;
             timeUnits -= 15;
             timeUnits = timeUnits == 0 ? 1 : timeUnits;
-            float period = _heartBeatsPerMinute / 60 * (timeUnits + 1);
+            float period = (_heartBeatsPerMinute / 60) * timeUnits;
             _heartBeatStatus = Formulae.HeartBeat(period);
         }
 

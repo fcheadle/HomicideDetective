@@ -10,7 +10,7 @@ namespace Tests.Entity
 {
     class ItemFactoryTests : TestBase
     {
-        ItemFactory factory = new ItemFactory();
+        MockItemFactory factory = new MockItemFactory();
         [Test]
         public void NewGenericItemTest()
         {

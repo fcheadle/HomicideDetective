@@ -7,7 +7,7 @@ using System;
 
 namespace Engine.Entities.Items
 {
-    public class ItemFactory : IItemFactory
+    public class MockItemFactory : IItemFactory
     {
         public BasicEntity Container(Coord position, string name, bool locked, bool isWalkable = true, bool isTransparent = true)
         {

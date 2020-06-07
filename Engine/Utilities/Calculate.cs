@@ -19,26 +19,6 @@ namespace Engine
             x => { return (Math.Cos(x)* 2) * (Math.Tan(x) * 2); },
 
         };
-        internal static List<Func<int, int, double>> Functions3d = new List<Func<int, int, double>>
-        {
-            //Terrain Generation formulae - starts at Color.Green and mutatesToZ of the returned value.
-            //Currently, the color formula is counting down by 1, but we would like for it to count down by 0.01,
-            //and then it should be bound between -2 and 2
-            //(x,y) => 0.00, //for testing purposes
-            (x,y) => 07.00 * (Math.Sin(x + (x * 2.25)) + Math.Cos(y + (y/7))), //personal fave
-            (x,y) => 04.65 * (Math.Sin(x) - (2*Math.Cos(4* y))), //freckles
-            (x,y) => 07.77 * (Math.Cos((x *x) + (y * y))), //static
-            (x,y) => 04.44 * (Math.Cos(x + y * Math.PI / 180) + Math.Sin(x + y * Math.PI / 180)), //smooth vertical lines
-            (x,y) => 08.88 * (Math.Tan(x / 13 % 1.99) + Math.Tan(y % 1.91)), //horizontal lines
-            (x,y) => 05.11 * (Math.Cos(Math.Sqrt(Math.Abs((x*x) + (y*y))))), //concentric circles origination from the top left
-            (x,y) => 08.75 * (Math.Cos(Math.Sqrt(Math.Abs((-x*x) + (y*y))))), //pretty, curved lines
-            (x,y) => 13.31 * (Math.Tan((-2 * x * y) % 1.99)), //nice, simple pattern
-            (x,y) => 11.11 * (Math.Tan(Math.Sqrt(x*y))), //nice, indiscernible pattern
-            (x,y) => 12.00 * (Math.Cos(y) * Math.Tan(x)), //looks natural
-            (x,y) => 15.00 * (Math.Sin(x) * Math.Tan(y)), //subtle
-            (x,y) => 08.88 * (Math.Sin(x / (y+1)) * Math.Tan(y * x)), //subtle
-            (x,y) => 19.19 * (Math.Sin(x + y) * Math.Cos(y * x)), //subtle
-        };
         public static List<Func<int, int, TimeSpan, bool>> Functions4d = new List<Func<int, int, TimeSpan, bool>>
         {
             //Curently used for wind.
@@ -109,22 +89,6 @@ namespace Engine
             int index = _random.Next(0, Functions2d.Count);
             return Functions2d[index];
         }
-        public static Func<int, int, double> RandomFunction3d()
-        {
-            int index = _random.Next(0, Functions3d.Count);
-            return Functions3d[index];
-        }
-        public static Func<int, int, TimeSpan, bool> RandomFunction4d()
-        {
-            int index = _random.Next(0, Functions4d.Count);
-            return Functions4d[index];
-        }
-        public static Func<int, int, double> MasterFormula()
-        {
-            Func<int, int, double> f = RandomFunction3d();
-
-            return f;
-        }
         public static Coord PolarToCartesian(double radius, double theta)
         {
             double x = radius * Math.Cos(theta);
@@ -143,7 +107,7 @@ namespace Engine
             return new PolarCoord(radius, theta);
         }
         public static double RadiansToDegrees(double theta) => theta * 180.0f / Math.PI;
-        public static double DegreesToRadians(int degrees) =>  degrees * Math.PI / 180.0f;
+        public static double DegreesToRadians(int degrees) => degrees * Math.PI / 180.0f;
         public static Point ButterflyCurve(double theta)
         {
             double radius = Math.Exp(Math.Sin(theta));
@@ -168,29 +132,6 @@ namespace Engine
             }
             return p;
         }
-        public static double BoundedTan(double radians)
-        {
-            //returns a tangent that is between -1 and 1
-            var safeRads = radians % (Math.PI / 4);
-            return Math.Tan(safeRads);
-        }
-
-        public static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
-        {
-            List<Coord> inner = new List<Coord>();
-            outer = outer.OrderBy(x => x.X).ToList();
-            for (int i = outer.First().X; i <= outer.Last().X; i++)
-            {
-                List<Coord> chunk = outer.Where(w => w.X == i).OrderBy(o => o.Y).ToList();
-                for (int j = chunk.First().Y; j <= chunk.Last().Y; j++)
-                {
-                    yield return new Coord(i, j);
-                }
-            }
-        }
-
-        
-
         #endregion
 
         #region chances

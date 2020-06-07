@@ -20,7 +20,7 @@ namespace Engine.Components.Creature
         }
         public void Act()
         {
-            if (Parent.GetComponent<KeyboardComponent>() != null)
+            if (Parent.GetComponent<CSIKeyboardComponent>() != null)
                 return;
 
             //Determine whether or not we have a path

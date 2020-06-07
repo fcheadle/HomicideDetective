@@ -8,10 +8,10 @@ using System.Text;
 
 namespace Tests.Components.Terrain
 {
-    class BlowsInWindComponentTests : TestBase
+    class AnimateGlyphComponent : TestBase
     {
         TerrainFactory factory = new TerrainFactory();
-        AnimateGlyphComponent _base;
+        Engine.Components.Terrain.AnimateGlyphComponent _base;
         string[] _answer;
 
         [Test]
@@ -23,7 +23,7 @@ namespace Tests.Components.Terrain
         }
         private void NewBlowsInWindComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = factory.Grass(new Coord()).GetComponent<AnimateGlyphComponent>();
+            _base = factory.Grass(new Coord()).GetComponent<Engine.Components.Terrain.AnimateGlyphComponent>();
             Assert.NotNull(_base);
         }
 
@@ -36,7 +36,7 @@ namespace Tests.Components.Terrain
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = factory.Grass(new Coord()).GetComponent<AnimateGlyphComponent>();
+            _base = factory.Grass(new Coord()).GetComponent<Engine.Components.Terrain.AnimateGlyphComponent>();
             _answer = _base.GetDetails();
             Assert.AreEqual(1, _answer.Length);
         }

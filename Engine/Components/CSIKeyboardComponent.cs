@@ -8,10 +8,11 @@ using SadConsole.Components;
 using SadConsole.Controls;
 using SadConsole.Renderers;
 using System;
+using System.Collections.Generic;
 
 namespace Engine.Components
 {
-    public class KeyboardComponent : KeyboardConsoleComponent //as opposed to my own `component` class, which i should really refactor out
+    public class CSIKeyboardComponent : KeyboardConsoleComponent //as opposed to my own `component` class, which i should really refactor out
     {
         BasicEntity Parent { get; }
         public Coord Position { get => Parent.Position; }
@@ -20,8 +21,8 @@ namespace Engine.Components
             get => SadConsole.Global.CurrentScreen.IsPaused;
             set => SadConsole.Global.CurrentScreen.IsPaused = value;
         }
-
-        public KeyboardComponent(BasicEntity parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
+        private Dictionary<GameActions, Keys> KeyBindings => Program.Settings.KeyBindings;
+        public CSIKeyboardComponent(BasicEntity parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
         {
             Parent = parent;
         }
@@ -69,8 +70,10 @@ namespace Engine.Components
 
             else
             {
-                if (Global.KeyboardState.IsKeyReleased(Program.Settings.KeyBindings[GameActions.TogglePause]))
+                if (info.IsKeyPressed(KeyBindings[GameActions.TogglePause]))
                     TogglePause();
+                else if (info.IsKeyPressed(KeyBindings[GameActions.ToggleMenu]))
+                    ToggleMenu();
             }
             handled = true;
         }

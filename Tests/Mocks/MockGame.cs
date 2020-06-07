@@ -18,10 +18,10 @@ namespace Tests
         public static MenuState Menu { get; private set; }
         public static BasicEntity Player { get; private set; }
 
-        public ISettings Settings { get; } = new Settings();
-        public ICreatureFactory CreatureFactory { get; } = new CreatureFactory();
-        public ITerrainFactory TerrainFactory { get; } = new TerrainFactory();
-        public IItemFactory ItemFactory { get; } = new ItemFactory();
+        public ISettings Settings { get; } = new MockSettings();
+        public ICreatureFactory CreatureFactory { get; } = new MockCreatureFactory();
+        public ITerrainFactory TerrainFactory { get; } = new MockTerrainFactory();
+        public IItemFactory ItemFactory { get; } = new MockItemFactory();
 
         public MockGame(Action<GameTime> update)
         {

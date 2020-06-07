@@ -50,7 +50,7 @@ namespace Engine.Maps
             _settings = settings ?? new Settings();
             _terrainFactory = tFactory ?? new TerrainFactory();
             _creatureFactory = cFactory ?? new CreatureFactory();
-            _itemFactory = iFactory ?? new ItemFactory();
+            _itemFactory = iFactory ?? new MockItemFactory();
 
             MakeOutdoors();
             //MakeBackrooms();
@@ -188,7 +188,7 @@ namespace Engine.Maps
         }
         private void MakeOutdoors()
         {
-            var f = Calculate.MasterFormula();
+            var f = Formulae.RandomTerrainGenFormula();
             for (int i = 0; i < Width; i++)
             {
                 for (int j = 0; j < Height; j++)

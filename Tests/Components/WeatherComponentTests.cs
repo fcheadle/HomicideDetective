@@ -39,5 +39,15 @@ namespace Tests.Components
             _answer = _component.GetDetails();
             Assert.Less(2, _answer.Length);
         }
+
+        [Test] //aka processtimeunit
+        public void BlowWindTest()
+        {
+            _game = new MockGame(NewWeatherComponent);
+            _game.RunOnce();
+            _game.SwapUpdate(GetDetails);
+            _game.RunOnce();
+            _game.Stop();
+        }
     }
 }

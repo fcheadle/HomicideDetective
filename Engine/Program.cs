@@ -35,7 +35,7 @@ namespace Engine
             Settings = settings ?? new Settings();
             CreatureFactory = creatureFactory ?? new CreatureFactory();
             TerrainFactory = terrainFactory ?? new TerrainFactory();
-            ItemFactory = itemFactory ?? new ItemFactory();
+            ItemFactory = itemFactory ?? new MockItemFactory();
             CurrentGame = game ?? new Game(Settings, CreatureFactory, ItemFactory, TerrainFactory);
             CurrentGame.Start();
             CurrentGame.Stop();
@@ -52,7 +52,7 @@ namespace Engine
             Settings = settings ?? new Settings();
             CreatureFactory = creatureFactory ?? new CreatureFactory();
             TerrainFactory = terrainFactory ?? new TerrainFactory();
-            ItemFactory = itemFactory ?? new ItemFactory();
+            ItemFactory = itemFactory ?? new MockItemFactory();
         }
     }
 }

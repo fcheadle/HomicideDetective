@@ -30,7 +30,7 @@ namespace Engine
         public ContainerConsole Container { get; private set; }
         public BasicEntity Player { get => Map.ControlledGameObject; }
         public ActorComponent Actor { get => (ActorComponent)Player.GetComponent<ActorComponent>(); }
-        public KeyboardComponent KeyBoardComponent { get => (KeyboardComponent)Player.GetComponent<KeyboardComponent>(); }
+        public CSIKeyboardComponent KeyBoardComponent { get => (CSIKeyboardComponent)Player.GetComponent<CSIKeyboardComponent>(); }
         public PageComponent<ThoughtsComponent> Thoughts { get => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>(); }
         public PageComponent<HealthComponent> Health { get => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>(); }
         private static ISettings _settings;
