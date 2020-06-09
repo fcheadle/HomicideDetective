@@ -1,5 +1,4 @@
-﻿using Engine.States;
-using GoRogue;
+﻿using GoRogue;
 using SadConsole;
 
 namespace Engine.Components.Creature

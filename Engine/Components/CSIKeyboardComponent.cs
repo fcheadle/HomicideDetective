@@ -78,23 +78,7 @@ namespace Engine.Components
             handled = true;
         }
 
-        //public override string[] GetDetails()
-        //{
-        //    string[] answer = {
-        //        "This is a keyboard component.",
-        //        "This entity listens/responds to keyboard input."
-        //    };
-        //    return answer;
-        //}
-
-        //public override void ProcessTimeUnit()
-        //{
-        //    //don't implement this. at least, no need for now
-        //}
-
-
-
-        private void TakeAction(GameActions key)
+        public void TakeAction(GameActions key)
         {
             switch (key)
             {
@@ -110,12 +94,12 @@ namespace Engine.Components
                 case GameActions.TogglePause: TogglePause(); break;
             }
         }
-        private void ToggleMenu()
+        public void ToggleMenu()
         {
 
         }
 
-        private void TogglePause()
+        public void TogglePause()
         {
             if (IsPaused)
             {

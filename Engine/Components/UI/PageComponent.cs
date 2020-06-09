@@ -4,6 +4,7 @@ using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Input;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Console = SadConsole.Console;
@@ -17,7 +18,7 @@ namespace Engine.Components.UI
         private string[] _content = { };
         public Window Window { get; }
         public Button MaximizeButton { get; }
-        
+        private PaperWindowTheme _theme;
         internal T Component;
         DrawingSurface _surface;
         bool _hasDrawn;
@@ -26,6 +27,7 @@ namespace Engine.Components.UI
             Parent = parent;
             Component = (T)Parent.GetConsoleComponent<T>();
             Name = "Display for " + Component.Name;
+            _theme = new PaperWindowTheme();
             Window = new Window(_width, _height)
             {
                 DefaultBackground = Color.Tan,
@@ -37,19 +39,46 @@ namespace Engine.Components.UI
                 Position = position,
                 ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
                 CanTabToNextConsole = true,
-                Theme = new PaperWindowTheme(),
+                Theme = _theme,
                 ThemeColors = ThemeColor.Paper
             };
             Window.ThemeColors.RebuildAppearances();
             Window.MouseButtonClicked += MinimizeMaximize;
 
+            int width = Window.Title.Length + 2; //* 3 
+            int height = 3;
+            List<Cell> buttonCells = new List<Cell>();
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    //set the button text
+                    int glyph;
+                    if (i != 0 && i != 2) //not the top or bottom row
+                    {
+                        if (j != 0 && j != width - 1)
+                        {
+                            glyph = Component.Name[j - 1];
+                        }
+                        else
+                            glyph = '>';
+                    }
+                    else
+                        glyph = '_';
+
+
+                    Cell here = new Cell(ThemeColor.Paper.Text, ThemeColor.Paper.ControlBack, glyph);
+                    buttonCells.Add(here);
+                }
+            }
             MaximizeButton = new Button(Name.Length + 2, 3)
             {
                 Theme = new PaperButtonTheme(),
                 ThemeColors = ThemeColor.Paper,
                 IsVisible = false,
                 Text = Window.Title,
-                TextAlignment = HorizontalAlignment.Center
+                TextAlignment = HorizontalAlignment.Center,
+                Surface = new CellSurface(width, 3, buttonCells.ToArray())
             };
             MaximizeButton.MouseButtonClicked += MaximizeButtonClicked;
             _surface = new DrawingSurface(_width - 2, _height - 2);
@@ -113,6 +142,7 @@ namespace Engine.Components.UI
 
 
                 MaximizeButton.IsVisible = !MaximizeButton.IsVisible;
+                MaximizeButton.Surface.IsDirty = true;
             }
         }
         public override string[] GetDetails()

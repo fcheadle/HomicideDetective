@@ -20,7 +20,7 @@ namespace Engine.Components.UI
 
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

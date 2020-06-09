@@ -72,7 +72,8 @@ namespace Engine
             
             Container = new ContainerConsole();
             Container.Children.Add(MapRenderer);
-
+            ControlsConsole Controls = new ControlsConsole(Settings.GameWidth, 3);
+            Controls.Position = new Coord(0, Settings.GameHeight - 4);
             foreach(IConsoleComponent visible in Player.Components)
             {
                 try
@@ -81,10 +82,12 @@ namespace Engine
                     if (display != null)
                     {
                         Container.Children.Add(display.Window);
+                        Controls.Add(display.MaximizeButton);
                     }
                 }
                 catch { } //dont care
             }
+            Container.Children.Add(Controls);
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
             Global.CurrentScreen = Container;
         }

@@ -2,7 +2,7 @@
 using Engine.Entities.Creatures;
 using Engine.Entities.Items;
 using Engine.Entities.Terrain;
-using Engine.States;
+using Engine.Maps;
 using Engine.Utilities;
 using Microsoft.Xna.Framework;
 using SadConsole;
@@ -14,10 +14,10 @@ namespace Tests
 {
     class MockGame : IGame
     {
-        public static MockState DebugState { get; private set; }
-        public static MenuState Menu { get; private set; }
         public static BasicEntity Player { get; private set; }
-
+        public static SceneMap Map { get; private set; }
+        public static ContainerConsole Container { get; } = new ContainerConsole();
+        public static ControlsConsole Controls { get; } = new ControlsConsole(100, 100);
         public ISettings Settings { get; } = new MockSettings();
         public ICreatureFactory CreatureFactory { get; } = new MockCreatureFactory();
         public ITerrainFactory TerrainFactory { get; } = new MockTerrainFactory();
@@ -48,7 +48,7 @@ namespace Tests
         {
             Global.Fonts.Remove("IBM_16x8");// = new Dictionary<string, FontMaster>();
             Global.Fonts.Remove("IBM_16x8_ext");// = new Dictionary<string, FontMaster>();
-            DebugState = new MockState();
+
             Global.CurrentScreen = DebugState;
             Program.RegisterTestGame(this, Settings, CreatureFactory, ItemFactory, TerrainFactory);
             Player = DebugState.Map.ControlledGameObject;

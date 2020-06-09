@@ -5,6 +5,7 @@ using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Input;
 using System;
+using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 using Console = SadConsole.Console;
 
@@ -67,6 +68,49 @@ namespace Engine.Components.UI
                 _hasDrawn = true;
             };
             Window.Add(ds);
+
+            int width = Window.Title.Length + 2; //* 3 
+            int height = 3;
+            List<Cell> buttonCells = new List<Cell>();
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    //set the button text
+                    int glyph;
+                    if (i != 0 && i != 2) //not the top or bottom row
+                    {
+                        if (j != 0 && j != width - 1)
+                        {
+                            glyph = Name[j - 1];
+                        }
+                        else
+                            glyph = '>';
+                    }
+                    else
+                        glyph = '_';
+
+
+                    Cell here = new Cell(ThemeColor.Paper.Text, ThemeColor.Paper.ControlBack, glyph);
+                    buttonCells.Add(here);
+                }
+            }
+            MaximizeButton = new Button(Name.Length + 2, 3)
+            {
+                Theme = new PaperButtonTheme(),
+                ThemeColors = ThemeColor.Paper,
+                IsVisible = false,
+                Text = Window.Title,
+                TextAlignment = HorizontalAlignment.Center,
+                Surface = new CellSurface(width, 3, buttonCells.ToArray())
+            };
+            MaximizeButton.MouseButtonClicked += MaximizeButtonClicked;
+        }
+
+        private void MaximizeButtonClicked(object sender, MouseEventArgs e)
+        {
+            Window.Show();
+            MaximizeButton.IsVisible = true;
         }
 
         public void Print(string[] text)

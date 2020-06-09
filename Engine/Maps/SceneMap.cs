@@ -54,10 +54,10 @@ namespace Engine.Maps
 
             MakeOutdoors();
             //MakeBackrooms();
-            //MakeRoadsAndBlocks();
-            //MakeHouses();
-            //MakePeople();
-            
+            MakeRoadsAndBlocks();
+            MakeHouses();
+            MakePeople();
+
         }
         private void MakeBackrooms()
         {
