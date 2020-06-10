@@ -73,7 +73,7 @@ namespace Engine
             Container = new ContainerConsole();
             Container.Children.Add(MapRenderer);
             ControlsConsole Controls = new ControlsConsole(Settings.GameWidth, 3);
-            Controls.Position = new Coord(0, Settings.GameHeight - 4);
+            Controls.Position = new Coord(0, Settings.GameHeight - 2);
             foreach(IConsoleComponent visible in Player.Components)
             {
                 try
@@ -89,6 +89,8 @@ namespace Engine
             }
             Container.Children.Add(Controls);
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
+            Container.Components.Add(new WeatherComponent(Map));
+            
             Global.CurrentScreen = Container;
         }
         public void Start()
@@ -106,6 +108,8 @@ namespace Engine
             {
                 Player.IsFocused = true;
             }
+            //Container.IsDirty = true;
+            MapRenderer.IsDirty = true;
         }
 
         private void ControlledGameObjectChanged(object s, ControlledGameObjectChangedArgs e)

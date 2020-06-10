@@ -3,7 +3,7 @@ _A Procedurally Generated Murder-Mystery Game_
 
 Investigate small-town murders. These homicides are procedurally generated from ranges given in the .json files^(Coming Soon). This readme also serves as the design document.
 
-[Subreddit](https://www.reddit.com/r/HomicideDetective)
+[Subreddit](https://www.reddit.com/r/HomicideDetective )
 
 ### Playing
 Clone it, run it. There is currently no content and nothing to do. Requires vs19, netcoreapp3.1

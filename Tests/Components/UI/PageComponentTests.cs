@@ -55,10 +55,10 @@ namespace Tests.Components.UI
             _game = new MockGame(NewPageComponent);
             _game.RunOnce();
             _game.SwapUpdate(GetDetails);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.Container.MapRenderer, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.Container, new Mouse() { RightClicked = true })));
             Assert.IsFalse(_component.Window.IsVisible);
             Assert.IsTrue(_component.MaximizeButton.IsVisible);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.DebugState.MapRenderer, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.Container, new Mouse() { RightClicked = true })));
             Assert.IsTrue(_component.Window.IsVisible);
             Assert.IsFalse(_component.MaximizeButton.IsVisible);
             _game.Stop();

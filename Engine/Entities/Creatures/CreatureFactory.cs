@@ -24,10 +24,7 @@ namespace Engine.Entities.Creatures
             BasicEntity critter = new BasicEntity(Color.White, Color.Black, 1, position, 3, true, true);
             AllCreaturesComponents(critter);
             PersonComponents(critter);
-            critter.Components.Add(new PageComponent<HealthComponent>(critter, position + 3));
-            critter.Components.Add(new PageComponent<ThoughtsComponent>(critter, position + 5));
-            critter.Components.Add(new NotePadComponent(critter, critter.Position + 7));
-            critter.Components.Add(new CSIKeyboardComponent(critter));
+            PlayerComponents(critter);
             return critter;
         }
 
@@ -49,6 +46,14 @@ namespace Engine.Entities.Creatures
             critter.Components.Add(new EmotionsComponent(critter));
             critter.Components.Add(new ActorComponent(critter));
             critter.Components.Add(new SpeechComponent(critter));
+        }
+
+        private void PlayerComponents(BasicEntity critter)
+        {
+            critter.Components.Add(new PageComponent<HealthComponent>(critter, critter.Position + 3));
+            critter.Components.Add(new PageComponent<ThoughtsComponent>(critter, critter.Position + 5));
+            critter.Components.Add(new NotePadComponent(critter, critter.Position + 7));
+            critter.Components.Add(new CSIKeyboardComponent(critter));
         }
     }
 }

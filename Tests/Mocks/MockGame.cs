@@ -1,9 +1,11 @@
 ﻿using Engine;
+using Engine.Components;
 using Engine.Entities.Creatures;
 using Engine.Entities.Items;
 using Engine.Entities.Terrain;
 using Engine.Maps;
 using Engine.Utilities;
+using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
@@ -48,10 +50,13 @@ namespace Tests
         {
             Global.Fonts.Remove("IBM_16x8");// = new Dictionary<string, FontMaster>();
             Global.Fonts.Remove("IBM_16x8_ext");// = new Dictionary<string, FontMaster>();
-
-            Global.CurrentScreen = DebugState;
+            Map = new SceneMap(100, 100);
+            Container.Components.Add(new WeatherComponent(Map));
+            Global.CurrentScreen = Container;
             Program.RegisterTestGame(this, Settings, CreatureFactory, ItemFactory, TerrainFactory);
-            Player = DebugState.Map.ControlledGameObject;
+            Map.ControlledGameObject = CreatureFactory.Player(new Coord(15, 15));
+
+            Player = Map.ControlledGameObject;
             Player.Components.Add(new MockComponent());
         }
     }

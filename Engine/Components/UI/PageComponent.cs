@@ -105,7 +105,7 @@ namespace Engine.Components.UI
         private void MaximizeButtonClicked(object sender, MouseEventArgs e)
         {
             Window.Show();
-            MaximizeButton.IsVisible = true;
+            MaximizeButton.IsVisible = false;
         }
         public void Print(string[] text)
         {
