@@ -19,7 +19,7 @@ namespace Engine.Utilities
         public FontMaster FontMaster { get; set; }
         public Font Font { get; set; }
         public Dictionary<Keys, Direction> MovementKeyBindings { get; }
-        public Dictionary<Keys, GameActions> KeyBindings { get; }
+        public Dictionary<GameActions, Keys> KeyBindings { get; }
 
         public void TogglePause();
         public void ToggleMenu();

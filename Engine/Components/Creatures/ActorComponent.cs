@@ -16,10 +16,11 @@ namespace Engine.Components.Creature
         public ActorComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
         {
             Parent = parent;
+            Name = "Actor Component";
         }
         public void Act()
         {
-            if (((BasicEntity)Parent).GetComponent<KeyboardComponent>() != null)
+            if (Parent.GetComponent<CSIKeyboardComponent>() != null)
                 return;
 
             //Determine whether or not we have a path

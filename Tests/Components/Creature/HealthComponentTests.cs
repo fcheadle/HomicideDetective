@@ -69,7 +69,7 @@ namespace Tests.Components.Creature
             _component = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
             _answer = _component.GetDetails();
             _maximum = _component.LungCapacity;
-            Assert.AreEqual(4, _answer.Length);
+            Assert.Less(4, _answer.Length);
         }
 
         [Test]

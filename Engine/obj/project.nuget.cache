@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7dVMbKaFVgX36O9ehPPsONzw7IZdQLic1cTARpJ/lOcSnwHqYpomHvxWpa3J2w2AWX8l1y7ejid4ArAoHhQc1g==",
+  "dgSpecHash": "qpdWUbd9SnUmgude60ExbhWwWWiCNcJHF9JGmQ0kiL1r/4WbvFS8U6idiBmUaHmvaBh5TziDfir6rr1wfhE7Sg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\Engine.csproj",
+  "projectFilePath": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\fchea\\.nuget\\packages\\gorogue\\2.6.2\\gorogue.2.6.2.nupkg.sha512",
     "C:\\Users\\fchea\\.nuget\\packages\\monogame.framework.desktopgl.core\\3.8.0.13\\monogame.framework.desktopgl.core.3.8.0.13.nupkg.sha512",
@@ -10,8 +10,7 @@
     "C:\\Users\\fchea\\.nuget\\packages\\optimizedpriorityqueue\\4.2.0\\optimizedpriorityqueue.4.2.0.nupkg.sha512",
     "C:\\Users\\fchea\\.nuget\\packages\\sadconsole\\8.99.1\\sadconsole.8.99.1.nupkg.sha512",
     "C:\\Users\\fchea\\.nuget\\packages\\sadconsole.goroguehelpers\\1.0.0\\sadconsole.goroguehelpers.1.0.0.nupkg.sha512",
-    "C:\\Users\\fchea\\.nuget\\packages\\troschuetz.random\\4.3.1\\troschuetz.random.4.3.1.nupkg.sha512",
-    "C:\\Users\\fchea\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
+    "C:\\Users\\fchea\\.nuget\\packages\\troschuetz.random\\4.3.1\\troschuetz.random.4.3.1.nupkg.sha512"
   ],
   "logs": []
 }

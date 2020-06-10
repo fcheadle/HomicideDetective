@@ -19,45 +19,6 @@ namespace Tests.Utilities
             Assert.AreNotEqual(0.000, answer); //I mean, statistically...
         }
         [Test]
-        public void RandomFunction3dTest()
-        {
-            var f = Calculate.RandomFunction3d();
-            double answer = f(77, -14);
-            Assert.AreNotEqual(0.000, answer); //I mean, statistically...
-        }
-        [Test]
-        public void RandomFunction4dTest()
-        {
-            var f = Calculate.RandomFunction4d();
-            bool answer = f(63, 35, TimeSpan.FromMilliseconds(100));
-            Assert.AreNotEqual(0.000, answer); //I mean, statistically...
-            //Assert.Fail();
-        }
-        [Test]
-        public void InnerFromOuterPointsTest()
-        {
-            List<Coord> inner = new List<Coord>();
-            List<Coord> outer = new List<Coord>();
-
-            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(1, 1), new Coord(5, 0)));
-            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(5, 0), new Coord(7, 3)));
-            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(7, 3), new Coord(3, 4)));
-            outer.AddRange(Calculate.PointsAlongStraightLine(new Coord(3, 4), new Coord(1, 1)));
-
-            inner = Calculate.InnerFromOuterPoints(outer).ToList();
-            Assert.Greater(outer.Count * 10, inner.Count);
-
-            Assert.IsFalse(inner.Contains(new Coord(-5, -5)));
-            Assert.IsFalse(inner.Contains(new Coord(1, 2)));
-            Assert.IsFalse(inner.Contains(new Coord(9, 8)));
-            Assert.IsFalse(inner.Contains(new Coord(6, 15)));
-
-            Assert.IsTrue(inner.Contains(new Coord(2, 1)));
-            Assert.IsTrue(inner.Contains(new Coord(4, 1)));
-            Assert.IsTrue(inner.Contains(new Coord(6, 3)));
-            Assert.IsTrue(inner.Contains(new Coord(3, 3)));
-        }
-        [Test]
         public void PointsAlongStraightLineTest()
         {
             Coord start = new Coord(1, 1);
@@ -108,13 +69,6 @@ namespace Tests.Utilities
             }
 
             Assert.AreEqual(12, answer.Count);
-        }
-        [Test] //skip for now
-        public void MasterFormulaTest()
-        {
-            var f = Calculate.MasterFormula();
-            double z = f(304, -77);
-            Assert.NotZero(z); //i mean, statistically...
         }
         [Test]
         public void PolarToCartesianTest()
@@ -182,64 +136,5 @@ namespace Tests.Utilities
             double five = Calculate.DistanceBetween(new Coord(0, 0), new Coord(3, 4));
             Assert.AreEqual(5, five, "Got an answer other than 5");
         }
-
-        [Test]
-        public void BoundedTanTest()
-        {
-            for (int i = 0; i < 100; i++)
-            {
-                double fx = Calculate.BoundedTan(i);
-                Assert.Greater(1.01, fx);
-                Assert.Less(-1.01, fx);
-            }
-        }
-
-        //[Test]
-        //public void CircleTest()
-        //{
-        //    List<Coord> circle = Calculate.Circle(new Coord(0, 0), 5).ToList();
-        //    Assert.AreEqual(79, circle.Count);
-
-        //    Assert.IsTrue(circle.Contains(new Coord(0, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, 1)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, 2)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, 3)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, 4)));
-        //    Assert.IsFalse(circle.Contains(new Coord(0, 5)));
-        //    Assert.IsFalse(circle.Contains(new Coord(0, 6)));
-        //    Assert.IsFalse(circle.Contains(new Coord(0, 7)));
-        //    Assert.IsFalse(circle.Contains(new Coord(0, 8)));
-        //    Assert.IsFalse(circle.Contains(new Coord(0, 9)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, -0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, -1)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, -2)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, -3)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, -4)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, -5)));
-        //    Assert.IsFalse(circle.Contains(new Coord(0, -6)));
-        //    Assert.IsFalse(circle.Contains(new Coord(0, -7)));
-        //    Assert.IsFalse(circle.Contains(new Coord(0, -8)));
-        //    Assert.IsFalse(circle.Contains(new Coord(0, -9)));
-        //    Assert.IsTrue(circle.Contains(new Coord(0, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(1, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(2, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(3, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(4, 0)));
-        //    Assert.IsFalse(circle.Contains(new Coord(5, 0)));
-        //    Assert.IsFalse(circle.Contains(new Coord(6, 0)));
-        //    Assert.IsFalse(circle.Contains(new Coord(7, 0)));
-        //    Assert.IsFalse(circle.Contains(new Coord(8, 0)));
-        //    Assert.IsFalse(circle.Contains(new Coord(9, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(-0, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(-1, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(-2, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(-3, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(-4, 0)));
-        //    Assert.IsTrue(circle.Contains(new Coord(-5, 0)));
-        //    Assert.IsFalse(circle.Contains(new Coord(-6, 0)));
-        //    Assert.IsFalse(circle.Contains(new Coord(-7, 0)));
-        //    Assert.IsFalse(circle.Contains(new Coord(-8, 0)));
-        //    Assert.IsFalse(circle.Contains(new Coord(-9, 0)));
-        //}
     }
 }

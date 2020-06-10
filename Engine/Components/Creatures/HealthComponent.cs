@@ -1,7 +1,9 @@
-﻿using GoRogue;
+﻿using Engine.Utilities;
+using GoRogue;
 using SadConsole;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Engine.Components.Creature
 {
@@ -24,8 +26,7 @@ namespace Engine.Components.Creature
         public float LungCapacity { get; private set; } //cm^3
         public float CurrentBreathVolume { get; private set; } //cm^3
         public float TypicalBloodVolume { get; set; } //in ml
-        private float _totalTime;
-
+        private int _timeUnitsElapsed;
         private float _heartBeatsPerMinute;
         private float _breathsPerMinute;
         private float _heartBeatStatus;
@@ -35,6 +36,7 @@ namespace Engine.Components.Creature
             : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
         {
             Parent = parent;
+            Name = "Health Component";
             SystoleBloodPressure = systoleBloodPressure;
             DiastoleBloodPressure = diastoleBloodPressure;
             Pulse = pulse;
@@ -51,7 +53,6 @@ namespace Engine.Components.Creature
 
         public override void Update(SadConsole.Console console, TimeSpan delta)
         {
-            _totalTime += (float)delta.TotalSeconds;
             base.Update(console, delta);
         }
 
@@ -63,41 +64,64 @@ namespace Engine.Components.Creature
             
             float delta = ms * period;
             float ratio = (float)Math.Sin(delta); //from -1 to 1
-            CurrentBreathVolume = _halfBreathVolume * ratio + _halfBreathVolume;
+            CurrentBreathVolume = (float)Math.Round(_halfBreathVolume * ratio + _halfBreathVolume, 1);
         }
 
         public Coord MonitorHeart()
         {
             //x position is between 0-23
-            int x = (int)Math.Round(_totalTime) % 24;
+            int x = _timeUnitsElapsed % 24;
             int y = (int)Math.Round(_heartBeatStatus);
             return new Coord(x, y);
         }
-        private void BeatHeart(float ms)
+        private void BeatHeart(int timeUnits)
         {
             //a graph that stays really close to 0 until we get close to zero, then it pulses up and down real quick-like
             //period goes from -15 to 15
-            float period = _heartBeatsPerMinute / 60 * (ms + 1);
-            _heartBeatStatus = 2f * (float)Math.Sin(Math.Sin(10/period));
+            timeUnits = timeUnits % 15;
+            timeUnits -= 15;
+            timeUnits = timeUnits == 0 ? 1 : timeUnits;
+            float period = (_heartBeatsPerMinute / 60) * timeUnits;
+            _heartBeatStatus = Formulae.HeartBeat(period);
         }
 
         public override string[] GetDetails()
         {
             string[] message = {
-                "Body Temp: " + CurrentBodyTemperature,
-                "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
+                "Temp: " + CurrentBodyTemperature,
                 "Pulse: " + Pulse + "bpm",
-                "Lung Capacity: " + CurrentBreathVolume + "/" + LungCapacity,
+                "Breath: " + CurrentBreathVolume + "/" + LungCapacity,
+                "Heart BP: " + _heartBeatStatus
             };
 
+            return message.Concat(HeartMonitotStrings()).ToArray();
+        }
 
-            return message;
+        private string[] HeartMonitotStrings()
+        {
+            Coord beep = MonitorHeart();
+            List<string> answer = new List<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                string line = "";
+                for (int j = 0; j < 30; j++)
+                {
+                    if (beep.X == j && beep.Y == i - 2)
+                        line += "*";
+                    else
+                        line += "_";
+                }
+                answer.Add(line);
+            }
+
+            return answer.ToArray();
         }
 
         public override void ProcessTimeUnit()
         {
-            BeatHeart(_totalTime);
-            Breathe(_totalTime); 
+            _timeUnitsElapsed++;
+            BeatHeart(_timeUnitsElapsed);
+            Breathe(_timeUnitsElapsed); 
         }
     }
 }

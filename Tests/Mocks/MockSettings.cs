@@ -5,20 +5,21 @@ using SadConsole;
 using System;
 using System.Collections.Generic;
 
-namespace Engine
+namespace Tests
 {
-    public class Settings : ISettings
+    internal class MockSettings : ISettings
     {
-        public int MapWidth { get; set; } = 360;
-        public int MapHeight { get; set; } = 360;
-        public int GameWidth { get; set; } = 120;
-        public int GameHeight { get; set; } = 40;
-        public bool IsPaused { get; set; } = false;
         public bool ShowingMenu { get; set; } = false;
+        public int MapWidth { get; set; } = 100;
+        public int MapHeight { get; set; } = 100;
+        public int GameWidth { get; set; } = 100;
+        public int GameHeight { get; set; } = 100;
+        public bool IsPaused { get; set; } = false;
         public Random Random { get; set; } = new Random();
         public Radius FOVRadius { get; set; } = Radius.CIRCLE;
         public FontMaster FontMaster { get; set; }
         public Font Font { get; set; }
+
         public Dictionary<Keys, Direction> MovementKeyBindings { get; } = new Dictionary<Keys, Direction>
         {
             { Keys.NumPad7, Direction.UP_LEFT },    { Keys.NumPad8, Direction.UP },     { Keys.NumPad9, Direction.UP_RIGHT },
@@ -28,9 +29,9 @@ namespace Engine
             { Keys.W, Direction.UP }, { Keys.S, Direction.DOWN }, { Keys.A, Direction.LEFT }, { Keys.D, Direction.RIGHT }
         };
 
-        public Dictionary<GameActions,Keys> KeyBindings { get; } = new Dictionary<GameActions, Keys>
+        public Dictionary<GameActions, Keys> KeyBindings { get; } = new Dictionary<GameActions, Keys>
         {
-            {GameActions.RefocusOnPlayer,           Keys.Tab},                           
+            {GameActions.RefocusOnPlayer,           Keys.Tab},
             {GameActions.TogglePause,               Keys.Space },
             {GameActions.ToggleMenu,                Keys.Escape},
             {GameActions.TakePhotograph,            Keys.P },

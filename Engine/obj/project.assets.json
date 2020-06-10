@@ -292,11 +292,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\Engine.csproj",
+      "projectUniqueName": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj",
       "projectName": "Engine",
-      "projectPath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\Engine.csproj",
+      "projectPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj",
       "packagesPath": "C:\\Users\\fchea\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\obj\\",
+      "outputPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -310,7 +310,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://proget.tcdevops.com/nuget/tcproget/": {}
       },
       "frameworks": {
         "netcoreapp3.1": {
@@ -353,18 +354,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[3.1.2, 3.1.2]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
       }
     }
   }

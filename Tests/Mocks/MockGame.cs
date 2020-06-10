@@ -1,9 +1,11 @@
 ﻿using Engine;
+using Engine.Components;
 using Engine.Entities.Creatures;
 using Engine.Entities.Items;
 using Engine.Entities.Terrain;
-using Engine.States;
+using Engine.Maps;
 using Engine.Utilities;
+using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
@@ -14,14 +16,14 @@ namespace Tests
 {
     class MockGame : IGame
     {
-        public static MockState DebugState { get; private set; }
-        public static MenuState Menu { get; private set; }
         public static BasicEntity Player { get; private set; }
-
-        public ISettings Settings { get; } = new Settings();
-        public ICreatureFactory CreatureFactory { get; } = new CreatureFactory();
-        public ITerrainFactory TerrainFactory { get; } = new TerrainFactory();
-        public IItemFactory ItemFactory { get; } = new ItemFactory();
+        public static SceneMap Map { get; private set; }
+        public static ContainerConsole Container { get; } = new ContainerConsole();
+        public static ControlsConsole Controls { get; } = new ControlsConsole(100, 100);
+        public ISettings Settings { get; } = new MockSettings();
+        public ICreatureFactory CreatureFactory { get; } = new MockCreatureFactory();
+        public ITerrainFactory TerrainFactory { get; } = new MockTerrainFactory();
+        public IItemFactory ItemFactory { get; } = new MockItemFactory();
 
         public MockGame(Action<GameTime> update)
         {
@@ -48,10 +50,13 @@ namespace Tests
         {
             Global.Fonts.Remove("IBM_16x8");// = new Dictionary<string, FontMaster>();
             Global.Fonts.Remove("IBM_16x8_ext");// = new Dictionary<string, FontMaster>();
-            DebugState = new MockState();
-            Global.CurrentScreen = DebugState;
+            Map = new SceneMap(100, 100);
+            Container.Components.Add(new WeatherComponent(Map));
+            Global.CurrentScreen = Container;
             Program.RegisterTestGame(this, Settings, CreatureFactory, ItemFactory, TerrainFactory);
-            Player = DebugState.Map.ControlledGameObject;
+            Map.ControlledGameObject = CreatureFactory.Player(new Coord(15, 15));
+
+            Player = Map.ControlledGameObject;
             Player.Components.Add(new MockComponent());
         }
     }

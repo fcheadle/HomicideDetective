@@ -1,16 +1,14 @@
 ﻿using Engine.Components;
 using Engine.Components.Creature;
 using Engine.Components.UI;
-using Engine.Maps;
+using Engine.Entities.Creatures;
 using GoRogue;
-using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using System.Collections.Generic;
 
-namespace Engine.Entities.Creatures
+namespace Tests
 {
-    public class CreatureFactory : ICreatureFactory
+    internal class MockCreatureFactory : ICreatureFactory
     {
         public BasicEntity Person(Coord position)
         {
@@ -27,7 +25,6 @@ namespace Engine.Entities.Creatures
             PlayerComponents(critter);
             return critter;
         }
-
         public BasicEntity Animal(Coord position)
         {
             BasicEntity critter = new BasicEntity(Color.Gray, Color.Black, 224, position, 3, true, true);
@@ -47,7 +44,6 @@ namespace Engine.Entities.Creatures
             critter.Components.Add(new ActorComponent(critter));
             critter.Components.Add(new SpeechComponent(critter));
         }
-
         private void PlayerComponents(BasicEntity critter)
         {
             critter.Components.Add(new PageComponent<HealthComponent>(critter, critter.Position + 3));

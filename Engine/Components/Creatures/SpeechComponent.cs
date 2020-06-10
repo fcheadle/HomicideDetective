@@ -1,5 +1,4 @@
-﻿using Engine.States;
-using GoRogue;
+﻿using GoRogue;
 using SadConsole;
 
 namespace Engine.Components.Creature
@@ -22,6 +21,7 @@ namespace Engine.Components.Creature
         public SpeechComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: false, isDraw: true, isMouse: false)
         {
             Parent = parent;
+            Name = "Speech Component";
             TendencyToMinimize = Calculate.Percent();    // m
             TendencyToInvalidate = Calculate.Percent();  // i
             TendencyToDeny = Calculate.Percent();        // d

@@ -1,4 +1,5 @@
-﻿using Engine.Components.Creature;
+﻿using Engine.Components;
+using Engine.Components.Creature;
 using Engine.Components.UI;
 using Engine.Entities.Creatures;
 using Engine.Entities.Items;
@@ -10,31 +11,40 @@ using GoRogue;
 using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
+using SadConsole.Components;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Engine
 {
     public class Game : IGame
     {
         public const double TimeIncrement = 100;
-        public ISettings Settings { get; }
-        public ICreatureFactory CreatureFactory { get; }
-        public IItemFactory ItemFactory { get; }
-        public ITerrainFactory TerrainFactory { get; }
+        public ISettings Settings { get => _settings; }
+        public ICreatureFactory CreatureFactory { get => _creatureFactory; }
+        public IItemFactory ItemFactory { get => _itemFactory; }
+        public ITerrainFactory TerrainFactory { get => _terrainFactory; }
         public SceneMap Map { get; private set; }
         public ScrollingConsole MapRenderer { get; private set; }
         public ContainerConsole Container { get; private set; }
-        public DisplayComponent<ThoughtsComponent> Thoughts { get => (DisplayComponent<ThoughtsComponent>)Player.GetComponent<DisplayComponent<ThoughtsComponent>>(); }
-        public DisplayComponent<HealthComponent> Health { get => (DisplayComponent<HealthComponent>)Player.GetComponent<DisplayComponent<HealthComponent>>(); }
         public BasicEntity Player { get => Map.ControlledGameObject; }
         public ActorComponent Actor { get => (ActorComponent)Player.GetComponent<ActorComponent>(); }
-
+        public CSIKeyboardComponent KeyBoardComponent { get => (CSIKeyboardComponent)Player.GetComponent<CSIKeyboardComponent>(); }
+        public PageComponent<ThoughtsComponent> Thoughts { get => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>(); }
+        public PageComponent<HealthComponent> Health { get => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>(); }
+        private static ISettings _settings;
+        private static ICreatureFactory _creatureFactory;
+        private static ITerrainFactory _terrainFactory;
+        private static IItemFactory _itemFactory;
+        public bool IsPaused { get => SadConsole.Global.CurrentScreen.IsPaused; set => SadConsole.Global.CurrentScreen.IsPaused = value; }
+        private int _fovRadius;
         public Game(ISettings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, ITerrainFactory terrainFactory) 
         {
-            Settings = settings;
-            CreatureFactory = creatureFactory;
-            ItemFactory = itemFactory;
-            TerrainFactory = terrainFactory;
+            _settings = settings;
+            _creatureFactory = creatureFactory;
+            _itemFactory = itemFactory;
+            _terrainFactory = terrainFactory;
             Setup();
         }
 
@@ -46,23 +56,41 @@ namespace Engine
         }
         public void Init()
         {
-            //readonly fields
             Map = new SceneMap(Settings.MapWidth, Settings.MapHeight);
-            var player = CreatureFactory.Player(new Coord(15, 15));
-            MapRenderer = Map.CreateRenderer(new Microsoft.Xna.Framework.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault);
-            Container = new ContainerConsole();
-            Map.ControlledGameObject = player;
-            Map.AddEntity(Map.ControlledGameObject);
-            Container.Children.Add(MapRenderer);
-            Container.Children.Add(Thoughts.Display);
-            Container.Children.Add(Health.Display);
-
+            //just in case weird things happened, move this to after player declaration?
+            MapRenderer = Map.CreateRenderer(new GoRogue.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault); 
+            MapRenderer.UseMouse = true;
+            MapRenderer.FocusOnMouseClick = false;
+            Map.ControlledGameObject = CreatureFactory.Player(new Coord(15, 15));
             Map.ControlledGameObject.IsFocused = true;
+            Map.ControlledGameObject.FocusOnMouseClick = true;
             Map.ControlledGameObject.Moved += Player_Moved;
             Map.ControlledGameObjectChanged += ControlledGameObjectChanged;
-
+            Map.AddEntity(Map.ControlledGameObject);
             Map.CalculateFOV(Actor.Position, Actor.FOVRadius);
+            _fovRadius = Actor.FOVRadius;
+            
+            Container = new ContainerConsole();
+            Container.Children.Add(MapRenderer);
+            ControlsConsole Controls = new ControlsConsole(Settings.GameWidth, 3);
+            Controls.Position = new Coord(0, Settings.GameHeight - 2);
+            foreach(IConsoleComponent visible in Player.Components)
+            {
+                try
+                {
+                    IDisplay display = (IDisplay)visible;
+                    if (display != null)
+                    {
+                        Container.Children.Add(display.Window);
+                        Controls.Add(display.MaximizeButton);
+                    }
+                }
+                catch { } //dont care
+            }
+            Container.Children.Add(Controls);
             MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
+            Container.Components.Add(new WeatherComponent(Map));
+            
             Global.CurrentScreen = Container;
         }
         public void Start()
@@ -75,8 +103,15 @@ namespace Engine
         }
         public void Update(GameTime time)
         {
-
+            //is it good practice to do keyboard interception here?
+            if (Global.KeyboardState.IsKeyReleased(Settings.KeyBindings[GameActions.RefocusOnPlayer]))
+            {
+                Player.IsFocused = true;
+            }
+            //Container.IsDirty = true;
+            MapRenderer.IsDirty = true;
         }
+
         private void ControlledGameObjectChanged(object s, ControlledGameObjectChangedArgs e)
         {
             if (e.OldObject != null)

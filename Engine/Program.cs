@@ -4,7 +4,6 @@ using Engine.Entities.Creatures;
 using Engine.Entities.Items;
 using Engine.Entities.Terrain;
 using Engine.Extensions;
-using Engine.States;
 using Engine.Utilities;
 using Microsoft.Xna.Framework;
 using SadConsole;
@@ -14,7 +13,6 @@ namespace Engine
 {
     public class Program
     {
-        public static MenuState Menu { get; private set; }
         public static IGame CurrentGame { get; private set; }
         public static ISettings Settings { get; private set; }
         public static ICreatureFactory CreatureFactory { get; private set; }
@@ -35,8 +33,8 @@ namespace Engine
             Settings = settings ?? new Settings();
             CreatureFactory = creatureFactory ?? new CreatureFactory();
             TerrainFactory = terrainFactory ?? new TerrainFactory();
-            ItemFactory = itemFactory ?? new ItemFactory();
-            CurrentGame = new Game(Settings, CreatureFactory, ItemFactory, TerrainFactory);
+            ItemFactory = itemFactory ?? new MockItemFactory();
+            CurrentGame = game ?? new Game(Settings, CreatureFactory, ItemFactory, TerrainFactory);
             CurrentGame.Start();
             CurrentGame.Stop();
         }
@@ -52,7 +50,7 @@ namespace Engine
             Settings = settings ?? new Settings();
             CreatureFactory = creatureFactory ?? new CreatureFactory();
             TerrainFactory = terrainFactory ?? new TerrainFactory();
-            ItemFactory = itemFactory ?? new ItemFactory();
+            ItemFactory = itemFactory ?? new MockItemFactory();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Engine.Components.Terrain
         int _animationIndex = 0;
         TimeSpan _interval = TimeSpan.FromMilliseconds(100);
         TimeSpan _counter = TimeSpan.FromSeconds(0);
-
+        Timer _timer = new Timer(TimeSpan.FromMilliseconds(15));
         public IGameObject Parent { get; set; }
         public bool Blowing { get; internal set; }
 
@@ -57,8 +57,8 @@ namespace Engine.Components.Terrain
                     parent.Glyph = _ogGlyph;
                     Blowing = false;
                 }
+                
             }
         }
-
     }
 }
