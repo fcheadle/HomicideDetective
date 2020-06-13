@@ -292,11 +292,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj",
+      "projectUniqueName": "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\Engine.csproj",
       "projectName": "Engine",
-      "projectPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\Engine.csproj",
+      "projectPath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\Engine.csproj",
       "packagesPath": "C:\\Users\\fchea\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fchea\\projects\\HomicideDetective\\Engine\\obj\\",
+      "outputPath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\Engine\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -310,8 +310,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://proget.tcdevops.com/nuget/tcproget/": {}
+        "C:\\Users\\fchea\\Documents\\work\\TC.WebAutomationUtilities\\src\\TC.WebAutomationUtilities\\bin\\Debug": {},
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp3.1": {

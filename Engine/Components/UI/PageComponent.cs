@@ -33,7 +33,7 @@ namespace Engine.Components.UI
                 DefaultBackground = Color.Tan,
                 Title = Component.Name,
                 TitleAlignment = HorizontalAlignment.Center,
-                IsVisible = true,
+                IsVisible = false,
                 IsFocused = false,
                 FocusOnMouseClick = false,
                 Position = position,
@@ -54,18 +54,22 @@ namespace Engine.Components.UI
                 {
                     //set the button text
                     int glyph;
-                    if (i != 0 && i != 2) //not the top or bottom row
+                    if (i == 0) //not the top or bottom row
                     {
-                        if (j != 0 && j != width - 1)
-                        {
-                            glyph = Component.Name[j - 1];
-                        }
+                        if (j == width - 1)
+                            glyph = 191;
                         else
-                            glyph = '>';
+                            glyph = 196;
                     }
                     else
-                        glyph = '_';
-
+                    {
+                        if (j != 0 && j != width - 1)
+                            glyph = Component.Name[j - 1];
+                        else if (j == 0)
+                            glyph = ' ';
+                        else
+                            glyph = 179;
+                    }
 
                     Cell here = new Cell(ThemeColor.Paper.Text, ThemeColor.Paper.ControlBack, glyph);
                     buttonCells.Add(here);
@@ -75,7 +79,7 @@ namespace Engine.Components.UI
             {
                 Theme = new PaperButtonTheme(),
                 ThemeColors = ThemeColor.Paper,
-                IsVisible = false,
+                IsVisible = true,
                 Text = Window.Title,
                 TextAlignment = HorizontalAlignment.Center,
                 Surface = new CellSurface(width, 3, buttonCells.ToArray())
@@ -104,8 +108,10 @@ namespace Engine.Components.UI
 
         private void MaximizeButtonClicked(object sender, MouseEventArgs e)
         {
-            Window.Show();
-            MaximizeButton.IsVisible = false;
+            if (Window.IsVisible)
+                Window.Hide();
+            else
+                Window.Show();
         }
         public void Print(string[] text)
         {
@@ -139,10 +145,6 @@ namespace Engine.Components.UI
                     Window.Hide();
                 else
                     Window.Show();
-
-
-                MaximizeButton.IsVisible = !MaximizeButton.IsVisible;
-                MaximizeButton.Surface.IsDirty = true;
             }
         }
         public override string[] GetDetails()

@@ -34,7 +34,7 @@ namespace Engine.Components.UI
                 DefaultBackground = Color.Tan,
                 Title = Name,
                 TitleAlignment = HorizontalAlignment.Center,
-                IsVisible = true,
+                IsVisible = false,
                 IsFocused = false,
                 FocusOnMouseClick = false,
                 Position = position,
@@ -43,16 +43,14 @@ namespace Engine.Components.UI
                 ThemeColors = ThemeColor.Paper,
                 CanTabToNextConsole = true,
             };
-            BackPageButton = new Button(1) { Position = new Coord(0, _height - 1), Text = "<" };
+            BackPageButton = new Button(2) { Position = new Coord(0, _height - 1), Text = "<=",  };
             BackPageButton.MouseButtonClicked += BackButton_Clicked;
             Window.Add(BackPageButton);
 
-            NextPageButton = new Button(1) { Position = new Coord(_width - 1, _height - 1), Text = ">" };
+            NextPageButton = new Button(2) { Position = new Coord(_width - 2, _height - 1), Text = "=>" };
             NextPageButton.MouseButtonClicked += NextButton_Clicked;
             Window.Add(NextPageButton); 
-            Window.Show();
-
-
+            Window.MouseButtonClicked += MinimizeMaximize;
 
             DrawingSurface ds = new DrawingSurface(_width - 2, _height - 2);
             ds.Position = new Coord(1, 1);
@@ -78,17 +76,22 @@ namespace Engine.Components.UI
                 {
                     //set the button text
                     int glyph;
-                    if (i != 0 && i != 2) //not the top or bottom row
+                    if (i == 0) //not the top or bottom row
                     {
-                        if (j != 0 && j != width - 1)
-                        {
-                            glyph = Name[j - 1];
-                        }
+                        if (j == width - 1)
+                            glyph = 191;
                         else
-                            glyph = '>';
+                            glyph = 196;
                     }
                     else
-                        glyph = '_';
+                    {
+                        if (j != 0 && j != width - 1)
+                            glyph = Name[j - 1];
+                        else if (j == 0)
+                            glyph = ' ';
+                        else
+                            glyph = 179;
+                    }
 
 
                     Cell here = new Cell(ThemeColor.Paper.Text, ThemeColor.Paper.ControlBack, glyph);
@@ -99,7 +102,7 @@ namespace Engine.Components.UI
             {
                 Theme = new PaperButtonTheme(),
                 ThemeColors = ThemeColor.Paper,
-                IsVisible = false,
+                IsVisible = true,
                 Text = Window.Title,
                 TextAlignment = HorizontalAlignment.Center,
                 Surface = new CellSurface(width, 3, buttonCells.ToArray())
@@ -109,10 +112,21 @@ namespace Engine.Components.UI
 
         private void MaximizeButtonClicked(object sender, MouseEventArgs e)
         {
-            Window.Show();
-            MaximizeButton.IsVisible = true;
+            if (Window.IsVisible)
+                Window.Hide();
+            else
+                Window.Show();
         }
-
+        public void MinimizeMaximize(object sender, MouseEventArgs args)
+        {
+            if (args.MouseState.Mouse.RightClicked)
+            {
+                if (Window.IsVisible)
+                    Window.Hide();
+                else
+                    Window.Show();
+            }
+        }
         public void Print(string[] text)
         {
             Window.Fill(Color.Blue, Color.Tan, '_');
@@ -123,8 +137,6 @@ namespace Engine.Components.UI
         }
         public void Print(Area[] areas)
         {
-            Window.Fill(Color.Blue, Color.Tan, '_');
-            //Display.Fill(Color.Transparent, Display.DefaultBackground, 0);
             for (int i = 0; i < areas.Length; i++)
             {
                 Window.Print(0, i, new ColoredString(areas[i].Name, Color.DarkBlue, Color.Transparent));
@@ -138,21 +150,18 @@ namespace Engine.Components.UI
 
         public override void Update(Console console, TimeSpan delta)
         {
-            //Window.Title = CurrentPage.Title;
             Window.Update(delta);
             base.Update(console, delta);
         }
 
         public override void ProcessMouse(Console console, MouseConsoleState state, out bool handled)
         {
-            //Console.ProcessMouse(state);
             Window.ProcessMouse(state);
             base.ProcessMouse(console, state, out handled);
         }
 
         public override void ProcessKeyboard(Console console, SadConsole.Input.Keyboard state, out bool handled)
         {
-            //Console.ProcessMouse(state);
             Window.ProcessKeyboard(state);
             base.ProcessKeyboard(console, state, out handled);
         }
@@ -179,7 +188,6 @@ namespace Engine.Components.UI
 
         public override void ProcessTimeUnit()
         {
-            //do nothing
         }
     }
 }

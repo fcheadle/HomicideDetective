@@ -26,5 +26,24 @@ namespace Engine.Components.UI
             ControlHostBack = Color.Tan,
             ControlHostFore = Color.Blue,
         };
+
+        public static Colors Clear => new Colors()
+        {
+            TitleText = Color.Black,
+            Lines = Color.Transparent,
+            TextBright = Color.White,
+            Text = Color.LightGray,
+            TextSelected = Color.LightBlue,
+            TextSelectedDark = Color.DarkBlue,
+            TextLight = Color.LightGray,
+            TextDark = Color.DarkGray,
+            TextFocused = Color.Blue,
+            ControlBack = Color.Transparent,
+            ControlBackLight = Color.Transparent,
+            ControlBackSelected = Color.Transparent,
+            ControlBackDark = Color.Transparent,
+            ControlHostBack = Color.Transparent,
+            ControlHostFore = Color.Black,
+        };
     }
 }

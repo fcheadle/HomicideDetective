@@ -51,7 +51,7 @@ namespace Engine.Components.Creature
         public EmotionsComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: false, isDraw: true, isMouse: false)
         {
             Parent = parent; 
-            Name = "Emotions Component";
+            Name = "Emotions";
             Angry = 50;
             Aroused = 50;
             Bored = 50;

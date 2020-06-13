@@ -47,7 +47,7 @@ namespace Engine.Components.Creature
             : base(isUpdate: false, isKeyboard: false, isDraw: false, isMouse: false)
         {
             Parent = parent;
-            Name = "Personality Component";
+            Name = "Personality";
             Passion = Calculate.Percent();
             Ambition = Calculate.Percent();
             Courage = Calculate.Percent();

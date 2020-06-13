@@ -10,7 +10,7 @@ namespace Engine.Components.Creature
         public MemoriesComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: false, isDraw: true, isMouse: false)
         {
             Parent = parent;
-            Name = "Memories Component";
+            Name = "Memories";
         }
 
         public override string[] GetDetails()

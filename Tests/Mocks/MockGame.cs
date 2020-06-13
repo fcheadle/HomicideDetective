@@ -18,8 +18,8 @@ namespace Tests
     {
         public static BasicEntity Player { get; private set; }
         public static SceneMap Map { get; private set; }
-        public static ContainerConsole Container { get; } = new ContainerConsole();
-        public static ControlsConsole Controls { get; } = new ControlsConsole(100, 100);
+        public static ContainerConsole Container { get; private set; }
+        public static ControlsConsole Controls { get; private set; }
         public ISettings Settings { get; } = new MockSettings();
         public ICreatureFactory CreatureFactory { get; } = new MockCreatureFactory();
         public ITerrainFactory TerrainFactory { get; } = new MockTerrainFactory();
@@ -50,6 +50,8 @@ namespace Tests
         {
             Global.Fonts.Remove("IBM_16x8");// = new Dictionary<string, FontMaster>();
             Global.Fonts.Remove("IBM_16x8_ext");// = new Dictionary<string, FontMaster>();
+            Container = new ContainerConsole();
+            Controls = new ControlsConsole(100, 100);
             Map = new SceneMap(100, 100);
             Container.Components.Add(new WeatherComponent(Map));
             Global.CurrentScreen = Container;

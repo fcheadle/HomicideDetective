@@ -1,4 +1,5 @@
-﻿using Engine.Extensions;
+﻿using Engine.Components.UI;
+using Engine.Extensions;
 using Engine.Utilities;
 using GoRogue;
 using GoRogue.MapViews;
@@ -82,18 +83,27 @@ namespace Engine.Components
         {
             switch (key)
             {
-                case GameActions.RefocusOnPlayer: Parent.IsFocused = true; break;
+                //opens a magnifying glass?
                 case GameActions.DustItemForPrints:
                 case GameActions.GetItem:
-                case GameActions.LookAtEverythingInSquare:
-                case GameActions.LookAtPerson:
+                case GameActions.LookAtEverythingInSquare: 
+                case GameActions.Talk:
+                case GameActions.LookAtPerson: OpenCursor(key); break;
+                
                 case GameActions.RemoveItemFromInventory:
                 case GameActions.TakePhotograph:
-                case GameActions.Talk:
+
                 case GameActions.ToggleMenu: ToggleMenu(); break;
                 case GameActions.TogglePause: TogglePause(); break;
+                case GameActions.RefocusOnPlayer: Parent.IsFocused = true; break;
             }
         }
+
+        private void OpenCursor(GameActions key)
+        {
+            Parent.Components.Add(new MagnifyingGlassComponent(Parent, Parent.Position, key));
+        }
+
         public void ToggleMenu()
         {
 

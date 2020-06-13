@@ -73,7 +73,10 @@ namespace Engine
             Container = new ContainerConsole();
             Container.Children.Add(MapRenderer);
             ControlsConsole Controls = new ControlsConsole(Settings.GameWidth, 3);
+            Controls.Theme = new PaperWindowTheme();
+            Controls.ThemeColors = ThemeColor.Clear;
             Controls.Position = new Coord(0, Settings.GameHeight - 2);
+            int currentX = 0;
             foreach(IConsoleComponent visible in Player.Components)
             {
                 try
@@ -82,6 +85,8 @@ namespace Engine
                     if (display != null)
                     {
                         Container.Children.Add(display.Window);
+                        display.MaximizeButton.Position = new Coord(currentX, 0);
+                        currentX += display.MaximizeButton.Surface.Width;
                         Controls.Add(display.MaximizeButton);
                     }
                 }

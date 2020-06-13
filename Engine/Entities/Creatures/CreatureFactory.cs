@@ -14,14 +14,14 @@ namespace Engine.Entities.Creatures
     {
         public BasicEntity Person(Coord position)
         {
-            BasicEntity critter = new BasicEntity(Color.White, Color.Black, 2, position, 3, true, true);
+            BasicEntity critter = new BasicEntity(Color.Gray, Color.Black, 1, position, 3, false, true);
             AllCreaturesComponents(critter);
             PersonComponents(critter);
             return critter;
         }
         public BasicEntity Player(Coord position)
         {
-            BasicEntity critter = new BasicEntity(Color.White, Color.Black, 1, position, 3, true, true);
+            BasicEntity critter = new BasicEntity(Color.White, Color.Black, 1, position, 3, false, true);
             AllCreaturesComponents(critter);
             PersonComponents(critter);
             PlayerComponents(critter);
@@ -30,7 +30,7 @@ namespace Engine.Entities.Creatures
 
         public BasicEntity Animal(Coord position)
         {
-            BasicEntity critter = new BasicEntity(Color.Gray, Color.Black, 224, position, 3, true, true);
+            BasicEntity critter = new BasicEntity(Color.Gray, Color.Black, 224, position, 3, false, true);
             AllCreaturesComponents(critter);
             return critter;
         }

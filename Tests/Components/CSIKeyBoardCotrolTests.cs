@@ -1,9 +1,12 @@
 ﻿using Engine;
 using Engine.Components;
+using Engine.Components.UI;
 using Engine.Utilities;
 using GoRogue;
 using Microsoft.Xna.Framework.Input;
 using NUnit.Framework;
+using SadConsole;
+using SadConsole.Controls;
 using SadConsole.Input;
 using System;
 using System.Collections.Generic;
@@ -14,67 +17,75 @@ namespace Tests.Components
 {
     class CSIKeyBoardCotrolTests : TestBase
     {
-        CSIKeyboardComponent _base;
-        string[] _answer;
+        CSIKeyboardComponent _component;
+        CellSurface cursor = new CellSurface(3, 3);
+        
+        public CSIKeyBoardCotrolTests()
+        {
+        }
+
         [Datapoints]
-        GameActions[] actions =
+        GameActions[] newCursorActions =
         {
             GameActions.LookAtEverythingInSquare,
             GameActions.LookAtPerson,
             GameActions.Talk,
-            GameActions.TakePhotograph,
             GameActions.GetItem,
-            GameActions.RemoveItemFromInventory,
-            GameActions.DustItemForPrints, //prints and tracks really just work the same way anyways
-            GameActions.ToggleNotes,
-            GameActions.ToggleInventory,
+        };
+        
+        (GameActions, BasicEntity)[] actionsAndExpectedConditions =
+        {
+            (GameActions.TakePhotograph, MockGame.Player),
+            //(GameActions.RemoveItemFromInventory, 
+            //GameActions.DustItemForPrints, //prints and tracks really just work the same way anyways
+            //GameActions.ToggleNotes,
+            //GameActions.ToggleInventory,
+
         };
 
         [SetUp]
         public void SetUp()
         {
-
+            _game = new MockGame(NewKeyboardComponent);
+            _game.RunOnce();
         }
 
         [Test]
         public void NewKeyBoardComponentTests()
         {
-            _game = new MockGame(NewKeyboardComponent);
-            _game.RunOnce();
             _game.Stop();
         }
         private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = (CSIKeyboardComponent)MockGame.Player.GetComponent<CSIKeyboardComponent>();
-            Assert.NotNull(_base);
-            //_base.ProcessTimeUnit();
+            _component = (CSIKeyboardComponent)MockGame.Player.GetComponent<CSIKeyboardComponent>();
+            Assert.NotNull(_component);
         }
         //[Test]//todo: figure out how to send fake keystrokes
-        public void ListensForKeyTest()
+        public void MovesTest()
         {
             _game = new MockGame(NewKeyboardComponent);
             _game.RunOnce();
             Coord startingPosition = MockGame.Player.Position;
             Coord position = MockGame.Player.Position;
             position += new Coord(1, 0);
-            var keyboard = new MockKeyboard();
+            MockKeyboard keyboard = new MockKeyboard();
             keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Right }, Keys.Right);
-            _base.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
+            _component.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
             Assert.AreEqual(position, MockGame.Player.Position);
             keyboard.Clear();
             position += new Coord(0, 1);
             keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Down }, Keys.Down);
-            _base.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
+            _component.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
             Assert.AreEqual(position, MockGame.Player.Position);
             keyboard.Clear();
             position += new Coord(-1, 0);
             keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Left }, Keys.Left);
-            _base.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
+            _component.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
             Assert.AreEqual(position, MockGame.Player.Position);
             keyboard.Clear();
             position += new Coord(0, -1);
             keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Up }, Keys.Up);
-            _base.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
+            _component.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
             Assert.AreEqual(position, MockGame.Player.Position);
             Assert.AreEqual(startingPosition, MockGame.Player.Position);
             _game.Stop();
@@ -90,7 +101,7 @@ namespace Tests.Components
             var keyboard = new MockKeyboard();
             keyboard.AddKeyDown(new AsciiKey() { Key = Keys.Right }, Keys.Right);
 
-            _base.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
+            _component.ProcessKeyboard(MockGame.Player, keyboard, out bool _);
             Assert.AreEqual(position, MockGame.Player.Position);
             //assert that nothing changed?
 
@@ -99,8 +110,8 @@ namespace Tests.Components
 
         private void TogglePause(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = (CSIKeyboardComponent)MockGame.Player.GetComponent<CSIKeyboardComponent>();
-            _base.TogglePause();
+            _component = (CSIKeyboardComponent)MockGame.Player.GetComponent<CSIKeyboardComponent>();
+            _component.TogglePause();
         }
 
         //[Test] //todo
@@ -109,10 +120,23 @@ namespace Tests.Components
             Assert.Fail();
         }
 
-        //[Theory] //todo
-        public void TakeActionsTest(GameActions action)
+        [Theory] //todo
+        public void OpensACursorTest(GameActions actionThatOpensACursor)
         {
-            Assert.Fail();
+            _game = new MockGame(NewKeyboardComponent);
+            _game.RunOnce();
+            MagnifyingGlassComponent glass = (MagnifyingGlassComponent)MockGame.Player.GetComponent<MagnifyingGlassComponent>();
+            Assert.Null(glass);
+
+            _component.TakeAction(actionThatOpensACursor);
+
+            //assert that our currently focused object is the cursor.
+            DrawingSurface cursor = glass.Surface;
+
+            //Assert.True(cursor.IsVisible);
+            //Assert.True(cursor.IsEnabled);
+            //Assert.AreEqual(cursor.Position, MockGame.Player.Position);
+            //Assert.AreEqual()
         }
     }
 }

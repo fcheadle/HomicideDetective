@@ -8,7 +8,7 @@ namespace Engine.Components.Creature
         public ThoughtsComponent(BasicEntity parent) : base(true, false, false, false)
         {
             Parent = parent;
-            Name = "Thoughts Component";
+            Name = "Thoughts";
         }
 
         public override string[] GetDetails()

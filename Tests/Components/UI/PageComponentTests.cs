@@ -26,9 +26,9 @@ namespace Tests.Components.UI
             _component = (PageComponent<HealthComponent>)MockGame.Player.GetComponent<PageComponent<HealthComponent>>();
             Assert.NotNull(_component);
             Assert.NotNull(_component.Window);
-            Assert.True(_component.Window.IsVisible);
+            Assert.False(_component.Window.IsVisible);
             Assert.NotNull(_component.MaximizeButton);
-            Assert.False(_component.MaximizeButton.IsVisible);
+            Assert.True(_component.MaximizeButton.IsVisible);
             _component.ProcessTimeUnit();
         }
         [Test]
@@ -56,11 +56,11 @@ namespace Tests.Components.UI
             _game.RunOnce();
             _game.SwapUpdate(GetDetails);
             _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.Container, new Mouse() { RightClicked = true })));
-            Assert.IsFalse(_component.Window.IsVisible);
-            Assert.IsTrue(_component.MaximizeButton.IsVisible);
+            Assert.True(_component.Window.IsVisible);
+            Assert.True(_component.MaximizeButton.IsVisible);
             _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.Container, new Mouse() { RightClicked = true })));
-            Assert.IsTrue(_component.Window.IsVisible);
-            Assert.IsFalse(_component.MaximizeButton.IsVisible);
+            Assert.False(_component.Window.IsVisible);
+            Assert.True(_component.MaximizeButton.IsVisible);
             _game.Stop();
         }
         
