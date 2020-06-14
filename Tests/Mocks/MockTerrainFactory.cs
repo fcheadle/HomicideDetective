@@ -12,7 +12,7 @@ namespace Engine.Entities.Terrain
         {
             Color fore;
             Color back;
-            double z = Program.Settings.Random.NextDouble() * glyph;
+            double z = Game.Settings.Random.NextDouble() * glyph;
             if (position.Y % 2 == 0)
             {
                 fore = Color.Cyan.MutateToIndex(-z);

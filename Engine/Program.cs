@@ -13,44 +13,25 @@ namespace Engine
 {
     public class Program
     {
-        public static IGame CurrentGame { get; private set; }
-        public static ISettings Settings { get; private set; }
-        public static ICreatureFactory CreatureFactory { get; private set; }
-        public static IItemFactory ItemFactory { get; private set; }
-        public static ITerrainFactory TerrainFactory { get; private set; }
+        public static Game CurrentGame { get; private set; }
         internal static void Main()
         {
 
         }
         public static void Start(
-            IGame game = null, 
             ISettings settings = null,
             ICreatureFactory creatureFactory = null, 
             IItemFactory itemFactory = null, 
             ITerrainFactory terrainFactory = null
             )
         {
-            Settings = settings ?? new Settings();
-            CreatureFactory = creatureFactory ?? new CreatureFactory();
-            TerrainFactory = terrainFactory ?? new TerrainFactory();
-            ItemFactory = itemFactory ?? new MockItemFactory();
-            CurrentGame = game ?? new Game(Settings, CreatureFactory, ItemFactory, TerrainFactory);
+            settings = settings ?? new Settings();
+            creatureFactory = creatureFactory ?? new CreatureFactory();
+            terrainFactory = terrainFactory ?? new TerrainFactory();
+            itemFactory = itemFactory ?? new MockItemFactory();
+            CurrentGame = new Game(settings, creatureFactory, itemFactory, terrainFactory);
             CurrentGame.Start();
             CurrentGame.Stop();
-        }
-
-        public static void RegisterTestGame(
-            IGame game,
-            ISettings settings,
-            ICreatureFactory creatureFactory,
-            IItemFactory itemFactory,
-            ITerrainFactory terrainFactory)
-        {
-            CurrentGame = game;
-            Settings = settings ?? new Settings();
-            CreatureFactory = creatureFactory ?? new CreatureFactory();
-            TerrainFactory = terrainFactory ?? new TerrainFactory();
-            ItemFactory = itemFactory ?? new MockItemFactory();
         }
     }
 }

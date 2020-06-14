@@ -20,7 +20,7 @@ namespace Tests.Components.Creature
         }
         private void NewActorComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = (ActorComponent)MockGame.Player.GetComponent<ActorComponent>();
+            _base = (ActorComponent)_game.Player.GetComponent<ActorComponent>();
             Assert.NotNull(_base);
         }
         [Test]
@@ -32,7 +32,7 @@ namespace Tests.Components.Creature
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _base = (ActorComponent)MockGame.Player.GetComponent<ActorComponent>();
+            _base = (ActorComponent)_game.Player.GetComponent<ActorComponent>();
             _answer = _base.GetDetails();
             Assert.AreEqual(2, _answer.Length);
         }

@@ -23,7 +23,7 @@ namespace Tests.Components
         }
         private void NewWeatherComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (WeatherComponent)MockGame.Container.GetComponent<WeatherComponent>();
+            _component = (WeatherComponent)_game.Container.GetComponent<WeatherComponent>();
             Assert.NotNull(_component);
         }
         [Test]
@@ -35,7 +35,7 @@ namespace Tests.Components
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (WeatherComponent)MockGame.Container.GetComponent<WeatherComponent>();
+            _component = (WeatherComponent)_game.Container.GetComponent<WeatherComponent>();
             _answer = _component.GetDetails();
             Assert.Less(2, _answer.Length);
         }

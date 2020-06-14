@@ -1,6 +1,7 @@
 ﻿using Engine.Components.Creature;
 using Engine.Entities.Terrain;
 using Engine.Maps;
+using Engine.Mathematics;
 using Engine.Utilities;
 using GoRogue;
 using GoRogue.GameFramework;

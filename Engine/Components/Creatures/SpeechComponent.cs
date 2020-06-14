@@ -1,4 +1,5 @@
-﻿using GoRogue;
+﻿using Engine.Mathematics;
+using GoRogue;
 using SadConsole;
 
 namespace Engine.Components.Creature
@@ -22,13 +23,13 @@ namespace Engine.Components.Creature
         {
             Parent = parent;
             Name = "Speech";
-            TendencyToMinimize = Calculate.Percent();    // m
-            TendencyToInvalidate = Calculate.Percent();  // i
-            TendencyToDeny = Calculate.Percent();        // d
-            TendencyToJustify = Calculate.Percent();     // j
-            TendencyToArgue = Calculate.Percent();       // a
-            TendencyToDefend = Calculate.Percent();      // d
-            TendencyToExplain = Calculate.Percent();     // e
+            TendencyToMinimize = Calculate.PercentValue();    // m
+            TendencyToInvalidate = Calculate.PercentValue();  // i
+            TendencyToDeny = Calculate.PercentValue();        // d
+            TendencyToJustify = Calculate.PercentValue();     // j
+            TendencyToArgue = Calculate.PercentValue();       // a
+            TendencyToDefend = Calculate.PercentValue();      // d
+            TendencyToExplain = Calculate.PercentValue();     // e
         }
 
         //for now, just print something random to the screen
@@ -67,7 +68,7 @@ namespace Engine.Components.Creature
 
         public void Talk()
         {
-            switch (Calculate.Percent())
+            switch (Calculate.PercentValue())
             {
                 case 0:  Saying = "Ah, it is you."; break;
                 case 1:  Saying = "Hello again, detective."; break;
@@ -171,7 +172,7 @@ namespace Engine.Components.Creature
                 case 99: Saying = "*sob* I admit it! I did it!"; break;
             }
 
-            switch (Calculate.Percent())
+            switch (Calculate.PercentValue())
             {
                 case 0:  BodyLanguage = "He stares blankly."; break;
                 case 1:  BodyLanguage = "He takes on a blank expression."; break;

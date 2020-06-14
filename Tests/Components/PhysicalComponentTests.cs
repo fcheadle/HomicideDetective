@@ -16,7 +16,7 @@ namespace Tests.Components
         }
         private void NewPhysicalComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (PhysicalComponent)MockGame.Player.GetComponent<PhysicalComponent>();
+            _component = (PhysicalComponent)_game.Player.GetComponent<PhysicalComponent>();
             _component.ProcessTimeUnit();
         }
         [Test]
@@ -28,7 +28,7 @@ namespace Tests.Components
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (PhysicalComponent)MockGame.Player.GetComponent<PhysicalComponent>();
+            _component = (PhysicalComponent)_game.Player.GetComponent<PhysicalComponent>();
             _component.ProcessTimeUnit();
         }
     }

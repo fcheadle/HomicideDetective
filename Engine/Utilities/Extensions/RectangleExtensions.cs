@@ -1,4 +1,5 @@
-﻿using GoRogue;
+﻿using Engine.Mathematics;
+using GoRogue;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,7 +35,7 @@ namespace Engine.Extensions
                 return parent.BisectHorizontally();
 
             else
-                return Calculate.Percent() % 2 == 1 ? BisectHorizontally(parent) : BisectVertically(parent);
+                return Calculate.PercentValue() % 2 == 1 ? BisectHorizontally(parent) : BisectVertically(parent);
         }
 
         //puts a horizontal line through the rectangle

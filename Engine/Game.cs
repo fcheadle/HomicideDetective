@@ -18,13 +18,13 @@ using System.Linq;
 
 namespace Engine
 {
-    public class Game : IGame
+    public class Game
     {
         public const double TimeIncrement = 100;
-        public ISettings Settings { get => _settings; }
-        public ICreatureFactory CreatureFactory { get => _creatureFactory; }
-        public IItemFactory ItemFactory { get => _itemFactory; }
-        public ITerrainFactory TerrainFactory { get => _terrainFactory; }
+        public static ISettings Settings { get => _settings; }
+        public static ICreatureFactory CreatureFactory { get => _creatureFactory; }
+        public static IItemFactory ItemFactory { get => _itemFactory; }
+        public static ITerrainFactory TerrainFactory { get => _terrainFactory; }
         public SceneMap Map { get; private set; }
         public ScrollingConsole MapRenderer { get; private set; }
         public ContainerConsole Container { get; private set; }
@@ -41,14 +41,38 @@ namespace Engine
         private int _fovRadius;
         public Game(ISettings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, ITerrainFactory terrainFactory) 
         {
-            _settings = settings;
-            _creatureFactory = creatureFactory;
-            _itemFactory = itemFactory;
-            _terrainFactory = terrainFactory;
+            ApplySettings(settings);
+            SetCreatureFactory(creatureFactory);
+            SetItemFactory(itemFactory);
+            SetTerrainFactory(terrainFactory);
             Setup();
         }
 
-        public void Setup()
+        protected Game()
+        {
+
+        }
+
+        protected void ApplySettings(ISettings settings)
+        {
+            _settings = settings;
+        }
+
+        protected void SetCreatureFactory(ICreatureFactory creatureFactory)
+        {
+            _creatureFactory = creatureFactory;
+        }
+
+        protected void SetItemFactory(IItemFactory itemFactory)
+        {
+            _itemFactory = itemFactory;
+        }
+
+        protected void SetTerrainFactory(ITerrainFactory terrainFactory)
+        {
+            _terrainFactory = terrainFactory;
+        }
+        protected void Setup()
         {
             SadConsole.Game.Create(Settings.GameWidth, Settings.GameHeight);
             SadConsole.Game.OnInitialize = Init;
@@ -56,46 +80,12 @@ namespace Engine
         }
         public void Init()
         {
-            Map = new SceneMap(Settings.MapWidth, Settings.MapHeight);
-            //just in case weird things happened, move this to after player declaration?
-            MapRenderer = Map.CreateRenderer(new GoRogue.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault); 
-            MapRenderer.UseMouse = true;
-            MapRenderer.FocusOnMouseClick = false;
-            Map.ControlledGameObject = CreatureFactory.Player(new Coord(15, 15));
-            Map.ControlledGameObject.IsFocused = true;
-            Map.ControlledGameObject.FocusOnMouseClick = true;
+            CreateConsoles();
+
             Map.ControlledGameObject.Moved += Player_Moved;
             Map.ControlledGameObjectChanged += ControlledGameObjectChanged;
-            Map.AddEntity(Map.ControlledGameObject);
-            Map.CalculateFOV(Actor.Position, Actor.FOVRadius);
-            _fovRadius = Actor.FOVRadius;
-            
-            Container = new ContainerConsole();
-            Container.Children.Add(MapRenderer);
-            ControlsConsole Controls = new ControlsConsole(Settings.GameWidth, 3);
-            Controls.Theme = new PaperWindowTheme();
-            Controls.ThemeColors = ThemeColor.Clear;
-            Controls.Position = new Coord(0, Settings.GameHeight - 2);
-            int currentX = 0;
-            foreach(IConsoleComponent visible in Player.Components)
-            {
-                try
-                {
-                    IDisplay display = (IDisplay)visible;
-                    if (display != null)
-                    {
-                        Container.Children.Add(display.Window);
-                        display.MaximizeButton.Position = new Coord(currentX, 0);
-                        currentX += display.MaximizeButton.Surface.Width;
-                        Controls.Add(display.MaximizeButton);
-                    }
-                }
-                catch { } //dont care
-            }
-            Container.Children.Add(Controls);
-            MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
-            Container.Components.Add(new WeatherComponent(Map));
-            
+
+
             Global.CurrentScreen = Container;
         }
         public void Start()
@@ -146,6 +136,43 @@ namespace Engine
                 if (area.InnerPoints.Contains(position))
                     yield return area;
             }
+        }
+
+        public void CreateConsoles()
+        {
+            Container = new ContainerConsole();
+            Map = new SceneMap(Settings.MapWidth, Settings.MapHeight);
+            ControlsConsole controls = new ControlsConsole(Settings.GameWidth, 3);
+            controls.Theme = new PaperWindowTheme();
+            controls.ThemeColors = ThemeColor.Clear;
+            controls.Position = new Coord(0, Settings.GameHeight - 2);
+            MapRenderer = Map.CreateRenderer(new GoRogue.Rectangle(0, 0, Settings.GameWidth, Settings.GameHeight), Global.FontDefault);
+            MapRenderer.UseMouse = true;
+            MapRenderer.FocusOnMouseClick = false;
+            Map.AddEntity(Map.ControlledGameObject);
+            Map.CalculateFOV(Actor.Position, Actor.FOVRadius);
+            _fovRadius = Actor.FOVRadius;
+
+            Container.Children.Add(MapRenderer);
+            int currentX = 0;
+            foreach (IConsoleComponent visible in Player.Components)
+            {
+                try
+                {
+                    IDisplay display = (IDisplay)visible;
+                    if (display != null)
+                    {
+                        Container.Children.Add(display.Window);
+                        display.MaximizeButton.Position = new Coord(currentX, 0);
+                        currentX += display.MaximizeButton.Surface.Width;
+                        controls.Add(display.MaximizeButton);
+                    }
+                }
+                catch { } //dont care
+            }
+            Container.Children.Add(controls);
+            MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
+            Container.Components.Add(new WeatherComponent(Map));
         }
     }
 }

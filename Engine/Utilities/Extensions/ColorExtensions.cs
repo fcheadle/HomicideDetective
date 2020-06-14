@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.Mathematics;
+using System;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Engine.Extensions
@@ -22,20 +23,20 @@ namespace Engine.Extensions
             int g = Convert.ToInt32(color.G);
             int b = Convert.ToInt32(color.B);
             int total = 1 + r + g + b;
-            double rPercent = r / total;
-            double bPercent = b / total;
-            double gPercent = g / total;
+            double rPercentValue = r / total;
+            double bPercentValue = b / total;
+            double gPercentValue = g / total;
 
             double chance;
 
             for (int i = 0; i < 10; i++)
             {
-                chance = (double)Calculate.Percent();
-                if (chance <= rPercent)
+                chance = (double)Calculate.PercentValue();
+                if (chance <= rPercentValue)
                 {
                     color.R -= Convert.ToByte(1);
                 }
-                else if (chance <= bPercent + rPercent)
+                else if (chance <= bPercentValue + rPercentValue)
                 {
                     color.B -= Convert.ToByte(1);
                 }
@@ -52,26 +53,26 @@ namespace Engine.Extensions
             int b = Convert.ToInt32(color.B);
             byte one = Convert.ToByte(1);
             int total = 1 + r + g + b;
-            double rPercent = r / total;
-            double bPercent = b / total;
-            double gPercent = g / total;
+            double rPercentValue = r / total;
+            double bPercentValue = b / total;
+            double gPercentValue = g / total;
 
             double chance;
 
             for (int i = 0; i < 10; i++)
             {
-                chance = (double)Calculate.Percent();
-                if (chance <= rPercent)
+                chance = (double)Calculate.PercentValue();
+                if (chance <= rPercentValue)
                 {
                     //if (Convert.ToInt32(color.R) < 255)
                     color.R += Convert.ToByte(1);
                 }
-                else if (chance <= bPercent + rPercent)
+                else if (chance <= bPercentValue + rPercentValue)
                 {
                     //if (Convert.ToInt32(color.B) < 255)
                     color.G += Convert.ToByte(1);
                 }
-                else if (chance <= bPercent + rPercent + gPercent)
+                else if (chance <= bPercentValue + rPercentValue + gPercentValue)
                     //if (Convert.ToInt32(color.G) < 255)
                     color.B += Convert.ToByte(1);
             }
@@ -116,7 +117,7 @@ namespace Engine.Extensions
             if (color.R > color.G || color.B > color.G)
             {
                 Color target;
-                int chance = Calculate.Percent();
+                int chance = Calculate.PercentValue();
                 if (chance < 10)
                     target = Color.DarkGreen;
                 else if (chance < 20)
@@ -149,7 +150,7 @@ namespace Engine.Extensions
             if (color.G > color.R || color.B > color.R)
             {
                 Color target;
-                int chance = Calculate.Percent();
+                int chance = Calculate.PercentValue();
                 if (chance < 10)
                     target = Color.DarkRed;
                 else if (chance < 20)
@@ -182,7 +183,7 @@ namespace Engine.Extensions
             if (color.R > color.B || color.G > color.B)
             {
                 Color target;
-                int chance = Calculate.Percent();
+                int chance = Calculate.PercentValue();
                 if (chance < 10)
                     target = Color.DarkBlue;
                 else if (chance < 20)

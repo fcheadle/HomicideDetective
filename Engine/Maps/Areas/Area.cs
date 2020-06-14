@@ -1,4 +1,5 @@
 ﻿using Engine.Extensions;
+using Engine.Mathematics;
 using GoRogue;
 using SadConsole;
 using System;

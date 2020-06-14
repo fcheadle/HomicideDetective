@@ -1,4 +1,5 @@
-﻿using SadConsole;
+﻿using Engine.Mathematics;
+using SadConsole;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Engine.Components.Creature
     public class PersonalityComponent : Component
     {
         //personality traits
-        //percent values of affecting any given decision
+        //PercentValue values of affecting any given decision
         public int Passion;
         public int Ambition;
         public int Courage;
@@ -48,30 +49,30 @@ namespace Engine.Components.Creature
         {
             Parent = parent;
             Name = "Personality";
-            Passion = Calculate.Percent();
-            Ambition = Calculate.Percent();
-            Courage = Calculate.Percent();
-            Creativity = Calculate.Percent();
-            Empathy = Calculate.Percent();
-            Adventurousness = Calculate.Percent();
-            Spirituality = Calculate.Percent();
-            Laziness = Calculate.Percent();
-            Jealousness = Calculate.Percent();
-            Lustfulness = Calculate.Percent();
-            Greediness = Calculate.Percent();
-            ProclivityToAnger = Calculate.Percent();
-            Pridefulness = Calculate.Percent();
-            Sadism = Calculate.Percent();
-            NeedToControl = Calculate.Percent();
+            Passion = Calculate.PercentValue();
+            Ambition = Calculate.PercentValue();
+            Courage = Calculate.PercentValue();
+            Creativity = Calculate.PercentValue();
+            Empathy = Calculate.PercentValue();
+            Adventurousness = Calculate.PercentValue();
+            Spirituality = Calculate.PercentValue();
+            Laziness = Calculate.PercentValue();
+            Jealousness = Calculate.PercentValue();
+            Lustfulness = Calculate.PercentValue();
+            Greediness = Calculate.PercentValue();
+            ProclivityToAnger = Calculate.PercentValue();
+            Pridefulness = Calculate.PercentValue();
+            Sadism = Calculate.PercentValue();
+            NeedToControl = Calculate.PercentValue();
 
 
-            ImportanceOfFamily = Calculate.Percent();
-            ImportanceOfFriendship = Calculate.Percent();
-            ImportanceOfBodilyHealth = Calculate.Percent();
-            ImportanceOfWealth = Calculate.Percent();
-            ImportanceOfReligion = Calculate.Percent();
-            WorkEthic = Calculate.Percent();
-            AttentionToDetail = Calculate.Percent();
+            ImportanceOfFamily = Calculate.PercentValue();
+            ImportanceOfFriendship = Calculate.PercentValue();
+            ImportanceOfBodilyHealth = Calculate.PercentValue();
+            ImportanceOfWealth = Calculate.PercentValue();
+            ImportanceOfReligion = Calculate.PercentValue();
+            WorkEthic = Calculate.PercentValue();
+            AttentionToDetail = Calculate.PercentValue();
 
         }
 

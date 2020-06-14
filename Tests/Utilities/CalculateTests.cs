@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Components.Creature;
+using Engine.Mathematics;
 using GoRogue;
 using NUnit.Framework;
 using System;
@@ -11,13 +12,6 @@ namespace Tests.Utilities
     [TestFixture]
     public class CalculateTests
     {
-        [Test]
-        public void RandomFunction2dTest()
-        {
-            var f = Calculate.RandomFunction2d();
-            double answer = f(77.5);
-            Assert.AreNotEqual(0.000, answer); //I mean, statistically...
-        }
         [Test]
         public void PointsAlongStraightLineTest()
         {
@@ -73,15 +67,15 @@ namespace Tests.Utilities
         [Test]
         public void PolarToCartesianTest()
         {
-            PolarCoord origin = new PolarCoord(3.7416573867739413, 0.64209261593433065);
-            Coord target = Calculate.PolarToCartesian(origin);
-            Assert.AreEqual(new Coord(2, 2), target);
+            PolarCoord origin = new PolarCoord(3.7416573867739413d, 0.64209261593433065d);
+            Coord target = PolarCoord.PolarToCartesian(origin);
+            Assert.AreEqual(new Coord(3, 2), target);
         }
         [Test]
         public void CartesianToPolarTest()
         {
             Coord origin = new Coord(5, 5);
-            PolarCoord target = Calculate.CartesianToPolar(origin);
+            PolarCoord target = PolarCoord.CartesianToPolar(origin);
             double expectedRadius = Math.Sqrt(50);
             double expectedTheta = 1 / Math.Tan(1);
 
@@ -94,21 +88,20 @@ namespace Tests.Utilities
         [Test]
         public void PolarCoordTest()
         {
-            PolarCoord target = Calculate.CartesianToPolar(new Coord(5, 5));
-            PolarCoord origin = new PolarCoord(7.0710678118654755d, 0.64209261593433065);
-            Coord cartTarget = Calculate.PolarToCartesian(target);
-            Coord cartOrigin = Calculate.PolarToCartesian(origin);
+            PolarCoord target = PolarCoord.CartesianToPolar(new Coord(5, 5));
+            PolarCoord origin = new PolarCoord(7.0710678118654755f, 0.64209261593433065f);
+            Coord cartTarget = PolarCoord.PolarToCartesian(target);
+            Coord cartOrigin = PolarCoord.PolarToCartesian(origin);
 
-            Assert.AreEqual(target.Radius, origin.Radius);
-            Assert.AreEqual(target.Theta, origin.Theta);
-            Assert.AreEqual(cartOrigin, cartTarget);
+            Assert.AreEqual(target, origin);
+            Assert.AreEqual(cartTarget, cartOrigin);
         }
 
         [Test]
         public void RadiansToDegreesTest()
         {
-            Assert.Greater(Calculate.RadiansToDegrees(Math.PI), 179.99f);
-            Assert.Less(Calculate.RadiansToDegrees(Math.PI), 180.01f);
+            Assert.Greater(Calculate.RadiansToDegrees((float)Math.PI), 179.99f);
+            Assert.Less(Calculate.RadiansToDegrees((float)Math.PI), 180.01f);
         }
         [Test]
         public void DegreesToRadiansTest()
@@ -122,7 +115,7 @@ namespace Tests.Utilities
             List<int> previousChances = new List<int>();
             for (int i = 0; i < 50; i++)
             {
-                int x = Calculate.Percent();
+                int x = Calculate.PercentValue();
                 previousChances.Add(x);
                 Assert.Less(x, 101);
                 Assert.Greater(x, 0);

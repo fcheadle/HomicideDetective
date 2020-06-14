@@ -23,7 +23,7 @@ namespace Tests.Components.UI
         }
         private void NewPageComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (PageComponent<HealthComponent>)MockGame.Player.GetComponent<PageComponent<HealthComponent>>();
+            _component = (PageComponent<HealthComponent>)_game.Player.GetComponent<PageComponent<HealthComponent>>();
             Assert.NotNull(_component);
             Assert.NotNull(_component.Window);
             Assert.False(_component.Window.IsVisible);
@@ -43,9 +43,9 @@ namespace Tests.Components.UI
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (PageComponent<HealthComponent>)MockGame.Player.GetComponent<PageComponent<HealthComponent>>();
+            _component = (PageComponent<HealthComponent>)_game.Player.GetComponent<PageComponent<HealthComponent>>();
             _answer = _component.GetDetails();
-            HealthComponent c = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
+            HealthComponent c = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
             Assert.AreEqual(c.GetDetails().Length, _answer.Length);
         }
 
@@ -55,10 +55,10 @@ namespace Tests.Components.UI
             _game = new MockGame(NewPageComponent);
             _game.RunOnce();
             _game.SwapUpdate(GetDetails);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.Container, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(_game.Container, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.Container, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(_game.Container, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
             _game.Stop();

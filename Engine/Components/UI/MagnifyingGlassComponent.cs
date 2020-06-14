@@ -14,24 +14,28 @@ namespace Engine.Components.UI
     {
         const int _width = 3;
         const int _height = 3;
+        private Window LookingGlass;
         public DrawingSurface Surface;
         public GameActions Purpose;
-        public MagnifyingGlassComponent(BasicEntity parent, Coord position, GameActions purpose): base(false, true, true, true)
+        public MagnifyingGlassComponent(BasicEntity parent, Coord position, GameActions purpose = GameActions.LookAtEverythingInSquare): base(false, true, true, true)
         {
             Parent = parent;
-            Surface = new DrawingSurface(3, 3);
-            Surface.Position = new Coord(-1, -1);
-            Surface.OnDraw = (ds) =>
-            {
-                ds.Surface.Effects.UpdateEffects(Global.GameTimeElapsedUpdate);
-                ds.Surface.Fill(Color.Gold, Color.Transparent, 0);
-                ds.Surface.SetGlyph(0, 1, '(');
-                ds.Surface.SetGlyph(2, 1, ')');
-                ds.Surface.SetGlyph(2, 2, '\\');
-            };
-            Surface.MouseMove += MoveWithMouse;
-            Surface.MouseButtonClicked += MouseButtonClicked;
-            Surface.IsFocused = true;
+            LookingGlass = new Window(3, 3);
+            CellSurface surface = new CellSurface(3, 3);
+            //surface.Position = new Coord(-1, -1);
+            //surface.OnDraw = (ds) =>
+            //{
+            //    ds.Surface.Effects.UpdateEffects(Global.GameTimeElapsedUpdate);
+            //    ds.Surface.Fill(Color.Gold, Color.Transparent, 0);
+            //    ds.Surface.SetGlyph(0, 1, '(');
+            //    ds.Surface.SetGlyph(2, 1, ')');
+            //    ds.Surface.SetGlyph(2, 2, '\\');
+            //};
+            //surface.MouseMove += MoveWithMouse;
+            //surface.MouseButtonClicked += MouseButtonClicked;
+            //surface.IsFocused = true;
+            //surface.IsVisible = true;
+            //Game.Container.Children.Add(surface);
         }
 
         private void MouseButtonClicked(object sender, MouseEventArgs mouse)
@@ -45,6 +49,8 @@ namespace Engine.Components.UI
         private void MoveWithMouse(object sender, MouseEventArgs mouse)
         {
             Surface.Position = mouse.MouseState.CellPosition - new Coord(1,1);
+            Surface.IsVisible = true;
+            Surface.IsFocused = true;
         }
 
         public override string[] GetDetails()

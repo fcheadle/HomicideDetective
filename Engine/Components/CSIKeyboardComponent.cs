@@ -22,7 +22,7 @@ namespace Engine.Components
             get => SadConsole.Global.CurrentScreen.IsPaused;
             set => SadConsole.Global.CurrentScreen.IsPaused = value;
         }
-        private Dictionary<GameActions, Keys> KeyBindings => Program.Settings.KeyBindings;
+        //private Dictionary<GameActions, Keys> KeyBindings => Game.Settings.KeyBindings;
         public CSIKeyboardComponent(BasicEntity parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
         {
             Parent = parent;
@@ -45,11 +45,11 @@ namespace Engine.Components
                 //        Settings.TogglePause();
                 //    }
 
-                foreach (Keys key in Program.Settings.MovementKeyBindings.Keys)
+                foreach (Keys key in Game.Settings.MovementKeyBindings.Keys)
                 {
                     if (info.IsKeyPressed(key))
                     {
-                        moveDirection = Program.Settings.MovementKeyBindings[key];
+                        moveDirection = Game.Settings.MovementKeyBindings[key];
                         break;
                     }
                 }
@@ -60,7 +60,7 @@ namespace Engine.Components
                         Parent.Position += moveDirection;
 
                 handled = false;
-                foreach (var action in Program.CurrentGame.Settings.KeyBindings)
+                foreach (var action in Game.Settings.KeyBindings)
                 {
                     if (Global.KeyboardState.IsKeyReleased(action.Value))
                     {
@@ -71,9 +71,9 @@ namespace Engine.Components
 
             else
             {
-                if (info.IsKeyPressed(KeyBindings[GameActions.TogglePause]))
+                if (info.IsKeyPressed(Game.Settings.KeyBindings[GameActions.TogglePause]))
                     TogglePause();
-                else if (info.IsKeyPressed(KeyBindings[GameActions.ToggleMenu]))
+                else if (info.IsKeyPressed(Game.Settings.KeyBindings[GameActions.ToggleMenu]))
                     ToggleMenu();
             }
             handled = true;

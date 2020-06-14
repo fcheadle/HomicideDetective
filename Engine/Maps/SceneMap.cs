@@ -4,6 +4,7 @@ using Engine.Entities.Items;
 using Engine.Entities.Terrain;
 using Engine.Extensions;
 using Engine.Maps.Areas;
+using Engine.Mathematics;
 using Engine.Utilities;
 using GoRogue;
 using Microsoft.Xna.Framework;
@@ -18,10 +19,6 @@ namespace Engine.Maps
     {
         private int _width;
         private int _height;
-        private ISettings _settings;
-        private ITerrainFactory _terrainFactory;
-        private ICreatureFactory _creatureFactory;
-        private IItemFactory _itemFactory;
        
         public List<Area> Regions
         {
@@ -47,16 +44,18 @@ namespace Engine.Maps
             _width = width;
             _height = height;
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
-            _settings = settings ?? new Settings();
-            _terrainFactory = tFactory ?? new TerrainFactory();
-            _creatureFactory = cFactory ?? new CreatureFactory();
-            _itemFactory = iFactory ?? new MockItemFactory();
 
             MakeOutdoors();
             //MakeBackrooms();
             MakeRoadsAndBlocks();
             MakeHouses();
             MakePeople();
+            ControlledGameObject = Game.CreatureFactory.Player(new Coord(14, 14));
+            
+            
+            ControlledGameObject.IsFocused = true;
+            ControlledGameObject.FocusOnMouseClick = true;
+            
         }
         private void MakeBackrooms()
         {
@@ -70,7 +69,7 @@ namespace Engine.Maps
                     {
                         BasicTerrain t = backrooms.Map.GetTerrain<BasicTerrain>(point);
                         if (t != null)
-                            SetTerrain(_terrainFactory.Copy(t, point));
+                            SetTerrain(Game.TerrainFactory.Copy(t, point));
                     }
                     catch
                     {
@@ -82,9 +81,9 @@ namespace Engine.Maps
         }
         private void MakeRoadsAndBlocks()
         {
-            RoadNames roadName = (RoadNames)Calculate.Percent();
+            RoadNames roadName = (RoadNames)Calculate.PercentValue();
             RoadNumbers roadNum = 0;
-            int offset = (Calculate.Percent() - 50) * 2;
+            int offset = (Calculate.PercentValue() - 50) * 2;
             Road road;
             for (int i = 16; i < _width - 48; i += 96)
             {
@@ -128,7 +127,7 @@ namespace Engine.Maps
             {
                 foreach (Coord c in r.InnerPoints)
                     if (this.Contains(c))
-                        SetTerrain(_terrainFactory.Floor(c));
+                        SetTerrain(Game.TerrainFactory.Floor(c));
                         //SetTerrain(_terrainFactory.Pavement(c));
             }
 
@@ -136,7 +135,7 @@ namespace Engine.Maps
             {
                 foreach (Coord c in block.GetFenceLocations())
                     if (this.Contains(c))
-                        SetTerrain(_terrainFactory.Generic(c, 44));
+                        SetTerrain(Game.TerrainFactory.Generic(c, 44));
                         //SetTerrain(_terrainFactory.Fence(c));
             }
         }
@@ -167,7 +166,7 @@ namespace Engine.Maps
                             Coord c = new Coord(j, k);
                             if (house.Map.GetTerrain(c) != null && this.Contains(house.Origin + c))
                             {
-                                SetTerrain(_terrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
+                                SetTerrain(Game.TerrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
                             }
                         }
                     }
@@ -178,11 +177,11 @@ namespace Engine.Maps
         {
             for (int i = 0; i < 500; i++)
             {
-                AddEntity(_creatureFactory.Person(new Coord(_settings.Random.Next(Width), _settings.Random.Next(Height))));
+                AddEntity(Game.CreatureFactory.Person(new Coord(Game.Settings.Random.Next(Width), Game.Settings.Random.Next(Height))));
             }
             for (int i = 0; i < 300; i++)
             {
-                AddEntity(_creatureFactory.Animal(new Coord(_settings.Random.Next(Width), _settings.Random.Next(Height))));
+                AddEntity(Game.CreatureFactory.Animal(new Coord(Game.Settings.Random.Next(Width), Game.Settings.Random.Next(Height))));
             }
         }
         private void MakeOutdoors()
@@ -193,7 +192,7 @@ namespace Engine.Maps
                 for (int j = 0; j < Height; j++)
                 {
                     Coord pos = new Coord(i, j);
-                    SetTerrain(_terrainFactory.Grass(pos, f(i, j)));
+                    SetTerrain(Game.TerrainFactory.Grass(pos, f(i, j)));
                 }
             }
         }

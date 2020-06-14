@@ -31,7 +31,7 @@ namespace Tests.Components.Creature
         }
         private void NewHealthComponent(GameTime time)
         {
-            _component = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
+            _component = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
             Assert.NotNull(_component);
             Assert.NotNull(_component.SystoleBloodPressure);
             Assert.Less(0, _component.SystoleBloodPressure);
@@ -66,7 +66,7 @@ namespace Tests.Components.Creature
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
+            _component = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
             _answer = _component.GetDetails();
             _maximum = _component.LungCapacity;
             Assert.Less(4, _answer.Length);
@@ -92,7 +92,7 @@ namespace Tests.Components.Creature
             if (DateTime.Now - _previous > TimeSpan.FromSeconds(2))
             {
                 _previous = DateTime.Now;
-                _component = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
+                _component = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
                 Assert.AreNotEqual(_breath, _component.CurrentBreathVolume);
                 _breath = _component.CurrentBreathVolume;
                 Assert.Less(0, _breath);
@@ -119,7 +119,7 @@ namespace Tests.Components.Creature
         private void BeatHeart(GameTime time)
         {
             _previous = DateTime.Now;
-            _component = (HealthComponent)MockGame.Player.GetComponent<HealthComponent>();
+            _component = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
             _currentHeartStatus = _component.MonitorHeart().Y;
             if (_minimumHeartStatus > _currentHeartStatus)
                 _minimumHeartStatus = _currentHeartStatus;

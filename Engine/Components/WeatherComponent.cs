@@ -1,5 +1,6 @@
 ﻿using Engine.Components.Terrain;
 using Engine.Maps;
+using Engine.Mathematics;
 using Engine.Utilities;
 using GoRogue;
 using SadConsole;
@@ -20,7 +21,7 @@ namespace Engine.Components
         {
             Area = area;
             WindDirection = EnumUtils.RandomEnumValue<Direction.Types>();
-            WindStrength = Calculate.Percent() / 10.01f; //arbitrary?
+            WindStrength = Calculate.PercentValue() / 10.01f; //arbitrary?
             Fxyt = Formulae.RandomWindPattern();//todo... this, but better
         }
 

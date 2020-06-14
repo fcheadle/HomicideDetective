@@ -1,4 +1,5 @@
 ﻿using Engine.Maps.Areas;
+using Engine.Mathematics;
 using GoRogue;
 using System.Collections.Generic;
 using System.Linq;

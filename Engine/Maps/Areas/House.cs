@@ -1,6 +1,7 @@
 ﻿using Engine.Entities.Terrain;
 using Engine.Extensions;
 using Engine.Maps.Areas;
+using Engine.Mathematics;
 using GoRogue;
 using GoRogue.Pathing;
 using SadConsole;
@@ -69,7 +70,7 @@ namespace Engine.Maps
                 case HouseType.Backrooms: CreateBackrooms(); break;
                     //case HouseType.CentralPassageHouse: CreateCentralPassageHouse(); break;
             }
-            int chance = Calculate.Percent();
+            int chance = Calculate.PercentValue();
 
             switch (_facing)
             {
@@ -100,7 +101,7 @@ namespace Engine.Maps
                     else
                     {
                         Map = Map.ReverseVertical();
-                        if (Calculate.Percent() < 50)
+                        if (Calculate.PercentValue() < 50)
                             Map = Map.ReverseHorizontal();
                     }
                     break;
@@ -199,7 +200,7 @@ namespace Engine.Maps
             int tempH = roomW;
             roomW = roomW > roomH ? roomW : roomH;
             roomH = roomH < tempH ? roomH : tempH;
-            tempH = Program.Settings.Random.Next(-1, 2);
+            tempH = Calculate.RandomInt(-1, 2);
             Rectangle wholeHouse = new Rectangle(0, 0, Map.Width - 6, Map.Height / 2); //six is the magic number for some reason
             List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
 
@@ -345,7 +346,7 @@ namespace Engine.Maps
         }
         private int RandomRoomDimension()
         {
-            return Program.Settings.Random.Next(_minRoomSize, _maxRoomSize);
+            return Game.Settings.Random.Next(_minRoomSize, _maxRoomSize);
         }
     }
 }

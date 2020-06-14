@@ -20,7 +20,7 @@ namespace Tests.Components.Creature
         }
         private void NewPersonalityComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (PersonalityComponent)MockGame.Player.GetComponent<PersonalityComponent>();
+            _component = (PersonalityComponent)_game.Player.GetComponent<PersonalityComponent>();
             Assert.NotNull(_component);
             Assert.NotNull(_component.Passion);
             Assert.Less(0, _component.Passion);
@@ -78,7 +78,7 @@ namespace Tests.Components.Creature
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (PersonalityComponent)MockGame.Player.GetComponent<PersonalityComponent>();
+            _component = (PersonalityComponent)_game.Player.GetComponent<PersonalityComponent>();
             _answer = _component.GetDetails();
             Assert.Less(20, _answer.Length);
         }

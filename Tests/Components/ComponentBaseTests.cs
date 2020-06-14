@@ -19,7 +19,7 @@ namespace Tests.Components
         }
         private void NewComponentDerivedFromBased(GameTime time)
         {
-            _base = (MockComponent)MockGame.Player.GetComponent<MockComponent>();
+            _base = (MockComponent)_game.Player.GetComponent<MockComponent>();
             _base.ProcessTimeUnit();
         }
     }

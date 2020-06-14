@@ -1,5 +1,6 @@
 ﻿using Engine.Components.Terrain;
 using Engine.Extensions;
+using Engine.Mathematics;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
@@ -12,7 +13,7 @@ namespace Engine.Entities.Terrain
         {
             Color fore;
             Color back;
-            double z = Program.Settings.Random.NextDouble() * glyph;
+            double z = Game.Settings.Random.NextDouble() * glyph;
             if (position.Y % 2 == 0)
             {
                 fore = Color.Cyan.MutateToIndex(-z);
@@ -37,7 +38,7 @@ namespace Engine.Entities.Terrain
         private int GrassGlyph()
         {
             int glyph;
-            int chance = Calculate.Percent();
+            int chance = Calculate.PercentValue();
             if (chance < 10)
                 glyph = '\'';
             else if (chance < 20)

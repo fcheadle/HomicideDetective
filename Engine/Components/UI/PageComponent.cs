@@ -75,7 +75,7 @@ namespace Engine.Components.UI
                     buttonCells.Add(here);
                 }
             }
-            MaximizeButton = new Button(Name.Length + 2, 3)
+            MaximizeButton = new Button(Window.Title.Length + 2, 3)
             {
                 Theme = new PaperButtonTheme(),
                 ThemeColors = ThemeColor.Paper,
@@ -108,6 +108,8 @@ namespace Engine.Components.UI
 
         private void MaximizeButtonClicked(object sender, MouseEventArgs e)
         {
+            //if I click on console position 13, 1,
+            //bounds go out to 20?
             if (Window.IsVisible)
                 Window.Hide();
             else

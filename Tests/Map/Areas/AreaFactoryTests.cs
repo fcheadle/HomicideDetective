@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Maps.Areas;
+using Engine.Mathematics;
 using GoRogue;
 using NUnit.Framework;
 using System.Linq;
