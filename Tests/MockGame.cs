@@ -12,6 +12,7 @@ using System;
 using Tests.Mocks;
 using Game = Engine.Game;
 using Settings = Engine.Settings;
+
 namespace Tests
 {
     class MockGame : Game

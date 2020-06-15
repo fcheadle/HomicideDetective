@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using SadConsole;
 
-namespace Tests.Entity
+namespace Tests.Creature
 {
     [TestFixture]
     internal class CreatureFactoryTests : TestBase

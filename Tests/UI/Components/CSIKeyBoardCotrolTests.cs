@@ -13,13 +13,13 @@ using System.Collections.Generic;
 using System.Text;
 using Tests.Mocks;
 
-namespace Tests.Components
+namespace Tests.UI.Components
 {
     class CSIKeyBoardCotrolTests : TestBase
     {
         CSIKeyboardComponent _component;
         MagnifyingGlassComponent _lookingGlass;
-        
+
         public CSIKeyBoardCotrolTests()
         {
         }
@@ -151,7 +151,7 @@ namespace Tests.Components
             Assert.Null(_lookingGlass);
 
             _component.TakeAction(dataset.actionkey);
-            if(dataset.actionkey == dataset.purpose)
+            if (dataset.actionkey == dataset.purpose)
                 Assert.AreEqual(dataset.purpose, _lookingGlass.Purpose);
             else
                 Assert.AreNotEqual(dataset.purpose, _lookingGlass.Purpose);

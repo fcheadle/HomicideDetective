@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests.Components.Terrain
+namespace Tests.Map.Terrain
 {
     class AnimateGlyphComponent : TestBase
     {

@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests.Entity
+namespace Tests.Map.Terrain
 {
     class TerrainFactoryTests : TestBase
     {

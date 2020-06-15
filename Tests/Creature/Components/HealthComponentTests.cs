@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace Tests.Components.Creature
+namespace Tests.Creature.Components
 {
     class HealthComponentTests : TestBase
     {
@@ -15,7 +15,7 @@ namespace Tests.Components.Creature
         HealthComponent _component;
         string[] _answer;
         float _breath;
-        float _minimum = 0.0f; 
+        float _minimum = 0.0f;
         float _maximum;
         float _minimumHeartStatus = 0;
         float _currentHeartStatus;
@@ -64,7 +64,7 @@ namespace Tests.Components.Creature
             _game.RunOnce();
             _game.Stop();
         }
-        private void GetDetails(Microsoft.Xna.Framework.GameTime time)
+        private void GetDetails(GameTime time)
         {
             _component = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
             _answer = _component.GetDetails();

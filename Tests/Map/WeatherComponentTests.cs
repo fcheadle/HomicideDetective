@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests.Components
+namespace Tests.Map
 {
     class WeatherComponentTests : TestBase
     {
@@ -23,7 +23,7 @@ namespace Tests.Components
         }
         private void NewWeatherComponent(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (WeatherComponent)MockGame.UIManager.GetComponent<WeatherComponent>();
+            _component = (WeatherComponent)Engine.Game.UIManager.GetComponent<WeatherComponent>();
             Assert.NotNull(_component);
         }
         [Test]
@@ -35,7 +35,7 @@ namespace Tests.Components
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (WeatherComponent)MockGame.UIManager.GetComponent<WeatherComponent>();
+            _component = (WeatherComponent)Engine.Game.UIManager.GetComponent<WeatherComponent>();
             _answer = _component.GetDetails();
             Assert.Less(2, _answer.Length);
         }
