@@ -1,4 +1,4 @@
-﻿using Engine.Components.Creature;
+﻿using Engine.Creatures.Components;
 using Engine.Utilities;
 using NUnit.Framework;
 using System;

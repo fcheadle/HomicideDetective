@@ -11,8 +11,4 @@
     <PackageReference Include="SadConsole.GoRogueHelpers" Version="1.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\Item\" />
-  </ItemGroup>
-
 </Project>

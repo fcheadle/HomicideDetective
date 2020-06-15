@@ -1,12 +1,10 @@
-﻿using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
-using SadConsole;
+﻿using SadConsole;
 
 namespace Engine.Components
 {
     public class PhysicalComponent : Component
     {
-        public string Description { get; private set; }
+        //public string Description { get; private set; }
         public int Mass { get; set; }
         public int Volume { get; set; }
         public PhysicalComponent(BasicEntity parent):base(false, false, false, false)

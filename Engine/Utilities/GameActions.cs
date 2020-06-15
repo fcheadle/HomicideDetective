@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Engine.Utilities
+﻿namespace Engine.Utilities
 { 
-    public enum GameActions
+    public enum GameAction
     {
         LookAtEverythingInSquare,
         LookAtPerson,
@@ -18,5 +14,19 @@ namespace Engine.Utilities
         ToggleInventory,
         ToggleMenu,
         RefocusOnPlayer,
+        MoveLeft,
+        MoveRight,
+        MoveUp,
+        MoveDown,
+    }
+    public class GameActions
+    {
+        public readonly GameAction[] Queries = 
+        { 
+            GameAction.LookAtEverythingInSquare,
+            GameAction.LookAtPerson,
+            GameAction.Talk,
+
+        };
     }
 }

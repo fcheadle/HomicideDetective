@@ -1,4 +1,4 @@
-﻿using GoRogue.GameFramework;
+﻿using Engine.Utilities;
 using GoRogue.GameFramework.Components;
 using SadConsole;
 using SadConsole.Components;
@@ -8,7 +8,7 @@ using System;
 
 namespace Engine.Components
 {
-    public abstract class Component : ComponentBase<BasicEntity>, IConsoleComponent
+    public abstract class Component : ComponentBase<BasicEntity>, IConsoleComponent, IGameObjectComponent
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -40,6 +40,6 @@ namespace Engine.Components
         public virtual void OnRemoved(SadConsole.Console console){ }
         public virtual void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled) { handled = false; }
         public virtual void ProcessMouse(SadConsole.Console console, MouseConsoleState state, out bool handled) { handled = false; }
-        public virtual void Update(SadConsole.Console console, TimeSpan delta) { timer.Update(console, delta); }
+        public virtual void Update(SadConsole.Console console, TimeSpan delta) { if(Game.Settings.Mode == GameMode.RealTimeWithPause) timer.Update(console, delta); }
     }
 }

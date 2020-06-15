@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ut9mf1TlTB6lZd08G61o3iuW+7FlWUrGFOu2jl4v7Bh3+JereUHvHWqISb0r1f7WbV5kP458JwYbXgrwxjuUfg==",
+  "dgSpecHash": "+W2DjmVQXPF73Nfbq/LGEWrLyKaRCcJ0CnqfStSl/MfyWdodLwdLHgO6UawhfYHuYS9YFux0yU0lEXmTrml0YA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\fchea\\projects\\HomicideDetective\\HomicideDetective\\HomicideDetective.csproj",
+  "projectFilePath": "C:\\Users\\fchea\\Projects\\HomicideDetective\\HomicideDetective\\HomicideDetective.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\fchea\\.nuget\\packages\\gorogue\\2.6.2\\gorogue.2.6.2.nupkg.sha512",
     "C:\\Users\\fchea\\.nuget\\packages\\monogame.framework.desktopgl.core\\3.8.0.13\\monogame.framework.desktopgl.core.3.8.0.13.nupkg.sha512",

@@ -1,6 +1,7 @@
-using Engine.Entities.Terrain;
-using Engine.Extensions;
+using Engine.Scenes.Terrain;
+using Engine.Utilities.Extensions;
 using GoRogue;
+using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using SadConsole;
 using System;
@@ -14,9 +15,11 @@ namespace Tests.Map
     {
         BasicMap _map;
         TerrainFactory _factory = new TerrainFactory();
+
         [SetUp]
         public void Setup()
         {
+            _game = new MockGame(_update);
             _map = new BasicMap(8, 8, 2, Distance.MANHATTAN);
             for (int i = 0; i < _map.Width; i++)
             {
@@ -28,6 +31,12 @@ namespace Tests.Map
                 }
             }
         }
+
+        private void _update(GameTime obj)
+        {
+            
+        }
+
         [Test]
         public void SubsectionTest()
         {

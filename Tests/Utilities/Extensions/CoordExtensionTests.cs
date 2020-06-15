@@ -1,4 +1,4 @@
-﻿using Engine.Extensions;
+﻿using Engine.Utilities.Extensions;
 using GoRogue;
 using NUnit.Framework;
 using System.Collections.Generic;

@@ -9,7 +9,7 @@ namespace Tests.Utilities
     class SettingsTests
     {
         int size = 360;
-        ISettings _settings = new Settings();
+        Settings _settings = new Settings();
         [Test]
         public void GetSettingsTest()
         {
@@ -21,7 +21,7 @@ namespace Tests.Utilities
             Assert.AreEqual(false, _settings.IsPaused);
             Assert.AreEqual(false, _settings.ShowingMenu);
             Assert.Less(0, _settings.Random.Next(5, 10));
-            Assert.AreEqual(Radius.CIRCLE, _settings.FOVRadius);
+            Assert.AreEqual(Radius.CIRCLE, _settings.FovRadius);
             Assert.AreEqual(16, _settings.MovementKeyBindings.Count());
         }
         [Test]

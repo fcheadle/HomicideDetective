@@ -1,7 +1,7 @@
 ﻿using GoRogue;
 using System.Collections.Generic;
 
-namespace Engine.Extensions
+namespace Engine.Utilities.Extensions
 {
     public static class CoordExtensions
     {

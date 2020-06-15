@@ -1,14 +1,15 @@
-﻿using GoRogue;
+﻿using Engine.Utilities.Mathematics;
+using GoRogue;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Engine.Extensions
+namespace Engine.Utilities.Extensions
 {
     public static class RectangleExtensions
     {
         public static IEnumerable<Rectangle> RecursiveBisect(this Rectangle parent, int minimumDimension)
         {
-            List<Rectangle> ogChildren = Bisect(parent).ToList();
+            List<Rectangle> ogChildren = parent.Bisect().ToList();
             List<Rectangle> children = new List<Rectangle>(); //so that we can modify children during the loop
             foreach (Rectangle child in ogChildren)
             {
@@ -18,7 +19,7 @@ namespace Engine.Extensions
                 }
                 else
                 {
-                    children.AddRange(RecursiveBisect(child, minimumDimension));
+                    children.AddRange(child.RecursiveBisect(minimumDimension));
                 }
             }
 
@@ -34,7 +35,7 @@ namespace Engine.Extensions
                 return parent.BisectHorizontally();
 
             else
-                return Calculate.Percent() % 2 == 1 ? BisectHorizontally(parent) : BisectVertically(parent);
+                return Calculate.PercentValue() % 2 == 1 ? parent.BisectHorizontally() : parent.BisectVertically();
         }
 
         //puts a horizontal line through the rectangle

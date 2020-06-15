@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Engine.Extensions
+namespace Engine.Utilities.Extensions
 {
     public static class ListOfCoordExtensions
     {

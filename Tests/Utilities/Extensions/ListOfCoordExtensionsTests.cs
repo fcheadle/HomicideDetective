@@ -1,5 +1,6 @@
 ﻿using Engine;
-using Engine.Extensions;
+using Engine.Utilities.Extensions;
+using Engine.Utilities.Mathematics;
 using GoRogue;
 using NUnit.Framework;
 using System;

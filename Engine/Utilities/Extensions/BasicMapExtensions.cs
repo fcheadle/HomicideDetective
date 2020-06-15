@@ -1,14 +1,14 @@
-﻿using Engine.Components.Creature;
-using Engine.Entities.Terrain;
-using Engine.Maps;
-using Engine.Utilities;
+﻿using Engine.Creatures.Components;
+using Engine.Scenes;
+using Engine.Scenes.Terrain;
+using Engine.Utilities.Mathematics;
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
 using System;
 using System.Collections.Generic;
 
-namespace Engine.Extensions
+namespace Engine.Utilities.Extensions
 {
     public static class BasicMapExtensions
     {
@@ -36,7 +36,7 @@ namespace Engine.Extensions
         }
         public static bool Contains(this BasicMap m, Coord location)
         {
-            return (location.X >= 0 && location.Y >= 0 && location.X < m.Width && location.Y < m.Height);
+            return location.X >= 0 && location.Y >= 0 && location.X < m.Width && location.Y < m.Height;
         }
         public static BasicMap ReverseHorizontal(this BasicMap m)
         {
@@ -161,7 +161,7 @@ namespace Engine.Extensions
             }
             return rotated;
         }
-        public static void Add(this BasicMap m, BasicMap map) => Add(m, map, new Coord(0, 0));
+        public static void Add(this BasicMap m, BasicMap map) => m.Add(map, new Coord(0, 0));
         public static void Add(this BasicMap m, BasicMap map, Coord origin)
         {
             if (m.Width < map.Width + origin.X && m.Height < map.Height + origin.X)
@@ -257,7 +257,7 @@ namespace Engine.Extensions
             Coord offset = new Coord(-minX, -minY);
 
             BasicMap map = new BasicMap(dx, dy, EnumUtils.EnumLength<MapLayer>(), Distance.EUCLIDEAN);
-            map.ForXForY((Coord point) =>
+            map.ForXForY((point) =>
             {
                 if (m.Contains(point - offset))
                 {
