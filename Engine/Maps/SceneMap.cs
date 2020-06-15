@@ -39,7 +39,7 @@ namespace Engine.Maps
         internal List<House> Houses { get; private set; } = new List<House>();
         internal List<Area> Rooms { get; private set; } = new List<Area>();
         public FOVVisibilityHandler FovVisibilityHandler { get; }
-        public SceneMap(int width, int height, ISettings settings = null, ITerrainFactory tFactory = null, ICreatureFactory cFactory = null, IItemFactory iFactory = null) : base(width, height, EnumUtils.EnumLength<MapLayer>(), Distance.MANHATTAN)
+        public SceneMap(int width, int height) : base(width, height, EnumUtils.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {
             _width = width;
             _height = height;
@@ -50,12 +50,6 @@ namespace Engine.Maps
             MakeRoadsAndBlocks();
             MakeHouses();
             MakePeople();
-            ControlledGameObject = Game.CreatureFactory.Player(new Coord(14, 14));
-            
-            
-            ControlledGameObject.IsFocused = true;
-            ControlledGameObject.FocusOnMouseClick = true;
-            
         }
         private void MakeBackrooms()
         {
@@ -194,6 +188,16 @@ namespace Engine.Maps
                     Coord pos = new Coord(i, j);
                     SetTerrain(Game.TerrainFactory.Grass(pos, f(i, j)));
                 }
+            }
+        }
+
+
+        public IEnumerable<Area> GetRegions(Coord position)
+        {
+            foreach (Area area in Regions)
+            {
+                if (area.InnerPoints.Contains(position))
+                    yield return area;
             }
         }
     }

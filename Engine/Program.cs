@@ -19,7 +19,7 @@ namespace Engine
 
         }
         public static void Start(
-            ISettings settings = null,
+            Settings settings = null,
             ICreatureFactory creatureFactory = null, 
             IItemFactory itemFactory = null, 
             ITerrainFactory terrainFactory = null

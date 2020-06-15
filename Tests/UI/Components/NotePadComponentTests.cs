@@ -53,10 +53,10 @@ namespace Tests.Components.UI
             _game = new MockGame(NewNotePadComponent);
             _game.RunOnce();
             _game.SwapUpdate(GetDetails);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(_game.Container, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.UIManager, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(_game.Container, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.UIManager, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
             _game.Stop();

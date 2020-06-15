@@ -13,14 +13,14 @@ namespace Tests.Utilities
         {
             var f = Formulae.RandomTerrainGenFormula();
             double answer = f(77, -14);
-            Assert.AreNotEqual(0.000, answer); //I mean, statistically...
+            Assert.AreNotEqual(0.0001, answer); //I mean, statistically...
         }
         [Test]
         public void RandomFunction4dTest()
         {
             var f = Formulae.RandomWindPattern();
             double answer = f(63, 35, TimeSpan.FromMilliseconds(100));
-            Assert.AreNotEqual(0.000, answer); //I mean, statistically...
+            Assert.AreNotEqual(0.0001, answer); //I mean, statistically...
         }
 
         [Test]

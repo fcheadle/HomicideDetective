@@ -16,8 +16,8 @@ namespace Engine.Components.UI
         const int _height = 3;
         private Window LookingGlass;
         public DrawingSurface Surface;
-        public GameActions Purpose;
-        public MagnifyingGlassComponent(BasicEntity parent, Coord position, GameActions purpose = GameActions.LookAtEverythingInSquare): base(false, true, true, true)
+        public GameAction Purpose;
+        public MagnifyingGlassComponent(BasicEntity parent, Coord position, GameAction purpose = GameAction.LookAtEverythingInSquare): base(false, true, true, true)
         {
             Parent = parent;
             LookingGlass = new Window(3, 3);

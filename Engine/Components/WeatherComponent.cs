@@ -13,13 +13,14 @@ namespace Engine.Components
     public class WeatherComponent : Component
     {
         //add this to the game's map, not individual tiles... although, it isn't working for some reason.
-        public SceneMap Area; //Area aka parent
+        public SceneMap Area => Game.Map;
+        private int _width;
+        private int _height;
         Func<int, int, TimeSpan, double> Fxyt;// F of x, y, and t
         Direction.Types WindDirection;
         float WindStrength; //meters per second
-        public WeatherComponent(SceneMap area) : base(true, false, false, false)
+        public WeatherComponent() : base(true, false, false, false)
         {
-            Area = area;
             WindDirection = EnumUtils.RandomEnumValue<Direction.Types>();
             WindStrength = Calculate.PercentValue() / 10.01f; //arbitrary?
             Fxyt = Formulae.RandomWindPattern();//todo... this, but better

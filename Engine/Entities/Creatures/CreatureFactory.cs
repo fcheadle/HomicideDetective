@@ -1,12 +1,9 @@
 ﻿using Engine.Components;
 using Engine.Components.Creature;
 using Engine.Components.UI;
-using Engine.Maps;
 using GoRogue;
-using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using System.Collections.Generic;
 
 namespace Engine.Entities.Creatures
 {

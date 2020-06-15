@@ -7,8 +7,9 @@ using System.Collections.Generic;
 
 namespace Engine
 {
-    public class Settings : ISettings
+    public class Settings// : ISettings
     {
+        public GameMode Mode { get; set; } = GameMode.RealTimeWithPause;
         public int MapWidth { get; set; } = 360;
         public int MapHeight { get; set; } = 360;
         public int GameWidth { get; set; } = 120;
@@ -16,9 +17,10 @@ namespace Engine
         public bool IsPaused { get; set; } = false;
         public bool ShowingMenu { get; set; } = false;
         public Random Random { get; set; } = new Random();
-        public Radius FOVRadius { get; set; } = Radius.CIRCLE;
-        public FontMaster FontMaster { get; set; }
-        public Font Font { get; set; }
+        public Radius FovRadius { get; set; } = Radius.CIRCLE;
+        public double FovDistance { get; set; } = 15.00;
+        //public FontMaster FontMaster { get; set; } = Global.;
+        public Font Font { get; set; } = Global.FontDefault;
         public Dictionary<Keys, Direction> MovementKeyBindings { get; } = new Dictionary<Keys, Direction>
         {
             { Keys.NumPad7, Direction.UP_LEFT },    { Keys.NumPad8, Direction.UP },     { Keys.NumPad9, Direction.UP_RIGHT },
@@ -28,20 +30,24 @@ namespace Engine
             { Keys.W, Direction.UP }, { Keys.S, Direction.DOWN }, { Keys.A, Direction.LEFT }, { Keys.D, Direction.RIGHT }
         };
 
-        public Dictionary<GameActions,Keys> KeyBindings { get; } = new Dictionary<GameActions, Keys>
+        public Dictionary<Keys, GameAction> KeyBindings { get; } = new Dictionary<Keys, GameAction>
         {
-            {GameActions.RefocusOnPlayer,           Keys.Tab},                           
-            {GameActions.TogglePause,               Keys.Space },
-            {GameActions.ToggleMenu,                Keys.Escape},
-            {GameActions.TakePhotograph,            Keys.P },
-            {GameActions.LookAtEverythingInSquare,  Keys.L },
-            {GameActions.DustItemForPrints,         Keys.D },
-            {GameActions.GetItem,                   Keys.G },
-            {GameActions.RemoveItemFromInventory,   Keys.R },
-            {GameActions.Talk,                      Keys.T },
-            {GameActions.ToggleInventory,           Keys.I },
-            {GameActions.ToggleNotes,               Keys.N },
-            {GameActions.LookAtPerson,              Keys.A },
+            { Keys.Tab, GameAction.RefocusOnPlayer},                           
+            { Keys.Space, GameAction.TogglePause},
+            {Keys.Escape, GameAction.ToggleMenu },
+            { Keys.P, GameAction.TakePhotograph},
+            {Keys.L, GameAction.LookAtEverythingInSquare},
+            {Keys.D, GameAction.DustItemForPrints},
+            {Keys.G, GameAction.GetItem},
+            {Keys.R, GameAction.RemoveItemFromInventory},
+            { Keys.T, GameAction.Talk},
+            {Keys.I, GameAction.ToggleInventory},
+            {Keys.N, GameAction.ToggleNotes},
+            {Keys.A, GameAction.LookAtPerson},
+            {Keys.Left, GameAction.MoveLeft },
+            {Keys.Right, GameAction.MoveRight },
+            {Keys.Up, GameAction.MoveUp },
+            {Keys.Down, GameAction.MoveDown },
         };
 
         public void ToggleMenu()

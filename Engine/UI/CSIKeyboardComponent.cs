@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Controls;
+using SadConsole.Input;
 using SadConsole.Renderers;
 using System;
 using System.Collections.Generic;
@@ -28,12 +29,6 @@ namespace Engine.Components
             Parent = parent;
         }
 
-
-        //public override void Update(SadConsole.Console console, TimeSpan time)
-        //{
-        //    //ProcessKeyboard(console, Global.KeyboardState, out _);
-        //}
-
         public override void ProcessKeyboard(SadConsole.Console console, SadConsole.Input.Keyboard info, out bool handled)
         {
             if (!IsPaused)
@@ -50,6 +45,8 @@ namespace Engine.Components
                     if (info.IsKeyPressed(key))
                     {
                         moveDirection = Game.Settings.MovementKeyBindings[key];
+                        if (Game.Settings.Mode == GameMode.TurnBased)
+                            Game.UIManager.ProcessTimeUnit();
                         break;
                     }
                 }
@@ -62,46 +59,50 @@ namespace Engine.Components
                 handled = false;
                 foreach (var action in Game.Settings.KeyBindings)
                 {
-                    if (Global.KeyboardState.IsKeyReleased(action.Value))
+                    if (Global.KeyboardState.IsKeyReleased(action.Key))
                     {
-                        TakeAction(action.Key);
+                        TakeAction(action.Value);
                     }
                 }
             }
 
             else
             {
-                if (info.IsKeyPressed(Game.Settings.KeyBindings[GameActions.TogglePause]))
-                    TogglePause();
-                else if (info.IsKeyPressed(Game.Settings.KeyBindings[GameActions.ToggleMenu]))
-                    ToggleMenu();
+                foreach (AsciiKey pressed in info.KeysPressed)
+                {
+                    Keys key = pressed.Key;
+                    if (Game.Settings.KeyBindings[key] == GameAction.TogglePause)
+                        TogglePause();
+                    else if (Game.Settings.KeyBindings[key] == GameAction.ToggleMenu)
+                        ToggleMenu();
+                }
             }
             handled = true;
         }
 
-        public void TakeAction(GameActions key)
+        public void TakeAction(GameAction key)
         {
             switch (key)
             {
                 //opens a magnifying glass?
-                case GameActions.DustItemForPrints:
-                case GameActions.GetItem:
-                case GameActions.LookAtEverythingInSquare: 
-                case GameActions.Talk:
-                case GameActions.LookAtPerson: OpenCursor(key); break;
+                case GameAction.DustItemForPrints:
+                case GameAction.GetItem:
+                case GameAction.LookAtEverythingInSquare: 
+                case GameAction.Talk:
+                case GameAction.LookAtPerson: OpenCursor(key); break;
                 
-                case GameActions.RemoveItemFromInventory:
-                case GameActions.TakePhotograph:
+                case GameAction.RemoveItemFromInventory:
+                case GameAction.TakePhotograph:
 
-                case GameActions.ToggleMenu: ToggleMenu(); break;
-                case GameActions.TogglePause: TogglePause(); break;
-                case GameActions.RefocusOnPlayer: Parent.IsFocused = true; break;
+                case GameAction.ToggleMenu: ToggleMenu(); break;
+                case GameAction.TogglePause: TogglePause(); break;
+                case GameAction.RefocusOnPlayer: Parent.IsFocused = true; break;
             }
         }
 
-        private void OpenCursor(GameActions key)
+        private void OpenCursor(GameAction purpose)
         {
-            Parent.Components.Add(new MagnifyingGlassComponent(Parent, Parent.Position, key));
+            Parent.Components.Add(new MagnifyingGlassComponent(Parent, Parent.Position, purpose));
         }
 
         public void ToggleMenu()

@@ -19,7 +19,7 @@ namespace Engine.Components.UI
         public Window Window { get; }
         public Button MaximizeButton { get; }
         private PaperWindowTheme _theme;
-        internal T Component;
+        public T Component;
         DrawingSurface _surface;
         bool _hasDrawn;
         public PageComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
@@ -128,6 +128,7 @@ namespace Engine.Components.UI
             }
             Window.Add(_surface);
         }
+
         public override void Draw(Console console, TimeSpan delta)
         {
             base.Draw(console, delta);

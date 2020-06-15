@@ -25,38 +25,38 @@ namespace Tests.Components
         }
 
         [Datapoints]
-        GameActions[] allActions =
+        GameAction[] allActions =
         {
-            GameActions.LookAtEverythingInSquare, //test that cursor opens
-            GameActions.LookAtPerson, //test that cursor opens
-            GameActions.Talk, //test that cursor opens
-            GameActions.TakePhotograph, //test that a photograph window opens
-            GameActions.GetItem, //test that a cursor opens ???
-            GameActions.RemoveItemFromInventory, //should probably not be a game action, and should be an inventory action?
-            GameActions.TogglePause, //test that FOV is reduced and that we stop listening to keyboard interaction
-            GameActions.DustItemForPrints, //prints and tracks really just work the same way anyways
-            GameActions.ToggleNotes, //test that the notepad opens and becomes focused
-            GameActions.ToggleInventory, //test that the window opens and becomes focused
-            GameActions.ToggleMenu, //test that the menu opens, becomes focused, and pauses the game
-            GameActions.RefocusOnPlayer, //switch focus elsewhere, then assert that player has focus again.
+            GameAction.LookAtEverythingInSquare, //test that cursor opens
+            GameAction.LookAtPerson, //test that cursor opens
+            GameAction.Talk, //test that cursor opens
+            GameAction.TakePhotograph, //test that a photograph window opens
+            GameAction.GetItem, //test that a cursor opens ???
+            GameAction.RemoveItemFromInventory, //should probably not be a game action, and should be an inventory action?
+            GameAction.TogglePause, //test that FOV is reduced and that we stop listening to keyboard interaction
+            GameAction.DustItemForPrints, //prints and tracks really just work the same way anyways
+            GameAction.ToggleNotes, //test that the notepad opens and becomes focused
+            GameAction.ToggleInventory, //test that the window opens and becomes focused
+            GameAction.ToggleMenu, //test that the menu opens, becomes focused, and pauses the game
+            GameAction.RefocusOnPlayer, //switch focus elsewhere, then assert that player has focus again.
         };
 
         [DatapointSource]
-        (GameActions, GameActions)[] newCursorActions =
+        (GameAction, GameAction)[] newCursorActions =
         {
-            (GameActions.LookAtEverythingInSquare, GameActions.LookAtEverythingInSquare),
-            (GameActions.LookAtPerson, GameActions.LookAtPerson),
-            (GameActions.Talk, GameActions.Talk),
-            (GameActions.GetItem, GameActions.GetItem),
+            (GameAction.LookAtEverythingInSquare, GameAction.LookAtEverythingInSquare),
+            (GameAction.LookAtPerson, GameAction.LookAtPerson),
+            (GameAction.Talk, GameAction.Talk),
+            (GameAction.GetItem, GameAction.GetItem),
         };
         [DatapointSource]
-        (GameActions, string)[] buttonsAndWindowsToggled =
+        (GameAction, string)[] buttonsAndWindowsToggled =
         {
-            (GameActions.TakePhotograph, "Photograph of "),
-            (GameActions.ToggleInventory, "Evidence"),
-            (GameActions.DustItemForPrints, "Fingerprints on "),
-            (GameActions.ToggleNotes, "Notepad"),
-            (GameActions.ToggleMenu, "Paused"), //window toggled
+            (GameAction.TakePhotograph, "Photograph of "),
+            (GameAction.ToggleInventory, "Evidence"),
+            (GameAction.DustItemForPrints, "Fingerprints on "),
+            (GameAction.ToggleNotes, "Notepad"),
+            (GameAction.ToggleMenu, "Paused"), //window toggled
         };
 
         [SetUp]
@@ -73,12 +73,12 @@ namespace Tests.Components
         [Test]
         public void NewKeyBoardComponentTests()
         {
-            _game.Stop();
+            _game = new MockGame(NewKeyboardComponent);
         }
         private void NewKeyboardComponent(Microsoft.Xna.Framework.GameTime time)
         {
             _component = (CSIKeyboardComponent)_game.Player.GetComponent<CSIKeyboardComponent>();
-            _lookingGlass = (MagnifyingGlassComponent)_game.Player.GetComponent<MagnifyingGlassComponent>();
+            //_lookingGlass = (MagnifyingGlassComponent)_game.Player.GetComponent<MagnifyingGlassComponent>();
             Assert.NotNull(_component);
         }
         //[Test]//skip for now
@@ -112,7 +112,7 @@ namespace Tests.Components
             _game.Stop();
         }
 
-        [Test]
+        //[Test] //todo
         public void ListensForKeyBindingsOnPauseOnlyTest()
         {
             _game = new MockGame(NewKeyboardComponent);
@@ -126,7 +126,7 @@ namespace Tests.Components
             _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
             Assert.AreEqual(position, _game.Player.Position);
             //assert that nothing changed?
-
+            Assert.Fail("Test is not sufficient to be reliable");
             _game.Stop();
         }
 
@@ -143,7 +143,7 @@ namespace Tests.Components
         }
 
         //[Theory] //todo
-        public void QueriableActionOpensACursorTest((GameActions actionkey, GameActions purpose) dataset)
+        public void QueriableActionOpensACursorTest((GameAction actionkey, GameAction purpose) dataset)
         {
             _game = new MockGame(NewKeyboardComponent);
             _game.RunOnce();
@@ -158,13 +158,13 @@ namespace Tests.Components
         }
 
         //[Theory]//todo
-        public void TogglesWindowsTest((GameActions action, string windowTitle) dataset)
+        public void TogglesWindowsTest((GameAction action, string windowTitle) dataset)
         {
             Assert.Fail();
         }
 
-        [Theory]
-        public void TakeActionsTest(GameActions action)
+        //[Theory]//todo
+        public void TakeActionsTest(GameAction action)
         {
             Assert.DoesNotThrow(() => _component.TakeAction(action));
         }

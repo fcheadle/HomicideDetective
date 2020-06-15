@@ -1,17 +1,15 @@
-﻿using Engine.Components.UI;
+﻿using Engine.Entities;
 using Engine.Utilities;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests.Components.UI
+namespace Tests.UI
 {
-    class MagnifyingGlassComponentTests : TestBase
+    class MagnifyingGlassTests
     {
-        [Datapoints]
-        GameActions[] queriableActions = { GameActions.LookAtEverythingInSquare, GameActions.LookAtPerson, GameActions.Talk, GameActions.GetItem };
-        MagnifyingGlassComponent _component;
+        MagnifyingGlass _lookingGlass;
         const int _size = 3;
 
         //[Test]//todo
@@ -26,8 +24,8 @@ namespace Tests.Components.UI
             Assert.Fail();
         }
 
-        //[Theory]//todo
-        public void QueryTest(GameActions action)
+        //[Theory]//todo. takes to much time
+        public void QueryTest(GameAction action)
         {
             Assert.Fail();
         }
