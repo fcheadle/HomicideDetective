@@ -1,7 +1,7 @@
-﻿using Engine.Entities.Terrain;
-using Engine.Extensions;
-using Engine.Maps;
-using Engine.Maps.Areas;
+﻿using Engine.Scenes;
+using Engine.Scenes.Areas;
+using Engine.Scenes.Terrain;
+using Engine.Utilities.Extensions;
 using GoRogue;
 using GoRogue.Pathing;
 using NUnit.Framework;

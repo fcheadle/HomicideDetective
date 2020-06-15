@@ -1,4 +1,4 @@
-﻿using Engine.Entities.Items;
+﻿using Engine.Items;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;

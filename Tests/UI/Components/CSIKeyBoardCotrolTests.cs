@@ -1,6 +1,6 @@
 ﻿using Engine;
-using Engine.Components;
 using Engine.Components.UI;
+using Engine.UI.Components;
 using Engine.Utilities;
 using GoRogue;
 using Microsoft.Xna.Framework.Input;

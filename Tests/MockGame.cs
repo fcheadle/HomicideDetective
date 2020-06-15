@@ -1,15 +1,8 @@
-﻿using Engine;
-using Engine.Components;
-using Engine.Entities.Creatures;
-using Engine.Entities.Items;
-using Engine.Entities.Terrain;
-using Engine.Maps;
-using Engine.UserInterface;
-using Engine.Utilities;
-using GoRogue;
+﻿using Engine.Entities.Terrain;
+using Engine.Items;
+using Engine.Scenes.Terrain.Components;
 using Microsoft.Xna.Framework;
 using System;
-using Tests.Mocks;
 using Game = Engine.Game;
 using Settings = Engine.Settings;
 

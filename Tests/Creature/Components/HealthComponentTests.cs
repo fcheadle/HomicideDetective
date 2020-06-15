@@ -1,4 +1,4 @@
-﻿using Engine.Components.Creature;
+﻿using Engine.Creatures.Components;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using System;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Engine.Utilities
+﻿namespace Engine.Utilities
 { 
     public enum GameAction
     {

@@ -1,5 +1,4 @@
 ﻿using Engine.Utilities;
-using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using SadConsole;
 using SadConsole.Components;

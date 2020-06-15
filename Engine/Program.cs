@@ -1,13 +1,6 @@
-﻿using Engine.Components;
-using Engine.Components.Creature;
-using Engine.Entities.Creatures;
-using Engine.Entities.Items;
-using Engine.Entities.Terrain;
-using Engine.Extensions;
-using Engine.Utilities;
-using Microsoft.Xna.Framework;
-using SadConsole;
-using System;
+﻿using Engine.Creatures;
+using Engine.Items;
+using Engine.Scenes.Terrain;
 
 namespace Engine
 {

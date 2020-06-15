@@ -1,6 +1,6 @@
 ﻿using Engine.Components;
-using Engine.Components.Creature;
 using Engine.Components.UI;
+using Engine.Creatures.Components;
 using NUnit.Framework;
 using SadConsole.Input;
 using System;

@@ -1,4 +1,4 @@
-﻿using Engine.Utilities;
+﻿using Engine.Utilities.Mathematics;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

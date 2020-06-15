@@ -1,11 +1,6 @@
-﻿using Engine.Components;
-using Engine.Components.Creature;
-using Engine.Components.UI;
+﻿using Engine.Components.UI;
 using NUnit.Framework;
 using SadConsole.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Components.UI
 {

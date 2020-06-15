@@ -1,4 +1,4 @@
-﻿using Engine.Extensions;
+﻿using Engine.Utilities.Extensions;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
 

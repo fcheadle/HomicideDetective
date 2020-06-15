@@ -1,6 +1,4 @@
-﻿using Engine;
-using Engine.Components.Creature;
-using Engine.Mathematics;
+﻿using Engine.Utilities.Mathematics;
 using GoRogue;
 using NUnit.Framework;
 using System;

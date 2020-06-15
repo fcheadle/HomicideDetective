@@ -1,5 +1,5 @@
-using Engine.Entities.Terrain;
-using Engine.Extensions;
+using Engine.Scenes.Terrain;
+using Engine.Utilities.Extensions;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;

@@ -1,7 +1,8 @@
 ﻿using Engine.Components;
-using Engine.Components.Creature;
 using Engine.Components.UI;
-using Engine.Entities.Creatures;
+using Engine.Creatures;
+using Engine.Creatures.Components;
+using Engine.UI.Components;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;

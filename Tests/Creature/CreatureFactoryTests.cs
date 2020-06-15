@@ -1,5 +1,5 @@
-﻿using Engine.Components.Creature;
-using Engine.Entities.Creatures;
+﻿using Engine.Creatures;
+using Engine.Creatures.Components;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;

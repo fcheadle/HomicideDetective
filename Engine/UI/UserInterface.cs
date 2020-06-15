@@ -1,10 +1,8 @@
-﻿using Engine.Components;
-using Engine.Components.Creature;
-using Engine.Components.UI;
-using Engine.Entities;
-using Engine.Maps;
-using Engine.Maps.Areas;
-using Engine.Utilities;
+﻿using Engine.Components.UI;
+using Engine.Creatures.Components;
+using Engine.Scenes;
+using Engine.Scenes.Areas;
+using Engine.UI.Components;
 using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
@@ -12,7 +10,7 @@ using SadConsole.Components;
 using System;
 using System.Collections.Generic;
 
-namespace Engine.UserInterface
+namespace Engine.UI
 {
     public class UserInterface : ContainerConsole
     {
@@ -21,9 +19,9 @@ namespace Engine.UserInterface
         public ControlsConsole Controls { get; private set; }
         public MagnifyingGlass LookingGlass { get; private set; }
         public BasicEntity Player => Map.ControlledGameObject;
-        public ActorComponent Actor => (ActorComponent)Player.GetComponent<ActorComponent>(); 
+        public ActorComponent Actor => (ActorComponent)Player.GetComponent<ActorComponent>();
         public CSIKeyboardComponent KeyBoardComponent => (CSIKeyboardComponent)Player.GetComponent<CSIKeyboardComponent>();
-        public PageComponent<ThoughtsComponent> Thoughts => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>(); 
+        public PageComponent<ThoughtsComponent> Thoughts => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>();
         public PageComponent<HealthComponent> Health => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>();
 
         public UserInterface()
@@ -45,7 +43,7 @@ namespace Engine.UserInterface
 
         private void CreateMapRenderer()
         {
-            MapRenderer = Map.CreateRenderer(new GoRogue.Rectangle(0, 0, Game.Settings.GameWidth, Game.Settings.GameHeight), Global.FontDefault);
+            MapRenderer = Map.CreateRenderer(new Rectangle(0, 0, Game.Settings.GameWidth, Game.Settings.GameHeight), Global.FontDefault);
             MapRenderer.UseMouse = true;
             MapRenderer.FocusOnMouseClick = false;
             Children.Add(MapRenderer);
@@ -58,7 +56,7 @@ namespace Engine.UserInterface
 
         private void CreatePlayer()
         {
-            Map.ControlledGameObject = Game.CreatureFactory.Player(new Coord(20,20));
+            Map.ControlledGameObject = Game.CreatureFactory.Player(new Coord(20, 20));
             Map.ControlledGameObject.IsFocused = true;
             Map.ControlledGameObject.FocusOnMouseClick = true;
             Map.AddEntity(Map.ControlledGameObject);
@@ -124,13 +122,13 @@ namespace Engine.UserInterface
             ((BasicMap)s).ControlledGameObject.Moved += Player_Moved;
         }
         // Remove an Entity from the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<IGameObject> args)
+        public void OnMapEntityRemoved(object sender, ItemEventArgs<IGameObject> args)
         {
             //MapRenderer.Children.Remove(args.Item);
         }
 
         // Add an Entity to the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<IGameObject> args)
+        public void OnMapEntityAdded(object sender, ItemEventArgs<IGameObject> args)
         {
             //MapRenderer.Children.Add(args.Item);
         }

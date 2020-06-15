@@ -1,4 +1,4 @@
-﻿using Engine.UserInterface;
+﻿using Engine.UI;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using System;

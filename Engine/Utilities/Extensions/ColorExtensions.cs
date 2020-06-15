@@ -1,8 +1,8 @@
-﻿using Engine.Mathematics;
+﻿using Engine.Utilities.Mathematics;
 using System;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Engine.Extensions
+namespace Engine.Utilities.Extensions
 {
     public static class ColorExtensions
     {
@@ -31,7 +31,7 @@ namespace Engine.Extensions
 
             for (int i = 0; i < 10; i++)
             {
-                chance = (double)Calculate.PercentValue();
+                chance = Calculate.PercentValue();
                 if (chance <= rPercentValue)
                 {
                     color.R -= Convert.ToByte(1);
@@ -61,7 +61,7 @@ namespace Engine.Extensions
 
             for (int i = 0; i < 10; i++)
             {
-                chance = (double)Calculate.PercentValue();
+                chance = Calculate.PercentValue();
                 if (chance <= rPercentValue)
                 {
                     //if (Convert.ToInt32(color.R) < 255)
@@ -90,9 +90,9 @@ namespace Engine.Extensions
         public static Color MutateBy(this Color baseColor, Color target)
         {
             Color newC = Color.Black;
-            newC.R = Convert.ToByte((baseColor.R + target.R) / (byte)4);
-            newC.G = Convert.ToByte((baseColor.G + target.G) / (byte)4);
-            newC.B = Convert.ToByte((baseColor.B + target.B) / (byte)4);
+            newC.R = Convert.ToByte((baseColor.R + target.R) / 4);
+            newC.G = Convert.ToByte((baseColor.G + target.G) / 4);
+            newC.B = Convert.ToByte((baseColor.B + target.B) / 4);
             return newC;
         }
 

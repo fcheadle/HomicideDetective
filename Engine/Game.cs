@@ -1,12 +1,11 @@
-﻿using Engine.Components;
-using Engine.Components.Creature;
-using Engine.Components.UI;
-using Engine.Entities.Creatures;
-using Engine.Entities.Items;
-using Engine.Entities.Terrain;
-using Engine.Maps;
-using Engine.UserInterface;
-using Engine.Utilities;
+﻿using Engine.Components.UI;
+using Engine.Creatures;
+using Engine.Creatures.Components;
+using Engine.Items;
+using Engine.Scenes;
+using Engine.Scenes.Terrain;
+using Engine.UI;
+using Engine.UI.Components;
 using Microsoft.Xna.Framework;
 using SadConsole;
 
@@ -19,7 +18,7 @@ namespace Engine
         public static ICreatureFactory CreatureFactory => _creatureFactory; 
         public static IItemFactory ItemFactory => _itemFactory; 
         public static ITerrainFactory TerrainFactory => _terrainFactory; 
-        public static UserInterface.UserInterface UIManager => _uiManager; 
+        public static UserInterface UIManager => _uiManager; 
         public static SceneMap Map => UIManager.Map;
         public ScrollingConsole MapRenderer => UIManager.MapRenderer;
         public BasicEntity Player => UIManager.Player;
@@ -31,7 +30,7 @@ namespace Engine
         private static ICreatureFactory _creatureFactory;
         private static ITerrainFactory _terrainFactory;
         private static IItemFactory _itemFactory;
-        private static UserInterface.UserInterface _uiManager;
+        private static UserInterface _uiManager;
 
         public bool IsPaused { get => SadConsole.Global.CurrentScreen.IsPaused; set => SadConsole.Global.CurrentScreen.IsPaused = value; }
 
@@ -76,7 +75,7 @@ namespace Engine
         }
         public virtual void Init()
         {
-            _uiManager = new UserInterface.UserInterface();
+            _uiManager = new UserInterface();
             Global.CurrentScreen = UIManager;
         }
         public virtual void Start()
