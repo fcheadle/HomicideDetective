@@ -62,14 +62,14 @@ namespace Tests.Creature.Components
             _answer = _base.GetDetails();
         }
 
-        //[Test]//todo...
+        [Test]//todo...
         public void ProcessTimeUnitTest()
         {
             _game = new MockGame(GetDetails);
             _game.RunOnce();
         }
 
-        //[Test]//todo...
+        [Test]//todo...
         public void DecideWhatToDoTest()
         {
             Assert.Fail();

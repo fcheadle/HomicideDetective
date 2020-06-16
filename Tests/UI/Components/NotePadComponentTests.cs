@@ -57,7 +57,7 @@ namespace Tests.UI.Components
             _game.Stop();
         }
 
-        //[Test]
+        [Test]
         public void BackButtonTest()
         {
             //print a bunch of bullshit so that we're like three or four pages in
@@ -70,7 +70,7 @@ namespace Tests.UI.Components
             Assert.Fail();
         }
 
-        //[Test]
+        [Test]
         public void NextButtonTest()
         {
             //print a bunch of bullshit so that we're like three or four pages in
@@ -80,6 +80,13 @@ namespace Tests.UI.Components
             //hit the back button
 
             //assert on the current top text and index
+            Assert.Fail();
+        }
+
+        [Test]
+        public void WriteTest()
+        {
+            //write some text
             Assert.Fail();
         }
     }

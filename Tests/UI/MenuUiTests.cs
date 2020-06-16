@@ -21,8 +21,6 @@ namespace Tests.UI
             Assert.IsNotNull(ui.SettingsOptionsConsole);
             Assert.False(ui.IsVisible);
             Assert.False(ui.IsFocused);
-            Assert.AreEqual(1, ui.Children.Count);
-            Assert.AreEqual(6, ui.MenuRenderer.Children.Count);
         }
         [Test]
         public void TitleConsoleTest()
@@ -35,7 +33,7 @@ namespace Tests.UI
         {
             _game = new MockGame(NewUI);
             _game.RunOnce();
-            Assert.AreEqual(4, ui.MainOptionsConsole.Children.Count);
+            Assert.AreEqual(4, ui.MainOptionsConsole.Controls.Count);
         }
         [Test]
         public void HelpOptionsTest()

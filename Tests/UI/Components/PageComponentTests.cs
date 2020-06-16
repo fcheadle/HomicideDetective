@@ -64,7 +64,7 @@ namespace Tests.UI.Components
             _game.Stop();
         }
 
-        //[Test]//I know that print works, but it resists testing, for now.
+        [Test]//I know that print works, but it resists testing, for now.
         public void PrintTest()
         {
             string[] bullshit =

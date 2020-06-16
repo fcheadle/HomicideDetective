@@ -81,7 +81,7 @@ namespace Tests.UI.Components
             //_lookingGlass = (MagnifyingGlassComponent)_game.Player.GetComponent<MagnifyingGlassComponent>();
             Assert.NotNull(_component);
         }
-        //[Test]//skip for now
+        [Test]//skip for now
         public void MovesTest()
         {
             _game = new MockGame(NewKeyboardComponent);
@@ -109,10 +109,9 @@ namespace Tests.UI.Components
             _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
             Assert.AreEqual(position, _game.Player.Position);
             Assert.AreEqual(startingPosition, _game.Player.Position);
-            _game.Stop();
         }
 
-        //[Test] //todo
+        [Test] //todo
         public void ListensForKeyBindingsOnPauseOnlyTest()
         {
             _game = new MockGame(NewKeyboardComponent);
@@ -127,7 +126,6 @@ namespace Tests.UI.Components
             Assert.AreEqual(position, _game.Player.Position);
             //assert that nothing changed?
             Assert.Fail("Test is not sufficient to be reliable");
-            _game.Stop();
         }
 
         private void TogglePause(Microsoft.Xna.Framework.GameTime time)
@@ -136,13 +134,16 @@ namespace Tests.UI.Components
             _component.TogglePause();
         }
 
-        //[Test] //todo
+        [Test] //todo
         public void ToggleMenuTest()
         {
-            Assert.Fail();
+            _game = new MockGame(NewKeyboardComponent);
+            _component.ToggleMenu();
+
+            Assert.AreEqual(MockGame.Menu, Global.CurrentScreen);
         }
 
-        //[Theory] //todo
+        //[Theory] //todo - just takes too long for now
         public void QueriableActionOpensACursorTest((GameAction actionkey, GameAction purpose) dataset)
         {
             _game = new MockGame(NewKeyboardComponent);
@@ -157,13 +158,13 @@ namespace Tests.UI.Components
                 Assert.AreNotEqual(dataset.purpose, _lookingGlass.Purpose);
         }
 
-        //[Theory]//todo
+        //[Theory]//todo -- just takes too long for now
         public void TogglesWindowsTest((GameAction action, string windowTitle) dataset)
         {
             Assert.Fail();
         }
 
-        //[Theory]//todo
+        //[Theory]//todo - just takes too long for now
         public void TakeActionsTest(GameAction action)
         {
             Assert.DoesNotThrow(() => _component.TakeAction(action));

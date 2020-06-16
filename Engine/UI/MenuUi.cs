@@ -88,7 +88,8 @@ namespace Engine.UI
             MainOptionsConsole.UseKeyboard = true;
             MainOptionsConsole.UseMouse = true;
             MenuRenderer.Children.Add(MainOptionsConsole);
-            
+            Selector = MenuSelector(MainOptionsConsole.Controls[0].Position);
+            MainOptionsConsole.Children.Add(Selector);
         }
         private void InitHelpOptions()
         {
@@ -107,6 +108,25 @@ namespace Engine.UI
             NewGameOptionsConsole = new ControlsConsole(Game.Settings.GameWidth, Game.Settings.GameHeight);
             Button quick = MenuButton("Quickstart", QuickStartButton_Click);
             quick.Position = new Coord(0, 2);
+            Button advanced = MenuButton("Advanced", AdvancedStartButton_Click);
+            advanced.Position = new Coord(0, 4);
+
+            NewGameOptionsConsole.Add(quick);
+            NewGameOptionsConsole.Add(advanced);
+
+            Children.Add(NewGameOptionsConsole);
+
+            NewGameAdvancedOptionsConsole = new ControlsConsole(Game.Settings.GameWidth, Game.Settings.GameHeight);
+            Button start = MenuButton("Start", AdvancedStartButton_Click);
+            start.Position = new Coord(0, 2);
+            NewGameAdvancedOptionsConsole.Add(start);
+
+            Children.Add(NewGameAdvancedOptionsConsole);
+        }
+
+        private void AdvancedStartButton_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void QuickStartButton_Click(object sender, EventArgs e)
@@ -120,16 +140,20 @@ namespace Engine.UI
         {
             IsVisible = false;
             IsFocused = false;
+            Global.CurrentScreen = Game.UIManager;
         }
         public void Show()
         {
             IsVisible = true;
             IsFocused = true;
+            Global.CurrentScreen = this;
         }
         public void Toggle()
         {
-            IsVisible = !IsVisible;
-            IsFocused = IsVisible; //these two values _should_ always be the same...?
+            if (IsVisible)
+                Hide();
+            else
+                Show();
         }
         #endregion
 
