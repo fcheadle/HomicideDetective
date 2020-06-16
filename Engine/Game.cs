@@ -18,7 +18,8 @@ namespace Engine
         public static ICreatureFactory CreatureFactory => _creatureFactory; 
         public static IItemFactory ItemFactory => _itemFactory; 
         public static ITerrainFactory TerrainFactory => _terrainFactory; 
-        public static UserInterface UIManager => _uiManager; 
+        public static CrimeSceneInvestigationUi UIManager => _csi;
+        public static MenuUi Menu => _menu;
         public static SceneMap Map => UIManager.Map;
         public ScrollingConsole MapRenderer => UIManager.MapRenderer;
         public BasicEntity Player => UIManager.Player;
@@ -30,7 +31,8 @@ namespace Engine
         private static ICreatureFactory _creatureFactory;
         private static ITerrainFactory _terrainFactory;
         private static IItemFactory _itemFactory;
-        private static UserInterface _uiManager;
+        private static CrimeSceneInvestigationUi _csi;
+        private static MenuUi _menu;
 
         public bool IsPaused { get => SadConsole.Global.CurrentScreen.IsPaused; set => SadConsole.Global.CurrentScreen.IsPaused = value; }
 
@@ -75,7 +77,8 @@ namespace Engine
         }
         public virtual void Init()
         {
-            _uiManager = new UserInterface();
+            _csi = new CrimeSceneInvestigationUi();
+            _menu = new MenuUi();
             Global.CurrentScreen = UIManager;
         }
         public virtual void Start()

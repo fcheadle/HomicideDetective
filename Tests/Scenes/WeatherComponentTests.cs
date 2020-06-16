@@ -1,7 +1,7 @@
 ﻿using Engine.Scenes.Terrain.Components;
 using NUnit.Framework;
 
-namespace Tests.Map
+namespace Tests.Scenes
 {
     class WeatherComponentTests : TestBase
     {

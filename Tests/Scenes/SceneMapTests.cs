@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests.Map
+namespace Tests.Scenes
 {
     class SceneMapTests : TestBase
     {
@@ -21,7 +21,7 @@ namespace Tests.Map
 
         private void NewSceneMap(GameTime obj)
         {
-            _map = MockGame.Map;
+            _map = Engine.Game.Map;
             for (int i = 0; i < _map.Width; i++)
             {
                 for (int j = 0; j < _map.Height; j++)

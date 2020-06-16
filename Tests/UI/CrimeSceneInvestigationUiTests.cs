@@ -7,11 +7,11 @@ using System.Text;
 
 namespace Tests.UI
 {
-    class UserInterfaceTests : TestBase
+    class CrimeSceneInvestigationUiTests : TestBase
     {
-        UserInterface ui;
+        CrimeSceneInvestigationUi ui;
         [Test]
-        public void NewUserInterfaceTests()
+        public void NewCsiUiTest()
         {
             _game = new MockGame(NewUI);
             _game.RunOnce();

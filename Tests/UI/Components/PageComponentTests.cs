@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests.Components.UI
+namespace Tests.UI.Components
 {
     class PageComponentTests : TestBase
     {
@@ -55,19 +55,19 @@ namespace Tests.Components.UI
             _game = new MockGame(NewPageComponent);
             _game.RunOnce();
             _game.SwapUpdate(GetDetails);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.UIManager, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.UIManager, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
             _game.Stop();
         }
-        
+
         //[Test]//I know that print works, but it resists testing, for now.
         public void PrintTest()
         {
-            string[] bullshit = 
+            string[] bullshit =
             {
                 "parmesan wedge",
                 "------* ",

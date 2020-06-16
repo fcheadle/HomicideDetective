@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using SadConsole.Input;
 
-namespace Tests.Components.UI
+namespace Tests.UI.Components
 {
     class NotePadComponentTests : TestBase
     {
@@ -48,10 +48,10 @@ namespace Tests.Components.UI
             _game = new MockGame(NewNotePadComponent);
             _game.RunOnce();
             _game.SwapUpdate(GetDetails);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.UIManager, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.UIManager, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
             _game.Stop();

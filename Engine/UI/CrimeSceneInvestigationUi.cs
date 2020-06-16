@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace Engine.UI
 {
-    public class UserInterface : ContainerConsole
+    public class CrimeSceneInvestigationUi : ContainerConsole
     {
         public SceneMap Map { get; private set; }
         public ScrollingConsole MapRenderer { get; private set; }
@@ -24,7 +24,7 @@ namespace Engine.UI
         public PageComponent<ThoughtsComponent> Thoughts => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>();
         public PageComponent<HealthComponent> Health => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>();
 
-        public UserInterface()
+        public CrimeSceneInvestigationUi()
         {
             IsVisible = true;
             IsFocused = true;

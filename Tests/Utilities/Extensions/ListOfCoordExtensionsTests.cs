@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace Tests.Map
+namespace Tests.Utilities.Extensions
 {
     [TestFixture]
     public class ListOfCoordExtensionsTests
