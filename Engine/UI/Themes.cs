@@ -52,6 +52,14 @@ namespace Engine.Components.UI
         }
     }
 
+    class MenuTheme : ControlsConsoleTheme
+    {
+        private readonly Color semitransparent = new Color(Color.Black, 128);
+        public MenuTheme()
+        {
+            this.FillStyle = new Cell(Color.Transparent, semitransparent);
+        }
+    }
     class MenuButtonTheme : ButtonTheme
     {
 

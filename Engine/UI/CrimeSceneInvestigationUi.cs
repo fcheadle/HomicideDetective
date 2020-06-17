@@ -70,7 +70,7 @@ namespace Engine.UI
         {
             Controls = new ControlsConsole(Game.Settings.GameWidth, 3);
             Controls.Theme = new PaperWindowTheme();
-            Controls.ThemeColors = ThemeColor.Clear;
+            Controls.ThemeColors = ThemeColors.Clear;
             Controls.Position = new Coord(0, Game.Settings.GameHeight - 2);
             int currentX = 0;
             foreach (IConsoleComponent visible in Player.Components)

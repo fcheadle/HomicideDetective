@@ -41,7 +41,7 @@ namespace Engine.Components.UI
                 Position = position,
                 ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
                 Theme = new PaperWindowTheme(),
-                ThemeColors = ThemeColor.Paper,
+                ThemeColors = ThemeColors.Paper,
                 CanTabToNextConsole = true,
             };
             BackPageButton = new Button(2) { Position = new Coord(0, _height - 1), Text = "<=",  };
@@ -95,14 +95,14 @@ namespace Engine.Components.UI
                     }
 
 
-                    Cell here = new Cell(ThemeColor.Paper.Text, ThemeColor.Paper.ControlBack, glyph);
+                    Cell here = new Cell(ThemeColors.Paper.Text, ThemeColors.Paper.ControlBack, glyph);
                     buttonCells.Add(here);
                 }
             }
             MaximizeButton = new Button(Name.Length + 2, 3)
             {
                 Theme = new PaperButtonTheme(),
-                ThemeColors = ThemeColor.Paper,
+                ThemeColors = ThemeColors.Paper,
                 IsVisible = true,
                 Text = Window.Title,
                 TextAlignment = HorizontalAlignment.Center,

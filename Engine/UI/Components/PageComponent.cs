@@ -41,7 +41,7 @@ namespace Engine.Components.UI
                 ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
                 CanTabToNextConsole = true,
                 Theme = _theme,
-                ThemeColors = ThemeColor.Paper
+                ThemeColors = ThemeColors.Paper
             };
             Window.ThemeColors.RebuildAppearances();
             Window.MouseButtonClicked += MinimizeMaximize;
@@ -72,14 +72,14 @@ namespace Engine.Components.UI
                             glyph = 179;
                     }
 
-                    Cell here = new Cell(ThemeColor.Paper.Text, ThemeColor.Paper.ControlBack, glyph);
+                    Cell here = new Cell(ThemeColors.Paper.Text, ThemeColors.Paper.ControlBack, glyph);
                     buttonCells.Add(here);
                 }
             }
             MaximizeButton = new Button(Window.Title.Length + 2, 3)
             {
                 Theme = new PaperButtonTheme(),
-                ThemeColors = ThemeColor.Paper,
+                ThemeColors = ThemeColors.Paper,
                 IsVisible = true,
                 Text = Window.Title,
                 TextAlignment = HorizontalAlignment.Center,
