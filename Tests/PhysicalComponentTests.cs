@@ -20,7 +20,7 @@ namespace Tests.Components
         [Test]
         public void GetDetailsTest()
         {
-            Assert.AreEqual(1, _component.GetDetails().Length);
+            Assert.AreEqual(2, _component.GetDetails().Length);
         }
     }
 }

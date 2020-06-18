@@ -3,7 +3,7 @@ using GoRogue;
 using NUnit.Framework;
 using SadConsole;
 
-namespace Tests.Scenes.Terrain
+namespace Tests.Scenes.Components
 {
     class TerrainFactoryTests : TestBase
     {

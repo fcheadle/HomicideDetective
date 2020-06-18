@@ -1,12 +1,12 @@
-﻿using Engine.Scenes.Terrain;
-using Engine.Scenes.Terrain.Components;
+﻿using Engine.Scenes.Components;
+using Engine.Scenes.Terrain;
 using GoRogue;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tests.Scenes.Terrain
+namespace Tests.Scenes.Components
 {
     class AnimateGlyphComponentTest : TestBase
     {

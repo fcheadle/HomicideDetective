@@ -30,9 +30,11 @@ namespace Tests.Creature.Components
             Assert.AreEqual(0, _answer.Length);
             _base.Think("hello there.");
             _game.RunOnce();
+            _answer = _base.GetDetails();
             Assert.AreEqual(1, _answer.Length);
             _base.Think("oh, I'm alone...");
             _game.RunOnce();
+            _answer = _base.GetDetails(); 
             Assert.AreEqual(2, _answer.Length);
             _game.Stop();
         }

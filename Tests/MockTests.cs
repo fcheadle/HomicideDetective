@@ -9,11 +9,11 @@ namespace Tests
 
         private static void DummyUpdate(GameTime time)
         {
-            Assert.Pass("We are calling our update method successfully");
         }
         [Test]//test that gameMock works as I expect it to
         public void GameMockTest()
         {
+            _game = new MockGame(DummyUpdate);
             Assert.DoesNotThrow(() => _game.RunOnce());
         }
     }

@@ -1,4 +1,4 @@
-﻿using Engine.Scenes.Terrain.Components;
+﻿using Engine.Scenes.Components;
 using Engine.Utilities.Extensions;
 using Engine.Utilities.Mathematics;
 using GoRogue;

@@ -19,25 +19,19 @@ namespace Tests.Utilities.Extensions
         [SetUp]
         public void Setup()
         {
-            _game = new MockGame(_update);
             _map = new BasicMap(8, 8, 2, Distance.MANHATTAN);
             for (int i = 0; i < _map.Width; i++)
             {
                 for (int j = 0; j < _map.Height; j++)
                 {
-                    int glyph = i + j;
                     Coord c = new Coord(i, j);
                     _map.SetTerrain(_factory.Generic(c, i + j));
                 }
             }
         }
 
-        private void _update(GameTime obj)
-        {
-
-        }
-
         [Test]
+        [Parallelizable]
         public void SubsectionTest()
         {
             Coord start = new Coord(4, 3);
@@ -53,6 +47,7 @@ namespace Tests.Utilities.Extensions
             }
         }
         [Test]
+        [Parallelizable]
         public void ContainsTest()
         {
             Assert.IsTrue(_map.Contains(new Coord(0, 0)));
@@ -154,9 +149,8 @@ namespace Tests.Utilities.Extensions
         [Test]
         public void RotateTest()
         {
-            _game = new MockGame(Rotate);
+            _game.SwapUpdate(Rotate);
             _game.RunOnce();
-            Assert.Pass();
         }
         private static void Rotate(GameTime time)
         {

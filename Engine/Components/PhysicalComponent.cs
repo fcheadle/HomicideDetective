@@ -1,12 +1,16 @@
-﻿using SadConsole;
+﻿using Engine.Items.Markings;
+using SadConsole;
+using System.Collections.Generic;
 
 namespace Engine.Components
 {
     public class PhysicalComponent : Component
     {
-        //public string Description { get; private set; }
+        private List<Marking> _markings = new List<Marking>();
+
         public int Mass { get; set; }
         public int Volume { get; set; }
+        public List<Marking> Markings => _markings;
         public PhysicalComponent(BasicEntity parent):base(false, false, false, false)
         {
             Parent = parent;
@@ -20,6 +24,10 @@ namespace Engine.Components
             return answer;
         }
 
+        //public Action<Marking> OnInteract(BasicEntity interactor)
+        //{
+
+        //}
         public void SetPhysicalDescription(string description)
         {
             Description = description;

@@ -1,16 +1,11 @@
-﻿using Engine;
-using Engine.Components.UI;
+﻿using Engine.Components.UI;
 using Engine.UI.Components;
 using Engine.Utilities;
 using GoRogue;
 using Microsoft.Xna.Framework.Input;
 using NUnit.Framework;
 using SadConsole;
-using SadConsole.Controls;
 using SadConsole.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Tests.Mocks;
 
 namespace Tests.UI.Components
@@ -66,7 +61,6 @@ namespace Tests.UI.Components
         }
 
         [Test]
-        //[Parallelizable]
         public void NewMenuKeyBoardComponentTests()
         {
             Assert.NotNull(_component);
@@ -101,7 +95,6 @@ namespace Tests.UI.Components
         }
 
         [Test]
-        //[Parallelizable]
         public void ListensForKeyBindingsOnPauseOnlyTest()
         {
             _game.SwapUpdate(TogglePause);
@@ -123,7 +116,6 @@ namespace Tests.UI.Components
         }
 
         [Test] //todo
-        //[Parallelizable]
         public void ToggleMenuTest()
         {
             _component.ToggleMenu();
@@ -131,7 +123,7 @@ namespace Tests.UI.Components
             Assert.AreEqual(MockGame.Menu, Global.CurrentScreen);
         }
 
-        //[Theory] //todo - just takes too long for now
+        [Theory] //todo - just takes too long for now
         public void QueriableActionOpensACursorTest((GameAction actionkey, GameAction purpose) dataset)
         {
             _lookingGlass = (MagnifyingGlassComponent)_game.Player.GetComponent<MagnifyingGlassComponent>();
@@ -144,7 +136,7 @@ namespace Tests.UI.Components
                 Assert.AreNotEqual(dataset.purpose, _lookingGlass.Purpose);
         }
 
-        //[Theory]//todo -- just takes too long for now
+        [Theory]//todo -- just takes too long for now
         public void TogglesWindowsTest((GameAction action, string windowTitle) dataset)
         {
             Assert.Fail();

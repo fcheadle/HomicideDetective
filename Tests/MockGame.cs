@@ -1,6 +1,6 @@
 ﻿using Engine.Entities.Terrain;
 using Engine.Items;
-using Engine.Scenes.Terrain.Components;
+using Engine.Scenes.Components;
 using Microsoft.Xna.Framework;
 using System;
 using Game = Engine.Game;
