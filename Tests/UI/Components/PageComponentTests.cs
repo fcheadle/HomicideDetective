@@ -5,6 +5,7 @@ using NUnit.Framework;
 using SadConsole.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Tests.UI.Components
@@ -13,37 +14,29 @@ namespace Tests.UI.Components
     {
         PageComponent<HealthComponent> _component;
         string[] _answer;
+        [SetUp]
+        public void SetUp()
+        {
+            _component = (PageComponent<HealthComponent>)_game.Player.GetComponent<PageComponent<HealthComponent>>();
+        }
 
         [Test]
         public void NewPageComponentTests()
         {
-            _game = new MockGame(NewPageComponent);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void NewPageComponent(Microsoft.Xna.Framework.GameTime time)
-        {
-            _component = (PageComponent<HealthComponent>)_game.Player.GetComponent<PageComponent<HealthComponent>>();
             Assert.NotNull(_component);
             Assert.NotNull(_component.Window);
             Assert.False(_component.Window.IsVisible);
             Assert.NotNull(_component.MaximizeButton);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.ProcessTimeUnit();
+            Assert.DoesNotThrow(() => _game.RunOnce());
         }
         [Test]
         public void GetDetailsTest()
         {
-            _game = new MockGame(NewPageComponent);
-            _game.RunOnce();
-
             _game.SwapUpdate(GetDetails);
-            _game.RunOnce();
-            _game.Stop();
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (PageComponent<HealthComponent>)_game.Player.GetComponent<PageComponent<HealthComponent>>();
             _answer = _component.GetDetails();
             HealthComponent c = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
             Assert.AreEqual(c.GetDetails().Length, _answer.Length);
@@ -52,16 +45,12 @@ namespace Tests.UI.Components
         [Test]
         public void MinimizeMaximizeTest()
         {
-            _game = new MockGame(NewPageComponent);
-            _game.RunOnce();
-            _game.SwapUpdate(GetDetails);
             _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
             _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _game.Stop();
         }
 
         [Test]//I know that print works, but it resists testing, for now.
@@ -74,11 +63,14 @@ namespace Tests.UI.Components
                 "cooking oil",
                 "I seen Footage",
             };
-            _game = new MockGame(NewPageComponent);
-            _game.RunOnce();
             _component.Print(bullshit);
-
-            SadConsole.CellSurface surface = _component.Window.GetSubSurface(new GoRogue.Rectangle(0, 0, _component.Window.Width, _component.Window.Height));
+            _answer = _component.GetDetails();
+            Assert.True(_answer[0].Contains(bullshit[0]));
+            Assert.True(_answer[0].Contains(bullshit[1]));
+            Assert.True(_answer[0].Contains(bullshit[2]));
+            Assert.True(_answer[0].Contains(bullshit[3]));
+            
+            //SadConsole.CellSurface surface = _component.Window.GetSubSurface(new GoRogue.Rectangle(0, 0, _component.Window.Width, _component.Window.Height));
 
             //surface to string?
             //string answer = "";

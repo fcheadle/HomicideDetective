@@ -1,39 +1,29 @@
 ﻿using Engine.Scenes.Terrain;
 using GoRogue;
-using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Scenes.Terrain
 {
     class TerrainFactoryTests : TestBase
     {
         TerrainFactory factory = new TerrainFactory();
-        BasicTerrain terrain;
-        [TearDown]
-        public void TearDown()
+        BasicTerrain _terrain;
+        [SetUp]
+        public void SetUp()
         {
-            Assert.IsTrue(terrain.IsStatic);
-            Assert.IsTrue(terrain.IsTransparent);
-            Assert.IsTrue(terrain.IsWalkable);
+            _terrain = factory.Generic(new Coord(0, 0), 14);
         }
 
         [Test]
         public void NewGenericTerrainTest()
         {
-            _game = new MockGame(NewGenericTerrain);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        public void NewGenericTerrain(GameTime time)
-        {
-            terrain = factory.Generic(new Coord(0, 0), 14);
-            Assert.NotNull(terrain);
-            Assert.AreEqual(new Coord(0, 0), terrain.Position);
-            Assert.AreEqual(14, terrain.Glyph);
+            Assert.NotNull(_terrain);
+            Assert.AreEqual(new Coord(0, 0), _terrain.Position);
+            Assert.AreEqual(14, _terrain.Glyph);
+            Assert.IsTrue(_terrain.IsStatic);
+            Assert.IsTrue(_terrain.IsTransparent);
+            Assert.IsTrue(_terrain.IsWalkable);
         }
     }
 }

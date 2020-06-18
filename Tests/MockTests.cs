@@ -14,8 +14,7 @@ namespace Tests
         [Test]//test that gameMock works as I expect it to
         public void GameMockTest()
         {
-            _game = new MockGame(DummyUpdate);
-            _game.RunOnce();
+            Assert.DoesNotThrow(() => _game.RunOnce());
         }
     }
 }

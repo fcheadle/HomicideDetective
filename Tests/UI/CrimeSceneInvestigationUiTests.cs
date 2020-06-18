@@ -10,12 +10,14 @@ namespace Tests.UI
     class CrimeSceneInvestigationUiTests : TestBase
     {
         CrimeSceneInvestigationUi ui;
+        [SetUp]
+        public void SetUp()
+        {
+            ui = MockGame.UIManager;
+        }
         [Test]
         public void NewCsiUiTest()
         {
-            _game = new MockGame(NewUI);
-            _game.RunOnce();
-            ui = MockGame.UIManager;
             Assert.IsNotNull(ui.Map);
             Assert.IsNotNull(ui.MapRenderer);
             Assert.IsNotNull(ui.Controls);
@@ -25,10 +27,6 @@ namespace Tests.UI
             Assert.IsNotNull(ui.KeyBoardComponent);
             Assert.IsNotNull(ui.Thoughts);
             Assert.IsNotNull(ui.Health);
-        }
-
-        private void NewUI(GameTime obj)
-        {
         }
     }
 }

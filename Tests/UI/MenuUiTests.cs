@@ -8,11 +8,16 @@ namespace Tests.UI
     class MenuUiTests : TestBase
     {
         MenuUi ui;
+        [SetUp]
+        public void Setup()
+        {
+            ui = MockGame.Menu;
+        }
         [Test]
+        //[Parallelizable]
         public void NewMenuUiTest()
         {
-            _game = new MockGame(NewUI);
-            _game.RunOnce();
+            ui = MockGame.Menu;
             Assert.IsNotNull(ui.Selector);
             Assert.IsNotNull(ui.MainOptionsConsole);
             Assert.IsNotNull(ui.HelpOptionsConsole);
@@ -23,37 +28,33 @@ namespace Tests.UI
             Assert.False(ui.IsFocused);
         }
         [Test]
+        //[Parallelizable]
         public void TitleConsoleTest()
         {
-            _game = new MockGame(NewUI);
-            _game.RunOnce();
+            Assert.Fail();
         }
         [Test]
+        //[Parallelizable]
         public void MainOptionsTest()
         {
-            _game = new MockGame(NewUI);
-            _game.RunOnce();
             Assert.AreEqual(4, ui.MainOptionsConsole.Controls.Count);
         }
         [Test]
+        //[Parallelizable]
         public void HelpOptionsTest()
         {
-            _game = new MockGame(NewUI);
-            _game.RunOnce();
             Assert.AreEqual(0, ui.HelpOptionsConsole.Children.Count);//0 for now
         }
         [Test]
+        //[Parallelizable]
         public void SettingsOptionsTest()
         {
-            _game = new MockGame(NewUI);
-            _game.RunOnce();
             Assert.AreEqual(0, ui.SettingsOptionsConsole.Children.Count);//0 for now
         }
         [Test]
+        //[Parallelizable]
         public void HideTest()
         {
-            _game = new MockGame(NewUI);
-            _game.RunOnce();
             Assert.False(ui.IsVisible);
             Assert.False(ui.IsFocused);
             Assert.AreNotEqual(Global.CurrentScreen, ui);
@@ -67,10 +68,9 @@ namespace Tests.UI
             Assert.False(ui.IsFocused);
         }
         [Test]
+        //[Parallelizable]
         public void ShowTest()
         {
-            _game = new MockGame(NewUI);
-            _game.RunOnce();
             Assert.False(ui.IsVisible);
             Assert.False(ui.IsFocused);
             Assert.AreNotEqual(Global.CurrentScreen, ui);
@@ -82,10 +82,9 @@ namespace Tests.UI
         }
 
         [Test]
+        //[Parallelizable]
         public void ToggleTest()
         {
-            _game = new MockGame(NewUI);
-            _game.RunOnce();
             Assert.False(ui.IsVisible);
             Assert.False(ui.IsFocused);
             Assert.AreNotEqual(Global.CurrentScreen, ui);
@@ -99,11 +98,6 @@ namespace Tests.UI
             Assert.False(ui.IsVisible);
             Assert.False(ui.IsFocused);
             Assert.AreNotEqual(Global.CurrentScreen, ui);
-        }
-
-        private void NewUI(GameTime obj)
-        {
-            ui = MockGame.Menu;
         }
     }
 }

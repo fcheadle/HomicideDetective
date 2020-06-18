@@ -14,6 +14,7 @@ namespace Tests
     class HouseGenerationIntegrationTests
     {
         TerrainFactory _factory = new TerrainFactory();
+
         [Test]
         public void GenerateTest()
         {

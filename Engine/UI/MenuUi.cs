@@ -181,6 +181,8 @@ namespace Engine.UI
             IsVisible = false;
             IsFocused = false;
             Global.CurrentScreen = Game.UIManager;
+            //Game.UIManager.MapRenderer.IsFocused = true;
+            //Game.UIManager.Player.IsFocused = true;
         }
         public void Show()
         {

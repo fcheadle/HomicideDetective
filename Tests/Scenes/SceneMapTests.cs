@@ -14,8 +14,7 @@ namespace Tests.Scenes
         [Test]
         public void NewSceneMapTest()
         {
-            _game = new MockGame(NewSceneMap);
-            _game.RunOnce();
+            _map = MockGame.UIManager.Map;
             Assert.NotNull(_map);
         }
 

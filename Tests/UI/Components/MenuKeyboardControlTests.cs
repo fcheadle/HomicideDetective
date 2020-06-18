@@ -15,10 +15,14 @@ using Tests.Mocks;
 
 namespace Tests.UI.Components
 {
-    class CsiKeyboardControlTests : TestBase
+    class MenuKeyboardControlTests : TestBase
     {
         CSIKeyboardComponent _component;
         MagnifyingGlassComponent _lookingGlass;
+
+        public MenuKeyboardControlTests()
+        {
+        }
 
         [Datapoints]
         GameAction[] allActions =
@@ -62,10 +66,12 @@ namespace Tests.UI.Components
         }
 
         [Test]
-        public void NewKeyBoardComponentTests()
+        //[Parallelizable]
+        public void NewMenuKeyBoardComponentTests()
         {
             Assert.NotNull(_component);
         }
+
         [Test]//skip for now
         public void MovesTest()
         {
@@ -94,7 +100,8 @@ namespace Tests.UI.Components
             Assert.AreEqual(startingPosition, _game.Player.Position);
         }
 
-        [Test] //todo
+        [Test]
+        //[Parallelizable]
         public void ListensForKeyBindingsOnPauseOnlyTest()
         {
             _game.SwapUpdate(TogglePause);
@@ -116,6 +123,7 @@ namespace Tests.UI.Components
         }
 
         [Test] //todo
+        //[Parallelizable]
         public void ToggleMenuTest()
         {
             _component.ToggleMenu();
@@ -142,7 +150,7 @@ namespace Tests.UI.Components
             Assert.Fail();
         }
 
-        //[Theory]//todo - just takes too long for now
+        [Theory]//todo - just takes too long for now
         public void TakeActionsTest(GameAction action)
         {
             Assert.DoesNotThrow(() => _component.TakeAction(action));

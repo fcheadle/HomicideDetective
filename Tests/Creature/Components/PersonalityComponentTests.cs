@@ -11,16 +11,14 @@ namespace Tests.Creature.Components
         PersonalityComponent _component;
         string[] _answer;
 
+        [SetUp]
+        public void SetUp()
+        {
+            _component = (PersonalityComponent)_game.Player.GetComponent<PersonalityComponent>();
+        }
         [Test]
         public void NewPersonalityComponentTest()
         {
-            _game = new MockGame(NewPersonalityComponent);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void NewPersonalityComponent(Microsoft.Xna.Framework.GameTime time)
-        {
-            _component = (PersonalityComponent)_game.Player.GetComponent<PersonalityComponent>();
             Assert.NotNull(_component);
             Assert.NotNull(_component.Passion);
             Assert.Less(0, _component.Passion);
@@ -69,19 +67,12 @@ namespace Tests.Creature.Components
             Assert.NotNull(_component.AttentionToDetail);
             Assert.Less(0, _component.AttentionToDetail);
         }
+
         [Test]
         public void GetDetailsTest()
         {
-            _game = new MockGame(GetDetails);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void GetDetails(Microsoft.Xna.Framework.GameTime time)
-        {
-            _component = (PersonalityComponent)_game.Player.GetComponent<PersonalityComponent>();
             _answer = _component.GetDetails();
             Assert.Less(20, _answer.Length);
         }
-
     }
 }

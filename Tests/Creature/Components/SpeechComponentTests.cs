@@ -13,17 +13,17 @@ namespace Tests.Creature.Components
         SpeechComponent _component;
         string[] _answer;
         CreatureFactory _factory = new CreatureFactory();
+        [SetUp]
+        public void SetUp()
+        {
+            _component = (SpeechComponent)_factory.Person(new Coord()).GetComponent<SpeechComponent>();
+            _answer = _component.GetDetails();
+        }
 
         [Test]
         public void NewSpeechComponentTest()
         {
-            _game = new MockGame(NewSpeechComponent);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void NewSpeechComponent(Microsoft.Xna.Framework.GameTime time)
-        {
-            _component = (SpeechComponent)_factory.Person(new Coord()).GetComponent<SpeechComponent>();
+            Assert.IsNotNull(_component);
             Assert.NotNull(_component);
             Assert.NotNull(_component.TendencyToMinimize);
             Assert.Less(0, _component.TendencyToMinimize);
@@ -43,14 +43,6 @@ namespace Tests.Creature.Components
         [Test]
         public void GetDetailsTest()
         {
-            _game = new MockGame(GetDetails);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void GetDetails(Microsoft.Xna.Framework.GameTime time)
-        {
-            _component = (SpeechComponent)_factory.Person(new Coord()).GetComponent<SpeechComponent>();
-            _answer = _component.GetDetails();
             Assert.Less(2, _answer.Length);
         }
     }
