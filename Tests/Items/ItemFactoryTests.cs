@@ -10,7 +10,7 @@ namespace Tests.Items
 {
     class ItemFactoryTests : TestBase
     {
-        MockItemFactory factory = new MockItemFactory();
+        DefaultItemFactory factory = new DefaultItemFactory();
         [Test]
         public void NewGenericItemTest()
         {

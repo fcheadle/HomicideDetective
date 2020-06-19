@@ -1,4 +1,5 @@
 ﻿using Engine.Components.UI;
+using Engine.UI.Components;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
@@ -42,7 +43,6 @@ namespace Engine.UI
             InitSettingsOptions();
             InitNewGameOptions();
             Hide();
-
         }
 
         #region initilization 
@@ -62,7 +62,7 @@ namespace Engine.UI
             
             TitleConsole.Position = new Coord(0, 0);
             TitleConsole.FillWithRandomGarbage();//for debugging purposes
-            TitleConsole.Print(2, 2, "!!! Homicide Detective !!!", Color.White, Color.Black);
+            TitleConsole.Print(2, 2, "!!! H O M I C I D E   D E T E C T I V E !!!", Color.White, Color.Black);
             MenuRenderer.Children.Add(TitleConsole);
         }
 
@@ -110,6 +110,7 @@ namespace Engine.UI
             MainOptionsConsole.UseMouse = true;
             
             Selector = MenuSelector(MainOptionsConsole.Controls[0].Position);
+            Selector.Components.Add(new MenuKeyboardComponent(Selector));
             MainOptionsConsole.Children.Add(Selector);
             MenuRenderer.Children.Add(MainOptionsConsole);
         }
@@ -182,13 +183,14 @@ namespace Engine.UI
             IsFocused = false;
             Global.CurrentScreen = Game.UIManager;
             //Game.UIManager.MapRenderer.IsFocused = true;
-            //Game.UIManager.Player.IsFocused = true;
+            Game.UIManager.Player.IsFocused = true;
         }
         public void Show()
         {
             IsVisible = true;
             IsFocused = true;
             Global.CurrentScreen = this;
+            Selector.IsFocused = true;
         }
         public void Toggle()
         {
@@ -220,8 +222,7 @@ namespace Engine.UI
 
         private void ContinueButton_Click(object sender, EventArgs e)
         {
-            //close menu
-            Global.CurrentScreen = Game.UIManager;
+            Hide();
         }
 
         private Button MenuButton(string name, EventHandler onClick)

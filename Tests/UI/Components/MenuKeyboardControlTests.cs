@@ -12,7 +12,7 @@ namespace Tests.UI.Components
 {
     class MenuKeyboardControlTests : TestBase
     {
-        CSIKeyboardComponent _component;
+        MenuKeyboardComponent _component;
         MagnifyingGlassComponent _lookingGlass;
 
         public MenuKeyboardControlTests()
@@ -57,7 +57,7 @@ namespace Tests.UI.Components
         [SetUp]
         public void SetUp()
         {
-            _component = (CSIKeyboardComponent)_game.Player.GetComponent<CSIKeyboardComponent>();
+            _component = (MenuKeyboardComponent)_game.Player.GetComponent<MenuKeyboardComponent>();
         }
 
         [Test]
@@ -94,58 +94,12 @@ namespace Tests.UI.Components
             Assert.AreEqual(startingPosition, _game.Player.Position);
         }
 
-        [Test]
-        public void ListensForKeyBindingsOnPauseOnlyTest()
-        {
-            _game.SwapUpdate(TogglePause);
-            _game.RunOnce();
-            Coord position = _game.Player.Position;
-            var keyboard = new MockKeyboard();
-            keyboard.AddKeyDown(new AsciiKey() { Key = Keys.Right }, Keys.Right);
-
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
-            //assert that nothing changed?
-            Assert.Fail("Test is not sufficient to be reliable");
-        }
-
-        private void TogglePause(Microsoft.Xna.Framework.GameTime time)
-        {
-            _component = (CSIKeyboardComponent)_game.Player.GetComponent<CSIKeyboardComponent>();
-            _component.TogglePause();
-        }
-
         [Test] //todo
         public void ToggleMenuTest()
         {
             _component.ToggleMenu();
 
             Assert.AreEqual(MockGame.Menu, Global.CurrentScreen);
-        }
-
-        [Theory] //todo - just takes too long for now
-        public void QueriableActionOpensACursorTest((GameAction actionkey, GameAction purpose) dataset)
-        {
-            _lookingGlass = (MagnifyingGlassComponent)_game.Player.GetComponent<MagnifyingGlassComponent>();
-            Assert.Null(_lookingGlass);
-
-            _component.TakeAction(dataset.actionkey);
-            if (dataset.actionkey == dataset.purpose)
-                Assert.AreEqual(dataset.purpose, _lookingGlass.Purpose);
-            else
-                Assert.AreNotEqual(dataset.purpose, _lookingGlass.Purpose);
-        }
-
-        [Theory]//todo -- just takes too long for now
-        public void TogglesWindowsTest((GameAction action, string windowTitle) dataset)
-        {
-            Assert.Fail();
-        }
-
-        [Theory]//todo - just takes too long for now
-        public void TakeActionsTest(GameAction action)
-        {
-            Assert.DoesNotThrow(() => _component.TakeAction(action));
         }
     }
 }

@@ -49,16 +49,5 @@ namespace Engine
             {Keys.Up, GameAction.MoveUp },
             {Keys.Down, GameAction.MoveDown },
         };
-
-        public void ToggleMenu()
-        {
-            ShowingMenu = !ShowingMenu;
-            IsPaused = ShowingMenu;
-        }
-
-        public void TogglePause()
-        {
-            IsPaused = !IsPaused;
-        }
     }
 }

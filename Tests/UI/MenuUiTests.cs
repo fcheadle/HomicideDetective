@@ -14,7 +14,6 @@ namespace Tests.UI
             ui = MockGame.Menu;
         }
         [Test]
-        //[Parallelizable]
         public void NewMenuUiTest()
         {
             ui = MockGame.Menu;
@@ -28,31 +27,26 @@ namespace Tests.UI
             Assert.False(ui.IsFocused);
         }
         [Test]
-        //[Parallelizable]
         public void TitleConsoleTest()
         {
             Assert.Fail();
         }
         [Test]
-        //[Parallelizable]
         public void MainOptionsTest()
         {
             Assert.AreEqual(4, ui.MainOptionsConsole.Controls.Count);
         }
         [Test]
-        //[Parallelizable]
         public void HelpOptionsTest()
         {
             Assert.AreEqual(0, ui.HelpOptionsConsole.Children.Count);//0 for now
         }
         [Test]
-        //[Parallelizable]
         public void SettingsOptionsTest()
         {
             Assert.AreEqual(0, ui.SettingsOptionsConsole.Children.Count);//0 for now
         }
         [Test]
-        //[Parallelizable]
         public void HideTest()
         {
             Assert.False(ui.IsVisible);
@@ -68,7 +62,6 @@ namespace Tests.UI
             Assert.False(ui.IsFocused);
         }
         [Test]
-        //[Parallelizable]
         public void ShowTest()
         {
             Assert.False(ui.IsVisible);
@@ -82,7 +75,6 @@ namespace Tests.UI
         }
 
         [Test]
-        //[Parallelizable]
         public void ToggleTest()
         {
             Assert.False(ui.IsVisible);

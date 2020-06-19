@@ -12,12 +12,12 @@ namespace Tests.UI.Components
 {
     class PageComponentTests : TestBase
     {
-        PageComponent<HealthComponent> _component;
+        PageComponent<ThoughtsComponent> _component;
         string[] _answer;
         [SetUp]
         public void SetUp()
         {
-            _component = (PageComponent<HealthComponent>)_game.Player.GetComponent<PageComponent<HealthComponent>>();
+            _component = (PageComponent<ThoughtsComponent>)_game.Player.GetComponent<PageComponent<ThoughtsComponent>>();
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace Tests.UI.Components
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
             _answer = _component.GetDetails();
-            HealthComponent c = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
+            ThoughtsComponent c = (ThoughtsComponent)_game.Player.GetComponent<ThoughtsComponent>();
             Assert.AreEqual(c.GetDetails().Length, _answer.Length);
         }
 

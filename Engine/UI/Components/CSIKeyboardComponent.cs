@@ -56,7 +56,7 @@ namespace Engine.UI.Components
                 handled = false;
                 foreach (var action in Game.Settings.KeyBindings)
                 {
-                    if (Global.KeyboardState.IsKeyReleased(action.Key))
+                    if (Global.KeyboardState.IsKeyPressed(action.Key))
                     {
                         TakeAction(action.Value);
                     }

@@ -15,7 +15,7 @@ namespace Tests
             ApplySettings(new Settings());
             SetCreatureFactory(new MockCreatureFactory());
             SetTerrainFactory(new MockTerrainFactory());
-            SetItemFactory(new MockItemFactory());
+            SetItemFactory(new DefaultItemFactory());
             SadConsole.Game.Create("font-sample.json", Settings.GameWidth, Settings.GameHeight);
             SadConsole.Game.OnInitialize = InitializeTests;
             SadConsole.Game.OnUpdate = update;

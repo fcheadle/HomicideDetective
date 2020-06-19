@@ -21,7 +21,7 @@ namespace Engine
             settings = settings ?? new Settings();
             creatureFactory = creatureFactory ?? new CreatureFactory();
             terrainFactory = terrainFactory ?? new TerrainFactory();
-            itemFactory = itemFactory ?? new MockItemFactory();
+            itemFactory = itemFactory ?? new DefaultItemFactory();
             CurrentGame = new Game(settings, creatureFactory, itemFactory, terrainFactory);
             CurrentGame.Start();
             CurrentGame.Stop();

@@ -118,6 +118,7 @@ namespace Engine.Components.UI
         }
         public void Print(string[] text)
         {
+            _content = text;
             Window.Remove(_surface);
 
             _surface.Surface.Fill(Color.Blue, Color.Tan, '_');
@@ -137,7 +138,7 @@ namespace Engine.Components.UI
 
         public override void Update(Console console, TimeSpan delta)
         {
-            Print(Component.GetDetails());
+            Print(_content);
             base.Update(console, delta);
         }
 
