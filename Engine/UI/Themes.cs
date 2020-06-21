@@ -41,11 +41,12 @@ namespace Engine.Components.UI
         {
             SetForeground(Color.Blue);
             SetBackground(Color.Tan); 
+            
         }
-
+        
         public override ThemeBase Clone()
         {
-            throw new NotImplementedException();
+            return new PaperButtonTheme();
         }
 
         public override void UpdateAndDraw(ControlBase control, TimeSpan time)

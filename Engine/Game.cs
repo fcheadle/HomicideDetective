@@ -22,12 +22,8 @@ namespace Engine
         public static CrimeSceneInvestigationUi UIManager => _csi;
         public static MenuUi Menu => _menu;
         public static SceneMap Map => UIManager.Map;
-        public ScrollingConsole MapRenderer => UIManager.Display;
         public BasicEntity Player => UIManager.ControlledGameObject;
-        public ActorComponent Actor => (ActorComponent)Player.GetComponent<ActorComponent>(); 
-        public CSIKeyboardComponent KeyBoardComponent => (CSIKeyboardComponent)Player.GetComponent<CSIKeyboardComponent>();
-        public PageComponent<ThoughtsComponent> Thoughts => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>(); 
-        public PageComponent<HealthComponent> Health => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>(); 
+
         private static Settings _settings;
         private static ICreatureFactory _creatureFactory;
         private static ITerrainFactory _terrainFactory;
@@ -48,7 +44,7 @@ namespace Engine
 
         protected Game()
         {
-
+            SadConsole.Themes.Library.Default.SetControlTheme(typeof(TextArea), new PaperButtonTheme());
         }
 
         protected void ApplySettings(Settings settings)
@@ -90,6 +86,7 @@ namespace Engine
         }
         protected void Setup()
         {
+            SadConsole.Themes.Library.Default.SetControlTheme(typeof(TextArea), new PaperButtonTheme());
             SadConsole.Game.Create(Settings.GameWidth, Settings.GameHeight);
             SadConsole.Game.OnInitialize = Init;
             SadConsole.Game.OnUpdate = Update;

@@ -31,7 +31,6 @@ namespace Tests.Utilities.Extensions
         }
 
         [Test]
-        [Parallelizable]
         public void SubsectionTest()
         {
             Coord start = new Coord(4, 3);
@@ -47,7 +46,6 @@ namespace Tests.Utilities.Extensions
             }
         }
         [Test]
-        [Parallelizable]
         public void ContainsTest()
         {
             Assert.IsTrue(_map.Contains(new Coord(0, 0)));
@@ -148,11 +146,6 @@ namespace Tests.Utilities.Extensions
 
         [Test]
         public void RotateTest()
-        {
-            _game.SwapUpdate(Rotate);
-            _game.RunOnce();
-        }
-        private static void Rotate(GameTime time)
         {
             BasicMap map = new BasicMap(42, 42, 1, Distance.EUCLIDEAN);
             int radius = 20;
