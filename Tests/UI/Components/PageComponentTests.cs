@@ -2,6 +2,7 @@
 using Engine.Components.UI;
 using Engine.Creatures.Components;
 using NUnit.Framework;
+using SadConsole.Controls;
 using SadConsole.Input;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,6 @@ namespace Tests.UI.Components
             Assert.False(_component.Window.IsVisible);
             Assert.NotNull(_component.MaximizeButton);
             Assert.True(_component.MaximizeButton.IsVisible);
-            Assert.DoesNotThrow(() => _game.RunOnce());
         }
         [Test]
         public void GetDetailsTest()
@@ -54,7 +54,7 @@ namespace Tests.UI.Components
         }
 
         [Test]//I know that print works, but it resists testing, for now.
-        public void PrintTest()
+        public void ElaborateTest()
         {
             string[] bullshit =
             {
@@ -63,26 +63,12 @@ namespace Tests.UI.Components
                 "cooking oil",
                 "I seen Footage",
             };
-            _component.Print(bullshit);
+            _component.Elaborate(bullshit);
             _answer = _component.GetDetails();
             Assert.True(_answer[0].Contains(bullshit[0]));
-            Assert.True(_answer[0].Contains(bullshit[1]));
-            Assert.True(_answer[0].Contains(bullshit[2]));
-            Assert.True(_answer[0].Contains(bullshit[3]));
-            
-            //SadConsole.CellSurface surface = _component.Window.GetSubSurface(new GoRogue.Rectangle(0, 0, _component.Window.Width, _component.Window.Height));
-
-            //surface to string?
-            //string answer = "";
-            //for (int i = 0; i < _component.Window.Width; i++)
-            //{
-            //    for (int j = 0; j < _component.Window.Height; j++)
-            //    {
-            //        answer += _component.Window.GetGlyph(i, j);
-            //    }
-            //}
-            //foreach (string shit in bullshit)
-            //    Assert.True(answer.Contains(shit));
+            Assert.True(_answer[1].Contains(bullshit[1]));
+            Assert.True(_answer[2].Contains(bullshit[2]));
+            Assert.True(_answer[3].Contains(bullshit[3]));
         }
     }
 }

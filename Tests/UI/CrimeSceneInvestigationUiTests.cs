@@ -19,10 +19,10 @@ namespace Tests.UI
         public void NewCsiUiTest()
         {
             Assert.IsNotNull(ui.Map);
-            Assert.IsNotNull(ui.MapRenderer);
+            Assert.IsNotNull(ui.Display);
             Assert.IsNotNull(ui.Controls);
             Assert.IsNotNull(ui.LookingGlass);
-            Assert.IsNotNull(ui.Player);
+            Assert.IsNotNull(ui.ControlledGameObject);
             Assert.IsNotNull(ui.Actor);
             Assert.IsNotNull(ui.KeyBoardComponent);
             Assert.IsNotNull(ui.Thoughts);

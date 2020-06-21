@@ -23,10 +23,12 @@ namespace Tests.Creature.Components
         {
             Assert.NotNull(_base);
         }
-
         [Test]
-        public void ThinkThoughtTest()
+        public void ThinkThoughtsTest()
         {
+            _game.RunOnce();
+            _game.RunOnce();
+            _game.RunOnce();
             Assert.AreEqual(0, _answer.Length);
             _base.Think("hello there.");
             _game.RunOnce();
@@ -34,13 +36,8 @@ namespace Tests.Creature.Components
             Assert.AreEqual(1, _answer.Length);
             _base.Think("oh, I'm alone...");
             _game.RunOnce();
-            _answer = _base.GetDetails(); 
+            _answer = _base.GetDetails();
             Assert.AreEqual(2, _answer.Length);
-            _game.Stop();
-        }
-        [Test]
-        public void ThinkThoughtsTest()
-        {
             string[] thoughts =
             {
                 "If Han Shot First",
@@ -48,11 +45,15 @@ namespace Tests.Creature.Components
                 "The CIA plotting against me",
                 "I Hear it in my Fillings...",
             };
-            Assert.AreEqual(0, _answer.Length);
             _base.Think(thoughts);
             _game.RunOnce();
             _answer = _base.GetDetails();
-            Assert.AreEqual(1, _answer.Length);
+            Assert.AreEqual(4, _answer.Length);
+
+            _base.Think(thoughts);
+            _answer = _base.GetDetails();
+            Assert.AreEqual(4, _answer.Length);
+
         }
 
         [Test]//todo...

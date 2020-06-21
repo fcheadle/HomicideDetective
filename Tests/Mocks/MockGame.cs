@@ -27,10 +27,10 @@ namespace Tests
 
         public void InitializeTests()
         {
-            base.Init();
-            UIManager.Components.Add(new WeatherComponent());
             SadConsole.Global.Fonts.Remove("IBM_16x8");
             SadConsole.Global.Fonts.Remove("IBM_16x8_ext");
+            base.Init();
+            UIManager.Components.Add(new WeatherComponent());
             Player.Components.Add(new MockComponent());
         }
     }

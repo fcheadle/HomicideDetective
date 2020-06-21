@@ -8,6 +8,7 @@ using Engine.UI;
 using Engine.UI.Components;
 using Microsoft.Xna.Framework;
 using SadConsole;
+using System;
 
 namespace Engine
 {
@@ -21,8 +22,8 @@ namespace Engine
         public static CrimeSceneInvestigationUi UIManager => _csi;
         public static MenuUi Menu => _menu;
         public static SceneMap Map => UIManager.Map;
-        public ScrollingConsole MapRenderer => UIManager.MapRenderer;
-        public BasicEntity Player => UIManager.Player;
+        public ScrollingConsole MapRenderer => UIManager.Display;
+        public BasicEntity Player => UIManager.ControlledGameObject;
         public ActorComponent Actor => (ActorComponent)Player.GetComponent<ActorComponent>(); 
         public CSIKeyboardComponent KeyBoardComponent => (CSIKeyboardComponent)Player.GetComponent<CSIKeyboardComponent>();
         public PageComponent<ThoughtsComponent> Thoughts => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>(); 
@@ -58,6 +59,24 @@ namespace Engine
         protected void SetCreatureFactory(ICreatureFactory creatureFactory)
         {
             _creatureFactory = creatureFactory;
+        }
+
+        public static void SwitchUserInterface()
+        {
+            if (Global.CurrentScreen == _csi)
+            {
+                Global.CurrentScreen = _menu;
+                _csi.Hide();
+                _menu.Show();
+                _menu.ControlledGameObject.IsFocused = true;
+            }
+            else
+            {
+                Global.CurrentScreen = _csi;
+                _menu.Hide();
+                _csi.Show();
+                _csi.ControlledGameObject.IsFocused = true;
+            }
         }
 
         protected void SetItemFactory(IItemFactory itemFactory)

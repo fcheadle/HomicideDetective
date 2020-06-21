@@ -8,10 +8,12 @@ using System.Text;
 
 namespace Engine.Components.UI
 {
-    class PaperWindowTheme : WindowTheme
+    public class PaperWindowTheme : WindowTheme
     {
         public PaperWindowTheme()
         {
+            //SetForeground(Color.Blue);
+            //SetBackground(Color.Tan);
             ModalTint = Color.Tan;
             FillStyle = new Cell(Color.Blue, Color.Tan, '_');
             BorderLineStyle = new int[]{
@@ -29,16 +31,16 @@ namespace Engine.Components.UI
                 0,
                 0,
             };
-            //cutom border:
             TitleAreaY = 0;
         }
     }
 
-    internal class PaperButtonTheme : ButtonTheme
+    public class PaperButtonTheme : ButtonTheme
     {
         public PaperButtonTheme()
         {
-
+            SetForeground(Color.Blue);
+            SetBackground(Color.Tan); 
         }
 
         public override ThemeBase Clone()
@@ -52,12 +54,12 @@ namespace Engine.Components.UI
         }
     }
 
-    class MenuTheme : ControlsConsoleTheme
+    class MenuControlsTheme : ControlsConsoleTheme
     {
         private readonly Color semitransparent = new Color(Color.Black, 128);
-        public MenuTheme()
+        public MenuControlsTheme()
         {
-            this.FillStyle = new Cell(Color.Transparent, Color.Black);
+            FillStyle = new Cell(Color.Transparent, Color.Black);
         }
     }
     class MenuButtonTheme : ButtonTheme

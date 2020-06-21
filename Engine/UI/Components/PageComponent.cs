@@ -1,6 +1,5 @@
 ﻿using Engine.UI;
 using GoRogue;
-using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Input;
@@ -16,19 +15,30 @@ namespace Engine.Components.UI
     {
         const int _width = 24;
         const int _height = 24;
+
         private string[] _content = { };
-        public Window Window { get; }
-        public Button MaximizeButton { get; }
-        private PaperWindowTheme _theme;
-        public T Component;
-        DrawingSurface _surface;
+        public Window Window { get; private set; }
+        public Coord Position { get; private set; }
+        public Button MaximizeButton { get; private set; }
+        public T Component { get; }
+        DrawingSurface _backgroundSurface;
+        ScrollingConsole _textSurface;
         bool _hasDrawn;
         public PageComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
         {
             Parent = parent;
+            Position = position;
             Component = (T)Parent.GetConsoleComponent<T>();
             Name = "Display for " + Component.Name;
-            _theme = new PaperWindowTheme();
+
+            InitWindow();
+            InitButton();
+            InitBackground();
+            InitTextSurface();
+        }
+
+        private void InitWindow()
+        {
             Window = new Window(_width, _height)
             {
                 DefaultBackground = Color.Tan,
@@ -37,16 +47,48 @@ namespace Engine.Components.UI
                 IsVisible = false,
                 IsFocused = false,
                 FocusOnMouseClick = false,
-                Position = position,
+                Position = Position,
                 ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
                 CanTabToNextConsole = true,
-                Theme = _theme,
+                Theme = new PaperWindowTheme(),
                 ThemeColors = ThemeColors.Paper
             };
             Window.ThemeColors.RebuildAppearances();
             Window.MouseButtonClicked += MinimizeMaximize;
+        }
 
-            int width = Window.Title.Length + 2; //* 3 
+        private void InitBackground()
+        {
+            _backgroundSurface = new DrawingSurface(_width - 2, _height - 2);
+            _backgroundSurface.Position = new Coord(1, 1);
+            _backgroundSurface.Surface.Fill(Color.Blue, Color.Tan, '_');
+            _backgroundSurface.OnDraw = (surface) => { }; //do nothing
+            Window.Add(_backgroundSurface);
+        }
+
+        public void Elaborate(string[] content)
+        {
+            _content = content;
+        }
+
+        private void InitButton()
+        {
+            MaximizeButton = new Button(Window.Title.Length + 2, 3)
+            {
+                Theme = new PaperButtonTheme(),
+                ThemeColors = ThemeColors.Paper,
+                IsVisible = true,
+                Text = Window.Title,
+                TextAlignment = HorizontalAlignment.Center,
+                Surface = new CellSurface(Window.Title.Length + 2, 3, ButtonCellArray(Window.Title))
+            };
+            MaximizeButton.MouseButtonClicked += MaximizeButtonClicked;
+            //Game.UIManager.Controls.Add(MaximizeButton);
+        }
+
+        private Cell[] ButtonCellArray(string title)
+        {
+            int width = title.Length + 2; //* 3 
             int height = 3;
             List<Cell> buttonCells = new List<Cell>();
             for (int i = 0; i < height; i++)
@@ -55,7 +97,7 @@ namespace Engine.Components.UI
                 {
                     //set the button text
                     int glyph;
-                    if (i == 0) //not the top or bottom row
+                    if (i == 0)//top row
                     {
                         if (j == width - 1)
                             glyph = 191;
@@ -64,7 +106,7 @@ namespace Engine.Components.UI
                     }
                     else
                     {
-                        if (j != 0 && j != width - 1)
+                        if (j != 0 && j != width - 1)//neither top nor bottom row
                             glyph = Component.Name[j - 1];
                         else if (j == 0)
                             glyph = ' ';
@@ -76,59 +118,44 @@ namespace Engine.Components.UI
                     buttonCells.Add(here);
                 }
             }
-            MaximizeButton = new Button(Window.Title.Length + 2, 3)
-            {
-                Theme = new PaperButtonTheme(),
-                ThemeColors = ThemeColors.Paper,
-                IsVisible = true,
-                Text = Window.Title,
-                TextAlignment = HorizontalAlignment.Center,
-                Surface = new CellSurface(width, 3, buttonCells.ToArray())
-            };
-            MaximizeButton.MouseButtonClicked += MaximizeButtonClicked;
-            _surface = new DrawingSurface(_width - 2, _height - 2);
-            _surface.Position = new Coord(1, 1);
-            _surface.OnDraw = (surface) =>
-            {
-                _surface.Surface.Effects.UpdateEffects(Global.GameTimeElapsedUpdate);
+            return buttonCells.ToArray();
+        }
 
-                if (_hasDrawn) return;
-
-                _surface.Surface.Fill(Color.Blue, Color.Tan, '_');
-                int i = 0;
-                foreach (string text in Component.GetDetails())
-                {
-                    _surface.Surface.Print(0, i, text);
-                    i++; 
-                }
-                _hasDrawn = true;
+        private void InitTextSurface()
+        {
+            _textSurface = new ScrollingConsole(_width - 2, _height - 2) 
+            {
+                UsePrintProcessor = true,
+                Position = new Coord(1, 1),
+                DefaultBackground = Color.Transparent,
+                DefaultForeground = Color.Blue,
             };
             
-            Window.Add(_surface);
+            _textSurface.Cursor.UseStringParser = true;
+            _textSurface.Cursor.Position = new Coord(0, 0);
+            foreach (string detail in GetDetails())
+            {
+                ColoredString text = new ColoredString(detail, Color.Blue, Color.Transparent);
+                _textSurface.Cursor.Print(text);
+                _textSurface.Cursor.NewLine();
+            }
+
+            Window.Children.Add(_textSurface);
         }
 
         private void MaximizeButtonClicked(object sender, MouseEventArgs e)
         {
-            //if I click on console position 13, 1,
-            //bounds go out to 20?
             if (Window.IsVisible)
                 Window.Hide();
             else
                 Window.Show();
+            Game.UIManager.ControlledGameObject.IsFocused = true;
         }
         public void Print(string[] text)
         {
-            _content = text;
-            Window.Remove(_surface);
-
-            _surface.Surface.Fill(Color.Blue, Color.Tan, '_');
-            int i = 0;
-            foreach (string line in text)
-            {
-                _surface.Surface.Print(0, i, line);
-                i++;
-            }
-            Window.Add(_surface);
+            _hasDrawn = false;
+            Window.Children.Remove(_textSurface);
+            InitTextSurface();
         }
 
         public override void Draw(Console console, TimeSpan delta)
@@ -138,7 +165,9 @@ namespace Engine.Components.UI
 
         public override void Update(Console console, TimeSpan delta)
         {
-            Print(_content);
+            Print(GetDetails());
+            if (Window.IsFocused) Game.UIManager.ControlledGameObject.IsFocused = true;
+            if (MaximizeButton.IsFocused) Game.UIManager.ControlledGameObject.IsFocused = true;
             base.Update(console, delta);
         }
 
@@ -154,17 +183,16 @@ namespace Engine.Components.UI
         }
         public override string[] GetDetails()
         {
-            return Component.GetDetails();
+            return _content.Concat(Component.GetDetails()).ToArray();
         }
 
         internal void Print()
         {
-            Print(_content);
+            Print(GetDetails());
         }
 
         public override void ProcessTimeUnit()
         {
-            Print(Component.GetDetails());
         }
     }
 }

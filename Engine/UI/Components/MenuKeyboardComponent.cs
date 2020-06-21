@@ -58,7 +58,7 @@ namespace Engine.UI.Components
 
         public void ToggleMenu()
         {
-            Game.Menu.Toggle();
+            Game.SwitchUserInterface();
         }
     }
 }

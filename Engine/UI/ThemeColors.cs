@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using SadConsole.Themes;
 
-namespace Engine.Components.UI
+namespace Engine.UI
 {
     public static class ThemeColors
     {

@@ -12,17 +12,15 @@ using System.Collections.Generic;
 
 namespace Engine.UI
 {
-    public class CrimeSceneInvestigationUi : ContainerConsole
+    public class CrimeSceneInvestigationUi : UserInterface
     {
         public SceneMap Map { get; private set; }
-        public ScrollingConsole MapRenderer { get; private set; }
-        public ControlsConsole Controls { get; private set; }
+        //public ScrollingConsole Display { get; private set; }
         public MagnifyingGlass LookingGlass { get; private set; }
-        public BasicEntity Player => Map.ControlledGameObject;
-        public ActorComponent Actor => (ActorComponent)Player.GetComponent<ActorComponent>();
-        public CSIKeyboardComponent KeyBoardComponent => (CSIKeyboardComponent)Player.GetComponent<CSIKeyboardComponent>();
-        public PageComponent<ThoughtsComponent> Thoughts => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>();
-        public PageComponent<HealthComponent> Health => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>();
+        public ActorComponent Actor => (ActorComponent)ControlledGameObject.GetComponent<ActorComponent>();
+        public CSIKeyboardComponent KeyBoardComponent => (CSIKeyboardComponent)ControlledGameObject.GetComponent<CSIKeyboardComponent>();
+        public PageComponent<ThoughtsComponent> Thoughts => (PageComponent<ThoughtsComponent>)ControlledGameObject.GetComponent<PageComponent<ThoughtsComponent>>();
+        public PageComponent<HealthComponent> Health => (PageComponent<HealthComponent>)ControlledGameObject.GetComponent<PageComponent<HealthComponent>>();
 
         public CrimeSceneInvestigationUi()
         {
@@ -43,10 +41,10 @@ namespace Engine.UI
 
         private void CreateMapRenderer()
         {
-            MapRenderer = Map.CreateRenderer(new Rectangle(0, 0, Game.Settings.GameWidth, Game.Settings.GameHeight), Global.FontDefault);
-            MapRenderer.UseMouse = true;
-            MapRenderer.FocusOnMouseClick = false;
-            Children.Add(MapRenderer);
+            Display = Map.CreateRenderer(new Rectangle(0, 0, Game.Settings.GameWidth, Game.Settings.GameHeight), Global.FontDefault);
+            Display.UseMouse = true;
+            Display.FocusOnMouseClick = false;
+            Children.Add(Display);
         }
 
         internal void ProcessTimeUnit()
@@ -56,14 +54,15 @@ namespace Engine.UI
 
         private void CreatePlayer()
         {
-            Map.ControlledGameObject = Game.CreatureFactory.Player(new Coord(20, 20));
-            Map.ControlledGameObject.IsFocused = true;
-            Map.ControlledGameObject.FocusOnMouseClick = true;
+            ControlledGameObject = Game.CreatureFactory.Player(new Coord(20, 20));
+            ControlledGameObject.IsFocused = true;
+            ControlledGameObject.FocusOnMouseClick = true;
+            Map.ControlledGameObject = ControlledGameObject;
             Map.AddEntity(Map.ControlledGameObject);
             Map.CalculateFOV(Map.ControlledGameObject.Position, Game.Settings.FovDistance);
             Map.ControlledGameObject.Moved += Player_Moved;
             Map.ControlledGameObjectChanged += ControlledGameObject_Changed;
-            MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
+            Display.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
         }
 
         private void CreateControls()
@@ -73,7 +72,7 @@ namespace Engine.UI
             Controls.ThemeColors = ThemeColors.Clear;
             Controls.Position = new Coord(0, Game.Settings.GameHeight - 2);
             int currentX = 0;
-            foreach (IConsoleComponent visible in Player.Components)
+            foreach (IConsoleComponent visible in ControlledGameObject.Components)
             {
                 try
                 {
@@ -97,17 +96,21 @@ namespace Engine.UI
 
         void Player_Moved(object sender, ItemMovedEventArgs<IGameObject> e)
         {
-            Map.CalculateFOV(Player.Position, Game.Settings.FovDistance, Game.Settings.FovRadius);
+            Map.CalculateFOV(ControlledGameObject.Position, Game.Settings.FovDistance, Game.Settings.FovRadius);
             List<string> output = new List<string>();
-            output.Add("At coordinate " + Player.Position.X + ", " + Player.Position.Y);
-            foreach (Area area in Map.GetRegions(Player.Position))
+            string coords = "At " + ControlledGameObject.Position.X + ", " + ControlledGameObject.Position.Y + ";";
+            output.Add(coords);
+            string answer = "";
+            
+
+            foreach (Area area in Map.GetRegions(ControlledGameObject.Position))
             {
-                output.Add(area.ToString());
-                output.Add(area.Orientation.ToString());
+                answer += area.ToString() + ", ";
             }
+            output.Add(answer);
             Thoughts.Component.Think(output.ToArray());
             Health.Print();
-            MapRenderer.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
+            Display.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
         }
         public override void Update(TimeSpan timeElapsed)
         {

@@ -1,6 +1,7 @@
 ﻿using Engine.Components;
 using SadConsole;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Engine.Creatures.Components
 {
@@ -23,20 +24,21 @@ namespace Engine.Creatures.Components
         }
         public void Think(string[] thoughts)
         {
-            if (thoughts.Length == 1)
-            {
-                Think(thoughts[0]);
-                return;
-            }
+            //foreach (string thought in thoughts) 
+            //    Think(thought);
 
-            string thought = "";
-            for (int i = 0; i < thoughts.Length - 1; i++)
-                thought += thoughts[i] + ", ";
-
-            thought += "and " + thoughts[thoughts.Length - 1];
-            _thoughts.Add(thought);
+            _thoughts = thoughts.ToList();
         }
-        public void Think(string thought) => _thoughts.Add(thought);
+        public void Think(string thought)
+        {
+            //needs to be more complex
+            if(!_thoughts.Contains(thought))
+                _thoughts.Add(thought);
+            else
+            {
+                
+            }
+        }
 
         private void ThinkAboutSenses()
         {

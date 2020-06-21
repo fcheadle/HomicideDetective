@@ -57,7 +57,7 @@ namespace Tests.UI.Components
         [SetUp]
         public void SetUp()
         {
-            _component = (MenuKeyboardComponent)_game.Player.GetComponent<MenuKeyboardComponent>();
+            _component = (MenuKeyboardComponent)MockGame.Menu.ControlledGameObject.GetComponent<MenuKeyboardComponent>();
         }
 
         [Test]

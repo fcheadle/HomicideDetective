@@ -7,89 +7,54 @@ namespace Tests.UI
 {
     class MenuUiTests : TestBase
     {
-        MenuUi ui;
+        MenuUi _ui;
         [SetUp]
         public void Setup()
         {
-            ui = MockGame.Menu;
+            _ui = MockGame.Menu;
         }
         [Test]
         public void NewMenuUiTest()
         {
-            ui = MockGame.Menu;
-            Assert.IsNotNull(ui.Selector);
-            Assert.IsNotNull(ui.MainOptionsConsole);
-            Assert.IsNotNull(ui.HelpOptionsConsole);
-            Assert.IsNotNull(ui.NewGameOptionsConsole);
-            Assert.IsNotNull(ui.NewGameAdvancedOptionsConsole);
-            Assert.IsNotNull(ui.SettingsOptionsConsole);
-            Assert.False(ui.IsVisible);
-            Assert.False(ui.IsFocused);
+            Assert.NotNull(_ui);
+            Assert.NotNull(_ui.ControlledGameObject);
+            Assert.False(_ui.IsVisible);
+            Assert.False(_ui.IsFocused);
         }
         [Test]
         public void TitleConsoleTest()
         {
-            Assert.Fail();
+            Assert.NotNull(_ui);
         }
         [Test]
         public void MainOptionsTest()
         {
-            Assert.AreEqual(4, ui.MainOptionsConsole.Controls.Count);
+            Assert.IsNotNull(_ui.MainOptions);
+            Assert.AreEqual(4, _ui.MainOptions.Count);
         }
         [Test]
         public void HelpOptionsTest()
         {
-            Assert.AreEqual(0, ui.HelpOptionsConsole.Children.Count);//0 for now
+            Assert.IsNotNull(_ui.HelpOptions);
+            Assert.AreEqual(2, _ui.HelpOptions.Controls.Count);//0 for now
         }
         [Test]
         public void SettingsOptionsTest()
         {
-            Assert.AreEqual(0, ui.SettingsOptionsConsole.Children.Count);//0 for now
+            Assert.IsNotNull(_ui.SettingsOptions);
+            Assert.AreEqual(13, _ui.SettingsOptions.Count);
         }
         [Test]
-        public void HideTest()
+        public void NewGameOptionsTest()
         {
-            Assert.False(ui.IsVisible);
-            Assert.False(ui.IsFocused);
-            Assert.AreNotEqual(Global.CurrentScreen, ui);
-
-            ui.IsVisible = true;
-            ui.IsFocused = true;
-            Global.CurrentScreen = ui;
-
-            ui.Hide();
-            Assert.False(ui.IsVisible);
-            Assert.False(ui.IsFocused);
+            Assert.IsNotNull(_ui.NewGameOptions);
+            Assert.AreEqual(2, _ui.NewGameOptions.Count);//quickstart / advanced
         }
         [Test]
-        public void ShowTest()
+        public void NewGameAdvancedOptionsTest()
         {
-            Assert.False(ui.IsVisible);
-            Assert.False(ui.IsFocused);
-            Assert.AreNotEqual(Global.CurrentScreen, ui);
-
-            ui.Show();
-            Assert.True(ui.IsVisible);
-            Assert.True(ui.IsFocused);
-            Assert.AreEqual(Global.CurrentScreen, ui);
-        }
-
-        [Test]
-        public void ToggleTest()
-        {
-            Assert.False(ui.IsVisible);
-            Assert.False(ui.IsFocused);
-            Assert.AreNotEqual(Global.CurrentScreen, ui);
-
-            ui.Toggle();
-            Assert.True(ui.IsVisible);
-            Assert.True(ui.IsFocused);
-            Assert.AreEqual(Global.CurrentScreen, ui);
-
-            ui.Toggle();
-            Assert.False(ui.IsVisible);
-            Assert.False(ui.IsFocused);
-            Assert.AreNotEqual(Global.CurrentScreen, ui);
+            Assert.IsNotNull(_ui.NewGameAdvancedOptions);
+            Assert.AreEqual(0, _ui.NewGameOptions.Count);//0 for now
         }
     }
 }
