@@ -16,19 +16,14 @@ namespace Engine.UI
         //public ScrollingConsole Display { get; private set; } //the main box that covers the screen
         //public BasicEntity ControlledGameObject { get; private set; } //the cursor
         public ScrollingConsole TitleConsole { get; private set; } // H O M I C I D E    D E T E C E T I V E 
-        public List<Button> MainOptions { get; private set; } //the main menu that appears when you pause
+        public ControlsConsole MainOptions { get; private set; } //the main menu that appears when you pause
         public HelpConsole HelpOptions { get; private set; } //console that holds the search box / cheats menu
-        public List<Button> NewGameOptions { get; private set; } //quickstart / advanced options
-        public List<ControlBase> NewGameAdvancedOptions { get; private set; } //name / color / glyph / option for tutorial
-        public List<ControlBase> SettingsOptions { get; private set; }
+        public ControlsConsole NewGameOptions { get; private set; } //quickstart / advanced options
+        public ControlsConsole NewGameAdvancedOptions { get; private set; } //name / color / glyph / option for tutorial
+        public ControlsConsole SettingsOptions { get; private set; }
 
         readonly int width = Game.Settings.GameWidth / 3;
         readonly int height = Game.Settings.GameHeight / 3;
-        readonly int middlePositionX = Game.Settings.GameWidth / 3;
-        readonly int middlePositionY = Game.Settings.GameHeight / 3;
-        readonly int rightPositionX = (Game.Settings.GameWidth / 3) * 2;
-        readonly int bottomPositionY = (Game.Settings.GameHeight / 3) * 2;
-        readonly int oneSubMenuOpenOffsetX = Game.Settings.GameWidth / 6;
 
         readonly Coord middlePosition;
         readonly Coord openSubMenuOffset;
@@ -36,13 +31,13 @@ namespace Engine.UI
         {
             IsVisible = false;
             IsFocused = false;
-            middlePosition = new Coord(middlePositionX, middlePositionY);
-            openSubMenuOffset = new Coord(oneSubMenuOpenOffsetX, middlePositionY);
+            middlePosition = new Coord(width, height);
+            openSubMenuOffset = new Coord(width / 2, height / 2);
             UseMouse = true;
             UseKeyboard = true;
             InitDisplay();
             InitTitleConsole();
-            InitControls(Game.Settings.GameWidth, middlePositionY);
+            InitControls(Game.Settings.GameWidth, 2 * height);
             InitMainOptions();
             InitHelpOptions();
             InitNewGameOptions();
@@ -50,32 +45,7 @@ namespace Engine.UI
             InitSettingsOptions();
         }
 
-        private void InitNewGameAdvancedOptions()
-        {
-            NewGameAdvancedOptions = new List<ControlBase>();
-            Controls.Add(MakeButton("Start", AdvancedStartButton_Click)); 
-            
-            //start.Position = new Coord(rightPositionX, 2);
-            //NewGameAdvancedOptions.Add(start);
-            //start.IsVisible = false;
-            //for(int i = 0; i < NewGameOptions.Count; i++)
-            //{
-            //    NewGameOptions[i].P
-            //    btn.IsVisible = false;
-            //    Controls.Add(btn);
-            //}
-        }
-        #region initilization 
-        protected override void InitControls(int width, int height)
-        {
-            base.InitControls(width, height);
-            Controls.Position = new Coord(0, middlePositionY);
-            Controls.Theme = new MenuControlsTheme();
-            Controls.ThemeColors = ThemeColors.Menu;
-
-            ControlledGameObject = MenuSelector(Controls.Position);
-            Controls.Children.Add(ControlledGameObject);
-        }
+        #region initilization
         private void InitTitleConsole()
         {
             //takes up the top 1/3 of the screen
@@ -88,45 +58,70 @@ namespace Engine.UI
             TitleConsole.IsVisible = true;
             Display.Children.Add(TitleConsole);
         }
+        protected override void InitControls(int width, int height)
+        {
+            base.InitControls(width, height);
+            Controls.Position = new Coord(0, height);
+            Controls.Theme = new MenuControlsTheme();
+            Controls.ThemeColors = ThemeColors.Menu;
 
-
+            ControlledGameObject = MenuSelector(Controls.Position);
+            Controls.Children.Add(ControlledGameObject);
+        }
         private void InitMainOptions()
         {
-            MainOptions = new List<Button>();
+            MainOptions = new MenuPanel(width, height);
+            MainOptions.Add(MakeButton("Continue", ContinueButton_Click));
+            MainOptions.Add(MakeButton("New Game", ContinueButton_Click));
+            MainOptions.Add(MakeButton("Settings", ContinueButton_Click));
+            MainOptions.Add(MakeButton("Help", ContinueButton_Click));
 
-            MakeButton("Continue", ContinueButton_Click);
-
-            MakeButton("New Game", ContinueButton_Click);
-
-            MakeButton("Settings", ContinueButton_Click);
-
-            MakeButton("Help", ContinueButton_Click);
-
-            for (int i = 0; i < MainOptions.Count; i++)
+            int i = 0;
+            foreach(var button in MainOptions)
             {
-                MainOptions[i].IsVisible = true;
-                MainOptions[i].IsEnabled = true;
-                MainOptions[i].Position = new Coord(middlePositionX, 2 + (i * 2));
+                button.IsVisible = true;
+                button.IsEnabled = true;
+                button.Position = new Coord(width, 2 + (i * 2));
+                i++;
             }
-        }
+        } 
         private void InitHelpOptions()
         {
             HelpOptions = new HelpConsole();
-            HelpOptions.Position = new Coord(Game.Settings.GameWidth / 4, middlePositionY);
+            HelpOptions.Position = new Coord(0, height);
             HelpOptions.IsVisible = false;
             Controls.Children.Add(HelpOptions);
-        }
+        }        
+        
+        private void InitNewGameOptions()
+        {
+            NewGameOptions = new MenuPanel(width, height);
 
+            NewGameOptions.Add(MakeButton("Quickstart", QuickStartButton_Click));
+            NewGameOptions.Add(MakeButton("Advanced", AdvancedStartButton_Click));
+            int i = 0;
+            foreach(var button in NewGameOptions)
+            {
+                button.Position = new Coord(0, 2 + 2 * i);
+                button.IsVisible = false;
+                i++;
+            }
+        }
+        private void InitNewGameAdvancedOptions()
+        {
+            NewGameAdvancedOptions = new ControlsConsole(width, height);
+            NewGameAdvancedOptions.Add(MakeButton("Start", AdvancedStartButton_Click)); 
+        }
         private void InitSettingsOptions()
         {
-            SettingsOptions = new List<ControlBase>();
+            SettingsOptions = new MenuPanel(width, height * 2);
             //foreach variable in Settings...?
             int count = 0;
             PropertyInfo[] properties = typeof(Settings).GetProperties();
             foreach (PropertyInfo property in properties)
             {
                 Button btn = MakeButton(property.Name, Except); //temporary
-                btn.Position = new Coord(rightPositionX, 2 + 2 * count);
+                btn.Position = new Coord(0, 2 + 2 * count);
                 btn.IsVisible = false;
                 SettingsOptions.Add(btn);
                 count++;
@@ -136,22 +131,9 @@ namespace Engine.UI
             {
                 Controls.Add(button);
             }
-
-
         }
         private void Except(object sender, EventArgs e) => throw new Exception();//temporary
-        private void InitNewGameOptions()
-        {
-            NewGameOptions = new List<Button>();
 
-            MakeButton("Quickstart", QuickStartButton_Click);
-            MakeButton("Advanced", AdvancedStartButton_Click);
-            for(int i = 0; i < NewGameOptions.Count; i++)
-            {
-                NewGameOptions[i].Position = new Coord(18, 2 + 2 * i);
-                NewGameOptions[i].IsVisible = false;
-            }
-        }
         private BasicEntity MenuSelector(Coord position)
         {
             BasicEntity cursor = new BasicEntity(Color.White, Color.Black, 16, position, 1, true, true);

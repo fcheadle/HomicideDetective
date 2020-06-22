@@ -1,14 +1,11 @@
 ﻿using Engine.Components.UI;
 using Engine.Creatures;
-using Engine.Creatures.Components;
 using Engine.Items;
 using Engine.Scenes;
 using Engine.Scenes.Terrain;
 using Engine.UI;
-using Engine.UI.Components;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using System;
 
 namespace Engine
 {

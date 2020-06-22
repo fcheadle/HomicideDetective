@@ -10,6 +10,7 @@ using System.Collections.Generic;
 namespace Engine.UI
 {
     //shamelessly copied and cobbled together from SC's textbox
+    //should probably switch from NewLines to Paragraphs, and have a collection of paragraphs?
     public class TextArea : ControlBase
     {
         private string _editingText = " ";

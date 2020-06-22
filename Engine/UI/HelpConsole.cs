@@ -26,10 +26,11 @@ namespace Engine.UI
                 Documentation.Add(keyBinding.Key, keyBinding.Value.ToString());
                 Documentation.Add(keyBinding.Value, keyBinding.Key.ToString());
             }
-
+            LibraryDisplayer.Theme = new MenuButtonTheme();
+            LibraryDisplayer.ThemeColors = ThemeColors;
             IsVisible = false;
             Add(SearchField);
-            //Add(LibraryDisplayer);//currently causing some exceptions that are hard to debug
+            Add(LibraryDisplayer);//currently causing some exceptions that are hard to debug
         }
     }
 }
