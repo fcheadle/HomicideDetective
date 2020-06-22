@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Tests.Map
+namespace Tests.Utilities.Extensions
 {
     class BasicMapExtensionTests : TestBase
     {
@@ -19,22 +19,15 @@ namespace Tests.Map
         [SetUp]
         public void Setup()
         {
-            _game = new MockGame(_update);
             _map = new BasicMap(8, 8, 2, Distance.MANHATTAN);
             for (int i = 0; i < _map.Width; i++)
             {
                 for (int j = 0; j < _map.Height; j++)
                 {
-                    int glyph = i + j;
                     Coord c = new Coord(i, j);
                     _map.SetTerrain(_factory.Generic(c, i + j));
                 }
             }
-        }
-
-        private void _update(GameTime obj)
-        {
-            
         }
 
         [Test]
@@ -154,12 +147,6 @@ namespace Tests.Map
         [Test]
         public void RotateTest()
         {
-            _game = new MockGame(Rotate);
-            _game.RunOnce();
-            Assert.Pass();
-        }
-        private static void Rotate(Microsoft.Xna.Framework.GameTime time)
-        {
             BasicMap map = new BasicMap(42, 42, 1, Distance.EUCLIDEAN);
             int radius = 20;
             for (int i = 0; i < map.Width; i++)
@@ -210,7 +197,7 @@ namespace Tests.Map
             BasicMap map = new BasicMap(width, height, 1, Distance.EUCLIDEAN);
             List<Coord> pointsSet = new List<Coord>();
             int counter = 0;
-            map.ForX((int x) =>
+            map.ForX((x) =>
             {
                 double y = 14.75 * Math.Sin(x / 30.0) + width / 2;
                 Coord fx = new Coord(x, (int)y);
@@ -238,7 +225,7 @@ namespace Tests.Map
             BasicMap map = new BasicMap(width, height, 1, Distance.EUCLIDEAN);
             List<Coord> pointsSet = new List<Coord>();
             int counter = 0;
-            map.ForY((int y) =>
+            map.ForY((y) =>
             {
                 double x = 14.75 * Math.Sin(y / 30.0) + width / 2;
                 Coord fy = new Coord((int)x, y);
@@ -262,7 +249,7 @@ namespace Tests.Map
         {
             BasicMap map = new BasicMap(25, 25, 1, Distance.EUCLIDEAN);
             int counter = 0;
-            map.ForXForY((Coord point) =>
+            map.ForXForY((point) =>
             {
                 map.SetTerrain(_factory.Generic(point, counter));
                 counter++;
@@ -402,7 +389,7 @@ namespace Tests.Map
                 for (int j = 1; j < map.Height - 1; j++)
                 {
                     Coord c = new Coord(i, j);
-                    map.SetTerrain(_factory.Generic(c, i+j));
+                    map.SetTerrain(_factory.Generic(c, i + j));
                 }
             }
 

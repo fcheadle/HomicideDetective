@@ -186,8 +186,6 @@ namespace Engine.Scenes
                 }
             }
         }
-
-
         public IEnumerable<Area> GetRegions(Coord position)
         {
             foreach (Area area in Regions)

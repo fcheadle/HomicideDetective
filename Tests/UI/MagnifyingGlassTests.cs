@@ -12,13 +12,13 @@ namespace Tests.UI
         MagnifyingGlass _lookingGlass;
         const int _size = 3;
 
-        //[Test]//todo
+        [Test]//todo
         public void NewMagnifyingGlassTest()
         {
             Assert.Fail();
         }
 
-        //[Test]//todo
+        [Test]//todo
         public void HoveringDisplaysLookingGlass()
         {
             Assert.Fail();

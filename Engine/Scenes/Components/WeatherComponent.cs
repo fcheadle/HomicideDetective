@@ -5,7 +5,7 @@ using GoRogue;
 using SadConsole;
 using System;
 
-namespace Engine.Scenes.Terrain.Components
+namespace Engine.Scenes.Components
 {
     public class WeatherComponent : Component
     {

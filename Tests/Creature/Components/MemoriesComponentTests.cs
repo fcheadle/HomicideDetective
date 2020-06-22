@@ -13,16 +13,14 @@ namespace Tests.Creature.Components
         EmotionsComponent _component;
         string[] _answer;
         CreatureFactory _factory = new CreatureFactory();
+        [SetUp]
+        public void SetUp()
+        {
+            _component = (EmotionsComponent)_factory.Person(new Coord()).GetComponent<EmotionsComponent>();
+        }
         [Test]
         public void NewSpeechComponentTest()
         {
-            _game = new MockGame(NewMemoriesComponent);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void NewMemoriesComponent(Microsoft.Xna.Framework.GameTime time)
-        {
-            _component = (EmotionsComponent)_factory.Person(new Coord()).GetComponent<EmotionsComponent>();
             Assert.NotNull(_component);
             Assert.AreEqual(50, _component.Angry);
             Assert.AreEqual(50, _component.Aroused);
@@ -45,16 +43,10 @@ namespace Tests.Creature.Components
             Assert.AreEqual(50, _component.Shame);
             Assert.AreEqual(50, _component.Sympathy);
         }
+
         [Test]
         public void GetDetailsTest()
         {
-            _game = new MockGame(GetDetails);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void GetDetails(Microsoft.Xna.Framework.GameTime time)
-        {
-            _component = (EmotionsComponent)_factory.Person(new Coord()).GetComponent<EmotionsComponent>();
             _answer = _component.GetDetails();
             Assert.Less(2, _answer.Length);
         }

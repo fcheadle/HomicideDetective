@@ -32,15 +32,15 @@ namespace Engine
 
         public Dictionary<Keys, GameAction> KeyBindings { get; } = new Dictionary<Keys, GameAction>
         {
-            { Keys.Tab, GameAction.RefocusOnPlayer},                           
-            { Keys.Space, GameAction.TogglePause},
+            {Keys.Tab, GameAction.RefocusOnPlayer},                           
+            {Keys.Space, GameAction.TogglePause},
             {Keys.Escape, GameAction.ToggleMenu },
-            { Keys.P, GameAction.TakePhotograph},
+            {Keys.P, GameAction.TakePhotograph},
             {Keys.L, GameAction.LookAtEverythingInSquare},
             {Keys.D, GameAction.DustItemForPrints},
             {Keys.G, GameAction.GetItem},
             {Keys.R, GameAction.RemoveItemFromInventory},
-            { Keys.T, GameAction.Talk},
+            {Keys.T, GameAction.Talk},
             {Keys.I, GameAction.ToggleInventory},
             {Keys.N, GameAction.ToggleNotes},
             {Keys.A, GameAction.LookAtPerson},
@@ -50,15 +50,22 @@ namespace Engine
             {Keys.Down, GameAction.MoveDown },
         };
 
-        public void ToggleMenu()
+        public Dictionary<GameAction, Keys> ActionsBindings()
         {
-            ShowingMenu = !ShowingMenu;
-            IsPaused = ShowingMenu;
-        }
+            Dictionary<GameAction, Keys> bindings = new Dictionary<GameAction, Keys>();
 
-        public void TogglePause()
-        {
-            IsPaused = !IsPaused;
+            foreach(GameAction action in Enum.GetValues(typeof(GameAction)))
+            {
+                foreach(KeyValuePair<Keys, GameAction> keybind in KeyBindings)
+                {
+                    if(keybind.Value == action)
+                    {
+                        bindings.Add(action, keybind.Key);
+                    }
+                }
+            }
+
+            return bindings;
         }
     }
 }

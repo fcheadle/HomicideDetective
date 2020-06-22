@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Tests.Map
+namespace Tests.Utilities.Extensions
 {
     [TestFixture]
     public class RectangleExtensionsTests

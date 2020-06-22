@@ -1,12 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using SadConsole.Themes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Engine.Components.UI
+namespace Engine.UI
 {
-    public static class ThemeColor
+    public static class ThemeColors
     {
         public static Colors Paper => new Colors()
         {
@@ -44,6 +41,25 @@ namespace Engine.Components.UI
             ControlBackDark = Color.Transparent,
             ControlHostBack = Color.Transparent,
             ControlHostFore = Color.Black,
+        };
+
+        public static Colors Menu => new Colors()
+        {
+            TitleText = Color.White,
+            Lines = Color.White,
+            TextBright = Color.LightGray,
+            Text = Color.Gray,
+            TextSelected = Color.White,
+            TextSelectedDark = Color.LightSkyBlue,
+            TextLight = Color.LightGray,
+            TextDark = Color.DarkGray,
+            TextFocused = Color.LightGray,
+            ControlBack = Color.Black,
+            ControlBackLight = Color.Black,
+            ControlBackSelected = Color.Black,
+            ControlBackDark = Color.Black,
+            ControlHostBack = Color.Black,
+            ControlHostFore = Color.White,
         };
     }
 }

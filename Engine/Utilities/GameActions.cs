@@ -19,14 +19,14 @@
         MoveUp,
         MoveDown,
     }
-    public class GameActions
-    {
-        public readonly GameAction[] Queries = 
-        { 
-            GameAction.LookAtEverythingInSquare,
-            GameAction.LookAtPerson,
-            GameAction.Talk,
+    //public class GameActions
+    //{
+    //    public readonly GameAction[] Queries = 
+    //    { 
+    //        GameAction.LookAtEverythingInSquare,
+    //        GameAction.LookAtPerson,
+    //        GameAction.Talk,
 
-        };
-    }
+    //    };
+    //}
 }

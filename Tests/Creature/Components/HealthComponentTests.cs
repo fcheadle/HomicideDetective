@@ -25,13 +25,6 @@ namespace Tests.Creature.Components
         [Test]
         public void NewHealthComponentTest()
         {
-            _game = new MockGame(NewHealthComponent);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void NewHealthComponent(GameTime time)
-        {
-            _component = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
             Assert.NotNull(_component);
             Assert.NotNull(_component.SystoleBloodPressure);
             Assert.Less(0, _component.SystoleBloodPressure);
@@ -55,16 +48,9 @@ namespace Tests.Creature.Components
             Assert.Less(0, _component.TypicalBloodVolume);
             _component.ProcessTimeUnit();
             _breath = _component.CurrentBreathVolume;
-            //_currentHeartStatus = _component.MonitorHeart().Y;
         }
         [Test]
         public void GetDetailsTest()
-        {
-            _game = new MockGame(GetDetails);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void GetDetails(GameTime time)
         {
             _component = (HealthComponent)_game.Player.GetComponent<HealthComponent>();
             _answer = _component.GetDetails();
@@ -75,14 +61,10 @@ namespace Tests.Creature.Components
         [Test]
         public void BreathingTest()
         {
-            _game = new MockGame(NewHealthComponent);
-            _game.RunOnce();
-            _game.RunOnce();
-            _game.RunOnce();
             _game.SwapUpdate(JustBreathe);
             _start = DateTime.Now;
             _previous = _start;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 33; i++)
             {
                 _game.RunOnce();
             }
@@ -102,14 +84,10 @@ namespace Tests.Creature.Components
         [Test]
         public void HeartBeatTest()
         {
-            _game = new MockGame(NewHealthComponent);
-            _game.RunOnce();
-            _game.RunOnce();
-            _game.RunOnce();
             _game.SwapUpdate(BeatHeart);
             _start = DateTime.Now;
             _previous = _start;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 33; i++)
             {
                 _game.RunOnce();
             }

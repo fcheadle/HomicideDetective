@@ -1,86 +1,94 @@
 ﻿using Engine.Components.UI;
 using NUnit.Framework;
 using SadConsole.Input;
+using System.Linq;
 
-namespace Tests.Components.UI
+namespace Tests.UI.Components
 {
     class NotePadComponentTests : TestBase
     {
         NotePadComponent _component;
         string[] _answer;
 
+        [SetUp]
+        public void SetUp()
+        {
+            _component = (NotePadComponent)_game.Player.GetComponent<NotePadComponent>();
+        }
+
         [Test]
         public void NewNotePadComponentTests()
         {
-            _game = new MockGame(NewNotePadComponent);
-            _game.RunOnce();
-            _game.Stop();
-        }
-        private void NewNotePadComponent(Microsoft.Xna.Framework.GameTime time)
-        {
-            _component = (NotePadComponent)_game.Player.GetComponent<NotePadComponent>();
             Assert.NotNull(_component);
             Assert.NotNull(_component.Window);
             Assert.False(_component.Window.IsVisible);
             Assert.NotNull(_component.MaximizeButton);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.ProcessTimeUnit();
+            Assert.DoesNotThrow(() => _component.ProcessTimeUnit());
         }
         [Test]
         public void GetDetailsTest()
         {
-            _game = new MockGame(NewNotePadComponent);
-            _game.RunOnce();
-
+            _answer = _component.GetDetails();
             _game.SwapUpdate(GetDetails);
             _game.RunOnce();
-            _game.Stop();
+            Assert.AreEqual(1, _answer.Length);
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
             _component = (NotePadComponent)_game.Player.GetComponent<NotePadComponent>();
-            _answer = _component.GetDetails();
         }
 
         [Test]
         public void MinimizeMaximizeTest()
         {
-            _game = new MockGame(NewNotePadComponent);
-            _game.RunOnce();
-            _game.SwapUpdate(GetDetails);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.UIManager, new Mouse() { RightClicked = true })));
+            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(MockGame.UIManager, new Mouse() { RightClicked = true })));
+            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _game.Stop();
         }
 
-        //[Test]
+        [Test]
         public void BackButtonTest()
         {
             //print a bunch of bullshit so that we're like three or four pages in
+            for (int i = 0; i < 300; i++)
+            {
+                _component.WriteLine("Test Statement number " + i);
+            }
 
             //get the current top line and index
+            Assert.AreEqual(0, _component.PageNumber);
 
             //hit the back button
 
             //assert on the current top text and index
-            Assert.Fail();
         }
 
-        //[Test]
+        [Test]
         public void NextButtonTest()
         {
             //print a bunch of bullshit so that we're like three or four pages in
+            for (int i = 0; i < 300; i++)
+            {
+                _component.WriteLine("Test Statement number " + i);
+            }
 
             //get the current top line and index
+            Assert.AreEqual(0, _component.PageNumber);
 
-            //hit the back button
+            //hit the next button
 
             //assert on the current top text and index
-            Assert.Fail();
+        }
+
+        [Test]
+        public void WriteTest()
+        {
+            _component.WriteLine("hot test action");
+            Assert.True(_component.GetDetails()[0].Contains("hot test action"));
         }
     }
 }

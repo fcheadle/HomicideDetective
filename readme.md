@@ -128,8 +128,10 @@ To reduce the amount of clutter in my abstractions, I've decided to enforce a fe
 ## Credits
 
 [GoRogue](https://github.com/Chris3606/GoRogue )
+
 [SadConsole](https://github.com/SadConsole/SadConsole )
 
-___Special Thanks___ 
-Jeremiah Hamilton
-The SadConsole and GoRogue Discord communities
+___Special Thanks___ to 
+
+* Jeremiah Hamilton
+* The SadConsole and GoRogue Discord communities

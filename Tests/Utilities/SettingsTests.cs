@@ -24,24 +24,5 @@ namespace Tests.Utilities
             Assert.AreEqual(Radius.CIRCLE, _settings.FovRadius);
             Assert.AreEqual(16, _settings.MovementKeyBindings.Count());
         }
-        [Test]
-        public void ToggleMenuTest()
-        {
-            Assert.AreEqual(false, _settings.IsPaused);
-            Assert.AreEqual(false, _settings.ShowingMenu);
-            _settings.ToggleMenu();
-            Assert.AreEqual(true, _settings.IsPaused);
-            Assert.AreEqual(true, _settings.ShowingMenu);
-            _settings.ToggleMenu();
-        }
-        [Test]
-        public void TogglePauseTest()
-        {
-            Assert.AreEqual(false, _settings.IsPaused);
-            Assert.AreEqual(false, _settings.ShowingMenu);
-            _settings.TogglePause();
-            Assert.AreEqual(true, _settings.IsPaused);
-            Assert.AreEqual(false, _settings.ShowingMenu);
-        }
     }
 }

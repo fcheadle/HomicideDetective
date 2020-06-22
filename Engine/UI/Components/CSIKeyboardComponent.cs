@@ -20,8 +20,8 @@ namespace Engine.UI.Components
             get => Global.CurrentScreen.IsPaused;
             set => Global.CurrentScreen.IsPaused = value;
         }
-        //private Dictionary<GameActions, Keys> KeyBindings => Game.Settings.KeyBindings;
-        public CSIKeyboardComponent(BasicEntity parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
+
+        public CSIKeyboardComponent(BasicEntity parent)
         {
             Parent = parent;
         }
@@ -31,12 +31,6 @@ namespace Engine.UI.Components
             if (!IsPaused)
             {
                 Direction moveDirection = Direction.NONE;
-                //foreach (Keys key in Settings.KeyBindings.Keys)
-                //    if (info.IsKeyPressed(key))
-                //    {
-                //        Settings.TogglePause();
-                //    }
-
                 foreach (Keys key in Game.Settings.MovementKeyBindings.Keys)
                 {
                     if (info.IsKeyPressed(key))
@@ -53,10 +47,10 @@ namespace Engine.UI.Components
                     if (Parent.CurrentMap.GetTerrain(target).IsWalkable)
                         Parent.Position += moveDirection;
 
-                handled = false;
+                handled = true;
                 foreach (var action in Game.Settings.KeyBindings)
                 {
-                    if (Global.KeyboardState.IsKeyReleased(action.Key))
+                    if (Global.KeyboardState.IsKeyPressed(action.Key))
                     {
                         TakeAction(action.Value);
                     }
@@ -67,11 +61,14 @@ namespace Engine.UI.Components
             {
                 foreach (AsciiKey pressed in info.KeysPressed)
                 {
-                    Keys key = pressed.Key;
-                    if (Game.Settings.KeyBindings[key] == GameAction.TogglePause)
-                        TogglePause();
-                    else if (Game.Settings.KeyBindings[key] == GameAction.ToggleMenu)
-                        ToggleMenu();
+                    if (Game.Settings.KeyBindings.ContainsKey(pressed.Key))
+                    {
+                        Keys key = pressed.Key;
+                        if (Game.Settings.KeyBindings[key] == GameAction.TogglePause)
+                            TogglePause();
+                        else if (Game.Settings.KeyBindings[key] == GameAction.ToggleMenu)
+                            ToggleMenu();
+                    }
                 }
             }
             handled = true;
@@ -82,19 +79,29 @@ namespace Engine.UI.Components
             switch (key)
             {
                 //opens a magnifying glass?
-                case GameAction.DustItemForPrints:
-                case GameAction.GetItem:
-                case GameAction.LookAtEverythingInSquare:
-                case GameAction.Talk:
+                case GameAction.DustItemForPrints: OpenCursor(GameAction.DustItemForPrints); break;
+                case GameAction.GetItem: OpenCursor(GameAction.GetItem); break;
+                case GameAction.LookAtEverythingInSquare: OpenCursor(GameAction.LookAtEverythingInSquare); break;
+                case GameAction.Talk: OpenCursor(GameAction.Talk); break;
                 case GameAction.LookAtPerson: OpenCursor(key); break;
 
-                case GameAction.RemoveItemFromInventory:
-                case GameAction.TakePhotograph:
+                case GameAction.RemoveItemFromInventory: DropItem(); break;
+                case GameAction.TakePhotograph: TakePhotograph(Position); break;
 
                 case GameAction.ToggleMenu: ToggleMenu(); break;
                 case GameAction.TogglePause: TogglePause(); break;
                 case GameAction.RefocusOnPlayer: Parent.IsFocused = true; break;
             }
+        }
+
+        private void TakePhotograph(Coord position)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DropItem()
+        {
+            throw new NotImplementedException();
         }
 
         private void OpenCursor(GameAction purpose)
@@ -104,7 +111,7 @@ namespace Engine.UI.Components
 
         public void ToggleMenu()
         {
-
+            Game.SwitchUserInterface();
         }
 
         public void TogglePause()

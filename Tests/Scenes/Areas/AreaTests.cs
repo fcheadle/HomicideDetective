@@ -5,7 +5,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Tests.Map.Areas
+namespace Tests.Scenes.Areas
 {
     [TestFixture]
     class AreaTests

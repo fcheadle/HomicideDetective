@@ -3,7 +3,7 @@ using GoRogue.GameFramework.Components;
 using SadConsole;
 using System;
 
-namespace Engine.Scenes.Terrain.Components
+namespace Engine.Scenes.Components
 {
     //Can't add ComponentBase to terrain objects, and we need this to be able to do that
     public class AnimateGlyphComponent : IGameObjectComponent//ComponentBase

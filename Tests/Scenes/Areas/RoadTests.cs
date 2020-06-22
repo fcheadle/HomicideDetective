@@ -2,7 +2,7 @@
 using GoRogue;
 using NUnit.Framework;
 
-namespace Tests.Map.Areas
+namespace Tests.Scenes.Areas
 {
     [TestFixture]
     public class RoadTests
