@@ -65,7 +65,7 @@ namespace Tests.Creature.Components
         [Test]//todo...
         public void DecideWhatToDoTest()
         {
-            Assert.Fail();
+            Assert.DoesNotThrow(() => _base.DecideWhatToDo());
         }
     }
 }

@@ -54,7 +54,7 @@ namespace Tests.UI
         public void NewGameAdvancedOptionsTest()
         {
             Assert.IsNotNull(_ui.NewGameAdvancedOptions);
-            Assert.AreEqual(0, _ui.NewGameOptions.Controls.Count);//0 for now
+            Assert.AreEqual(1, _ui.NewGameAdvancedOptions.Controls.Count);//0 for now
         }
     }
 }

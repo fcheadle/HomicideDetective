@@ -110,11 +110,11 @@ namespace Tests.UI.Components
             _component.TogglePause();
         }
 
-        [Test] //todo
+        [Test]
         public void ToggleMenuTest()
         {
             _component.ToggleMenu();
-
+            _game.RunOnce();
             Assert.AreEqual(MockGame.Menu, Global.CurrentScreen);
         }
 

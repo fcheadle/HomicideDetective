@@ -11,7 +11,6 @@ namespace Tests.Components
         public void SetUp()
         {
             _component = (PhysicalComponent)_game.Player.GetComponent<PhysicalComponent>();
-            _component.ProcessTimeUnit();
         }
         [Test]
         public void NewPhysicalComponentTest()
@@ -24,11 +23,11 @@ namespace Tests.Components
             Assert.AreEqual(2, _component.GetDetails().Length);
         }
         [Test]
-        public void MarkingsTest()
+        public void MarkingsOnTest()
         {
             Assert.AreEqual(0, _component.MarkingsOn.Count);
-            Assert.AreEqual(0, _component.MarkingsLeftBy.Count);
-
+            _component.Mark(new Marking());
+            Assert.AreEqual(1, _component.MarkingsOn.Count);
         }
         [Test]
         public void AddLimitedMarkingsTest()
@@ -40,6 +39,13 @@ namespace Tests.Components
         [Test]
         public void InteractTest()
         {
+            //something that produces markings
+
+            //something that can accept markings
+
+            //interact
+
+            //assert on markings
             Assert.Fail();
         }
         [Test]
@@ -50,12 +56,15 @@ namespace Tests.Components
         [Test]
         public void SetPhysicalDescriptionTest()
         {
-            Assert.Fail();
+            _component.SetPhysicalDescription("A short, sturdy creature fond of drink and industry");
+            Assert.AreEqual("A short, sturdy creature fond of drink and industry", _component.Description);
         }
         [Test]
         public void ToStringOverrideTest()
         {
-            Assert.Fail();
+            string answer = _component.ToString();
+            Assert.False(answer.Contains("PhysicalComponent"));
+            Assert.False(answer.ToLower().Contains("physicalcomponent"));
         }
     }
 }

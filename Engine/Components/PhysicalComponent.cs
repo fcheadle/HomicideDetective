@@ -1,6 +1,7 @@
 ﻿using Engine.Items.Markings;
 using GoRogue;
 using SadConsole;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,6 +16,7 @@ namespace Engine.Components
         public int Mass { get; set; }
         public int Volume { get; set; }
         public List<Marking> MarkingsOn => _markingsOn.ToList();
+
         public List<Marking> MarkingsLeftBy => _limitedMarkingsLeft.Concat(_unlimitedMarkingsLeft).ToList();
         public PhysicalComponent(BasicEntity parent, List<Marking> markingsLeftByUnlimited = null, Dictionary<Marking, int> markingsLeftByLimited = null):base(false, false, false, false)
         {
@@ -52,6 +54,11 @@ namespace Engine.Components
             {
                 _limitedMarkingsLeft.Add(marking);
             }
+        }
+
+        public void Mark(Marking marking)
+        {
+            _markingsOn.Add(marking);
         }
         public void SetPhysicalDescription(string description)
         {
