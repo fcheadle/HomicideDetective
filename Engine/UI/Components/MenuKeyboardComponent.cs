@@ -1,13 +1,11 @@
-﻿using Engine.Components.UI;
-using Engine.Utilities;
-using Engine.Utilities.Extensions;
-using GoRogue;
-using GoRogue.MapViews;
+﻿using GoRogue;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using SadConsole.Components;
-using SadConsole.Input;
+using SadConsole.Controls;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Engine.UI.Components
 {
@@ -15,6 +13,8 @@ namespace Engine.UI.Components
     {
         BasicEntity Parent { get; }
         public Coord Position { get => Parent.Position; }
+        private int _buttonIndex = 0;
+        private ReadOnlyCollection<ControlBase> _controls;
         public bool IsPaused
         {
             get => Global.CurrentScreen.IsPaused;
@@ -28,37 +28,49 @@ namespace Engine.UI.Components
 
         public override void ProcessKeyboard(SadConsole.Console console, SadConsole.Input.Keyboard info, out bool handled)
         {
-            Direction moveDirection = Direction.NONE;
-            //foreach (Keys key in Settings.KeyBindings.Keys)
-            //    if (info.IsKeyPressed(key))
-            //    {
-            //        Settings.TogglePause();
-            //    }
+            _controls = Game.Menu.ActivePanels.Peek().Controls;
+            if (info.IsKeyPressed(Keys.Up))
+                MoveUp();
 
-            foreach (Keys key in Game.Settings.MovementKeyBindings.Keys)
-            {
-                if (info.IsKeyPressed(key))
-                {
-                    moveDirection = Game.Settings.MovementKeyBindings[key];
-                    break;
-                }
-            }
+            if (info.IsKeyPressed(Keys.Down))
+                MoveDown();
+
+            if (info.IsKeyPressed(Keys.Left))
+                HideParent();
             if (info.IsKeyPressed(Keys.Escape))
-                ToggleMenu();
+                HideParent();
 
-            if(info.IsKeyPressed(Keys.Enter))
-            {
-                //get button on this location
-
-            }
-            Parent.Position += moveDirection;
+            if (info.IsKeyPressed(Keys.Right))
+                Select();
+            if (info.IsKeyPressed(Keys.Enter))
+                Select();
 
             handled = true;
         }
 
-        public void ToggleMenu()
+        public void Select()
         {
-            Game.SwitchUserInterface();
+            MenuPanel active = Game.Menu.ActivePanels.Peek();
+            active.SelectControl(_buttonIndex);
+        }
+
+        public void HideParent()
+        {
+            Game.Menu.ActivePanels.Pop();
+        }
+
+        public void MoveDown()
+        {
+            _buttonIndex++;
+            if (_buttonIndex >= _controls.Count)
+                _buttonIndex = 0;
+        }
+
+        public void MoveUp()
+        {
+            _buttonIndex--;
+            if (_buttonIndex < 0)
+                _buttonIndex = _controls.Count - 1;
         }
     }
 }

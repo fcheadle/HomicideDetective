@@ -6,6 +6,7 @@ using SadConsole;
 using SadConsole.Controls;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -16,11 +17,12 @@ namespace Engine.UI
         //public ScrollingConsole Display { get; private set; } //the main box that covers the screen
         //public BasicEntity ControlledGameObject { get; private set; } //the cursor
         public ScrollingConsole TitleConsole { get; private set; } // H O M I C I D E    D E T E C E T I V E 
+        public Stack<MenuPanel> ActivePanels { get; private set; } = new Stack<MenuPanel>();
         public MenuPanel MainOptions { get; private set; } //the main menu that appears when you pause
         public MenuPanel NewGameOptions { get; private set; } //quickstart / advanced options
         public MenuPanel NewGameAdvancedOptions { get; private set; } //name / color / glyph / option for tutorial
         public MenuPanel SettingsOptions { get; private set; }
-        public HelpConsole HelpOptions { get; private set; } //console that holds the search box / cheats menu
+        public HelpPanel HelpOptions { get; private set; } //console that holds the search box / cheats menu
 
         readonly int _width = Game.Settings.GameWidth / 3;
         readonly int _height = Game.Settings.GameHeight / 3;
@@ -46,6 +48,21 @@ namespace Engine.UI
             InitCursor();
         }
 
+        private void NavUp()
+        {
+            ActivePanels.Pop();
+            if(Controls.Controls.Where(c => c.IsVisible).Count() < 1)
+            {
+                MainOptions.IsVisible = true;
+                Game.SwitchUserInterface();
+                return;
+            }
+            else
+            {
+
+            }
+        }
+
 
         #region initilization
         private void InitTitleConsole()
@@ -68,12 +85,9 @@ namespace Engine.UI
             Controls.ThemeColors = ThemeColors.Menu;
             Controls.DefaultBackground = Color.Black;
             Controls.DefaultForeground = Color.White;
-            List<Cell> cells = new List<Cell>();
-
-            for (int i = 0; i < width * height; i++)
-                cells.Add(new Cell(Color.White, Color.Black, ' '));
-
-            Controls.SetSurface(cells.ToArray(), width, height);
+            SadConsole.Console console = new SadConsole.Console(Controls.Width, Controls.Height);
+            console.Fill(Color.White, Color.Black, 0);
+            Controls.Children.Add(console);
         }
         private void InitMainOptions()
         {
@@ -84,12 +98,13 @@ namespace Engine.UI
             MainOptions.Add(MakeButton("Help", ContinueButton_Click));
             MainOptions.Position = new Coord(_width, 0);
             MainOptions.Arrange();
+            ActivePanels.Push(MainOptions);
             Controls.Children.Add(MainOptions);
         }
 
         private void InitHelpOptions()
         {
-            HelpOptions = new HelpConsole();
+            HelpOptions = new HelpPanel();
             HelpOptions.Position = new Coord(0, _height);
             HelpOptions.IsVisible = false;
             Controls.Children.Add(HelpOptions);
@@ -135,8 +150,8 @@ namespace Engine.UI
 
         private void InitCursor()
         {
-            ControlledGameObject = MenuSelector(Controls.Position);
-            Controls.Children.Add(ControlledGameObject);
+            ControlledGameObject = MenuSelector(MainOptions.Controls[0].Position);
+            MainOptions.Children.Add(ControlledGameObject);
         }
         #endregion
 
@@ -156,6 +171,18 @@ namespace Engine.UI
         #endregion
 
         #region event handlers
+        public void OpenPanel(MenuPanel panel)
+        {
+            panel.IsVisible = true;
+            panel.IsFocused = true;
+            MoveSelectorTo(panel);
+            ActivePanels.Push(panel);
+        }
+
+        public void MoveSelectorTo(MenuPanel panel)
+        {
+            ControlledGameObject.Position = panel.Controls[0].Position;
+        }
 
         private void AdvancedStartButton_Click(object sender, EventArgs e)
         {
@@ -173,7 +200,6 @@ namespace Engine.UI
             HelpOptions.IsFocused = true;
             //MainOptions.Position = new Coord(Game.Settings.GameWidth / 3, Game.Settings.GameHeight / 3);
         }
-
         private void SettingsButton_Click(object sender, EventArgs e)
         {
             //open settings console

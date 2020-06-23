@@ -69,37 +69,10 @@ namespace Tests.UI.Components
         [Test]//skip for now
         public void MovesTest()
         {
-            Coord startingPosition = _game.Player.Position;
-            Coord position = _game.Player.Position;
-            position += new Coord(1, 0);
-            MockKeyboard keyboard = new MockKeyboard();
-            keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Right }, Keys.Right);
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
-            keyboard.Clear();
-            position += new Coord(0, 1);
-            keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Down }, Keys.Down);
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
-            keyboard.Clear();
-            position += new Coord(-1, 0);
-            keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Left }, Keys.Left);
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
-            keyboard.Clear();
-            position += new Coord(0, -1);
-            keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Up }, Keys.Up);
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
-            Assert.AreEqual(startingPosition, _game.Player.Position);
-        }
-
-        [Test] //todo
-        public void ToggleMenuTest()
-        {
-            _component.ToggleMenu();
-
-            Assert.AreEqual(MockGame.Menu, Global.CurrentScreen);
+            var cursor = MockGame.Menu.ControlledGameObject;
+            Coord startingPosition = cursor.Position;
+            _component.MoveDown();
+            Assert.AreNotEqual(startingPosition, MockGame.Menu.ControlledGameObject.Position);
         }
     }
 }

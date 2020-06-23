@@ -1,6 +1,10 @@
 ﻿using Engine.Components.UI;
 using GoRogue;
+using Microsoft.Xna.Framework;
 using SadConsole;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Engine.UI
 {
@@ -13,6 +17,13 @@ namespace Engine.UI
             Theme = new MenuControlsTheme();
             ThemeColors = Engine.UI.ThemeColors.Menu;
             Position = position;
+            List<Cell> cells = new List<Cell>() { new Cell(Color.White, Color.Black) };
+            for (int x = 0; x < width * height; x++)
+            {
+                cells.Add(new Cell(Color.White, Color.Black));
+            }
+            SetSurface(cells.ToArray(), width, height);
+
         }
         public void Arrange()
         {
@@ -53,6 +64,10 @@ namespace Engine.UI
         public void FaceOut()
         {
 
+        }
+        internal void SelectControl(int buttonIndex)
+        {
+            
         }
     }
 }

@@ -113,9 +113,10 @@ namespace Tests.UI.Components
         [Test]
         public void ToggleMenuTest()
         {
+            var previousScreen = Global.CurrentScreen;
             _component.ToggleMenu();
             _game.RunOnce();
-            Assert.AreEqual(MockGame.Menu, Global.CurrentScreen);
+            Assert.AreNotEqual(previousScreen, Global.CurrentScreen);
         }
 
         [Theory] //todo - just takes too long for now
