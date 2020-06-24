@@ -1,6 +1,7 @@
 ﻿using Engine.Components;
 using Engine.Items.Markings;
 using NUnit.Framework;
+using SadConsole;
 
 namespace Tests.Components
 {
@@ -32,26 +33,80 @@ namespace Tests.Components
         [Test]
         public void AddLimitedMarkingsTest()
         {
-            Marking marking = new Marking();
+            Marking marking = new Marking()
+            {
+                Name = "bruise",
+                Color = "light purple",
+                Description = "just past the {bodyPart}",
+                Adjective = "round"
+            };
             _component.AddLimitedMarkings(marking, 5);
             Assert.AreEqual(5, _component.MarkingsLeftBy.Count);
         }
         [Test]
-        public void InteractTest()
+        public void AddUnlimitedMarkingsTest()
         {
-            //something that produces markings
-
-            //something that can accept markings
-
-            //interact
-
-            //assert on markings
-            Assert.Fail();
+            Marking marking = new Marking()
+            {
+                Name = "hair follicle",
+                Color = "red",
+                Description = "short",
+                Adjective = "curly"
+            };
+            int markingsBefore = _component.MarkingsLeftBy.Count;
+            _component.AddUnlimitedMarkings(marking);
+            Assert.AreEqual(markingsBefore + 1, _component.MarkingsLeftBy.Count);
         }
         [Test]
-        public void OnInteractTest()
+        public void InteractTest()
         {
-            Assert.Fail();
+            Marking hair = new Marking() 
+            {
+                Name = "hair follicle",
+                Description = "short",
+                Adjective = "dirty"
+            };
+
+            BasicEntity raccoon = MockGame.CreatureFactory.Animal(new GoRogue.Coord());
+            raccoon.Name = "trash panda"; //for fun :)
+            _component = (PhysicalComponent)raccoon.GetComponent<PhysicalComponent>();
+
+            Marking dirt = new Marking()
+            {
+                Name = "dirt",
+                Description = "course yet loamy",
+                Adjective = "moist",
+                Color = "grey & brown"
+            };
+
+            _component.AddLimitedMarkings(dirt, 100);
+
+            Marking grease = new Marking()
+            {
+                Name = "grease",
+                Description = "a smudging",
+                Adjective = "sticky",
+                Color = "yellow"
+            };
+
+            _component.AddLimitedMarkings(grease, 100);
+
+
+            BasicEntity shinyThing = MockGame.ItemFactory.Generic(new GoRogue.Coord(), "shiny thing");
+            PhysicalComponent shinyThingComponent = (PhysicalComponent)shinyThing.GetComponent<PhysicalComponent>();
+
+            //interact
+            shinyThingComponent.Interact(_component.Interact());
+            //assert on markings
+            Assert.AreEqual(1, shinyThingComponent.MarkingsOn.Count);
+
+            for (int i = 0; i < 100; i++)
+            {
+                shinyThingComponent.Interact(_component.Interact());
+            }
+
+            Assert.AreEqual(101, shinyThingComponent.MarkingsOn.Count);
+            Assert.AreEqual(99, _component.MarkingsLeftBy.Count);
         }
         [Test]
         public void SetPhysicalDescriptionTest()

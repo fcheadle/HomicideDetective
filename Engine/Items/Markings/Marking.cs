@@ -9,5 +9,9 @@ namespace Engine.Items.Markings
     /// </summary>
     public class Marking
     {
+        public string Name { get; set; }
+        public string Color { get; set; }
+        public string Description { get; set; }
+        public string Adjective { get; set; }
     }
 }
