@@ -57,7 +57,7 @@ namespace Tests.UI.Components
         [SetUp]
         public void SetUp()
         {
-            _component = (MenuKeyboardComponent)MockGame.Menu.ControlledGameObject.GetComponent<MenuKeyboardComponent>();
+            _component = (MenuKeyboardComponent)MockGame.Menu.Player.GetComponent<MenuKeyboardComponent>();
         }
 
         [Test]
@@ -66,13 +66,13 @@ namespace Tests.UI.Components
             Assert.NotNull(_component);
         }
 
-        [Test]//skip for now
+        [Test]
         public void MovesTest()
         {
-            var cursor = MockGame.Menu.ControlledGameObject;
+            var cursor = MockGame.Menu.Player;
             Coord startingPosition = cursor.Position;
             _component.MoveDown();
-            Assert.AreNotEqual(startingPosition, MockGame.Menu.ControlledGameObject.Position);
+            Assert.AreNotEqual(startingPosition, MockGame.Menu.Player.Position);
         }
     }
 }

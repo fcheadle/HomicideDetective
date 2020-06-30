@@ -11,7 +11,7 @@ namespace Engine.UI.Components
 {
     public class MenuKeyboardComponent : KeyboardConsoleComponent //as opposed to my own `component` class, which i should really refactor out
     {
-        BasicEntity Parent { get; }
+        SadConsole.Console Parent { get; }
         public Coord Position { get => Parent.Position; }
         private int _buttonIndex = 0;
         private ReadOnlyCollection<ControlBase> _controls;
@@ -21,7 +21,7 @@ namespace Engine.UI.Components
             set => Global.CurrentScreen.IsPaused = value;
         }
         //private Dictionary<GameActions, Keys> KeyBindings => Game.Settings.KeyBindings;
-        public MenuKeyboardComponent(BasicEntity parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
+        public MenuKeyboardComponent(SadConsole.Console parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
         {
             Parent = parent;
         }

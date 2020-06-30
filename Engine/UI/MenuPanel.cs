@@ -1,7 +1,9 @@
 ﻿using Engine.Components.UI;
+using Engine.UI.Components;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
+using SadConsole.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +14,14 @@ namespace Engine.UI
     {
         readonly Coord _xIncrement = new Coord(Game.Settings.GameWidth / 6, 0);
         readonly Coord _yIncrement = new Coord(0, Game.Settings.GameHeight / 6);
+        public readonly BasicEntity Selector;
         public MenuPanel(int width, int height, Coord position = new Coord()) : base(width, height)
         {
             Theme = new MenuControlsTheme();
             ThemeColors = Engine.UI.ThemeColors.Menu;
             Position = position;
-            List<Cell> cells = new List<Cell>() { new Cell(Color.White, Color.Black) };
-            for (int x = 0; x < width * height; x++)
-            {
-                cells.Add(new Cell(Color.White, Color.Black));
-            }
-            SetSurface(cells.ToArray(), width, height);
-
+            Selector = new BasicEntity(Color.White, Color.Black, 16, default, 0, true, true);
+            Components.Add(new MenuKeyboardComponent(this));
         }
         public void Arrange()
         {
@@ -35,6 +33,13 @@ namespace Engine.UI
                 button.Position = new Coord(0, 2 + (i * 2));
                 i++;
             }
+        }
+
+        public override void Update(TimeSpan time)
+        {
+            base.Update(time);
+            if (IsFocused && IsVisible)
+                Selector.IsFocused = true;
         }
         public void SlideLeft()
         {
@@ -67,7 +72,7 @@ namespace Engine.UI
         }
         internal void SelectControl(int buttonIndex)
         {
-            
+            ((Button)Controls[buttonIndex]).DoClick();
         }
     }
 }

@@ -149,7 +149,7 @@ namespace Engine.Components.UI
                 Window.Hide();
             else
                 Window.Show();
-            Game.UIManager.ControlledGameObject.IsFocused = true;
+            Game.UIManager.Player.IsFocused = true;
         }
         public void Print(string[] text)
         {
@@ -166,8 +166,8 @@ namespace Engine.Components.UI
         public override void Update(Console console, TimeSpan delta)
         {
             Print(GetDetails());
-            if (Window.IsFocused) Game.UIManager.ControlledGameObject.IsFocused = true;
-            if (MaximizeButton.IsFocused) Game.UIManager.ControlledGameObject.IsFocused = true;
+            if (Window.IsFocused) Game.UIManager.Player.IsFocused = true;
+            if (MaximizeButton.IsFocused) Game.UIManager.Player.IsFocused = true;
             base.Update(console, delta);
         }
 

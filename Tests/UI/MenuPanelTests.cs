@@ -18,6 +18,9 @@ namespace Tests.UI
             Assert.AreEqual(10, panel.Width);
             Assert.AreEqual(10, panel.Height);
             Assert.AreEqual(0, panel.Controls.Count);
+
+            Assert.NotNull(panel.Selector);
+            Assert.AreEqual(1, panel.Components.Count);
         }
         [Test]
         public void SlideLeftTest()

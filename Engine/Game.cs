@@ -19,7 +19,7 @@ namespace Engine
         public static CrimeSceneInvestigationUi UIManager => _csi;
         public static MenuUi Menu => _menu;
         public static SceneMap Map => UIManager.Map;
-        public BasicEntity Player => UIManager.ControlledGameObject;
+        public BasicEntity Player => UIManager.Player;
 
         private static Settings _settings;
         private static ICreatureFactory _creatureFactory;
@@ -61,14 +61,14 @@ namespace Engine
                 Global.CurrentScreen = _menu;
                 _csi.Hide();
                 _menu.Show();
-                _menu.ControlledGameObject.IsFocused = true;
+                _menu.Player.IsFocused = true;
             }
             else
             {
                 Global.CurrentScreen = _csi;
                 _menu.Hide();
                 _csi.Show();
-                _csi.ControlledGameObject.IsFocused = true;
+                _csi.Player.IsFocused = true;
             }
         }
 

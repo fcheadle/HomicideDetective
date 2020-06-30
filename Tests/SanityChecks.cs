@@ -2,9 +2,9 @@
 using NUnit.Framework;
 using System;
 
-namespace Tests
+namespace Tests.Alpha
 {
-    class MockTests
+    class SanityChecks
     {
         MockGame _game;
 
@@ -13,6 +13,7 @@ namespace Tests
         {
             _game = new MockGame(Update);
             Assert.DoesNotThrow(() => _game.RunOnce());
+            Assert.Pass("Tests are valid and able to run!");
         }
 
         private void Update(GameTime obj)

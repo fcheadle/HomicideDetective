@@ -11,11 +11,11 @@ namespace Engine.UI
 {
     public class UserInterface : ContainerConsole
     {
-        public ScrollingConsole Display { get; protected set; }    
-        public BasicEntity ControlledGameObject { get; protected set; }
-        public ControlsConsole Controls { get; protected set; }
-        public ThemeBase Theme { get; protected set; }
-        public Colors Colors { get; protected set; }
+        public virtual ScrollingConsole Display { get; protected set; }    
+        public virtual BasicEntity Player { get; protected set; }
+        public virtual ControlsConsole Controls { get; protected set; }
+        public virtual ThemeBase Theme { get; protected set; }
+        public virtual Colors Colors { get; protected set; }
 
         #region initilization 
         protected virtual void InitDisplay()

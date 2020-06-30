@@ -10,16 +10,22 @@ namespace Tests.UI
     class MenuUiTests : TestBase
     {
         MenuUi ui;
-        [Datapoint] MenuPanel main;
-        [Datapoint] HelpPanel help;
-        [Datapoint] MenuPanel settings;
-        [Datapoint] MenuPanel newGame;
-        [Datapoint] MenuPanel newGameAdvanced;
+        static MenuPanel main;
+        static HelpPanel help;
+        static MenuPanel settings;
+        static MenuPanel newGame;
+        static MenuPanel newGameAdvanced;
         Stack<MenuPanel> activePanels;
         BasicEntity selector;
 
-        
-
+        static MenuPanel[] Panels => new MenuPanel[]
+        {
+            main,
+            help,
+            settings,
+            newGame,
+            newGameAdvanced,
+        };
         [SetUp]
         public void Setup()
         {
@@ -28,9 +34,11 @@ namespace Tests.UI
             help = ui.HelpOptions;
             settings = ui.SettingsOptions;
             activePanels = ui.ActivePanels;
-            selector = ui.ControlledGameObject;
+            selector = ui.Player;
             newGame = ui.NewGameOptions;
             newGameAdvanced = ui.NewGameAdvancedOptions;
+
+            //Panels = new MenuPanel[] { main, help, settings, newGame, newGameAdvanced };
         }
         [Test]
         public void NewMenuUiTest()
@@ -43,8 +51,6 @@ namespace Tests.UI
             Assert.NotNull(activePanels);
             Assert.NotNull(newGame);
             Assert.NotNull(newGameAdvanced);
-            Assert.False(ui.IsVisible);
-            Assert.False(ui.IsFocused);
         }
         [Test]
         public void TitleConsoleTest()
@@ -88,27 +94,30 @@ namespace Tests.UI
             Assert.AreEqual(1, ui.ActivePanels.Count);//0 for now
             Assert.AreEqual(main, ui.ActivePanels.Peek());//0 for now
         }
-        [Theory]
-        public void MoveSelectorToTest(MenuPanel panel)
+
+        [Test]
+        public void OpenPanelTest()
         {
-            Assert.IsNotNull(ui.ActivePanels);
-            Assert.AreEqual(1, ui.ActivePanels.Count);//0 for now
-            Assert.Fail();
-        }
-        [Theory]
-        public void OpenPanelTest(MenuPanel panel)
-        {
-            Assert.IsNotNull(ui.ActivePanels);
-            Assert.AreEqual(1, ui.ActivePanels.Count);//0 for now
-            Assert.Fail();
+            int start = ui.ActivePanels.Count;
+            ui.OpenPanel(settings);
+            Assert.AreEqual(start + 1, ui.ActivePanels.Count);
+            Assert.True(settings.IsVisible);
+            Assert.True(settings.IsFocused);
         }
         [Test]
         public void ClosePanelTest()
         {
             Assert.IsNotNull(ui.ActivePanels);
-            Assert.AreEqual(1, ui.ActivePanels.Count);//0 for now
-            Assert.Fail();
+            int startAmount = ui.ActivePanels.Count;
+            ui.OpenPanel(newGame);
+            ui.OpenPanel(newGameAdvanced);
 
+            Assert.AreEqual(startAmount + 2, ui.ActivePanels.Count);
+
+            ui.ClosePanel(newGameAdvanced);
+            Assert.AreEqual(startAmount + 1, ui.ActivePanels.Count);
+            Assert.False(newGameAdvanced.IsVisible);
+            Assert.False(newGameAdvanced.IsFocused);
         }
 
     }

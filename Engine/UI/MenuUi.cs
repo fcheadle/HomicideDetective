@@ -18,6 +18,8 @@ namespace Engine.UI
         //public BasicEntity ControlledGameObject { get; private set; } //the cursor
         public ScrollingConsole TitleConsole { get; private set; } // H O M I C I D E    D E T E C E T I V E 
         public Stack<MenuPanel> ActivePanels { get; private set; } = new Stack<MenuPanel>();
+        public MenuPanel ActivePanel => ActivePanels.Peek();
+        public override BasicEntity Player { get => ActivePanel.Selector; }
         public MenuPanel MainOptions { get; private set; } //the main menu that appears when you pause
         public MenuPanel NewGameOptions { get; private set; } //quickstart / advanced options
         public MenuPanel NewGameAdvancedOptions { get; private set; } //name / color / glyph / option for tutorial
@@ -47,22 +49,6 @@ namespace Engine.UI
             InitSettingsOptions();
             InitCursor();
         }
-
-        private void NavUp()
-        {
-            ActivePanels.Pop();
-            if(Controls.Controls.Where(c => c.IsVisible).Count() < 1)
-            {
-                MainOptions.IsVisible = true;
-                Game.SwitchUserInterface();
-                return;
-            }
-            else
-            {
-
-            }
-        }
-
 
         #region initilization
         private void InitTitleConsole()
@@ -150,8 +136,8 @@ namespace Engine.UI
 
         private void InitCursor()
         {
-            ControlledGameObject = MenuSelector(MainOptions.Controls[0].Position);
-            MainOptions.Children.Add(ControlledGameObject);
+            Player = MenuSelector(MainOptions.Controls[0].Position);
+            MainOptions.Children.Add(Player);
         }
         #endregion
 
@@ -160,13 +146,13 @@ namespace Engine.UI
         {
             base.Hide();
             Global.CurrentScreen = Game.UIManager;
-            Game.UIManager.ControlledGameObject.IsFocused = true;
+            Game.UIManager.Player.IsFocused = true;
         }
         public override void Show()
         {
             base.Show();
             Global.CurrentScreen = this;
-            ControlledGameObject.IsFocused = true;
+            Player.IsFocused = true;
         }
         #endregion
 
@@ -178,10 +164,23 @@ namespace Engine.UI
             MoveSelectorTo(panel);
             ActivePanels.Push(panel);
         }
-
+        public void ClosePanel(MenuPanel panel)
+        {
+            panel.IsVisible = false;
+            panel.IsFocused = false;
+            
+            ActivePanels.Pop();
+            if (Controls.Controls.Where(c => c.IsVisible).Count() < 1)
+            {
+                MainOptions.IsVisible = true;
+                Game.SwitchUserInterface();
+                return;
+            }
+        }
         public void MoveSelectorTo(MenuPanel panel)
         {
-            ControlledGameObject.Position = panel.Controls[0].Position;
+            Player.Position = panel.Controls[0].Position;
+            
         }
 
         private void AdvancedStartButton_Click(object sender, EventArgs e)

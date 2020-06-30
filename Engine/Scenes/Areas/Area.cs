@@ -11,25 +11,25 @@ namespace Engine.Scenes.Areas
     public class Area
     {
         public string Name { get; set; }
-        public int Rise { get; internal set; }
-        public int Run { get; internal set; }
-        public Orientation Orientation { get; }
+        public int Rise { get; private set; }
+        public int Run { get; private set; }
+        public Orientation Orientation { get; private set; }
         public Dictionary<Enum, Area> SubAreas { get; set; } = new Dictionary<Enum, Area>();
         public List<Coord> OuterPoints { get; set; } = new List<Coord>();
         public List<Coord> InnerPoints { get; set; } = new List<Coord>();
-        public List<Coord> SouthBoundary { get; } //or southeast boundary in the case of diamonds
-        public List<Coord> NorthBoundary { get; }
-        public List<Coord> EastBoundary { get; }
-        public List<Coord> WestBoundary { get; }
+        public List<Coord> SouthBoundary { get; private set; } //or southeast boundary in the case of diamonds
+        public List<Coord> NorthBoundary { get; private set; }
+        public List<Coord> EastBoundary { get; private set; }
+        public List<Coord> WestBoundary { get; private set; }
         public List<Coord> Connections { get; private set; } = new List<Coord>();
-        public int Left { get; }
-        public int Right { get; }
-        public int Top { get; }
-        public int Bottom { get; }
-        public Coord SouthEastCorner { get; }
-        public Coord SouthWestCorner { get; }
-        public Coord NorthWestCorner { get; }
-        public Coord NorthEastCorner { get; }
+        public int Left => SouthWestCorner.X <= NorthWestCorner.X ? SouthWestCorner.X : NorthWestCorner.X;
+        public int Right => SouthEastCorner.X >= NorthEastCorner.X ? SouthEastCorner.X : NorthEastCorner.X;
+        public int Top => NorthEastCorner.Y <= NorthWestCorner.Y ? NorthEastCorner.Y : NorthWestCorner.Y;
+        public int Bottom => SouthEastCorner.Y <= SouthWestCorner.Y ? SouthWestCorner.Y : SouthEastCorner.Y;
+        public Coord SouthEastCorner { get; private set; }
+        public Coord SouthWestCorner { get; private set; }
+        public Coord NorthWestCorner { get; private set; }
+        public Coord NorthEastCorner { get; private set; }
         public int Width { get => Right - Left; }
         public int Height { get => Bottom - Top; }
         public List<Coord> Points { get => OuterPoints.Concat(InnerPoints).ToList(); }
@@ -43,6 +43,18 @@ namespace Engine.Scenes.Areas
         public Area(string name, Coord se, Coord ne, Coord nw, Coord sw)
         {
             Name = name;
+            Generate(se, ne, nw, sw);
+        }
+        private Area() { }
+
+        #region miscellaneous features
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        private void Generate(Coord se, Coord ne, Coord nw, Coord sw)
+        {
             SouthEastCorner = se;
             NorthEastCorner = ne;
             NorthWestCorner = nw;
@@ -56,10 +68,6 @@ namespace Engine.Scenes.Areas
             Rise = se.Y - ne.Y;
             Run = se.X - sw.X;
 
-            Top = ne.Y <= nw.Y ? ne.Y : nw.Y;
-            Right = se.X >= ne.X ? se.X : ne.X;
-            Left = sw.X <= nw.X ? sw.X : nw.X;
-            Bottom = se.Y <= sw.Y ? sw.Y : se.Y;
             OuterPoints.AddRange(SouthBoundary);
             OuterPoints.AddRange(NorthBoundary);
             OuterPoints.AddRange(EastBoundary);
@@ -67,19 +75,6 @@ namespace Engine.Scenes.Areas
             OuterPoints = OuterPoints.Distinct().ToList();
             InnerPoints = InnerFromOuterPoints(OuterPoints).Distinct().ToList();
             Orientation = (NorthBoundary.Count() + SouthBoundary.Count()) / 2 > (EastBoundary.Count() + WestBoundary.Count()) / 2 ? Orientation.Horizontal : Orientation.Vertical;
-        }
-
-        #region miscellaneous features
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        public IEnumerable<Coord> SurroundingPoints(Coord point)
-        {
-            for (int i = -1; i <= 1; i++)
-                for (int j = -1; j <= 1; j++)
-                    yield return new Coord(i, j);
         }
         #endregion
 
@@ -198,6 +193,33 @@ namespace Engine.Scenes.Areas
                 while (InnerPoints.Contains(c))
                     InnerPoints.Remove(c);
             }
+        }
+        public Area Rotate(float degrees)
+        {
+            Coord center = new Coord((Left + Right) / 2, (Top + Bottom) / 2);
+            double radians = Calculate.DegreesToRadians(degrees);
+
+            Coord sw = SouthWestCorner - center;
+            int x = (int)(sw.X * Math.Cos(radians) - sw.Y * Math.Sin(radians));
+            int y = (int)(sw.X * Math.Sin(radians) + sw.Y * Math.Cos(radians));
+            sw = new Coord(x, y) + center;
+
+            Coord se = SouthEastCorner - center;
+            x = (int)(se.X * Math.Cos(radians) - se.Y * Math.Sin(radians));
+            y = (int)(se.X * Math.Sin(radians) + se.Y * Math.Cos(radians));
+            se = new Coord(x, y) + center;
+
+            Coord nw = NorthWestCorner - center;
+            x = (int)(nw.X * Math.Cos(radians) - nw.Y * Math.Sin(radians));
+            y = (int)(nw.X * Math.Sin(radians) + nw.Y * Math.Cos(radians));
+            nw = new Coord(x, y) + center;
+
+            Coord ne = NorthEastCorner - center;
+            x = (int)(ne.X * Math.Cos(radians) - ne.Y * Math.Sin(radians));
+            y = (int)(ne.X * Math.Sin(radians) + ne.Y * Math.Cos(radians));
+            ne = new Coord(x, y) + center;
+
+            return new Area(Name, se, ne, nw, sw);
         }
         #endregion
     }

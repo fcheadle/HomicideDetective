@@ -22,7 +22,7 @@ namespace Tests.UI
             Assert.IsNotNull(ui.Display);
             Assert.IsNotNull(ui.Controls);
             Assert.IsNotNull(ui.LookingGlass);
-            Assert.IsNotNull(ui.ControlledGameObject);
+            Assert.IsNotNull(ui.Player);
             Assert.IsNotNull(ui.Actor);
             Assert.IsNotNull(ui.KeyBoardComponent);
             Assert.IsNotNull(ui.Thoughts);

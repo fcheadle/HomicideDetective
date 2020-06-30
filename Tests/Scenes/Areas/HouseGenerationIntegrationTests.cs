@@ -9,7 +9,7 @@ using SadConsole;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Tests
+namespace Tests.Scenes.Areas
 {
     class HouseGenerationIntegrationTests
     {
