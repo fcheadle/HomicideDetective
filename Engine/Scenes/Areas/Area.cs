@@ -67,7 +67,7 @@ namespace Engine.Scenes.Areas
 
             Rise = se.Y - ne.Y;
             Run = se.X - sw.X;
-
+            OuterPoints = new List<Coord>();
             OuterPoints.AddRange(SouthBoundary);
             OuterPoints.AddRange(NorthBoundary);
             OuterPoints.AddRange(EastBoundary);
@@ -108,10 +108,11 @@ namespace Engine.Scenes.Areas
             for (int i = outer.First().X; i <= outer.Last().X; i++)
             {
                 List<Coord> chunk = outer.Where(w => w.X == i).OrderBy(o => o.Y).ToList();
-                for (int j = chunk.First().Y; j <= chunk.Last().Y; j++)
-                {
-                    yield return new Coord(i, j);
-                }
+                if(chunk.Count > 0)
+                    for (int j = chunk.First().Y; j <= chunk.Last().Y; j++)
+                    {
+                        yield return new Coord(i, j);
+                    }
             }
         }
 
@@ -194,9 +195,14 @@ namespace Engine.Scenes.Areas
                     InnerPoints.Remove(c);
             }
         }
-        public Area Rotate(float degrees)
+        public Area Rotate(float degrees, bool doToSelf, Coord origin = default)
         {
-            Coord center = new Coord((Left + Right) / 2, (Top + Bottom) / 2);
+            Coord center;
+            if (origin == default(Coord))
+                center = new Coord((Left + Right) / 2, (Top + Bottom) / 2);
+            else
+                center = origin;
+
             double radians = Calculate.DegreesToRadians(degrees);
 
             Coord sw = SouthWestCorner - center;
@@ -218,8 +224,17 @@ namespace Engine.Scenes.Areas
             x = (int)(ne.X * Math.Cos(radians) - ne.Y * Math.Sin(radians));
             y = (int)(ne.X * Math.Sin(radians) + ne.Y * Math.Cos(radians));
             ne = new Coord(x, y) + center;
-
-            return new Area(Name, se, ne, nw, sw);
+            if (doToSelf)
+            {
+                Generate(se, ne, nw, sw);
+                foreach (Area area in SubAreas.Values)
+                {
+                    area.Rotate(degrees, true, center);
+                }
+                return this;
+            }
+            else
+                return new Area(Name, se, ne, nw, sw);
         }
         #endregion
     }

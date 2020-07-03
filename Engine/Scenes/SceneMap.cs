@@ -15,7 +15,7 @@ namespace Engine.Scenes
     {
         private int _width;
         private int _height;
-
+        private float _rotationDegrees;
         public List<Area> Regions
         {
             get => new List<Area>()
@@ -34,6 +34,15 @@ namespace Engine.Scenes
         internal List<Block> Blocks { get; private set; } = new List<Block>();
         internal List<House> Houses { get; private set; } = new List<House>();
         internal List<Area> Rooms { get; private set; } = new List<Area>();
+
+        public void RefreshRegion(Area area)
+        {
+            Area region = Regions.Where(x => x.Name == area.Name).First();
+            Regions.Remove(region);
+            Regions.Add(area);
+            
+        }
+
         public FOVVisibilityHandler FovVisibilityHandler { get; }
         public SceneMap(int width, int height) : base(width, height, EnumUtils.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {
@@ -47,7 +56,7 @@ namespace Engine.Scenes
             MakeHouses();
             MakePeople();
         }
-        private void MakeBackrooms()
+        public void MakeBackrooms()
         {
             House backrooms = new House("Backrooms", new Coord(0, 0), HouseType.Backrooms, Direction.Types.DOWN);
             backrooms.Generate();
@@ -74,6 +83,7 @@ namespace Engine.Scenes
             RoadNames roadName = (RoadNames)Calculate.PercentValue();
             RoadNumbers roadNum = 0;
             int offset = (Calculate.PercentValue() - 50) * 2;
+            _rotationDegrees = (float)(offset * 1.75); //guess?
             Road road;
             for (int i = 16; i < _width - 48; i += 96)
             {
@@ -141,6 +151,8 @@ namespace Engine.Scenes
                     string address = block.Name[0] + block.Name[1] + i.ToString() + block.Name.Substring(9);
                     house = new House(address, houseOrigin, HouseType.PrairieHome, Direction.Types.DOWN);
                     house.Generate();
+                    house.Rotate(_rotationDegrees, true);
+                    house.Draw();
                     Houses.Add(house);
                     i++;
 

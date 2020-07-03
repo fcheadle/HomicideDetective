@@ -21,12 +21,12 @@ namespace Engine
         public static SceneMap Map => UIManager.Map;
         public BasicEntity Player => UIManager.Player;
 
-        private static Settings _settings;
-        private static ICreatureFactory _creatureFactory;
-        private static ITerrainFactory _terrainFactory;
-        private static IItemFactory _itemFactory;
-        private static CrimeSceneInvestigationUi _csi;
-        private static MenuUi _menu;
+        protected static Settings _settings;
+        protected static ICreatureFactory _creatureFactory;
+        protected static ITerrainFactory _terrainFactory;
+        protected static IItemFactory _itemFactory;
+        protected static CrimeSceneInvestigationUi _csi;
+        protected static MenuUi _menu;
 
         public bool IsPaused { get => SadConsole.Global.CurrentScreen.IsPaused; set => SadConsole.Global.CurrentScreen.IsPaused = value; }
 

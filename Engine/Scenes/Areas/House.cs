@@ -56,6 +56,7 @@ namespace Engine.Scenes.Areas
             StructureType = type;
             Origin = origin;
             Map = new BasicMap(25, 25, 1, Distance.MANHATTAN);
+
             _facing = facing;
             //Generate();
         }
@@ -71,7 +72,7 @@ namespace Engine.Scenes.Areas
             }
             int chance = Calculate.PercentValue();
 
-            switch (_facing)
+            /*switch (_facing)
             {
                 default:
                 case Direction.Types.DOWN: break; //do nothing
@@ -104,16 +105,27 @@ namespace Engine.Scenes.Areas
                             Map = Map.ReverseHorizontal();
                     }
                     break;
-            }
+            }*/
 
 
 
             foreach (KeyValuePair<Enum, Area> room in SubAreas)
             {
                 ConnectRoomToNeighbors(room.Value);
-                DrawRoom(room.Value, (RoomType)room.Key);
             }
 
+            //Draw();
+        }
+
+        public void Draw()
+        {
+            int width = Right - Left;
+            int height = Bottom - Top;
+            Map = new BasicMap(width, height, 1, Distance.MANHATTAN);
+            foreach (KeyValuePair<Enum, Area> room in SubAreas)
+            {
+                DrawRoom(room.Value, (RoomType)room.Key);
+            }
             for (int i = 0; i < Map.Width; i++)
             {
                 for (int j = 0; j < Map.Height; j++)
@@ -130,8 +142,9 @@ namespace Engine.Scenes.Areas
                                 foreach (Coord neighbor in here.Neighbors())
                                 {
                                     if (Map.Contains(neighbor))
-                                        if (!Map.GetTerrain<BasicTerrain>(neighbor).IsWalkable)
-                                            Map.SetTerrain(factory.Door(neighbor));
+                                        if (Map.GetTerrain<BasicTerrain>(neighbor) != null)
+                                            if (!Map.GetTerrain<BasicTerrain>(neighbor).IsWalkable)
+                                                Map.SetTerrain(factory.Door(neighbor));
                                 }
                             }
                         }
@@ -296,42 +309,62 @@ namespace Engine.Scenes.Areas
 
         private void DrawRoom(Area room, RoomType type)
         {
-            for (int x = room.Left + 1; x < room.Right; x++)
+            foreach(Coord location in room.InnerPoints)
             {
-                for (int y = room.Top + 1; y < room.Bottom; y++)
+                if (Map.Contains(location - Origin))
                 {
-                    Coord location = new Coord(x, y) - Origin;
-                    if (Map.Contains(location))
+                    BasicTerrain floor;
+                    switch ((int)type % 8)
                     {
-                        BasicTerrain floor;
-                        ////Don't delete this, I'll come back to it later
-                        //switch (type)
-                        //{
-                        //    case RoomType.BoysBedroom:
-                        //    case RoomType.GirlsBedroom:
-                        //    case RoomType.HallCloset:
-                        //    case RoomType.MasterBedroom:
-                        //    case RoomType.GuestBedroom: floor = TerrainFactory.OliveCarpet(location); break;
-                        //    case RoomType.Kitchen:
-                        //    case RoomType.GuestBathroom: floor = TerrainFactory.BathroomLinoleum(location); break;
-                        //    default: floor = TerrainFactory.DarkHardwoodFloor(location); break;
-                        //}
-
-                        switch ((int)type % 8)
-                        {
-                            default:
-                            case 0: floor = factory.OliveCarpet(location); break;
-                            case 1: floor = factory.LightCarpet(location); break;
-                            case 2: floor = factory.ShagCarpet(location); break;
-                            case 3: floor = factory.BathroomLinoleum(location); break;
-                            case 4: floor = factory.KitchenLinoleum(location); break;
-                            case 5: floor = factory.DarkHardwoodFloor(location); break;
-                            case 6: floor = factory.MediumHardwoodFloor(location); break;
-                            case 7: floor = factory.LightHardwoodFloor(location); break;
-                        }
-                        Map.SetTerrain(floor);
+                        default:
+                        case 0: floor = factory.OliveCarpet(location - Origin); break;
+                        case 1: floor = factory.LightCarpet(location - Origin); break;
+                        case 2: floor = factory.ShagCarpet(location - Origin); break;
+                        case 3: floor = factory.BathroomLinoleum(location - Origin); break;
+                        case 4: floor = factory.KitchenLinoleum(location - Origin); break;
+                        case 5: floor = factory.DarkHardwoodFloor(location - Origin); break;
+                        case 6: floor = factory.MediumHardwoodFloor(location - Origin); break;
+                        case 7: floor = factory.LightHardwoodFloor(location - Origin); break;
                     }
+                    Map.SetTerrain(floor);
                 }
+            //}
+            //for (int x = room.Left + 1; x < room.Right; x++)
+            //{
+            //    for (int y = room.Top + 1; y < room.Bottom; y++)
+            //    {
+            //        Coord location = new Coord(x, y) - Origin;
+            //        if (Map.Contains(location))
+            //        {
+            //            BasicTerrain floor;
+            //            ////Don't delete this, I'll come back to it later
+            //            //switch (type)
+            //            //{
+            //            //    case RoomType.BoysBedroom:
+            //            //    case RoomType.GirlsBedroom:
+            //            //    case RoomType.HallCloset:
+            //            //    case RoomType.MasterBedroom:
+            //            //    case RoomType.GuestBedroom: floor = TerrainFactory.OliveCarpet(location); break;
+            //            //    case RoomType.Kitchen:
+            //            //    case RoomType.GuestBathroom: floor = TerrainFactory.BathroomLinoleum(location); break;
+            //            //    default: floor = TerrainFactory.DarkHardwoodFloor(location); break;
+            //            //}
+
+            //            switch ((int)type % 8)
+            //            {
+            //                default:
+            //                case 0: floor = factory.OliveCarpet(location); break;
+            //                case 1: floor = factory.LightCarpet(location); break;
+            //                case 2: floor = factory.ShagCarpet(location); break;
+            //                case 3: floor = factory.BathroomLinoleum(location); break;
+            //                case 4: floor = factory.KitchenLinoleum(location); break;
+            //                case 5: floor = factory.DarkHardwoodFloor(location); break;
+            //                case 6: floor = factory.MediumHardwoodFloor(location); break;
+            //                case 7: floor = factory.LightHardwoodFloor(location); break;
+            //            }
+            //            Map.SetTerrain(floor);
+            //        }
+            //    }
             }
 
             foreach (Coord location in room.OuterPoints)
