@@ -59,7 +59,7 @@ namespace Engine.Scenes.Areas
             NorthEastCorner = ne;
             NorthWestCorner = nw;
             SouthWestCorner = sw;
-
+            Connections = new List<Coord>();
             WestBoundary = Calculate.PointsAlongStraightLine(NorthWestCorner, SouthWestCorner).ToList();
             SouthBoundary = Calculate.PointsAlongStraightLine(SouthWestCorner, SouthEastCorner).ToList();
             EastBoundary = Calculate.PointsAlongStraightLine(SouthEastCorner, NorthEastCorner).ToList();
@@ -195,7 +195,7 @@ namespace Engine.Scenes.Areas
                     InnerPoints.Remove(c);
             }
         }
-        public Area Rotate(float degrees, bool doToSelf, Coord origin = default)
+        public virtual Area Rotate(float degrees, bool doToSelf, Coord origin = default)
         {
             Coord center;
             if (origin == default(Coord))
@@ -204,29 +204,43 @@ namespace Engine.Scenes.Areas
                 center = origin;
 
             double radians = Calculate.DegreesToRadians(degrees);
+            List<Coord> coords = new List<Coord>();
 
             Coord sw = SouthWestCorner - center;
             int x = (int)(sw.X * Math.Cos(radians) - sw.Y * Math.Sin(radians));
             int y = (int)(sw.X * Math.Sin(radians) + sw.Y * Math.Cos(radians));
-            sw = new Coord(x, y) + center;
+            coords.Add(new Coord(x, y) + center);
 
             Coord se = SouthEastCorner - center;
             x = (int)(se.X * Math.Cos(radians) - se.Y * Math.Sin(radians));
             y = (int)(se.X * Math.Sin(radians) + se.Y * Math.Cos(radians));
-            se = new Coord(x, y) + center;
+            coords.Add(new Coord(x, y) + center);
 
             Coord nw = NorthWestCorner - center;
             x = (int)(nw.X * Math.Cos(radians) - nw.Y * Math.Sin(radians));
             y = (int)(nw.X * Math.Sin(radians) + nw.Y * Math.Cos(radians));
-            nw = new Coord(x, y) + center;
+            coords.Add(new Coord(x, y) + center);
 
             Coord ne = NorthEastCorner - center;
             x = (int)(ne.X * Math.Cos(radians) - ne.Y * Math.Sin(radians));
             y = (int)(ne.X * Math.Sin(radians) + ne.Y * Math.Cos(radians));
-            ne = new Coord(x, y) + center;
+            coords.Add(new Coord(x, y) + center);
+
+            sw = coords.OrderBy(c => -c.Y).ThenBy(c => c.X).First();
+            coords.Remove(sw);
+
+            se = coords.OrderBy(c => -c.Y).First();
+            coords.Remove(se);
+
+            nw = coords.OrderBy(c => c.X).First();
+            coords.Remove(nw);
+
+            ne = coords.OrderBy(c => -c.X).First();
+
             if (doToSelf)
             {
                 Generate(se, ne, nw, sw);
+
                 foreach (Area area in SubAreas.Values)
                 {
                     area.Rotate(degrees, true, center);

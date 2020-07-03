@@ -15,7 +15,7 @@ namespace Engine
             Settings settings = null,
             ICreatureFactory creatureFactory = null, 
             IItemFactory itemFactory = null, 
-            ITerrainFactory terrainFactory = null
+            TerrainFactory terrainFactory = null
             )
         {
             settings = settings ?? new Settings();

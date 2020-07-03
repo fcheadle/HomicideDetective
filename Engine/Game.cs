@@ -2,6 +2,7 @@
 using Engine.Creatures;
 using Engine.Items;
 using Engine.Scenes;
+using Engine.Scenes.Components;
 using Engine.Scenes.Terrain;
 using Engine.UI;
 using Microsoft.Xna.Framework;
@@ -15,7 +16,7 @@ namespace Engine
         public static Settings Settings => _settings; 
         public static ICreatureFactory CreatureFactory => _creatureFactory; 
         public static IItemFactory ItemFactory => _itemFactory; 
-        public static ITerrainFactory TerrainFactory => _terrainFactory; 
+        public static TerrainFactory TerrainFactory => _terrainFactory; 
         public static CrimeSceneInvestigationUi UIManager => _csi;
         public static MenuUi Menu => _menu;
         public static SceneMap Map => UIManager.Map;
@@ -23,14 +24,14 @@ namespace Engine
 
         protected static Settings _settings;
         protected static ICreatureFactory _creatureFactory;
-        protected static ITerrainFactory _terrainFactory;
+        protected static TerrainFactory _terrainFactory;
         protected static IItemFactory _itemFactory;
         protected static CrimeSceneInvestigationUi _csi;
         protected static MenuUi _menu;
 
         public bool IsPaused { get => SadConsole.Global.CurrentScreen.IsPaused; set => SadConsole.Global.CurrentScreen.IsPaused = value; }
 
-        public Game(Settings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, ITerrainFactory terrainFactory) 
+        public Game(Settings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, TerrainFactory terrainFactory) 
         {
             ApplySettings(settings);
             SetCreatureFactory(creatureFactory);
@@ -77,7 +78,7 @@ namespace Engine
             _itemFactory = itemFactory;
         }
 
-        protected void SetTerrainFactory(ITerrainFactory terrainFactory)
+        protected void SetTerrainFactory(TerrainFactory terrainFactory)
         {
             _terrainFactory = terrainFactory;
         }
@@ -91,6 +92,7 @@ namespace Engine
         public virtual void Init()
         {
             _csi = new CrimeSceneInvestigationUi();
+            _csi.Components.Add(new WeatherComponent());
             _menu = new MenuUi();
             Global.CurrentScreen = UIManager;
         }

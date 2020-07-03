@@ -1,4 +1,5 @@
 ﻿using Engine.Scenes.Areas;
+using Engine.Scenes.Terrain;
 using Engine.Utilities;
 using Engine.Utilities.Extensions;
 using Engine.Utilities.Mathematics;
@@ -61,22 +62,19 @@ namespace Engine.Scenes
             House backrooms = new House("Backrooms", new Coord(0, 0), HouseType.Backrooms, Direction.Types.DOWN);
             backrooms.Generate();
             Houses.Add(backrooms);
-            this.ForXForY(
-                (point) =>
-                {
-                    try
-                    {
-                        BasicTerrain t = backrooms.Map.GetTerrain<BasicTerrain>(point);
-                        if (t != null)
-                            SetTerrain(Game.TerrainFactory.Copy(t, point));
-                    }
-                    catch
-                    {
-                        //don't care
-                    }
+            foreach (Coord floor in backrooms.Floor)
+                if (this.Contains(floor))
+                    SetTerrain(Game.TerrainFactory.Wall(floor));
+            
+            foreach (Coord wall in backrooms.Walls)
+                if (this.Contains(wall))
+                    SetTerrain(Game.TerrainFactory.Wall(wall));
 
-                }
-            );
+            foreach (Coord door in backrooms.Doors)
+                if (this.Contains(door))
+                    SetTerrain(Game.TerrainFactory.Wall(door));
+
+            
         }
         private void MakeRoadsAndBlocks()
         {
@@ -152,7 +150,7 @@ namespace Engine.Scenes
                     house = new House(address, houseOrigin, HouseType.PrairieHome, Direction.Types.DOWN);
                     house.Generate();
                     house.Rotate(_rotationDegrees, true);
-                    house.Draw();
+                    //house.Draw();
                     Houses.Add(house);
                     i++;
 
@@ -161,19 +159,55 @@ namespace Engine.Scenes
                         Rooms.Add(room);
                     }
 
-                    for (int j = 0; j < houseDistance; j++)
-                    {
-                        for (int k = 0; k < houseDistance; k++)
-                        {
-                            Coord c = new Coord(j, k);
-                            if (house.Map.GetTerrain(c) != null && this.Contains(house.Origin + c))
-                            {
-                                SetTerrain(Game.TerrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
-                            }
-                        }
-                    }
+                    //for (int j = 0; j < houseDistance; j++)
+                    //{
+                    //    for (int k = 0; k < houseDistance; k++)
+                    //    {
+                    //        Coord c = new Coord(j, k);
+                    //        if (house.Map.GetTerrain(c) != null && this.Contains(house.Origin + c))
+                    //        {
+                    //            SetTerrain(Game.TerrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
+                    //        }
+                    //    }
+                    //}
                 }
             }
+
+            foreach (House gennedHouse in Houses)
+            {
+                TerrainFactory factory = Game.TerrainFactory;
+                BasicTerrain floor;
+                int chance = Calculate.PercentValue();
+
+                foreach (Coord target in gennedHouse.Floor)
+                {
+                    switch (chance % 8)
+                    {
+                        default:
+                        case 0: floor = factory.OliveCarpet(target); break;
+                        case 1: floor = factory.LightCarpet(target); break;
+                        case 2: floor = factory.ShagCarpet(target); break;
+                        case 3: floor = factory.BathroomLinoleum(target); break;
+                        case 4: floor = factory.KitchenLinoleum(target); break;
+                        case 5: floor = factory.DarkHardwoodFloor(target); break;
+                        case 6: floor = factory.MediumHardwoodFloor(target); break;
+                        case 7: floor = factory.LightHardwoodFloor(target); break;
+                    }
+
+                    if (this.Contains(target))
+                        SetTerrain(floor);
+                }
+
+                foreach (Coord target in gennedHouse.Walls)
+                    if (this.Contains(target))
+                        SetTerrain(factory.Wall(target));
+
+                foreach (Coord target in gennedHouse.Doors)
+                    if (this.Contains(target))
+                        SetTerrain(factory.Door(target));
+            }
+
+
         }
         private void MakePeople()
         {
