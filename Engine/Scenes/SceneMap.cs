@@ -24,7 +24,7 @@ namespace Engine.Scenes
                 .Concat(Blocks)
                 .Concat(Houses)
                 .Concat(Intersections.Values)
-                .Concat(Rooms)
+                //.Concat(Rooms)
                 .ToList()
                 ;
         }
@@ -34,7 +34,6 @@ namespace Engine.Scenes
         internal Dictionary<RoadNames, Road> VerticalRoads { get; private set; } = new Dictionary<RoadNames, Road>();
         internal List<Block> Blocks { get; private set; } = new List<Block>();
         internal List<House> Houses { get; private set; } = new List<House>();
-        internal List<Area> Rooms { get; private set; } = new List<Area>();
 
         public void RefreshRegion(Area area)
         {
@@ -52,10 +51,10 @@ namespace Engine.Scenes
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
 
             MakeOutdoors();
-            //MakeBackrooms();
+            //MakeBackrooms();//very, very, very slow
             MakeRoadsAndBlocks();
             MakeHouses();
-            MakePeople();
+            //MakePeople();
         }
         public void MakeBackrooms()
         {
@@ -81,7 +80,7 @@ namespace Engine.Scenes
             RoadNames roadName = (RoadNames)Calculate.PercentValue();
             RoadNumbers roadNum = 0;
             int offset = (Calculate.PercentValue() - 50) * 2;
-            _rotationDegrees = (float)(offset * 1.75); //guess?
+
             Road road;
             for (int i = 16; i < _width - 48; i += 96)
             {
@@ -96,6 +95,9 @@ namespace Engine.Scenes
                     roadName++;
                 }
             }
+
+            //_rotationDegrees = Math.Atan; //guess?
+
             foreach (Road hRoad in HorizontalRoads.Values)
             {
                 foreach (Road vRoad in VerticalRoads.Values)
@@ -121,25 +123,22 @@ namespace Engine.Scenes
                     Blocks.Add(new Block(nw, sw, se, ne));
                 }
             }
+
             foreach (Road r in Roads)
-            {
                 foreach (Coord c in r.InnerPoints)
                     if (this.Contains(c))
                         SetTerrain(Game.TerrainFactory.Floor(c));
-                //SetTerrain(_terrainFactory.Pavement(c));
-            }
+             
 
             foreach (Block block in Blocks)
-            {
                 foreach (Coord c in block.GetFenceLocations())
                     if (this.Contains(c))
-                        SetTerrain(Game.TerrainFactory.Generic(c, 44));
-                //SetTerrain(_terrainFactory.Fence(c));
-            }
+                        SetTerrain(Game.TerrainFactory.Fence(c));
+            
         }
         private void MakeHouses()
         {
-            int houseDistance = 20;
+            _rotationDegrees = Calculate.RandomInt(46, 90);
             House house;
             foreach (Block block in Blocks)
             {
@@ -150,32 +149,14 @@ namespace Engine.Scenes
                     house = new House(address, houseOrigin, HouseType.PrairieHome, Direction.Types.DOWN);
                     house.Generate();
                     house.Rotate(_rotationDegrees, true);
-                    //house.Draw();
                     Houses.Add(house);
                     i++;
-
-                    foreach (Area room in house.SubAreas.Values)
-                    {
-                        Rooms.Add(room);
-                    }
-
-                    //for (int j = 0; j < houseDistance; j++)
-                    //{
-                    //    for (int k = 0; k < houseDistance; k++)
-                    //    {
-                    //        Coord c = new Coord(j, k);
-                    //        if (house.Map.GetTerrain(c) != null && this.Contains(house.Origin + c))
-                    //        {
-                    //            SetTerrain(Game.TerrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
-                    //        }
-                    //    }
-                    //}
                 }
             }
 
             foreach (House gennedHouse in Houses)
             {
-                TerrainFactory factory = Game.TerrainFactory;
+                DefaultTerrainFactory factory = Game.TerrainFactory;
                 BasicTerrain floor;
                 int chance = Calculate.PercentValue();
 
@@ -194,7 +175,7 @@ namespace Engine.Scenes
                         case 7: floor = factory.LightHardwoodFloor(target); break;
                     }
 
-                    if (this.Contains(target))
+                    if (this.Contains(target) && GetTerrain<BasicTerrain>(target).IsWalkable)
                         SetTerrain(floor);
                 }
 

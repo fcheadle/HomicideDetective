@@ -16,7 +16,7 @@ namespace Engine
         public static Settings Settings => _settings; 
         public static ICreatureFactory CreatureFactory => _creatureFactory; 
         public static IItemFactory ItemFactory => _itemFactory; 
-        public static TerrainFactory TerrainFactory => _terrainFactory; 
+        public static DefaultTerrainFactory TerrainFactory => _terrainFactory; 
         public static CrimeSceneInvestigationUi UIManager => _csi;
         public static MenuUi Menu => _menu;
         public static SceneMap Map => UIManager.Map;
@@ -24,14 +24,14 @@ namespace Engine
 
         protected static Settings _settings;
         protected static ICreatureFactory _creatureFactory;
-        protected static TerrainFactory _terrainFactory;
+        protected static DefaultTerrainFactory _terrainFactory;
         protected static IItemFactory _itemFactory;
         protected static CrimeSceneInvestigationUi _csi;
         protected static MenuUi _menu;
 
         public bool IsPaused { get => SadConsole.Global.CurrentScreen.IsPaused; set => SadConsole.Global.CurrentScreen.IsPaused = value; }
 
-        public Game(Settings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, TerrainFactory terrainFactory) 
+        public Game(Settings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, DefaultTerrainFactory terrainFactory) 
         {
             ApplySettings(settings);
             SetCreatureFactory(creatureFactory);
@@ -78,7 +78,7 @@ namespace Engine
             _itemFactory = itemFactory;
         }
 
-        protected void SetTerrainFactory(TerrainFactory terrainFactory)
+        protected void SetTerrainFactory(DefaultTerrainFactory terrainFactory)
         {
             _terrainFactory = terrainFactory;
         }

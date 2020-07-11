@@ -229,14 +229,40 @@ namespace Tests.Scenes.Areas
         [Test]
         public void RotateTest()
         {
+            /* (0,0 & 0,1)
+             * ###
+             * #  ##
+             * #    ## 
+             *  #     ##
+             *  #       ##
+             *   #        ##
+             *   #          ## (14, 6) 
+             *    #         #
+             *    #        #
+             *     #      #
+             *     #     #
+             *      #   #
+             *      #  #
+             *       ##
+             *       # (6, 14)
+             */ 
             float degrees = 45.0f;
             Rectangle rectangle = new Rectangle(new Coord(1, 1), new Coord(32, 48));
-            Area prior = AreaFactory.FromRectangle("prior", rectangle);
-            Area post = AreaFactory.FromRectangle("prior", rectangle).Rotate(degrees, true); // pi divided by 4
-            Assert.Less(post.Left, prior.Left);
-            Assert.Less(post.Top, prior.Top);
-            Assert.Greater(post.Bottom, prior.Bottom);
-            Assert.Greater(post.Right, prior.Right);
+            Area prior = new Area("bermuda triangle", new Coord(14, 6), new Coord(0, 1), new Coord(0, 0), new Coord(6, 14));
+            Area copyOfPrior = new Area("bermuda triangle", new Coord(14, 6), new Coord(0, 1), new Coord(0, 0), new Coord(6, 14));
+            Area post = prior.Rotate(degrees, false, new Coord(6,14));
+            Assert.AreEqual(prior.Bottom, post.Bottom);
+            Assert.AreEqual(prior.SouthWestCorner, post.SouthWestCorner);
+            Assert.Less(prior.Left, post.Left);
+            Assert.Less(prior.Right, post.Right);
+            Assert.Less(prior.SouthEastCorner.X, post.SouthEastCorner.X);
+            Assert.Less(prior.SouthEastCorner.Y, post.SouthEastCorner.Y);
+
+            //Assert.AreEqual(copyOfPrior, prior);
+
+            //prior.Rotate(degrees, true, new Coord(6, 14));
+
+            //Assert.AreEqual(prior, post);
         }
     }
 }

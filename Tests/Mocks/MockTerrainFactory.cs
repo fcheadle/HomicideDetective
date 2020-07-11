@@ -7,7 +7,7 @@ using SadConsole;
 
 namespace Engine.Entities.Terrain
 {
-    public class MockTerrainFactory : TerrainFactory
+    public class MockTerrainFactory : DefaultTerrainFactory
     {
         public BasicTerrain Generic(Coord position, int glyph)
         {

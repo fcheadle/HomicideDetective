@@ -14,7 +14,7 @@ namespace Tests.Utilities.Extensions
     class BasicMapExtensionTests : TestBase
     {
         BasicMap _map;
-        TerrainFactory _factory = new TerrainFactory();
+        DefaultTerrainFactory _factory = new DefaultTerrainFactory();
 
         [SetUp]
         public void Setup()

@@ -11,7 +11,7 @@ namespace Tests.Mocks
 {
     public class MockMap : SceneMap
     {
-        TerrainFactory _factory = new TerrainFactory();
+        DefaultTerrainFactory _factory = new DefaultTerrainFactory();
         public FOVVisibilityHandler FovVisibilityHandler { get; }
         internal MockMap() : base(100,100)//base(100, 100, Calculate.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {

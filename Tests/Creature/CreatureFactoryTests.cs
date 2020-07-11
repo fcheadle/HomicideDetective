@@ -12,7 +12,7 @@ namespace Tests.Creature
     {
         static BasicEntity critter { get; set; }
         static string expectedName { get; } = "elder thing";
-        CreatureFactory _factory = new CreatureFactory();
+        DefaultCreatureFactory _factory = new DefaultCreatureFactory();
 
         [Test]
         public void PersonTest()

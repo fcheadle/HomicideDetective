@@ -15,12 +15,12 @@ namespace Engine
             Settings settings = null,
             ICreatureFactory creatureFactory = null, 
             IItemFactory itemFactory = null, 
-            TerrainFactory terrainFactory = null
+            DefaultTerrainFactory terrainFactory = null
             )
         {
             settings = settings ?? new Settings();
-            creatureFactory = creatureFactory ?? new CreatureFactory();
-            terrainFactory = terrainFactory ?? new TerrainFactory();
+            creatureFactory = creatureFactory ?? new DefaultCreatureFactory();
+            terrainFactory = terrainFactory ?? new DefaultTerrainFactory();
             itemFactory = itemFactory ?? new DefaultItemFactory();
             CurrentGame = new Game(settings, creatureFactory, itemFactory, terrainFactory);
             CurrentGame.Start();

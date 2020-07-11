@@ -39,7 +39,7 @@ namespace Engine.Scenes.Components
         {
             _elapsed += TimeSpan.FromMilliseconds(100);
             BlowWind();
-            Game.UIManager.IsDirty = true;
+            Game.UIManager.Display.IsDirty = true;
         }
 
         private void BlowWind()

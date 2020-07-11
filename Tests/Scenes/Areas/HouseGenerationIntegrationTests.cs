@@ -13,7 +13,7 @@ namespace Tests.Scenes.Areas
 {
     class HouseGenerationIntegrationTests
     {
-        TerrainFactory _factory = new TerrainFactory();
+        DefaultTerrainFactory _factory = new DefaultTerrainFactory();
 
         
     }

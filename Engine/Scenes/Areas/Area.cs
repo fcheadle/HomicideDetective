@@ -33,7 +33,7 @@ namespace Engine.Scenes.Areas
         public int Width { get => Right - Left; }
         public int Height { get => Bottom - Top; }
         public List<Coord> Points { get => OuterPoints.Concat(InnerPoints).ToList(); }
-
+        public Coord Center => new Coord((Left + Right) / 2, (Top + Bottom) / 2);
         public int LeftAt(int y) => OuterPoints.LeftAt(y);
         public int RightAt(int y) => OuterPoints.RightAt(y);
         public int TopAt(int x) => OuterPoints.TopAt(x);
@@ -103,7 +103,6 @@ namespace Engine.Scenes.Areas
 
         public static IEnumerable<Coord> InnerFromOuterPoints(List<Coord> outer)
         {
-            List<Coord> inner = new List<Coord>();
             outer = outer.OrderBy(x => x.X).ToList();
             for (int i = outer.First().X; i <= outer.Last().X; i++)
             {
@@ -198,57 +197,134 @@ namespace Engine.Scenes.Areas
         public virtual Area Rotate(float degrees, bool doToSelf, Coord origin = default)
         {
             Coord center;
+            Area area;
+            int quarterTurns = 0;
+            double radians = Calculate.DegreesToRadians(degrees);
+            
+            List<Coord> corners = new List<Coord>();
             if (origin == default(Coord))
                 center = new Coord((Left + Right) / 2, (Top + Bottom) / 2);
             else
                 center = origin;
 
-            double radians = Calculate.DegreesToRadians(degrees);
-            List<Coord> coords = new List<Coord>();
+            while (degrees < 0)
+                degrees += 360;
 
+            while (degrees > 360)
+                degrees -= 360;
+
+            //while (degrees > 90)
+            //{
+            //    area = QuarterRotation(doToSelf, origin);
+            //    quarterTurns++;
+            //    degrees -= 90;
+            //}
             Coord sw = SouthWestCorner - center;
             int x = (int)(sw.X * Math.Cos(radians) - sw.Y * Math.Sin(radians));
             int y = (int)(sw.X * Math.Sin(radians) + sw.Y * Math.Cos(radians));
-            coords.Add(new Coord(x, y) + center);
+            corners.Add(new Coord(x, y) + center);
 
             Coord se = SouthEastCorner - center;
             x = (int)(se.X * Math.Cos(radians) - se.Y * Math.Sin(radians));
             y = (int)(se.X * Math.Sin(radians) + se.Y * Math.Cos(radians));
-            coords.Add(new Coord(x, y) + center);
+            corners.Add(new Coord(x, y) + center);
 
             Coord nw = NorthWestCorner - center;
             x = (int)(nw.X * Math.Cos(radians) - nw.Y * Math.Sin(radians));
             y = (int)(nw.X * Math.Sin(radians) + nw.Y * Math.Cos(radians));
-            coords.Add(new Coord(x, y) + center);
+            corners.Add(new Coord(x, y) + center);
 
             Coord ne = NorthEastCorner - center;
             x = (int)(ne.X * Math.Cos(radians) - ne.Y * Math.Sin(radians));
             y = (int)(ne.X * Math.Sin(radians) + ne.Y * Math.Cos(radians));
-            coords.Add(new Coord(x, y) + center);
+            corners.Add(new Coord(x, y) + center);
 
-            sw = coords.OrderBy(c => -c.Y).ThenBy(c => c.X).First();
-            coords.Remove(sw);
+            sw = corners.OrderBy(c => -c.Y).ThenBy(c => c.X).First();
+            corners.Remove(sw);
 
-            se = coords.OrderBy(c => -c.Y).First();
-            coords.Remove(se);
+            se = corners.OrderBy(c => -c.Y).First();
+            corners.Remove(se);
 
-            nw = coords.OrderBy(c => c.X).First();
-            coords.Remove(nw);
+            nw = corners.OrderBy(c => c.X).First();
+            corners.Remove(nw);
 
-            ne = coords.OrderBy(c => -c.X).First();
+            ne = corners.OrderBy(c => -c.X).First();
+
+            List<int> nconnections = new List<int>();
+            List<int> wconnections = new List<int>();
+            List<int> econnections = new List<int>();
+            List<int> sconnections = new List<int>();
+
+            List<Coord> boundary = NorthBoundary.OrderBy(x => x.X).ToList(); //from left to right
+            for (int i = 0; i < boundary.Count; i++)
+                if (Connections.Contains(boundary[i]))
+                    nconnections.Add(i);
+
+            boundary = SouthBoundary.OrderBy(x => -x.X).ToList(); //from right to left
+            for (int i = 0; i < boundary.Count; i++)
+                if (Connections.Contains(boundary[i]))
+                    sconnections.Add(i);
+
+            boundary = EastBoundary.OrderBy(x => x.Y).ToList(); //from top to bottom
+            for (int i = 0; i < boundary.Count; i++)
+                if (Connections.Contains(boundary[i]))
+                    econnections.Add(i);
+
+            boundary = WestBoundary.OrderBy(x => -x.Y).ToList(); //from bottom to top
+            for (int i = 0; i < boundary.Count; i++)
+                if (Connections.Contains(boundary[i]))
+                    wconnections.Add(i);
 
             if (doToSelf)
             {
                 Generate(se, ne, nw, sw);
 
-                foreach (Area area in SubAreas.Values)
+                foreach (Area subArea in SubAreas.Values)
                 {
-                    area.Rotate(degrees, true, center);
+                    subArea.Rotate(degrees, true, center);
                 }
                 return this;
             }
             else
                 return new Area(Name, se, ne, nw, sw);
+        }
+
+        private Area QuarterRotation(bool doToSelf, Coord origin)
+        {
+            //transpose 
+            //reverse horizontal
+
+            int radius = Math.Abs(origin.X - Right);
+
+            int nextDiff = Math.Abs(origin.X - Left);
+            radius = radius < nextDiff ? nextDiff : radius;
+
+            nextDiff = Math.Abs(origin.Y - Bottom);
+            radius = radius < nextDiff ? nextDiff : radius;
+
+            nextDiff = Math.Abs(origin.Y - Top);
+            radius = radius < nextDiff ? nextDiff : radius;
+
+            Coord nw = SouthWestCorner - Center; 
+            nw = new Coord(radius - nw.Y, nw.X) + Center;
+
+            Coord ne = NorthWestCorner;
+            ne = new Coord(radius - ne.Y, ne.X) + Center;
+
+            Coord se = NorthEastCorner;
+            se = new Coord(radius - se.Y, se.X) + Center;
+
+            Coord sw = SouthEastCorner;
+            sw = new Coord(radius - sw.Y, sw.X) + Center;
+
+            if (doToSelf)
+            {
+                Generate(se, ne, nw, sw);
+                return this;
+            }
+            else
+                return new Area(Name, se, ne, nw, sw);
+
         }
         #endregion
     }
