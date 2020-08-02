@@ -60,13 +60,13 @@ namespace Tests.UI.Components
             _component = (MenuKeyboardComponent)MockGame.Menu.Player.GetComponent<MenuKeyboardComponent>();
         }
 
-        [Test]
+        //[Test]
         public void NewMenuKeyBoardComponentTests()
         {
             Assert.NotNull(_component);
         }
 
-        [Test]
+        //[Test]
         public void MovesTest()
         {
             var cursor = MockGame.Menu.Player;
