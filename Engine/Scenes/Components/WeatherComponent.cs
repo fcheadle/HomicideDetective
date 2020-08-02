@@ -10,7 +10,8 @@ namespace Engine.Scenes.Components
     public class WeatherComponent : Component
     {
         //add this to the game's map, not individual tiles... although, it isn't working for some reason.
-        public SceneMap Area => Game.Map;
+        private SceneMap _map => Game.Map;
+
         private int _width;
         private int _height;
         Func<int, int, TimeSpan, double> Fxyt;// F of x, y, and t
@@ -38,15 +39,16 @@ namespace Engine.Scenes.Components
         {
             _elapsed += TimeSpan.FromMilliseconds(100);
             BlowWind();
+            Game.UIManager.Display.IsDirty = true;
         }
 
         private void BlowWind()
         {
-            for (int x = 0; x < Area.Width; x++)
+            for (int x = 0; x < _map.Width; x++)
             {
-                for (int y = 0; y < Area.Height; y++)
+                for (int y = 0; y < _map.Height; y++)
                 {
-                    BasicTerrain terrain = Area.GetTerrain<BasicTerrain>(new Coord(x, y));
+                    BasicTerrain terrain = _map.GetTerrain<BasicTerrain>(new Coord(x, y));
                     if (terrain != null)
                     {
                         if (terrain.HasComponent<AnimateGlyphComponent>())
@@ -62,7 +64,7 @@ namespace Engine.Scenes.Components
                     }
                 }
             }
-
+            
         }
     }
 }

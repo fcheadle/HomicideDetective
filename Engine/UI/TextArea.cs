@@ -98,7 +98,7 @@ namespace Engine.UI
 
                 if (info.IsKeyPressed(Keys.Escape) || info.IsKeyPressed(Keys.Tab))
                 {
-                    Game.UIManager.ControlledGameObject.IsFocused = true;
+                    Game.UIManager.Player.IsFocused = true;
                     return true;
                 }
 

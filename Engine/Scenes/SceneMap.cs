@@ -1,4 +1,5 @@
 ﻿using Engine.Scenes.Areas;
+using Engine.Scenes.Terrain;
 using Engine.Utilities;
 using Engine.Utilities.Extensions;
 using Engine.Utilities.Mathematics;
@@ -15,7 +16,7 @@ namespace Engine.Scenes
     {
         private int _width;
         private int _height;
-
+        private float _rotationDegrees;
         public List<Area> Regions
         {
             get => new List<Area>()
@@ -23,7 +24,7 @@ namespace Engine.Scenes
                 .Concat(Blocks)
                 .Concat(Houses)
                 .Concat(Intersections.Values)
-                .Concat(Rooms)
+                //.Concat(Rooms)
                 .ToList()
                 ;
         }
@@ -33,47 +34,53 @@ namespace Engine.Scenes
         internal Dictionary<RoadNames, Road> VerticalRoads { get; private set; } = new Dictionary<RoadNames, Road>();
         internal List<Block> Blocks { get; private set; } = new List<Block>();
         internal List<House> Houses { get; private set; } = new List<House>();
-        internal List<Area> Rooms { get; private set; } = new List<Area>();
+
+        public void RefreshRegion(Area area)
+        {
+            Area region = Regions.Where(x => x.Name == area.Name).First();
+            Regions.Remove(region);
+            Regions.Add(area);
+            
+        }
+
         public FOVVisibilityHandler FovVisibilityHandler { get; }
-        public SceneMap(int width, int height) : base(width, height, EnumUtils.EnumLength<MapLayer>(), Distance.MANHATTAN)
+        public SceneMap(int width, int height) : base(width, height, EnumUtils.EnumLength<MapLayer>(), Game.Settings.DistanceType)
         {
             _width = width;
             _height = height;
             FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
 
             MakeOutdoors();
-            //MakeBackrooms();
+            //MakeBackrooms();//very, very, very slow
             MakeRoadsAndBlocks();
             MakeHouses();
-            MakePeople();
+            //MakePeople();
         }
-        private void MakeBackrooms()
+        public void MakeBackrooms()
         {
             House backrooms = new House("Backrooms", new Coord(0, 0), HouseType.Backrooms, Direction.Types.DOWN);
             backrooms.Generate();
             Houses.Add(backrooms);
-            this.ForXForY(
-                (point) =>
-                {
-                    try
-                    {
-                        BasicTerrain t = backrooms.Map.GetTerrain<BasicTerrain>(point);
-                        if (t != null)
-                            SetTerrain(Game.TerrainFactory.Copy(t, point));
-                    }
-                    catch
-                    {
-                        //don't care
-                    }
+            foreach (Coord floor in backrooms.Floor)
+                if (this.Contains(floor))
+                    SetTerrain(Game.TerrainFactory.Wall(floor));
+            
+            foreach (Coord wall in backrooms.Walls)
+                if (this.Contains(wall))
+                    SetTerrain(Game.TerrainFactory.Wall(wall));
 
-                }
-            );
+            foreach (Coord door in backrooms.Doors)
+                if (this.Contains(door))
+                    SetTerrain(Game.TerrainFactory.Wall(door));
+
+            
         }
         private void MakeRoadsAndBlocks()
         {
             RoadNames roadName = (RoadNames)Calculate.PercentValue();
             RoadNumbers roadNum = 0;
             int offset = (Calculate.PercentValue() - 50) * 2;
+
             Road road;
             for (int i = 16; i < _width - 48; i += 96)
             {
@@ -88,6 +95,9 @@ namespace Engine.Scenes
                     roadName++;
                 }
             }
+
+            //_rotationDegrees = Math.Atan; //guess?
+
             foreach (Road hRoad in HorizontalRoads.Values)
             {
                 foreach (Road vRoad in VerticalRoads.Values)
@@ -113,25 +123,22 @@ namespace Engine.Scenes
                     Blocks.Add(new Block(nw, sw, se, ne));
                 }
             }
+
             foreach (Road r in Roads)
-            {
                 foreach (Coord c in r.InnerPoints)
                     if (this.Contains(c))
                         SetTerrain(Game.TerrainFactory.Floor(c));
-                //SetTerrain(_terrainFactory.Pavement(c));
-            }
+             
 
             foreach (Block block in Blocks)
-            {
                 foreach (Coord c in block.GetFenceLocations())
                     if (this.Contains(c))
-                        SetTerrain(Game.TerrainFactory.Generic(c, 44));
-                //SetTerrain(_terrainFactory.Fence(c));
-            }
+                        SetTerrain(Game.TerrainFactory.Fence(c));
+            
         }
         private void MakeHouses()
         {
-            int houseDistance = 20;
+            _rotationDegrees = Calculate.RandomInt(46, 90);
             House house;
             foreach (Block block in Blocks)
             {
@@ -141,27 +148,47 @@ namespace Engine.Scenes
                     string address = block.Name[0] + block.Name[1] + i.ToString() + block.Name.Substring(9);
                     house = new House(address, houseOrigin, HouseType.PrairieHome, Direction.Types.DOWN);
                     house.Generate();
+                    house.Rotate(_rotationDegrees, true);
                     Houses.Add(house);
                     i++;
-
-                    foreach (Area room in house.SubAreas.Values)
-                    {
-                        Rooms.Add(room);
-                    }
-
-                    for (int j = 0; j < houseDistance; j++)
-                    {
-                        for (int k = 0; k < houseDistance; k++)
-                        {
-                            Coord c = new Coord(j, k);
-                            if (house.Map.GetTerrain(c) != null && this.Contains(house.Origin + c))
-                            {
-                                SetTerrain(Game.TerrainFactory.Copy(house.Map.GetTerrain<BasicTerrain>(c), house.Origin + c));
-                            }
-                        }
-                    }
                 }
             }
+
+            foreach (House gennedHouse in Houses)
+            {
+                DefaultTerrainFactory factory = Game.TerrainFactory;
+                BasicTerrain floor;
+                int chance = Calculate.PercentValue();
+
+                foreach (Coord target in gennedHouse.Floor)
+                {
+                    switch (chance % 8)
+                    {
+                        default:
+                        case 0: floor = factory.OliveCarpet(target); break;
+                        case 1: floor = factory.LightCarpet(target); break;
+                        case 2: floor = factory.ShagCarpet(target); break;
+                        case 3: floor = factory.BathroomLinoleum(target); break;
+                        case 4: floor = factory.KitchenLinoleum(target); break;
+                        case 5: floor = factory.DarkHardwoodFloor(target); break;
+                        case 6: floor = factory.MediumHardwoodFloor(target); break;
+                        case 7: floor = factory.LightHardwoodFloor(target); break;
+                    }
+
+                    if (this.Contains(target) && GetTerrain<BasicTerrain>(target).IsWalkable)
+                        SetTerrain(floor);
+                }
+
+                foreach (Coord target in gennedHouse.Walls)
+                    if (this.Contains(target))
+                        SetTerrain(factory.Wall(target));
+
+                foreach (Coord target in gennedHouse.Doors)
+                    if (this.Contains(target))
+                        SetTerrain(factory.Door(target));
+            }
+
+
         }
         private void MakePeople()
         {

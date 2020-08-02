@@ -48,12 +48,21 @@ namespace Engine.Components
                 _limitedMarkingsLeft.Remove(leaving);
             return leaving;
         }
+
+        public void Interact(Marking marking)
+        {
+            _markingsOn.Add(marking);
+        }
         public void AddLimitedMarkings(Marking marking, int amount)
         {
             for (int i = 0; i < amount; i++)
             {
                 _limitedMarkingsLeft.Add(marking);
             }
+        }
+        public void AddUnlimitedMarkings(Marking marking)
+        {
+            _unlimitedMarkingsLeft.Add(marking);
         }
 
         public void Mark(Marking marking)

@@ -1,7 +1,9 @@
 ﻿using Engine.Scenes;
 using Engine.Scenes.Areas;
+using Engine.Utilities.Extensions;
 using GoRogue;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Tests.Scenes.Areas
@@ -9,7 +11,6 @@ namespace Tests.Scenes.Areas
     [TestFixture]
     public class HouseTests
     {
-        [Datapoints]
 
         [Test]
         public void NewHouseTest()
@@ -52,6 +53,49 @@ namespace Tests.Scenes.Areas
             Assert.AreEqual(room.Width, parlor.Width);
             Assert.AreEqual(room.Height, parlor.Height);
             //add another room
+        }
+
+        [Test]
+        public void GenerateTest()
+        {
+            MockGame game = new MockGame((time) => { });
+            House house = new House("paddys pub", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
+            house.Generate();
+            int nonWalkableCount = house.Walls.Count();
+            int doorCount = house.Doors.Count();
+
+            Assert.Greater(house.SubAreas.Count(), 5);
+            Assert.Greater(nonWalkableCount, 25); //i mean, statistically....
+            Assert.Greater(doorCount, 6); //i mean, statistically....
+            Assert.NotNull(house[RoomType.Parlor]);
+            Assert.NotNull(house[RoomType.GuestBathroom]);
+            Assert.NotNull(house[RoomType.MasterBedroom]);
+            Assert.NotNull(house[RoomType.DiningRoom]);
+            Assert.NotNull(house[RoomType.Kitchen]);
+        }
+
+        [Test]
+        public void RecursiveBisectedRectanglesCanConnect()
+        {
+            //we need to know for sure that the rectangles returned from this are going to produce connectable rooms
+            MockGame game = new MockGame((time) => { });
+            House house = new House("Testatorium", new Coord(0, 0), HouseType.PrairieHome, Direction.Types.DOWN);
+            List<Rectangle> rooms = new Rectangle(0, 0, 24, 24).RecursiveBisect(5).ToList();
+
+
+            int index = 0;
+            foreach (Rectangle room in rooms)
+            {
+                house.CreateRoom((RoomType)index, room);
+                index++;
+            }
+
+            foreach (Area area in house.SubAreas.Values)
+            {
+                house.ConnectRoomToNeighbors(area);
+            }
+            Assert.AreEqual(rooms.Count(), house.SubAreas.Count());
+            Assert.Less(rooms.Count() * 2, house.Doors.Count(), "RecursiveBisect() is not returning rectangles which can be used for house generation.");
         }
     }
 }

@@ -8,11 +8,16 @@ using Settings = Engine.Settings;
 
 namespace Tests
 {
-    class MockGame : Game
+    public class MockGame : Game
     {
         public MockGame(Action<GameTime> update) : base()
         {
             ApplySettings(new Settings());
+            Settings.GameWidth = 64;
+            Settings.GameHeight = 64;
+            Settings.MapWidth = 128;
+            Settings.MapHeight = 128;
+
             SetCreatureFactory(new MockCreatureFactory());
             SetTerrainFactory(new MockTerrainFactory());
             SetItemFactory(new DefaultItemFactory());
@@ -27,9 +32,9 @@ namespace Tests
 
         public void InitializeTests()
         {
+            base.Init();
             SadConsole.Global.Fonts.Remove("IBM_16x8");
             SadConsole.Global.Fonts.Remove("IBM_16x8_ext");
-            base.Init();
             UIManager.Components.Add(new WeatherComponent());
             Player.Components.Add(new MockComponent());
         }

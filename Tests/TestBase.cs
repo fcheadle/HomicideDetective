@@ -6,6 +6,7 @@ using GameTime = Microsoft.Xna.Framework.GameTime;
 namespace Tests
 {
     [TestFixture]
+    [Category("RequiresGraphicsDevice")]
     abstract class TestBase
     {
         public bool Finished { get; set; } = false;

@@ -2,6 +2,7 @@
 using Engine.Creatures;
 using Engine.Items;
 using Engine.Scenes;
+using Engine.Scenes.Components;
 using Engine.Scenes.Terrain;
 using Engine.UI;
 using Microsoft.Xna.Framework;
@@ -15,22 +16,22 @@ namespace Engine
         public static Settings Settings => _settings; 
         public static ICreatureFactory CreatureFactory => _creatureFactory; 
         public static IItemFactory ItemFactory => _itemFactory; 
-        public static ITerrainFactory TerrainFactory => _terrainFactory; 
+        public static DefaultTerrainFactory TerrainFactory => _terrainFactory; 
         public static CrimeSceneInvestigationUi UIManager => _csi;
         public static MenuUi Menu => _menu;
         public static SceneMap Map => UIManager.Map;
-        public BasicEntity Player => UIManager.ControlledGameObject;
+        public BasicEntity Player => UIManager.Player;
 
-        private static Settings _settings;
-        private static ICreatureFactory _creatureFactory;
-        private static ITerrainFactory _terrainFactory;
-        private static IItemFactory _itemFactory;
-        private static CrimeSceneInvestigationUi _csi;
-        private static MenuUi _menu;
+        protected static Settings _settings;
+        protected static ICreatureFactory _creatureFactory;
+        protected static DefaultTerrainFactory _terrainFactory;
+        protected static IItemFactory _itemFactory;
+        protected static CrimeSceneInvestigationUi _csi;
+        protected static MenuUi _menu;
 
         public bool IsPaused { get => SadConsole.Global.CurrentScreen.IsPaused; set => SadConsole.Global.CurrentScreen.IsPaused = value; }
 
-        public Game(Settings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, ITerrainFactory terrainFactory) 
+        public Game(Settings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, DefaultTerrainFactory terrainFactory) 
         {
             ApplySettings(settings);
             SetCreatureFactory(creatureFactory);
@@ -61,14 +62,14 @@ namespace Engine
                 Global.CurrentScreen = _menu;
                 _csi.Hide();
                 _menu.Show();
-                _menu.ControlledGameObject.IsFocused = true;
+                _menu.Player.IsFocused = true;
             }
             else
             {
                 Global.CurrentScreen = _csi;
                 _menu.Hide();
                 _csi.Show();
-                _csi.ControlledGameObject.IsFocused = true;
+                _csi.Player.IsFocused = true;
             }
         }
 
@@ -77,7 +78,7 @@ namespace Engine
             _itemFactory = itemFactory;
         }
 
-        protected void SetTerrainFactory(ITerrainFactory terrainFactory)
+        protected void SetTerrainFactory(DefaultTerrainFactory terrainFactory)
         {
             _terrainFactory = terrainFactory;
         }
@@ -91,6 +92,7 @@ namespace Engine
         public virtual void Init()
         {
             _csi = new CrimeSceneInvestigationUi();
+            _csi.Components.Add(new WeatherComponent());
             _menu = new MenuUi();
             Global.CurrentScreen = UIManager;
         }

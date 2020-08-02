@@ -11,7 +11,6 @@ namespace Tests.Utilities.Extensions
     [TestFixture]
     public class ListOfCoordExtensionsTests
     {
-        Func<int, int> f = (x) => (int)(4 * Math.Sin(x) + x * 0.85);
         List<Coord> _hardCodedRange = new List<Coord>();
 
         private readonly Coord sw = new Coord(3, 4);

@@ -178,7 +178,7 @@ namespace Engine.Components.UI
             if (Window.IsVisible)
             {
                 Window.Hide();
-                Game.UIManager.ControlledGameObject.IsFocused = true;
+                Game.UIManager.Player.IsFocused = true;
             }
             else
             {

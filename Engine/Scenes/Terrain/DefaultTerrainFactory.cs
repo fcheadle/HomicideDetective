@@ -7,29 +7,22 @@ using SadConsole;
 
 namespace Engine.Scenes.Terrain
 {
-    public class TerrainFactory : ITerrainFactory
+    public class DefaultTerrainFactory : ITerrainFactory
     {
         public BasicTerrain Generic(Coord position, int glyph)
         {
             Color fore;
             Color back;
             double z = Game.Settings.Random.NextDouble() * glyph;
-            if (position.Y % 2 == 0)
-            {
-                fore = Color.Cyan.MutateToIndex(-z);
-            }
-            else
+            if (position.Y + position.X % 2 == 0)
             {
                 fore = Color.White.MutateToIndex(-z);
             }
-            if (position.X % 2 == 0)
-            {
-                back = Color.Magenta.MutateToIndex(z);
-            }
             else
             {
-                back = Color.DarkMagenta.MutateToIndex(z);
+                fore = Color.LightGray.MutateToIndex(-z);
             }
+            back = Color.Black;
             return new BasicTerrain(fore, back, glyph, position, true, true);
         }
         public BasicTerrain Copy(BasicTerrain source, Coord target) => new BasicTerrain(source.Foreground, source.Background, source.Glyph, target, source.IsWalkable, source.IsTransparent);

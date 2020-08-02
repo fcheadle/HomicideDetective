@@ -8,12 +8,12 @@ using System.Text;
 
 namespace Engine.UI
 {
-    public class HelpConsole : ControlsConsole
+    public class HelpPanel : MenuPanel
     {
         public TextBox SearchField { get; private set; }
         public DrawingSurface LibraryDisplayer { get; private set; }
         public Dictionary<Enum, string> Documentation { get; private set; }
-        public HelpConsole() : base(Game.Settings.GameWidth, Game.Settings.GameHeight)
+        public HelpPanel() : base(Game.Settings.GameWidth, Game.Settings.GameHeight)
         {
             SearchField = new TextBox(Width / 2);
             LibraryDisplayer = new DrawingSurface(Width, Height - 4);

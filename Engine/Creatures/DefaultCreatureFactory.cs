@@ -8,7 +8,7 @@ using SadConsole;
 
 namespace Engine.Creatures
 {
-    public class CreatureFactory : ICreatureFactory
+    public class DefaultCreatureFactory : ICreatureFactory
     {
         public BasicEntity Person(Coord position)
         {

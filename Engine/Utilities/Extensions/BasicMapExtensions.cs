@@ -12,7 +12,7 @@ namespace Engine.Utilities.Extensions
 {
     public static class BasicMapExtensions
     {
-        static TerrainFactory _factory = new TerrainFactory();
+        static DefaultTerrainFactory _factory = new DefaultTerrainFactory();
         public static BasicMap Subsection(this BasicMap m, Coord start, Coord stop)
         {
             int xDiff = stop.X - start.X;

@@ -10,7 +10,7 @@ namespace Tests.Scenes.Components
 {
     class AnimateGlyphComponentTest : TestBase
     {
-        TerrainFactory factory = new TerrainFactory();
+        DefaultTerrainFactory factory = new DefaultTerrainFactory();
         AnimateGlyphComponent _base;
         string[] _answer;
 

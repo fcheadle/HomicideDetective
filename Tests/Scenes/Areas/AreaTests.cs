@@ -226,5 +226,43 @@ namespace Tests.Scenes.Areas
             Assert.AreEqual(0, a.InnerPoints.Count());
             Assert.AreEqual(b.OuterPoints.Count(), bCountBefore, "Connecting points were unexpectedly removed from Area b");
         }
+        [Test]
+        public void RotateTest()
+        {
+            /* (0,0 & 0,1)
+             * ###
+             * #  ##
+             * #    ## 
+             *  #     ##
+             *  #       ##
+             *   #        ##
+             *   #          ## (14, 6) 
+             *    #         #
+             *    #        #
+             *     #      #
+             *     #     #
+             *      #   #
+             *      #  #
+             *       ##
+             *       # (6, 14)
+             */ 
+            float degrees = 45.0f;
+            Rectangle rectangle = new Rectangle(new Coord(1, 1), new Coord(32, 48));
+            Area prior = new Area("bermuda triangle", new Coord(14, 6), new Coord(0, 1), new Coord(0, 0), new Coord(6, 14));
+            Area copyOfPrior = new Area("bermuda triangle", new Coord(14, 6), new Coord(0, 1), new Coord(0, 0), new Coord(6, 14));
+            Area post = prior.Rotate(degrees, false, new Coord(6,14));
+            Assert.AreEqual(prior.Bottom, post.Bottom);
+            Assert.AreEqual(prior.SouthWestCorner, post.SouthWestCorner);
+            Assert.Less(prior.Left, post.Left);
+            Assert.Less(prior.Right, post.Right);
+            Assert.Less(prior.SouthEastCorner.X, post.SouthEastCorner.X);
+            Assert.Less(prior.SouthEastCorner.Y, post.SouthEastCorner.Y);
+
+            //Assert.AreEqual(copyOfPrior, prior);
+
+            //prior.Rotate(degrees, true, new Coord(6, 14));
+
+            //Assert.AreEqual(prior, post);
+        }
     }
 }

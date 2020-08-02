@@ -7,7 +7,7 @@ namespace Tests.Scenes.Components
 {
     class TerrainFactoryTests : TestBase
     {
-        TerrainFactory factory = new TerrainFactory();
+        DefaultTerrainFactory factory = new DefaultTerrainFactory();
         BasicTerrain _terrain;
         [SetUp]
         public void SetUp()

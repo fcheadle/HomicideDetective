@@ -12,7 +12,7 @@ namespace Tests.Creature.Components
     {
         EmotionsComponent _component;
         string[] _answer;
-        CreatureFactory _factory = new CreatureFactory();
+        DefaultCreatureFactory _factory = new DefaultCreatureFactory();
         [SetUp]
         public void SetUp()
         {
