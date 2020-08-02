@@ -44,7 +44,7 @@ namespace Engine.Scenes
         }
 
         public FOVVisibilityHandler FovVisibilityHandler { get; }
-        public SceneMap(int width, int height) : base(width, height, EnumUtils.EnumLength<MapLayer>(), Distance.MANHATTAN)
+        public SceneMap(int width, int height) : base(width, height, EnumUtils.EnumLength<MapLayer>(), Game.Settings.DistanceType)
         {
             _width = width;
             _height = height;

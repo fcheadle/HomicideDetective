@@ -73,7 +73,7 @@ namespace Tests.UI
         public void SettingsOptionsTest()
         {
             Assert.IsNotNull(ui.SettingsOptions);
-            Assert.AreEqual(13, ui.SettingsOptions.Controls.Count);
+            Assert.AreEqual(14, ui.SettingsOptions.Controls.Count);
         }
         [Test]
         public void NewGameOptionsTest()

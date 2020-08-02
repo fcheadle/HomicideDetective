@@ -18,7 +18,8 @@ namespace Engine
         public bool ShowingMenu { get; set; } = false;
         public Random Random { get; set; } = new Random();
         public Radius FovRadius { get; set; } = Radius.CIRCLE;
-        public double FovDistance { get; set; } = 15.00;
+        public Distance DistanceType { get; set; }  = Distance.MANHATTAN;
+        public double FovDistance { get; set; } = 20.00;
         //public FontMaster FontMaster { get; set; } = Global.;
         public Font Font { get; set; } = Global.FontDefault;
         public Dictionary<Keys, Direction> MovementKeyBindings { get; } = new Dictionary<Keys, Direction>
