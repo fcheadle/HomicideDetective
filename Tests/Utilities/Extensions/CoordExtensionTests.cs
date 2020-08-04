@@ -8,6 +8,7 @@ namespace Tests.Utilities
     class CoordExtensionTests
     {
         [Test]
+        [Category("NonGraphical")]
         public void NeighborsTest()
         {
             Coord c = new Coord(0, 0);

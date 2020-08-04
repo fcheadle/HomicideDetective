@@ -11,6 +11,7 @@ namespace Tests.Utilities
     {
 
         [Test]
+        [Category("NonGraphical")]
         public void EnumValueFromIndexTest()
         {
             BloodType first = (BloodType)0;
@@ -22,12 +23,14 @@ namespace Tests.Utilities
             Assert.AreEqual(first, last);
         }
         [Test]
+        [Category("NonGraphical")]
         public void EnumLengthTest()
         {
             int answer = EnumUtils.EnumLength<BloodType>();
             Assert.AreEqual(4, answer);
         }
         [Test]
+        [Category("NonGraphical")]
         public void RandomEnumValueTest()
         {
             BloodType type = EnumUtils.RandomEnumValue<BloodType>();

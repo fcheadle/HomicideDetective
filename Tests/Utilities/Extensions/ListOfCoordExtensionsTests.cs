@@ -27,6 +27,7 @@ namespace Tests.Utilities.Extensions
             _hardCodedRange.AddRange(Calculate.PointsAlongStraightLine(sw, nw));
         }
         [Test]
+        [Category("NonGraphical")]
         public void LeftAtTest()
         {
             Assert.AreEqual(nw.X, _hardCodedRange.LeftAt(nw.Y));
@@ -34,18 +35,21 @@ namespace Tests.Utilities.Extensions
             Assert.AreEqual(3, _hardCodedRange.LeftAt(4));
         }
         [Test]
+        [Category("NonGraphical")]
         public void RightAtTest()
         {
             Assert.AreEqual(ne.X, _hardCodedRange.RightAt(ne.Y));
             Assert.AreEqual(se.X, _hardCodedRange.RightAt(se.Y));
         }
         [Test]
+        [Category("NonGraphical")]
         public void TopAtTest()
         {
             Assert.AreEqual(ne.Y, _hardCodedRange.TopAt(ne.X));
             Assert.AreEqual(nw.Y, _hardCodedRange.TopAt(nw.X));
         }
         [Test]
+        [Category("NonGraphical")]
         public void BottomAtTest()
         {
             Assert.AreEqual(se.Y, _hardCodedRange.BottomAt(se.X));

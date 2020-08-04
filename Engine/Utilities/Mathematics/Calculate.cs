@@ -9,7 +9,8 @@ namespace Engine.Utilities.Mathematics
     public static class Calculate
     {
         #region map generation
-        private static Random _random => Game.Settings.Random;
+
+        private static Random _random { get; } = new Random();
         private const float _piOverOneEighty = (float)(Math.PI / 180);
         private const float _oneEightyOverPi = (float)(180 / Math.PI);
         public static float RadiansToDegrees(float theta) => theta * _oneEightyOverPi;

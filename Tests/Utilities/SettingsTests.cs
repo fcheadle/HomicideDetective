@@ -11,6 +11,7 @@ namespace Tests.Utilities
         int size = 360;
         Settings _settings = new Settings();
         [Test]
+        [Category("NonGraphical")]
         public void GetSettingsTest()
         {
 

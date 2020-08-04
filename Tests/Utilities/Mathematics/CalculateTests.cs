@@ -11,6 +11,7 @@ namespace Tests.Utilities
     public class CalculateTests
     {
         [Test]
+        [Category("NonGraphical")]
         public void PointsAlongStraightLineTest()
         {
             Coord start = new Coord(1, 1);
@@ -26,6 +27,7 @@ namespace Tests.Utilities
             Assert.Contains(new Coord(9, 4), line);
         }
         [Test]
+        [Category("NonGraphical")]
         public void BorderLocationsTest()
         {
             /*
@@ -63,6 +65,7 @@ namespace Tests.Utilities
             Assert.AreEqual(12, answer.Count);
         }
         [Test]
+        [Category("NonGraphical")]
         public void PolarToCartesianTest()
         {
             PolarCoord origin = new PolarCoord(3.7416573867739413d, 0.64209261593433065d);
@@ -70,6 +73,7 @@ namespace Tests.Utilities
             Assert.AreEqual(new Coord(3, 2), target);
         }
         [Test]
+        [Category("NonGraphical")]
         public void CartesianToPolarTest()
         {
             Coord origin = new Coord(5, 5);
@@ -84,6 +88,7 @@ namespace Tests.Utilities
             Assert.Greater(expectedRadius + 0.01, target.Radius);
         }
         [Test]
+        [Category("NonGraphical")]
         public void PolarCoordTest()
         {
             PolarCoord target = PolarCoord.CartesianToPolar(new Coord(5, 5));
@@ -96,18 +101,21 @@ namespace Tests.Utilities
         }
 
         [Test]
+        [Category("NonGraphical")]
         public void RadiansToDegreesTest()
         {
             Assert.Greater(Calculate.RadiansToDegrees((float)Math.PI), 179.99f);
             Assert.Less(Calculate.RadiansToDegrees((float)Math.PI), 180.01f);
         }
         [Test]
+        [Category("NonGraphical")]
         public void DegreesToRadiansTest()
         {
             Assert.Greater(Calculate.DegreesToRadians(180), Math.PI - 0.01);
             Assert.Less(Calculate.DegreesToRadians(180), Math.PI + 0.01);
         }
         [Test]
+        [Category("NonGraphical")]
         public void PercentTest()
         {
             List<int> previousChances = new List<int>();
@@ -122,6 +130,7 @@ namespace Tests.Utilities
             Assert.Greater(previousChances.Distinct().Count(), 12);
         }
         [Test]
+        [Category("NonGraphical")]
         public void DistanceBetweenTest()
         {
             double five = Calculate.DistanceBetween(new Coord(0, 0), new Coord(3, 4));
