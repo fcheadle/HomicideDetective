@@ -8,7 +8,6 @@ namespace Tests.Utilities
     public class ColorExtensionsTests
     {
         [Test]
-        [Category("NonGraphical")]
         public void DarkenTest()
         {
             Color c = Color.White.Darken();
@@ -17,7 +16,6 @@ namespace Tests.Utilities
             Assert.LessOrEqual(c.B, Color.White.B);
         }
         [Test]
-        [Category("NonGraphical")]
         public void BrightenTest()
         {
             Color c = Color.Black.Brighten();
@@ -26,14 +24,12 @@ namespace Tests.Utilities
             Assert.GreaterOrEqual(c.B, Color.Black.B);
         }
         [Test]
-        [Category("NonGraphical")]
         public void FadeOutTest()
         {
             Color c = Color.Black.FadeOut();
             Assert.Less(c.A, Color.Black.A);
         }
         [Test]
-        [Category("NonGraphical")]
         public void FadeInTest()
         {
             Color c = Color.Transparent.FadeIn();
@@ -41,7 +37,6 @@ namespace Tests.Utilities
         }
 
         [Test]
-        [Category("NonGraphical")]
         public void MutateToIndexTest()
         {
             Color g = Color.Green.MutateToIndex(-9.55);
@@ -61,7 +56,6 @@ namespace Tests.Utilities
         }
 
         [Test]
-        [Category("NonGraphical")]
         public void MutateByTest()
         {
             Color c = Color.Red.MutateBy(Color.Blue);
@@ -71,7 +65,6 @@ namespace Tests.Utilities
         }
 
         [Test]
-        [Category("NonGraphical")]
         public void HalfTest()
         {
             Color c = Color.Red.Half();
@@ -82,7 +75,6 @@ namespace Tests.Utilities
         }
 
         [Test]
-        [Category("NonGraphical")]
         public void DoubleTest()
         {
             Color c = Color.DarkBlue.Double();
@@ -93,7 +85,6 @@ namespace Tests.Utilities
         }
 
         [Test]
-        [Category("NonGraphical")]
         public void Greenify()
         {
             Color c = Color.Purple.Greenify();
@@ -104,7 +95,6 @@ namespace Tests.Utilities
         }
 
         [Test]
-        [Category("NonGraphical")]
         public void Redify()
         {
             Color c = Color.Cyan.Redify();
@@ -115,7 +105,6 @@ namespace Tests.Utilities
         }
 
         [Test]
-        [Category("NonGraphical")]
         public void Blueify()
         {
             Color c = Color.Yellow.Blueify();
