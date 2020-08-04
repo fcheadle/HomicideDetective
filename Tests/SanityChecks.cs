@@ -18,7 +18,6 @@ namespace Tests.Alpha
         House backrooms;
 
         [Test]//test that gameMock works as I expect it to
-        [Category("NonGraphical")]
         public void GameMockTest()
         {
             _game = new MockGame(Update);
