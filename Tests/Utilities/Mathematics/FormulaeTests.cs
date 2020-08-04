@@ -9,6 +9,7 @@ namespace Tests.Utilities
     class FormulaeTests
     {
         [Test]
+        [Category("NonGraphical")]
         public void RandomFunction3dTest()
         {
             var f = Formulae.RandomTerrainGenFormula();
@@ -16,6 +17,7 @@ namespace Tests.Utilities
             Assert.AreNotEqual(0.0001, answer); //I mean, statistically...
         }
         [Test]
+        [Category("NonGraphical")]
         public void RandomFunction4dTest()
         {
             var f = Formulae.RandomWindPattern();
@@ -24,6 +26,7 @@ namespace Tests.Utilities
         }
 
         [Test]
+        [Category("NonGraphical")]
         public void BoundedTanTest()
         {
             for (int i = 0; i < 100; i++)

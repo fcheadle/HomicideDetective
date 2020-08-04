@@ -10,6 +10,7 @@ namespace Tests.Utilities.Extensions
     public class RectangleExtensionsTests
     {
         [Test]
+        [Category("NonGraphical")]
         public void RecursiveBisectTest()
         {
             //Assert.Fail("This test is causing the rest not to run, so failing automatically.");
@@ -26,6 +27,7 @@ namespace Tests.Utilities.Extensions
             }
         }
         [Test]
+        [Category("NonGraphical")]
         public void BisectTest()
         {
             Rectangle rectangle = new Rectangle(0, 0, 5, 13);
@@ -85,6 +87,7 @@ namespace Tests.Utilities.Extensions
 
         }
         [Test]
+        [Category("NonGraphical")]
         public void BisectVerticallyTest()
         {
             Rectangle rectangle = new Rectangle(0, 0, 13, 5);
