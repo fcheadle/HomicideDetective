@@ -11,7 +11,7 @@ using Console = SadConsole.Console;
 
 namespace Engine.Components.UI
 {
-    public class PageComponent<T> : Component, IDisplay where T : Component
+    public class PageComponent<T> : ComponentBase, IDisplay where T : ComponentBase
     {
         const int _width = 24;
         const int _height = 24;
@@ -28,7 +28,7 @@ namespace Engine.Components.UI
         {
             Parent = parent;
             Position = position;
-            Component = (T)Parent.GetConsoleComponent<T>();
+            Component = (T) parent.GetConsoleComponent<T>();
             Name = "Display for " + Component.Name;
 
             InitWindow();

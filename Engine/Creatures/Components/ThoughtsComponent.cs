@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Engine.Creatures.Components
 {
-    public class ThoughtsComponent : Component
+    public class ThoughtsComponent : ComponentBase
     {
         private List<string> _thoughts = new List<string>();
 

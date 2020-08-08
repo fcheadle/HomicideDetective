@@ -1,11 +1,7 @@
 ﻿using Engine.Scenes;
 using Engine.Scenes.Areas;
-using GoRogue;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
-using SadConsole;
-using System;
-using Tests.Mocks;
 
 //named such so that they are the first tests that execute
 namespace Tests.Alpha

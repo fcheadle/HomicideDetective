@@ -14,7 +14,7 @@ namespace Engine.Components.UI
 {
     //Everything is working in this class,
     //except scrolling back and forth
-    public class NotePadComponent : Component, IDisplay
+    public class NotePadComponent : ComponentBase, IDisplay
     {
         public Window Window { get; private set; }
         public Button MaximizeButton { get; private set; }

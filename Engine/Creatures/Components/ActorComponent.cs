@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 namespace Engine.Creatures.Components
 {
-    public class ActorComponent : Component
+    public class ActorComponent : ComponentBase
     {
         private Path _path;
-        private BasicEntity _target;
+        private EntityBase _target;
         public int FOVRadius = 15;
 
         public Coord Position => Parent.Position;
-        public ActorComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
+        public ActorComponent(EntityBase parent) : base(isUpdate: true, isKeyboard: false, isDraw: false, isMouse: false)
         {
             Parent = parent;
             Name = "Actor Component";
@@ -43,7 +43,7 @@ namespace Engine.Creatures.Components
             Parent.MoveIn(d);
         }
 
-        public void Interact(BasicEntity sender)
+        public void Interact(EntityBase sender)
         {
         }
 

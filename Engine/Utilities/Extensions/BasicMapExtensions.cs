@@ -171,8 +171,8 @@ namespace Engine.Utilities.Extensions
                 for (int j = 0; j < map.Height; j++)
                 {
                     Coord target = new Coord(i + origin.X, j + origin.Y);
-                    BasicTerrain t1 = map.GetTerrain<BasicTerrain>(new Coord(i, j));
-                    BasicTerrain t2 = m.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t1 = (BasicTerrain) map.GetTerrain(new Coord(i, j));
+                    BasicTerrain t2 = (BasicTerrain) m.GetTerrain(new Coord(i, j));
                     if (t1 != null && t2 == null && m.Contains(target))
                     {
                         t1 = _factory.Copy(t1, target);
@@ -197,14 +197,14 @@ namespace Engine.Utilities.Extensions
                 }
             }
         }
-        public static IEnumerable<BasicEntity> GetCreatures(this BasicMap m)
+        public static IEnumerable<BasicTerrain> GetCreatures(this BasicMap m)
         {
             foreach (ISpatialTuple<IGameObject> e in m.Entities)
             {
                 IGameObject entity = e.Item;
-                if (entity.GetType() == typeof(BasicEntity) && entity.GetComponent<ActorComponent>() != null)
+                if (entity.GetType() == typeof(BasicTerrain) && entity.GetComponent<ActorComponent>() != null)
                 {
-                    yield return (BasicEntity)entity;
+                    yield return (BasicTerrain)entity;
                 }
             }
         }

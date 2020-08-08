@@ -3,7 +3,7 @@ using SadConsole;
 
 namespace Engine.Creatures.Components
 {
-    public class EmotionsComponent : Component
+    public class EmotionsComponent : ComponentBase
     {
         #region emotions
         //here, they are values that go from 0 (feeling as bad as can be) to 100 (feeling barely more extremely than humanly possible)

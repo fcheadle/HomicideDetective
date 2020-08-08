@@ -7,7 +7,7 @@ using System;
 
 namespace Engine.Scenes.Components
 {
-    public class WeatherComponent : Component
+    public class WeatherComponent : ComponentBase
     {
         //add this to the game's map, not individual tiles... although, it isn't working for some reason.
         private SceneMap _map => Game.Map;

@@ -5,8 +5,8 @@ namespace Engine.Creatures
 {
     public interface ICreatureFactory
     {
-        BasicEntity Person(Coord position);
-        BasicEntity Player(Coord position);
-        BasicEntity Animal(Coord position);
+        EntityBase Person(Coord position);
+        EntityBase Player(Coord position);
+        EntityBase Animal(Coord position);
     }
 }

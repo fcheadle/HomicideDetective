@@ -4,7 +4,7 @@ using SadConsole;
 
 namespace Engine.Creatures.Components
 {
-    public class PersonalityComponent : Component
+    public class PersonalityComponent : ComponentBase
     {
         //personality traits
         //PercentValue values of affecting any given decision

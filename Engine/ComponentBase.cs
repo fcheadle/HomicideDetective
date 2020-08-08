@@ -1,16 +1,17 @@
-﻿using Engine.Utilities;
+﻿using System;
+using Engine.Utilities;
+using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using SadConsole;
 using SadConsole.Components;
-using SadConsole.Components.GoRogue;
 using SadConsole.Input;
-using System;
 
-namespace Engine.Components
+namespace Engine
 {
-    public abstract class Component : ComponentBase<BasicEntity>, IConsoleComponent, IGameObjectComponent
+    public abstract class ComponentBase : IConsoleComponent, IGameObjectComponent
     {
         public string Name { get; set; }
+        public IGameObject Parent { get; set; }
         public string Description { get; set; }
         public int SortOrder { get; set; } = 9;
         public bool IsUpdate { get; }
@@ -19,7 +20,7 @@ namespace Engine.Components
         public bool IsKeyboard { get; }
         protected Timer timer;
         protected TimeSpan _elapsed;
-        public Component(bool isUpdate, bool isKeyboard, bool isDraw, bool isMouse)
+        public ComponentBase(bool isUpdate, bool isKeyboard, bool isDraw, bool isMouse)
         {
             IsUpdate = isUpdate;
             IsKeyboard = isKeyboard;

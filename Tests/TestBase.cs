@@ -7,26 +7,23 @@ namespace Tests
 {
     [TestFixture]
     [Category("RequiresGraphicsDevice")]
-    abstract class TestBase
+    internal abstract class TestBase
     {
         public bool Finished { get; set; } = false;
         public bool Running { get; set; } = false;
-
-        protected List<Action<GameTime>> _completedTests = new List<Action<GameTime>>();
-        protected List<Action<GameTime>> _notCompletedTests = new List<Action<GameTime>>();
-        protected static MockGame _game;
+        protected static MockGame Game;
 
         [OneTimeSetUp]
         public void Init()
         {
-            _game = new MockGame(DoNothing);
-            _game.RunOnce();
+            Game = new MockGame(DoNothing);
+            Game.RunOnce();
         }
 
         [OneTimeTearDown]
         public void End()
         {
-            _game.Stop();
+            Game.Stop();
         }
         private void DoNothing(GameTime obj) { }
     }

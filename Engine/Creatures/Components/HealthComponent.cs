@@ -15,7 +15,7 @@ namespace Engine.Creatures.Components
         B,
         AB
     }
-    public class HealthComponent : Component
+    public class HealthComponent : ComponentBase
     {
         public float SystoleBloodPressure { get; private set; }
         public float DiastoleBloodPressure { get; private set; }

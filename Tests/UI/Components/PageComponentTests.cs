@@ -18,7 +18,7 @@ namespace Tests.UI.Components
         [SetUp]
         public void SetUp()
         {
-            _component = (PageComponent<ThoughtsComponent>)_game.Player.GetComponent<PageComponent<ThoughtsComponent>>();
+            _component = (PageComponent<ThoughtsComponent>)Game.Player.GetComponent<PageComponent<ThoughtsComponent>>();
         }
 
         [Test]
@@ -33,12 +33,12 @@ namespace Tests.UI.Components
         [Test]
         public void GetDetailsTest()
         {
-            _game.SwapUpdate(GetDetails);
+            Game.SwapUpdate(GetDetails);
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
             _answer = _component.GetDetails();
-            ThoughtsComponent c = (ThoughtsComponent)_game.Player.GetComponent<ThoughtsComponent>();
+            ThoughtsComponent c = (ThoughtsComponent)Game.Player.GetComponent<ThoughtsComponent>();
             Assert.AreEqual(c.GetDetails().Length, _answer.Length);
         }
 

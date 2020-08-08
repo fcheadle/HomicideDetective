@@ -13,7 +13,7 @@ namespace Tests.Creature.Components
         [SetUp]
         public void SetUp()
         {
-            _base = (ActorComponent)_game.Player.GetComponent<ActorComponent>();
+            _base = (ActorComponent)Game.Player.GetComponent<ActorComponent>();
             _answer = _base.GetDetails();
         }
         [Test]

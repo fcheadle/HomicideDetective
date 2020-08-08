@@ -1,8 +1,9 @@
-﻿using Engine.Components;
+﻿using Engine;
+using Engine.Components;
 
 namespace Tests
 {
-    internal class MockComponent : Component
+    internal class MockComponent : ComponentBase
     {
         public int UpdateCounter = 0;
         internal MockComponent() : base(true, true, true, false)

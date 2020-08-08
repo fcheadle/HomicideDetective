@@ -13,7 +13,7 @@ namespace Tests.UI.Components
         [SetUp]
         public void SetUp()
         {
-            _component = (NotePadComponent)_game.Player.GetComponent<NotePadComponent>();
+            _component = (NotePadComponent)Game.Player.GetComponent<NotePadComponent>();
         }
 
         [Test]
@@ -30,13 +30,13 @@ namespace Tests.UI.Components
         public void GetDetailsTest()
         {
             _answer = _component.GetDetails();
-            _game.SwapUpdate(GetDetails);
-            _game.RunOnce();
+            Game.SwapUpdate(GetDetails);
+            Game.RunOnce();
             Assert.AreEqual(1, _answer.Length);
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (NotePadComponent)_game.Player.GetComponent<NotePadComponent>();
+            _component = (NotePadComponent)Game.Player.GetComponent<NotePadComponent>();
         }
 
         [Test]

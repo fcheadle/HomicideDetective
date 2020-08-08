@@ -26,23 +26,23 @@ namespace Tests.UI
         public void SlideLeftTest()
         {
             MenuPanel panel = new MenuPanel(10, 10);
-            panel.Position = new Coord(Game.Settings.GameWidth / 3, 0);
+            panel.Position = new Coord(Engine.Game.Settings.GameWidth / 3, 0);
             panel.SlideLeft();
-            Assert.AreEqual(new Coord(Game.Settings.GameWidth / 6 + 1, 0), (Coord)panel.Position);
+            Assert.AreEqual(new Coord(Engine.Game.Settings.GameWidth / 6 + 1, 0), (Coord)panel.Position);
         }
         [Test]
         public void SlideRightTest()
         {
             MenuPanel panel = new MenuPanel(10, 10);
             panel.SlideRight();
-            Assert.AreEqual(new Coord(Game.Settings.GameWidth / 6, 0), (Coord)panel.Position);
+            Assert.AreEqual(new Coord(Engine.Game.Settings.GameWidth / 6, 0), (Coord)panel.Position);
         }
         [Test]
         public void SlideUpTest()
         {
             MenuPanel panel = new MenuPanel(10, 10);
             panel.SlideUp();
-            Assert.AreEqual(new Coord(0, -Game.Settings.GameHeight / 6), (Coord)panel.Position);
+            Assert.AreEqual(new Coord(0, -Engine.Game.Settings.GameHeight / 6), (Coord)panel.Position);
         }
         [Test]
         public void SlideDownTest()
@@ -50,7 +50,7 @@ namespace Tests.UI
 
             MenuPanel panel = new MenuPanel(10, 10);
             panel.SlideDown();
-            Assert.AreEqual(new Coord(0, Game.Settings.GameHeight / 6), (Coord)panel.Position);
+            Assert.AreEqual(new Coord(0, Engine.Game.Settings.GameHeight / 6), (Coord)panel.Position);
         }
         //[Test]
         public void FadeInTest()

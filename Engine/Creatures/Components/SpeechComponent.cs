@@ -5,7 +5,7 @@ using SadConsole;
 
 namespace Engine.Creatures.Components
 {
-    public class SpeechComponent : Component
+    public class SpeechComponent : ComponentBase
     {
         internal Console Dialogue;
         internal readonly Font Voice;

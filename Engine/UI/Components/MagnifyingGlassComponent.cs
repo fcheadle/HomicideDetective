@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Engine.Components.UI
 {
-    public class MagnifyingGlassComponent : Component
+    public class MagnifyingGlassComponent : ComponentBase
     {
         const int _width = 3;
         const int _height = 3;
@@ -43,7 +43,7 @@ namespace Engine.Components.UI
             //Take action on person/place/thing?
 
             //destroy the magnifying glass
-            Parent.Components.Remove(this);
+            Parent.RemoveComponent(this);
         }
 
         private void MoveWithMouse(object sender, MouseEventArgs mouse)
