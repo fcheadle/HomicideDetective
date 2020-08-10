@@ -1,5 +1,4 @@
-﻿using Engine.Components;
-using SadConsole;
+﻿using SadConsole;
 
 namespace Engine.Creatures.Components
 {

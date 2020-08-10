@@ -1,5 +1,4 @@
-﻿using Engine.Components;
-using Engine.Utilities.Mathematics;
+﻿using Engine.Utilities.Mathematics;
 using GoRogue;
 using SadConsole;
 using System;
@@ -13,6 +12,7 @@ namespace Engine.Creatures.Components
         O,
         A,
         B,
+        // ReSharper disable once InconsistentNaming
         AB
     }
     public class HealthComponent : ComponentBase
@@ -50,11 +50,6 @@ namespace Engine.Creatures.Components
             _halfBreathVolume /= 2;
             _breathsPerMinute = 14;
             CurrentBreathVolume = _halfBreathVolume;
-        }
-
-        public override void Update(SadConsole.Console console, TimeSpan delta)
-        {
-            base.Update(console, delta);
         }
 
         private void Breathe(float ms)

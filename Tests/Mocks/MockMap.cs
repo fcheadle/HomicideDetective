@@ -1,5 +1,4 @@
-﻿using Engine;
-using Engine.Scenes;
+﻿using Engine.Scenes;
 using Engine.Scenes.Areas;
 using Engine.Scenes.Terrain;
 using Engine.Utilities.Extensions;
@@ -12,11 +11,8 @@ namespace Tests.Mocks
     public class MockMap : SceneMap
     {
         DefaultTerrainFactory _factory = new DefaultTerrainFactory();
-        public FOVVisibilityHandler FovVisibilityHandler { get; }
         internal MockMap() : base(100,100)//base(100, 100, Calculate.EnumLength<MapLayer>(), Distance.MANHATTAN)
         {
-            FovVisibilityHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
-
             FloodWithSimpleTiles();
             TestMap();
         }

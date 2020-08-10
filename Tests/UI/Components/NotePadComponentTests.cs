@@ -1,7 +1,6 @@
-﻿using Engine.Components.UI;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SadConsole.Input;
-using System.Linq;
+using Engine.UI.Components;
 
 namespace Tests.UI.Components
 {
@@ -42,10 +41,10 @@ namespace Tests.UI.Components
         [Test]
         public void MinimizeMaximizeTest()
         {
-            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
+            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UiManager, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
+            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UiManager, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
         }

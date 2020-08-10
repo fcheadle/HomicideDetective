@@ -1,5 +1,4 @@
-﻿using Engine.Components;
-using Engine.Scenes;
+﻿using Engine.Scenes;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;

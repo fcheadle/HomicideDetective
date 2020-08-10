@@ -1,10 +1,7 @@
-﻿using Engine.Components.UI;
-using GoRogue;
+﻿using GoRogue;
 using Microsoft.Xna.Framework.Input;
-using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Input;
-using System;
 using System.Collections.Generic;
 
 namespace Engine.UI
@@ -15,7 +12,7 @@ namespace Engine.UI
     {
         private string _editingText = " ";
         //private string _text = "";
-        private int _caretPosition
+        private int CaretPosition
         {
             get => _index;
             set
@@ -30,7 +27,7 @@ namespace Engine.UI
         }
         private int _index;
 
-        public Coord CursorPosition => new Coord(_caretPosition % Width, _caretPosition / Width);
+        public Coord CursorPosition => new Coord(CaretPosition % Width, CaretPosition / Width);
         public string Text => _editingText;
 
         private Dictionary<Keys, (string, string)> _specialCharacters = new Dictionary<Keys, (string, string)>()
@@ -71,49 +68,49 @@ namespace Engine.UI
 
                 if (info.IsKeyPressed(Keys.Left))
                 {
-                    if(_caretPosition > 0)
-                        _caretPosition--;
+                    if(CaretPosition > 0)
+                        CaretPosition--;
                     return true;
                 }
                 if (info.IsKeyPressed(Keys.Right))
                 {
-                    if(_caretPosition < _editingText.Length)
-                        _caretPosition++;
+                    if(CaretPosition < _editingText.Length)
+                        CaretPosition++;
                     return true;
                 }
                 if (info.IsKeyPressed(Keys.Up))
                 {
-                    _caretPosition -= Width;
-                    if (_caretPosition < 0)
-                        _caretPosition = 0;
+                    CaretPosition -= Width;
+                    if (CaretPosition < 0)
+                        CaretPosition = 0;
                     return true;
                 }
                 if (info.IsKeyPressed(Keys.Down))
                 {
-                    _caretPosition += Width;
-                    if (_caretPosition > _editingText.Length)
-                        _caretPosition = _editingText.Length - 1;
+                    CaretPosition += Width;
+                    if (CaretPosition > _editingText.Length)
+                        CaretPosition = _editingText.Length - 1;
                     return true;
                 }
 
                 if (info.IsKeyPressed(Keys.Escape) || info.IsKeyPressed(Keys.Tab))
                 {
-                    Game.UIManager.Player.IsFocused = true;
+                    Game.UiManager.Player.IsFocused = true;
                     return true;
                 }
 
                 if (info.IsKeyPressed(Keys.Back))
                 {
-                    if (_caretPosition == 0)
+                    if (CaretPosition == 0)
                         return true;
 
-                    _editingText = _editingText.Remove(_caretPosition - 1, 1);
-                    _caretPosition--;
+                    _editingText = _editingText.Remove(CaretPosition - 1, 1);
+                    CaretPosition--;
                     return true;
                 }
                 if (info.IsKeyPressed(Keys.Delete))
                 {
-                    _editingText = _editingText.Remove(_caretPosition, 1);
+                    _editingText = _editingText.Remove(CaretPosition, 1);
                     return true;
                 }
 
@@ -127,18 +124,18 @@ namespace Engine.UI
                         if (info.IsKeyDown(Keys.LeftShift) || info.IsKeyDown(Keys.RightControl))
                         {
                             if(k.Length == 1)
-                                _editingText = _editingText.Insert(_caretPosition, key.ToString());
+                                _editingText = _editingText.Insert(CaretPosition, key.ToString());
                             else
-                                _editingText = _editingText.Insert(_caretPosition, _specialCharacters[key].Item2);
+                                _editingText = _editingText.Insert(CaretPosition, _specialCharacters[key].Item2);
                         }
                         else
                         {
                             if (k.Length == 1)
-                                _editingText = _editingText.Insert(_caretPosition, key.ToString().ToLower());
+                                _editingText = _editingText.Insert(CaretPosition, key.ToString().ToLower());
                             else
-                                _editingText = _editingText.Insert(_caretPosition, _specialCharacters[key].Item1);
+                                _editingText = _editingText.Insert(CaretPosition, _specialCharacters[key].Item1);
                         }
-                        _caretPosition++;
+                        CaretPosition++;
                     }
                 }
             }
@@ -148,14 +145,14 @@ namespace Engine.UI
         
         public bool NewLine()
         {
-            int lineNumber = _caretPosition / Width;
+            int lineNumber = CaretPosition / Width;
             int newPos = (lineNumber + 1) * Width;
             string spaces = "";
-            for(int i = 0; i < newPos - _caretPosition; i++)
+            for(int i = 0; i < newPos - CaretPosition; i++)
                 spaces += " ";
 
-            _editingText = _editingText.Insert(_caretPosition, spaces);
-            _caretPosition = newPos;
+            _editingText = _editingText.Insert(CaretPosition, spaces);
+            CaretPosition = newPos;
 
             return true;
         }
@@ -180,8 +177,8 @@ namespace Engine.UI
 
         public void Write(string c)
         {
-            _editingText = _editingText.Insert(_caretPosition, c);
-            _caretPosition++;
+            _editingText = _editingText.Insert(CaretPosition, c);
+            CaretPosition++;
         }
     }
 }

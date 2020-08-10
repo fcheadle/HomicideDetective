@@ -1,10 +1,7 @@
-﻿using Engine.Components;
-using Engine.Components.UI;
-using Engine.Creatures.Components;
+﻿using Engine.Creatures.Components;
 using Engine.UI.Components;
 using GoRogue;
 using Microsoft.Xna.Framework;
-using SadConsole;
 
 namespace Engine.Creatures
 {
@@ -50,7 +47,7 @@ namespace Engine.Creatures
             critter.Components.Add(new PageComponent<HealthComponent>(critter, critter.Position + 3));
             critter.Components.Add(new PageComponent<ThoughtsComponent>(critter, critter.Position + 5));
             critter.Components.Add(new NotePadComponent(critter, critter.Position + 7));
-            critter.Components.Add(new CSIKeyboardComponent(critter));
+            critter.Components.Add(new CsiKeyboardComponent(critter));
         }
     }
 }

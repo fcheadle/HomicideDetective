@@ -1,5 +1,4 @@
 ﻿using GoRogue;
-using SadConsole;
 
 namespace Engine.Creatures
 {

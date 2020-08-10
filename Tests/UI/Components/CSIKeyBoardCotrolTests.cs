@@ -1,22 +1,17 @@
-﻿using Engine.Components.UI;
-using Engine.UI.Components;
+﻿using Engine.UI.Components;
 using Engine.Utilities;
-using GoRogue;
-using Microsoft.Xna.Framework.Input;
 using NUnit.Framework;
 using SadConsole;
-using SadConsole.Input;
-using Tests.Mocks;
 
 namespace Tests.UI.Components
 {
     class CsiKeyboardControlTests : TestBase
     {
-        CSIKeyboardComponent _component;
+        CsiKeyboardComponent _component;
         MagnifyingGlassComponent _lookingGlass;
 
-        [Datapoints]
-        GameAction[] allActions =
+        // ReSharper disable once UnusedMember.Local
+        [Datapoints] private GameAction[] _allActions =
         {
             GameAction.LookAtEverythingInSquare, //test that cursor opens
             GameAction.LookAtPerson, //test that cursor opens
@@ -32,8 +27,8 @@ namespace Tests.UI.Components
             GameAction.RefocusOnPlayer, //switch focus elsewhere, then assert that player has focus again.
         };
 
-        [DatapointSource]
-        (GameAction, GameAction)[] newCursorActions =
+        // ReSharper disable once UnusedMember.Local
+        [DatapointSource] private (GameAction, GameAction)[] _newCursorActions =
         {
             (GameAction.LookAtEverythingInSquare, GameAction.LookAtEverythingInSquare),
             (GameAction.LookAtPerson, GameAction.LookAtPerson),
@@ -41,7 +36,8 @@ namespace Tests.UI.Components
             (GameAction.GetItem, GameAction.GetItem),
         };
         [DatapointSource]
-        (GameAction, string)[] buttonsAndWindowsToggled =
+        // ReSharper disable once UnusedMember.Local
+        (GameAction, string)[] _buttonsAndWindowsToggled =
         {
             (GameAction.TakePhotograph, "Photograph of "),
             (GameAction.ToggleInventory, "Evidence"),
@@ -53,7 +49,7 @@ namespace Tests.UI.Components
         [SetUp]
         public void SetUp()
         {
-            _component = (CSIKeyboardComponent)Game.Player.GetComponent<CSIKeyboardComponent>();
+            _component = (CsiKeyboardComponent)Game.Player.GetComponent<CsiKeyboardComponent>();
         }
 
         [Test]
@@ -62,7 +58,7 @@ namespace Tests.UI.Components
             Assert.NotNull(_component);
         }
         //[Test]//skip for now
-        public void MovesTest()
+        /*public void MovesTest()
         {
             Coord startingPosition = Game.Player.Position;
             Coord position = Game.Player.Position;
@@ -87,10 +83,10 @@ namespace Tests.UI.Components
             _component.ProcessKeyboard(Game.Player, keyboard, out bool _);
             Assert.AreEqual(position, Game.Player.Position);
             Assert.AreEqual(startingPosition, Game.Player.Position);
-        }
+        }*/
 
         //[Test] //todo
-        public void ListensForKeyBindingsOnPauseOnlyTest()
+        /*public void ListensForKeyBindingsOnPauseOnlyTest()
         {
             Game.SwapUpdate(TogglePause);
             Game.RunOnce();
@@ -106,9 +102,9 @@ namespace Tests.UI.Components
 
         private void TogglePause(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (CSIKeyboardComponent)Game.Player.GetComponent<CSIKeyboardComponent>();
+            _component = (CsiKeyboardComponent)Game.Player.GetComponent<CsiKeyboardComponent>();
             _component.TogglePause();
-        }
+        }*/
 
         [Test]
         public void ToggleMenuTest()

@@ -1,12 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Themes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Engine.Components.UI
+namespace Engine.UI
 {
     public class PaperWindowTheme : WindowTheme
     {
@@ -16,7 +14,7 @@ namespace Engine.Components.UI
             //SetBackground(Color.Tan);
             ModalTint = Color.Tan;
             FillStyle = new Cell(Color.Blue, Color.Tan, '_');
-            BorderLineStyle = new int[]{
+            BorderLineStyle = new[]{
                 0,
                 0,
                 0,
@@ -57,7 +55,7 @@ namespace Engine.Components.UI
 
     class MenuControlsTheme : ControlsConsoleTheme
     {
-        private readonly Color semitransparent = new Color(Color.Black, 128);
+        //private readonly Color _semitransparent = new Color(Color.Black, 128);
         public MenuControlsTheme()
         {
             FillStyle = new Cell(Color.Transparent, Color.Black);
@@ -65,12 +63,6 @@ namespace Engine.Components.UI
     }
     class MenuButtonTheme : ButtonTheme
     {
-
-        public MenuButtonTheme()
-        {
-
-        }
-
         public override ThemeBase Clone()
         {
             throw new NotImplementedException();

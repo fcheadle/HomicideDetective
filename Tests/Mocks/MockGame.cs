@@ -1,16 +1,17 @@
-﻿using Engine.Entities.Terrain;
+﻿using System;
+using Engine.Creatures;
 using Engine.Items;
 using Engine.Scenes.Components;
+using Engine.Scenes.Terrain;
 using Microsoft.Xna.Framework;
-using System;
 using Game = Engine.Game;
 using Settings = Engine.Settings;
 
-namespace Tests
+namespace Tests.Mocks
 {
     public class MockGame : Game
     {
-        public MockGame(Action<GameTime> update) : base()
+        public MockGame(Action<GameTime> update)
         {
             ApplySettings(new Settings());
             Settings.GameWidth = 64;
@@ -18,8 +19,8 @@ namespace Tests
             Settings.MapWidth = 128;
             Settings.MapHeight = 128;
 
-            SetCreatureFactory(new MockCreatureFactory());
-            SetTerrainFactory(new MockTerrainFactory());
+            SetCreatureFactory(new DefaultCreatureFactory());
+            SetTerrainFactory(new DefaultTerrainFactory());
             SetItemFactory(new DefaultItemFactory());
             SadConsole.Game.Create("font-sample.json", Settings.GameWidth, Settings.GameHeight);
             SadConsole.Game.OnInitialize = InitializeTests;
@@ -35,7 +36,7 @@ namespace Tests
             base.Init();
             SadConsole.Global.Fonts.Remove("IBM_16x8");
             SadConsole.Global.Fonts.Remove("IBM_16x8_ext");
-            UIManager.Components.Add(new WeatherComponent());
+            UiManager.Components.Add(new WeatherComponent());
             Player.Components.Add(new MockComponent());
         }
     }

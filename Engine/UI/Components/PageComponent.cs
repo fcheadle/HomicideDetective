@@ -1,20 +1,19 @@
-﻿using Engine.UI;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GoRogue;
 using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using Console = SadConsole.Console;
 
-namespace Engine.Components.UI
+namespace Engine.UI.Components
 {
     public class PageComponent<T> : ComponentBase, IDisplay where T : ComponentBase
     {
-        const int _width = 24;
-        const int _height = 24;
+        const int Width = 24;
+        const int Height = 24;
 
         private string[] _content = { };
         public Window Window { get; private set; }
@@ -23,7 +22,7 @@ namespace Engine.Components.UI
         public T Component { get; }
         DrawingSurface _backgroundSurface;
         ScrollingConsole _textSurface;
-        bool _hasDrawn;
+        
         public PageComponent(BasicEntity parent, Coord position) : base(true, false, true, true)
         {
             Parent = parent;
@@ -39,7 +38,7 @@ namespace Engine.Components.UI
 
         private void InitWindow()
         {
-            Window = new Window(_width, _height)
+            Window = new Window(Width, Height)
             {
                 DefaultBackground = Color.Tan,
                 Title = Component.Name,
@@ -48,7 +47,7 @@ namespace Engine.Components.UI
                 IsFocused = false,
                 FocusOnMouseClick = false,
                 Position = Position,
-                ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
+                ViewPort = new Rectangle(0, 0, Width, Height),
                 CanTabToNextConsole = true,
                 Theme = new PaperWindowTheme(),
                 ThemeColors = ThemeColors.Paper
@@ -59,7 +58,7 @@ namespace Engine.Components.UI
 
         private void InitBackground()
         {
-            _backgroundSurface = new DrawingSurface(_width - 2, _height - 2);
+            _backgroundSurface = new DrawingSurface(Width - 2, Height - 2);
             _backgroundSurface.Position = new Coord(1, 1);
             _backgroundSurface.Surface.Fill(Color.Blue, Color.Tan, '_');
             _backgroundSurface.OnDraw = (surface) => { }; //do nothing
@@ -123,7 +122,7 @@ namespace Engine.Components.UI
 
         private void InitTextSurface()
         {
-            _textSurface = new ScrollingConsole(_width - 2, _height - 2) 
+            _textSurface = new ScrollingConsole(Width - 2, Height - 2) 
             {
                 UsePrintProcessor = true,
                 Position = new Coord(1, 1),
@@ -149,25 +148,20 @@ namespace Engine.Components.UI
                 Window.Hide();
             else
                 Window.Show();
-            Game.UIManager.Player.IsFocused = true;
+            Game.UiManager.Player.IsFocused = true;
         }
         public void Print(string[] text)
         {
-            _hasDrawn = false;
+            
             Window.Children.Remove(_textSurface);
             InitTextSurface();
-        }
-
-        public override void Draw(Console console, TimeSpan delta)
-        {
-            base.Draw(console, delta);
         }
 
         public override void Update(Console console, TimeSpan delta)
         {
             Print(GetDetails());
-            if (Window.IsFocused) Game.UIManager.Player.IsFocused = true;
-            if (MaximizeButton.IsFocused) Game.UIManager.Player.IsFocused = true;
+            if (Window.IsFocused) Game.UiManager.Player.IsFocused = true;
+            if (MaximizeButton.IsFocused) Game.UiManager.Player.IsFocused = true;
             base.Update(console, delta);
         }
 

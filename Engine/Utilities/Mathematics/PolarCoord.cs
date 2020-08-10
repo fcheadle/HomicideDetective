@@ -30,6 +30,7 @@ namespace Engine.Utilities.Mathematics
 
         public override int GetHashCode()
         {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
             return base.GetHashCode();
         }
         public override bool Equals(object obj)
@@ -72,6 +73,7 @@ namespace Engine.Utilities.Mathematics
         {
             float radius = c.X * c.X + c.Y * c.Y;
             radius = (float)Math.Sqrt(radius);
+            // ReSharper disable once PossibleLossOfFraction
             float theta = c.X == 0 ? 0 : 1 / (float)Math.Tan(c.Y / c.X);
             return new PolarCoord(radius, theta);
         }

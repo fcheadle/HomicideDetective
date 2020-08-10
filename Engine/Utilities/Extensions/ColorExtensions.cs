@@ -1,6 +1,7 @@
 ﻿using Engine.Utilities.Mathematics;
 using System;
 using Color = Microsoft.Xna.Framework.Color;
+// ReSharper disable PossibleLossOfFraction
 
 namespace Engine.Utilities.Extensions
 {
@@ -25,7 +26,6 @@ namespace Engine.Utilities.Extensions
             int total = 1 + r + g + b;
             double rPercentValue = r / total;
             double bPercentValue = b / total;
-            double gPercentValue = g / total;
 
             double chance;
 
@@ -51,7 +51,6 @@ namespace Engine.Utilities.Extensions
             int r = Convert.ToInt32(color.R);
             int g = Convert.ToInt32(color.G);
             int b = Convert.ToInt32(color.B);
-            byte one = Convert.ToByte(1);
             int total = 1 + r + g + b;
             double rPercentValue = r / total;
             double bPercentValue = b / total;

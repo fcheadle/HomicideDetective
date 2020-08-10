@@ -3,6 +3,7 @@ using Engine.Items.Markings;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
+using Tests.Mocks;
 
 namespace Tests.Alpha
 {
@@ -57,16 +58,18 @@ namespace Tests.Alpha
         [Test]
         public void InteractTest()
         {
-            Marking hair = new Marking() 
-            {
-                Name = "hair follicle",
-                Description = "short",
-                Adjective = "dirty"
-            };
-
-            EntityBase raccoon = MockGame.CreatureFactory.Animal(new GoRogue.Coord());
+            // ReSharper disable once AccessToStaticMemberViaDerivedType
+            EntityBase raccoon = MockGame.CreatureFactory.Animal(new Coord());
             raccoon.Name = "trash panda"; //for fun :)
 
+            // Marking hair = new Marking() 
+            // {
+            //     Name = "hair follicle",
+            //     Description = "short",
+            //     Adjective = "dirty",
+            //     Color = "grey"
+            // };
+            // raccoon.AddUnlimitedMarkings(hair);
             Marking dirt = new Marking()
             {
                 Name = "dirt",
@@ -88,7 +91,8 @@ namespace Tests.Alpha
             raccoon.AddLimitedMarkings(grease, 100);
 
 
-            EntityBase shinyThing = MockGame.ItemFactory.Generic(new GoRogue.Coord(), "shiny thing");
+            // ReSharper disable once AccessToStaticMemberViaDerivedType
+            EntityBase shinyThing = MockGame.ItemFactory.Generic(new Coord(), "shiny thing");
             //interact
             raccoon.InteractWith(shinyThing);
             //assert on markings
@@ -107,6 +111,7 @@ namespace Tests.Alpha
         {
             string answer = _base.ToString();
             Assert.False(answer.Contains("PhysicalComponent"));
+            // ReSharper disable once StringLiteralTypo
             Assert.False(answer.ToLower().Contains("physicalcomponent"));
         }
     }

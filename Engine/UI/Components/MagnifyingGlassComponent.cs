@@ -1,27 +1,25 @@
 ﻿using Engine.Utilities;
 using GoRogue;
-using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
+// ReSharper disable UnusedParameter.Local
+// ReSharper disable UnusedMember.Local
 
-namespace Engine.Components.UI
+namespace Engine.UI.Components
 {
     public class MagnifyingGlassComponent : ComponentBase
     {
-        const int _width = 3;
-        const int _height = 3;
-        private Window LookingGlass;
+        const int Width = 3;
+        const int Height = 3;
+        //private Window _lookingGlass;
         public DrawingSurface Surface;
         public GameAction Purpose;
         public MagnifyingGlassComponent(BasicEntity parent, Coord position, GameAction purpose = GameAction.LookAtEverythingInSquare): base(false, true, true, true)
         {
             Parent = parent;
-            LookingGlass = new Window(3, 3);
-            CellSurface surface = new CellSurface(3, 3);
+            //_lookingGlass = new Window(3, 3);
+            //CellSurface surface = new CellSurface(3, 3);
             //surface.Position = new Coord(-1, -1);
             //surface.OnDraw = (ds) =>
             //{
@@ -55,7 +53,7 @@ namespace Engine.Components.UI
 
         public override string[] GetDetails()
         {
-            return new string[]
+            return new[]
             {
                 "Just a magnifying glass.",
                 "You shouldn't be seeing this message."

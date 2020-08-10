@@ -1,9 +1,6 @@
 ﻿using Engine.UI;
 using NUnit.Framework;
 using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.UI
 {
@@ -17,7 +14,7 @@ namespace Tests.UI
             _ui = (UserInterface)Global.CurrentScreen;
         }
         [Test]
-        public void NewUITest()
+        public void NewUiTest()
         {
             Assert.NotNull(_ui);
         }

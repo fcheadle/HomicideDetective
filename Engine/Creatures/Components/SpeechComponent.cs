@@ -1,5 +1,4 @@
-﻿using Engine.Components;
-using Engine.Utilities.Mathematics;
+﻿using Engine.Utilities.Mathematics;
 using GoRogue;
 using SadConsole;
 
@@ -8,7 +7,7 @@ namespace Engine.Creatures.Components
     public class SpeechComponent : ComponentBase
     {
         internal Console Dialogue;
-        internal readonly Font Voice;
+        //internal readonly Font Voice;
         public string Saying;
         public string BodyLanguage;
         //abusive tendencies - aka ways to gaslight

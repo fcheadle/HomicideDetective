@@ -78,7 +78,7 @@ namespace Engine.Utilities.Extensions
 
             return map;
         }
-        public static BasicMap SwapXY(this BasicMap m)
+        public static BasicMap SwapXy(this BasicMap m)
         {
             BasicMap map = new BasicMap(m.Width, m.Height, 1, Distance.MANHATTAN);
 
@@ -102,12 +102,12 @@ namespace Engine.Utilities.Extensions
         public static BasicMap RotateDiscreet(this BasicMap m, int degrees)
         {
             if (degrees % 90 != 0)
-                throw new ArgumentOutOfRangeException("degrees must be some multiple of 90.");
+                throw new ArgumentOutOfRangeException(nameof(degrees));
 
             BasicMap map = m;
             for (int i = degrees; i > 0; i -= 90)
             {
-                map = map.SwapXY();
+                map = map.SwapXy();
                 map = map.ReverseVertical();
             }
 
@@ -165,7 +165,7 @@ namespace Engine.Utilities.Extensions
         public static void Add(this BasicMap m, BasicMap map, Coord origin)
         {
             if (m.Width < map.Width + origin.X && m.Height < map.Height + origin.X)
-                throw new ArgumentOutOfRangeException("Parent Map must be larger than or equal to the map we're adding.");
+                throw new ArgumentOutOfRangeException(nameof(origin));
             for (int i = 0; i < map.Width; i++)
             {
                 for (int j = 0; j < map.Height; j++)
@@ -222,7 +222,7 @@ namespace Engine.Utilities.Extensions
                         {
                             if (!t.IsWalkable)
                                 return false;
-                            else if (_factory.Pavement(c) == _factory.Copy(t, c)) //todo: fix this shit
+                            else if (Equals(_factory.Pavement(c), _factory.Copy(t, c))) //todo: fix this shit
                                 return false;
                         }
                     }
@@ -273,7 +273,6 @@ namespace Engine.Utilities.Extensions
         }
         public static bool ForXForY(this BasicMap m, Action<Coord> f)
         {//makes it hard to debug, so I don't really recommend using this one any more.
-            bool success = true;
             for (int i = 0; i < m.Width; i++)
             {
                 for (int j = 0; j < m.Height; j++)
@@ -282,7 +281,7 @@ namespace Engine.Utilities.Extensions
                     f(point);
                 }
             }
-            return success;
+            return true;
         }
         public static bool ForX(this BasicMap m, Action<int> f)
         {

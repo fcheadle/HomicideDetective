@@ -1,11 +1,7 @@
-﻿using Engine;
-using Engine.UI;
+﻿using Engine.UI;
 using GoRogue;
 using NUnit.Framework;
 using SadConsole.Controls;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.UI
 {

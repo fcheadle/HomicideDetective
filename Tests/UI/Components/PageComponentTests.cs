@@ -1,13 +1,7 @@
-﻿using Engine.Components;
-using Engine.Components.UI;
-using Engine.Creatures.Components;
+﻿using Engine.Creatures.Components;
 using NUnit.Framework;
-using SadConsole.Controls;
 using SadConsole.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Engine.UI.Components;
 
 namespace Tests.UI.Components
 {
@@ -45,10 +39,10 @@ namespace Tests.UI.Components
         [Test]
         public void MinimizeMaximizeTest()
         {
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UiManager, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UiManager, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
         }

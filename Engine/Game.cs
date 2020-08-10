@@ -1,5 +1,4 @@
-﻿using Engine.Components.UI;
-using Engine.Creatures;
+﻿using Engine.Creatures;
 using Engine.Items;
 using Engine.Scenes;
 using Engine.Scenes.Components;
@@ -17,19 +16,19 @@ namespace Engine
         public static ICreatureFactory CreatureFactory => _creatureFactory; 
         public static IItemFactory ItemFactory => _itemFactory; 
         public static DefaultTerrainFactory TerrainFactory => _terrainFactory; 
-        public static CrimeSceneInvestigationUi UIManager => _csi;
+        public static CrimeSceneInvestigationUi UiManager => _csi;
         public static MenuUi Menu => _menu;
-        public static SceneMap Map => UIManager.Map;
-        public BasicEntity Player => UIManager.Player;
+        public static SceneMap Map => UiManager.Map;
+        public BasicEntity Player => UiManager.Player;
 
-        protected static Settings _settings;
-        protected static ICreatureFactory _creatureFactory;
-        protected static DefaultTerrainFactory _terrainFactory;
-        protected static IItemFactory _itemFactory;
-        protected static CrimeSceneInvestigationUi _csi;
-        protected static MenuUi _menu;
+        private static Settings _settings;
+        private static ICreatureFactory _creatureFactory;
+        private static DefaultTerrainFactory _terrainFactory;
+        private static IItemFactory _itemFactory;
+        private static CrimeSceneInvestigationUi _csi;
+        private static MenuUi _menu;
 
-        public bool IsPaused { get => SadConsole.Global.CurrentScreen.IsPaused; set => SadConsole.Global.CurrentScreen.IsPaused = value; }
+        public bool IsPaused { get => Global.CurrentScreen.IsPaused; set => Global.CurrentScreen.IsPaused = value; }
 
         public Game(Settings settings, ICreatureFactory creatureFactory, IItemFactory itemFactory, DefaultTerrainFactory terrainFactory) 
         {
@@ -94,7 +93,7 @@ namespace Engine
             _csi = new CrimeSceneInvestigationUi();
             _csi.Components.Add(new WeatherComponent());
             _menu = new MenuUi();
-            Global.CurrentScreen = UIManager;
+            Global.CurrentScreen = UiManager;
         }
         public virtual void Start()
         {

@@ -2,7 +2,6 @@
 using GoRogue;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Tests.Scenes.Areas
 {
@@ -22,12 +21,6 @@ namespace Tests.Scenes.Areas
                 }
             }
             RoadIntersection intersection = new RoadIntersection(RoadNumbers.Eighteenth, RoadNames.Anaheim, points);
-
-            Coord se = points.OrderBy(c => -c.Y).ThenBy(c => -c.X).ToList().First();
-            Coord ne = points.OrderBy(c => c.Y).ThenBy(c => -c.X).ToList().First();
-            Coord nw = points.OrderBy(c => c.Y).ThenBy(c => c.X).ToList().First();
-            Coord sw = points.OrderBy(c => -c.Y).ThenBy(c => c.X).ToList().First();
-
 
             Assert.AreEqual(new Coord(0, 0), intersection.NorthWestCorner);
             Assert.AreEqual(new Coord(0, 24), intersection.SouthWestCorner);

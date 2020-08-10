@@ -11,7 +11,7 @@ namespace Tests.Scenes
         [SetUp]
         public void SetUp()
         {
-            _component = (WeatherComponent)Engine.Game.UIManager.GetComponent<WeatherComponent>();
+            _component = (WeatherComponent)Engine.Game.UiManager.GetComponent<WeatherComponent>();
         }
         [Test]
         public void NewWeatherComponentTest()

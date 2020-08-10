@@ -1,9 +1,9 @@
-﻿using Engine.Utilities.Extensions;
+﻿using System.Collections.Generic;
+using Engine.Utilities.Extensions;
 using GoRogue;
 using NUnit.Framework;
-using System.Collections.Generic;
 
-namespace Tests.Utilities
+namespace Tests.Utilities.Extensions
 {
     class CoordExtensionTests
     {

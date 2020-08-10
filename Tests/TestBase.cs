@@ -1,13 +1,12 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
+using Tests.Mocks;
 using GameTime = Microsoft.Xna.Framework.GameTime;
 
 namespace Tests
 {
     [TestFixture]
     [Category("RequiresGraphicsDevice")]
-    internal abstract class TestBase
+    public abstract class TestBase
     {
         public bool Finished { get; set; } = false;
         public bool Running { get; set; } = false;

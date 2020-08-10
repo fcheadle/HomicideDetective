@@ -1,5 +1,4 @@
-﻿using Engine;
-using Engine.Scenes.Terrain;
+﻿using Engine.Scenes.Terrain;
 using GoRogue;
 using NUnit.Framework;
 using SadConsole;

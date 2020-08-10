@@ -1,5 +1,4 @@
 ﻿using Engine.Utilities.Extensions;
-using Engine.Utilities.Mathematics;
 using GoRogue;
 using System;
 using System.Collections.Generic;
@@ -11,12 +10,14 @@ namespace Engine.Scenes.Areas
     public class House : Area
     {
         //public BasicMap Map;
-        private const int _minRoomSize = 4;
-        private const int _maxRoomSize = 7;
+        private const int MinRoomSize = 4;
+        //private const int MaxRoomSize = 7;
+        // ReSharper disable once InconsistentNaming
         private const int _width = 32;
+        // ReSharper disable once InconsistentNaming
         private const int _height = 32;
-        private readonly HouseType StructureType;
-        private readonly Direction.Types _facing;
+        private readonly HouseType _structureType;
+        
         internal string Address { get => Name; }
         public Coord Origin { get; set; }
         public IEnumerable<Coord> Walls
@@ -50,7 +51,7 @@ namespace Engine.Scenes.Areas
             }
         }
 
-        public House(string name, Coord origin, HouseType type, Direction.Types facing) :
+        public House(string name, Coord origin, HouseType type) :
             base(
                 name ?? origin.X.ToString() + origin.Y.ToString(),
                 se: origin + new Coord(_width, _height),
@@ -59,19 +60,18 @@ namespace Engine.Scenes.Areas
                 sw: origin + new Coord(0, _height)
             )
         {
-            StructureType = type;
+            _structureType = type;
             Origin = origin;
             //Map = new BasicMap(25, 25, 1, Distance.MANHATTAN);
 
-            _facing = facing;
+            
             //Generate();
         }
 
         public void Generate()
         {
-            switch (StructureType)
+            switch (_structureType)
             {
-                default:
                 case HouseType.PrairieHome: CreatePrairieHome(); break;
                 case HouseType.Backrooms: CreateBackrooms(); break;
                 //case HouseType.CentralPassageHouse: CreateCentralPassageHouse(); break;
@@ -90,7 +90,7 @@ namespace Engine.Scenes.Areas
         {
             //Map = new BasicMap(Map.Width, Map.Height, 1, Distance.EUCLIDEAN);
             Rectangle wholeHouse = new Rectangle(0, 0, _width, _height); //six is the magic number for some reason
-            List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
+            List<Rectangle> rooms = wholeHouse.RecursiveBisect(MinRoomSize).ToList();
 
             int index = 0;
             foreach (Rectangle plan in rooms.OrderBy(r => r.Area).ToArray())
@@ -140,7 +140,7 @@ namespace Engine.Scenes.Areas
             foreach (var room in SubAreas)
             {
                 if((RoomType)room.Key != RoomType.Kitchen && (RoomType)room.Key != RoomType.Parlor)
-                ConnectRoomToNeighbors(room.Value);
+                    ConnectRoomToNeighbors(room.Value);
             }
             ConnectRoomOnAllSides(this[RoomType.Parlor]);
             ConnectRoomOnAllSides(this[RoomType.Kitchen]);
@@ -165,15 +165,8 @@ namespace Engine.Scenes.Areas
         }
         private void CreatePrairieHome()
         {
-            string suffix = ", " + Name;
-            int roomW = _maxRoomSize;
-            int roomH = _maxRoomSize - 2;
-            int tempH = roomW;
-            roomW = roomW > roomH ? roomW : roomH;
-            roomH = roomH < tempH ? roomH : tempH;
-            tempH = Calculate.RandomInt(-1, 2);
             Rectangle wholeHouse = new Rectangle(0, 0, _width - 12, _height / 2); 
-            List<Rectangle> rooms = wholeHouse.RecursiveBisect(_minRoomSize).ToList();
+            List<Rectangle> rooms = wholeHouse.RecursiveBisect(MinRoomSize).ToList();
 
             int index = 0;
             foreach (Rectangle plan in rooms.OrderBy(r => r.Area).ToArray())
@@ -186,7 +179,7 @@ namespace Engine.Scenes.Areas
         public void CreateRoom(Enum type, Rectangle plan)
         {
             plan = new Rectangle(Origin + plan.MinExtent, Origin + plan.MaxExtent);
-            Area room = AreaFactory.FromRectangle(type.ToString() + ", " + Name, plan);
+            Area room = AreaFactory.FromRectangle(type + ", " + Name, plan);
             SubAreas.Add(type, room);
         }
 
@@ -195,11 +188,6 @@ namespace Engine.Scenes.Areas
             var house = (House)base.Rotate(degrees, doToSelf, origin);
             //house.Connect();
             return house;
-        }
-
-        private int RandomRoomDimension()
-        {
-            return Game.Settings.Random.Next(_minRoomSize, _maxRoomSize);
         }
     }
 }

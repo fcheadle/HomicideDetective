@@ -1,8 +1,6 @@
-﻿using Engine.Components.UI;
-using Engine.Utilities;
+﻿using Engine.Utilities;
 using Engine.Utilities.Extensions;
 using GoRogue;
-using GoRogue.MapViews;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using SadConsole.Components;
@@ -11,7 +9,7 @@ using System;
 
 namespace Engine.UI.Components
 {
-    public class CSIKeyboardComponent : KeyboardConsoleComponent //as opposed to my own `component` class, which i should really refactor out
+    public class CsiKeyboardComponent : KeyboardConsoleComponent //as opposed to my own `component` class, which i should really refactor out
     {
         BasicEntity Parent { get; }
         public Coord Position { get => Parent.Position; }
@@ -21,7 +19,7 @@ namespace Engine.UI.Components
             set => Global.CurrentScreen.IsPaused = value;
         }
 
-        public CSIKeyboardComponent(BasicEntity parent)
+        public CsiKeyboardComponent(BasicEntity parent)
         {
             Parent = parent;
         }
@@ -37,7 +35,7 @@ namespace Engine.UI.Components
                     {
                         moveDirection = Game.Settings.MovementKeyBindings[key];
                         if (Game.Settings.Mode == GameMode.TurnBased)
-                            Game.UIManager.ProcessTimeUnit();
+                            Game.UiManager.ProcessTimeUnit();
                         break;
                     }
                 }
@@ -86,7 +84,7 @@ namespace Engine.UI.Components
                 case GameAction.LookAtPerson: OpenCursor(key); break;
 
                 case GameAction.RemoveItemFromInventory: DropItem(); break;
-                case GameAction.TakePhotograph: TakePhotograph(Position); break;
+                case GameAction.TakePhotograph: TakePhotograph(); break;
 
                 case GameAction.ToggleMenu: ToggleMenu(); break;
                 case GameAction.TogglePause: TogglePause(); break;
@@ -94,7 +92,7 @@ namespace Engine.UI.Components
             }
         }
 
-        private void TakePhotograph(Coord position)
+        private void TakePhotograph()
         {
             throw new NotImplementedException();
         }

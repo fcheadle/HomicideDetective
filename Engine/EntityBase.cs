@@ -2,15 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Engine.Items.Markings;
 using GoRogue;
-using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
 using SadConsole;
 
 namespace Engine
 {
-    public class EntityBase : BasicEntity, IHasComponents//, IGameObject
+    public class EntityBase : BasicEntity
     {
-        public string Name { get; set; }
+        //public string Name { get; set; }
         public int Mass { get; set; }
         public int Volume { get; set; }
         public int Glyph { get; set; }

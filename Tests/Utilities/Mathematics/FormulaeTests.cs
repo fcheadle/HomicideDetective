@@ -1,10 +1,8 @@
-﻿using Engine.Utilities.Mathematics;
+﻿using System;
+using Engine.Utilities.Mathematics;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Tests.Utilities
+namespace Tests.Utilities.Mathematics
 {
     class FormulaeTests
     {

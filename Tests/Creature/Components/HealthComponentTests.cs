@@ -2,9 +2,6 @@
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 namespace Tests.Creature.Components
 {
@@ -15,13 +12,18 @@ namespace Tests.Creature.Components
         HealthComponent _component;
         string[] _answer;
         float _breath;
-        float _minimum = 0.0f;
         float _maximum;
-        float _minimumHeartStatus = 0;
+        float _minimumHeartStatus;
         float _currentHeartStatus;
-        float _maximumHeartStatus = 0;
+        float _maximumHeartStatus;
         DateTime _start;
         DateTime _previous;
+
+        public HealthComponentTests()
+        {
+            _maximumHeartStatus = 0;
+        }
+
         [Test]
         public void NewHealthComponentTest()
         {

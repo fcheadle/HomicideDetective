@@ -18,8 +18,8 @@ namespace Engine
         public bool IsDraw { get; }
         public bool IsMouse { get; }
         public bool IsKeyboard { get; }
-        protected Timer timer;
-        protected TimeSpan _elapsed;
+        protected readonly Timer Timer;
+        protected TimeSpan Elapsed;
         public ComponentBase(bool isUpdate, bool isKeyboard, bool isDraw, bool isMouse)
         {
             IsUpdate = isUpdate;
@@ -28,8 +28,8 @@ namespace Engine
             IsDraw = isDraw;
             if (isUpdate)
             {
-                timer = new Timer(TimeSpan.FromMilliseconds(Game.TimeIncrement));
-                timer.TimerElapsed += (timer, e) => ProcessTimeUnit();
+                Timer = new Timer(TimeSpan.FromMilliseconds(Game.TimeIncrement));
+                Timer.TimerElapsed += (timer, e) => ProcessTimeUnit();
             }
         }
 
@@ -41,6 +41,6 @@ namespace Engine
         public virtual void OnRemoved(SadConsole.Console console){ }
         public virtual void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled) { handled = false; }
         public virtual void ProcessMouse(SadConsole.Console console, MouseConsoleState state, out bool handled) { handled = false; }
-        public virtual void Update(SadConsole.Console console, TimeSpan delta) { if(Game.Settings.Mode == GameMode.RealTimeWithPause) timer.Update(console, delta); }
+        public virtual void Update(SadConsole.Console console, TimeSpan delta) { if(Game.Settings.Mode == GameMode.RealTimeWithPause) Timer.Update(console, delta); }
     }
 }
