@@ -15,7 +15,7 @@ namespace Tests.Scenes.Areas
         [Test]
         public void NewHouseTest()
         {
-            House house = new House("humble abode", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
+            House house = new House("humble abode", new Coord(5, 5), HouseType.PrairieHome);
             Assert.AreEqual("humble abode", house.Name);
             Assert.AreEqual(new Coord(5, 5), house.Origin);
             for (int x = 0; x < 24; x++)
@@ -30,7 +30,7 @@ namespace Tests.Scenes.Areas
         [Test]
         public void ConnectRoomToNeighborsTest()
         {
-            House house = new House("party mansion", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
+            House house = new House("party mansion", new Coord(5, 5), HouseType.PrairieHome);
             Rectangle parlor = new Rectangle(0, 0, 12, 18);
             Rectangle dining = new Rectangle(parlor.Width, 7, 5, 5);
             house.CreateRoom(RoomType.Parlor, parlor);
@@ -44,7 +44,7 @@ namespace Tests.Scenes.Areas
         [Test]
         public void CreateRoomTest()
         {
-            House house = new House("party mansion", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
+            House house = new House("party mansion", new Coord(5, 5), HouseType.PrairieHome);
             Rectangle room = new Rectangle(6, 9, 12, 18);
             house.CreateRoom(RoomType.Parlor, room);
             Assert.AreEqual(1, house.SubAreas.Count());
@@ -58,8 +58,8 @@ namespace Tests.Scenes.Areas
         [Test]
         public void GenerateTest()
         {
-            MockGame game = new MockGame((time) => { });
-            House house = new House("paddys pub", new Coord(5, 5), HouseType.PrairieHome, Direction.Types.DOWN);
+            
+            House house = new House("paddys pub", new Coord(5, 5), HouseType.PrairieHome);
             house.Generate();
             int nonWalkableCount = house.Walls.Count();
             int doorCount = house.Doors.Count();
@@ -78,8 +78,8 @@ namespace Tests.Scenes.Areas
         public void RecursiveBisectedRectanglesCanConnect()
         {
             //we need to know for sure that the rectangles returned from this are going to produce connectable rooms
-            MockGame game = new MockGame((time) => { });
-            House house = new House("Testatorium", new Coord(0, 0), HouseType.PrairieHome, Direction.Types.DOWN);
+            
+            House house = new House("Testatorium", new Coord(0, 0), HouseType.PrairieHome);
             List<Rectangle> rooms = new Rectangle(0, 0, 24, 24).RecursiveBisect(5).ToList();
 
 

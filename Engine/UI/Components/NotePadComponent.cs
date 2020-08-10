@@ -1,20 +1,17 @@
-﻿using Engine.Scenes.Areas;
-using Engine.UI;
-using Engine.Utilities;
+﻿using System;
+using System.Collections.Generic;
 using GoRogue;
 using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Input;
-using System;
-using System.Collections.Generic;
 using Color = Microsoft.Xna.Framework.Color;
 using Console = SadConsole.Console;
 
-namespace Engine.Components.UI
+namespace Engine.UI.Components
 {
     //Everything is working in this class,
     //except scrolling back and forth
-    public class NotePadComponent : Component, IDisplay
+    public class NotePadComponent : ComponentBase, IDisplay
     {
         public Window Window { get; private set; }
         public Button MaximizeButton { get; private set; }
@@ -23,10 +20,10 @@ namespace Engine.Components.UI
         public TextArea Text { get; private set; }
         public ScrollingConsole Surface { get; }
         private DrawingSurface _backgroundSurface;
-        const int _width = 32;
-        const int _height = 32;
-        const int _maxLines = 100 * _height;
-        public int PageNumber = 0;
+        const int Width = 32;
+        const int Height = 32;
+        const int MaxLines = 100 * Height;
+        public int PageNumber;
 
         public NotePadComponent(BasicEntity parent, Coord position) : base(true, true, false, true)
         {
@@ -37,7 +34,7 @@ namespace Engine.Components.UI
             InitNavigationButtons();
             InitMaximizeButton();
 
-            Surface = new ScrollingConsole(_width - 2, _height - 2)
+            Surface = new ScrollingConsole(Width - 2, Height - 2)
             {
                 UseKeyboard = false,
                 IsVisible = true,
@@ -53,7 +50,7 @@ namespace Engine.Components.UI
         #region take notes
         public override string[] GetDetails()
         {
-            return new string[] { Text.Text };
+            return new[] { Text.Text };
         }
 
         public void WriteLine(string line)
@@ -65,7 +62,7 @@ namespace Engine.Components.UI
         #region init
         private void InitWindow()
         {
-            Window = new Window(_width, _height)
+            Window = new Window(Width, Height)
             {
                 DefaultBackground = Color.Tan,
                 Title = Name,
@@ -73,7 +70,7 @@ namespace Engine.Components.UI
                 IsVisible = false,
                 IsFocused = false,
                 FocusOnMouseClick = true,
-                ViewPort = new GoRogue.Rectangle(0, 0, _width, _height),
+                ViewPort = new Rectangle(0, 0, Width, Height),
                 Theme = new PaperWindowTheme(),
                 ThemeColors = ThemeColors.Paper,
                 CanTabToNextConsole = true,
@@ -83,14 +80,14 @@ namespace Engine.Components.UI
 
         private void InitTextSurface()
         {
-            Text = new TextArea(_width - 2, _maxLines);
+            Text = new TextArea(Width - 2, MaxLines);
             Text.Position = new Coord(1, 1);
             Window.Add(Text);
         }
 
         private void InitNavigationButtons()
         {
-            BackPageButton = new Button(2) { Position = new Coord(0, _height - 1), Text = "<=", };
+            BackPageButton = new Button(2) { Position = new Coord(0, Height - 1), Text = "<=", };
             BackPageButton.Theme = new PaperButtonTheme();
             BackPageButton.ThemeColors = ThemeColors.Paper;
             BackPageButton.ThemeColors.Appearance_ControlOver.Foreground = Color.Black;
@@ -101,7 +98,7 @@ namespace Engine.Components.UI
             BackPageButton.MouseButtonClicked += BackButton_Clicked;
             Window.Add(BackPageButton);
 
-            NextPageButton = new Button(2) { Position = new Coord(_width - 2, _height - 1), Text = "=>" };
+            NextPageButton = new Button(2) { Position = new Coord(Width - 2, Height - 1), Text = "=>" };
             NextPageButton.Theme = new PaperButtonTheme();
             NextPageButton.ThemeColors = ThemeColors.Paper;
             NextPageButton.ThemeColors.Appearance_ControlOver.Foreground = Color.Black;
@@ -160,7 +157,7 @@ namespace Engine.Components.UI
 
         private void InitBackground()
         {
-            _backgroundSurface = new DrawingSurface(_width - 2, _height - 2);
+            _backgroundSurface = new DrawingSurface(Width - 2, Height - 2);
             _backgroundSurface.Position = new Coord(1, 1);
             _backgroundSurface.Surface.Fill(Color.Blue, Color.Tan, '_');
             _backgroundSurface.OnDraw = (surface) => { }; //do nothing
@@ -178,7 +175,7 @@ namespace Engine.Components.UI
             if (Window.IsVisible)
             {
                 Window.Hide();
-                Game.UIManager.Player.IsFocused = true;
+                Game.UiManager.Player.IsFocused = true;
             }
             else
             {
@@ -222,7 +219,7 @@ namespace Engine.Components.UI
             base.ProcessMouse(console, state, out handled);
         }
 
-        public override void ProcessKeyboard(Console console, SadConsole.Input.Keyboard state, out bool handled)
+        public override void ProcessKeyboard(Console console, Keyboard state, out bool handled)
         {
             Window.ProcessKeyboard(state);
             Text.ProcessKeyboard(state);
@@ -234,13 +231,13 @@ namespace Engine.Components.UI
         private void NextButton_Clicked(object sender, MouseEventArgs e)
         {
             PageNumber++;
-            Surface.ViewPort = new Rectangle(0, PageNumber * _height, _width - 2, _height - 2);
+            Surface.ViewPort = new Rectangle(0, PageNumber * Height, Width - 2, Height - 2);
         }
 
         private void BackButton_Clicked(object sender, MouseEventArgs e)
         {
             PageNumber--;
-            Surface.ViewPort = new Rectangle(0, PageNumber * _height, _width - 2, _height - 2);
+            Surface.ViewPort = new Rectangle(0, PageNumber * Height, Width - 2, Height - 2);
         }
 
         public override void ProcessTimeUnit()

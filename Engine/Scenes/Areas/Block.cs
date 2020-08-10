@@ -32,7 +32,6 @@ namespace Engine.Scenes.Areas
             int length = 0;
             switch (Orientation)
             {
-                default:
                 case SadConsole.Orientation.Horizontal:
                     length += (NorthBoundary.Count + SouthBoundary.Count) / 2;
                     break;
@@ -67,7 +66,6 @@ namespace Engine.Scenes.Areas
 
             switch (Orientation)
             {
-                default:
                 case SadConsole.Orientation.Horizontal:
                     lowerBoundary = NorthFenceLine;
                     upperBoundary = SouthFenceLine;

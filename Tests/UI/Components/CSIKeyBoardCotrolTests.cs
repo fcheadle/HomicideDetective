@@ -1,22 +1,17 @@
-﻿using Engine.Components.UI;
-using Engine.UI.Components;
+﻿using Engine.UI.Components;
 using Engine.Utilities;
-using GoRogue;
-using Microsoft.Xna.Framework.Input;
 using NUnit.Framework;
 using SadConsole;
-using SadConsole.Input;
-using Tests.Mocks;
 
 namespace Tests.UI.Components
 {
     class CsiKeyboardControlTests : TestBase
     {
-        CSIKeyboardComponent _component;
+        CsiKeyboardComponent _component;
         MagnifyingGlassComponent _lookingGlass;
 
-        [Datapoints]
-        GameAction[] allActions =
+        // ReSharper disable once UnusedMember.Local
+        [Datapoints] private GameAction[] _allActions =
         {
             GameAction.LookAtEverythingInSquare, //test that cursor opens
             GameAction.LookAtPerson, //test that cursor opens
@@ -32,8 +27,8 @@ namespace Tests.UI.Components
             GameAction.RefocusOnPlayer, //switch focus elsewhere, then assert that player has focus again.
         };
 
-        [DatapointSource]
-        (GameAction, GameAction)[] newCursorActions =
+        // ReSharper disable once UnusedMember.Local
+        [DatapointSource] private (GameAction, GameAction)[] _newCursorActions =
         {
             (GameAction.LookAtEverythingInSquare, GameAction.LookAtEverythingInSquare),
             (GameAction.LookAtPerson, GameAction.LookAtPerson),
@@ -41,7 +36,8 @@ namespace Tests.UI.Components
             (GameAction.GetItem, GameAction.GetItem),
         };
         [DatapointSource]
-        (GameAction, string)[] buttonsAndWindowsToggled =
+        // ReSharper disable once UnusedMember.Local
+        (GameAction, string)[] _buttonsAndWindowsToggled =
         {
             (GameAction.TakePhotograph, "Photograph of "),
             (GameAction.ToggleInventory, "Evidence"),
@@ -53,7 +49,7 @@ namespace Tests.UI.Components
         [SetUp]
         public void SetUp()
         {
-            _component = (CSIKeyboardComponent)_game.Player.GetComponent<CSIKeyboardComponent>();
+            _component = (CsiKeyboardComponent)Game.Player.GetComponent<CsiKeyboardComponent>();
         }
 
         [Test]
@@ -62,67 +58,67 @@ namespace Tests.UI.Components
             Assert.NotNull(_component);
         }
         //[Test]//skip for now
-        public void MovesTest()
+        /*public void MovesTest()
         {
-            Coord startingPosition = _game.Player.Position;
-            Coord position = _game.Player.Position;
+            Coord startingPosition = Game.Player.Position;
+            Coord position = Game.Player.Position;
             position += new Coord(1, 0);
             MockKeyboard keyboard = new MockKeyboard();
             keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Right }, Keys.Right);
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
+            _component.ProcessKeyboard(Game.Player, keyboard, out bool _);
+            Assert.AreEqual(position, Game.Player.Position);
             keyboard.Clear();
             position += new Coord(0, 1);
             keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Down }, Keys.Down);
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
+            _component.ProcessKeyboard(Game.Player, keyboard, out bool _);
+            Assert.AreEqual(position, Game.Player.Position);
             keyboard.Clear();
             position += new Coord(-1, 0);
             keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Left }, Keys.Left);
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
+            _component.ProcessKeyboard(Game.Player, keyboard, out bool _);
+            Assert.AreEqual(position, Game.Player.Position);
             keyboard.Clear();
             position += new Coord(0, -1);
             keyboard.AddKeyPressed(new AsciiKey() { Key = Keys.Up }, Keys.Up);
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
-            Assert.AreEqual(startingPosition, _game.Player.Position);
-        }
+            _component.ProcessKeyboard(Game.Player, keyboard, out bool _);
+            Assert.AreEqual(position, Game.Player.Position);
+            Assert.AreEqual(startingPosition, Game.Player.Position);
+        }*/
 
         //[Test] //todo
-        public void ListensForKeyBindingsOnPauseOnlyTest()
+        /*public void ListensForKeyBindingsOnPauseOnlyTest()
         {
-            _game.SwapUpdate(TogglePause);
-            _game.RunOnce();
-            Coord position = _game.Player.Position;
+            Game.SwapUpdate(TogglePause);
+            Game.RunOnce();
+            Coord position = Game.Player.Position;
             var keyboard = new MockKeyboard();
             keyboard.AddKeyDown(new AsciiKey() { Key = Keys.Right }, Keys.Right);
 
-            _component.ProcessKeyboard(_game.Player, keyboard, out bool _);
-            Assert.AreEqual(position, _game.Player.Position);
+            _component.ProcessKeyboard(Game.Player, keyboard, out bool _);
+            Assert.AreEqual(position, Game.Player.Position);
             //assert that nothing changed?
             Assert.Fail("Test is not sufficient to be reliable");
         }
 
         private void TogglePause(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (CSIKeyboardComponent)_game.Player.GetComponent<CSIKeyboardComponent>();
+            _component = (CsiKeyboardComponent)Game.Player.GetComponent<CsiKeyboardComponent>();
             _component.TogglePause();
-        }
+        }*/
 
         [Test]
         public void ToggleMenuTest()
         {
             var previousScreen = Global.CurrentScreen;
             _component.ToggleMenu();
-            _game.RunOnce();
+            Game.RunOnce();
             Assert.AreNotEqual(previousScreen, Global.CurrentScreen);
         }
 
         //[Theory] //todo - just takes too long for now
         public void QueriableActionOpensACursorTest((GameAction actionkey, GameAction purpose) dataset)
         {
-            _lookingGlass = (MagnifyingGlassComponent)_game.Player.GetComponent<MagnifyingGlassComponent>();
+            _lookingGlass = (MagnifyingGlassComponent)Game.Player.GetComponent<MagnifyingGlassComponent>();
             Assert.Null(_lookingGlass);
 
             _component.TakeAction(dataset.actionkey);

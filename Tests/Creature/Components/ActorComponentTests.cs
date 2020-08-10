@@ -1,8 +1,5 @@
 ﻿using Engine.Creatures.Components;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Creature.Components
 {
@@ -13,14 +10,14 @@ namespace Tests.Creature.Components
         [SetUp]
         public void SetUp()
         {
-            _base = (ActorComponent)_game.Player.GetComponent<ActorComponent>();
+            _base = (ActorComponent)Game.Player.GetComponent<ActorComponent>();
             _answer = _base.GetDetails();
         }
         [Test]
         public void NewActorComponentTests()
         {
             Assert.NotNull(_base);
-            Assert.Less(0, _base.FOVRadius);
+            Assert.Less(0, _base.FovRadius);
         }
         [Test]
         public void GetDetailsTest()

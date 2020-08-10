@@ -1,24 +1,19 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using SadConsole;
+﻿using Microsoft.Xna.Framework.Input;
 using SadConsole.Input;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace Tests.Mocks
 {
     public class MockKeyboard : SadConsole.Input.Keyboard
     {
-        private KeyboardState _state;
 
         public new ReadOnlyCollection<AsciiKey> KeysPressed => KeysPressedInternal.AsReadOnly();
         public new ReadOnlyCollection<AsciiKey> KeysDown => KeysDownInternal.AsReadOnly();
         public new ReadOnlyCollection<AsciiKey> KeysReleased => KeysReleasedInternal.AsReadOnly();
         private List<AsciiKey> KeysPressedInternal { get; }
         private List<AsciiKey> KeysDownInternal { get; }
-        private List<Keys> UnmappedVirtualKeysDown { get; }
+        //private List<Keys> UnmappedVirtualKeysDown { get; }
         private List<AsciiKey> KeysReleasedInternal { get; }
 
         public MockKeyboard()
@@ -26,18 +21,18 @@ namespace Tests.Mocks
             KeysPressedInternal = new List<AsciiKey>();
             KeysReleasedInternal = new List<AsciiKey>();
             KeysDownInternal = new List<AsciiKey>();
-            UnmappedVirtualKeysDown = new List<Keys>();
+            //UnmappedVirtualKeysDown = new List<Keys>();
         }
-        internal void AddKeyDown(AsciiKey key, Keys unmappedVirtualKey)
-        {
-            KeysDownInternal.Add(key);
-            UnmappedVirtualKeysDown.Add(unmappedVirtualKey);
-        }
+        // internal void AddKeyDown(AsciiKey key, Keys unmappedVirtualKey)
+        // {
+        //     KeysDownInternal.Add(key);
+        //     //UnmappedVirtualKeysDown.Add(unmappedVirtualKey);
+        // }
 
         internal void RemoveKeyDownAt(int i)
         {
             KeysDownInternal.RemoveAt(i);
-            UnmappedVirtualKeysDown.RemoveAt(i);
+            //UnmappedVirtualKeysDown.RemoveAt(i);
         }
         internal void AddKeyPressed(AsciiKey key, Keys unmappedVirtualKey)
         {

@@ -1,26 +1,19 @@
-﻿using Engine.Components.UI;
-using Engine.UI.Components;
+﻿using Engine.UI.Components;
 using Engine.Utilities;
 using GoRogue;
-using Microsoft.Xna.Framework.Input;
 using NUnit.Framework;
-using SadConsole;
-using SadConsole.Input;
 using Tests.Mocks;
+// ReSharper disable AccessToStaticMemberViaDerivedType
 
 namespace Tests.UI.Components
 {
     class MenuKeyboardControlTests : TestBase
     {
         MenuKeyboardComponent _component;
-        MagnifyingGlassComponent _lookingGlass;
+        //MagnifyingGlassComponent _lookingGlass;
 
-        public MenuKeyboardControlTests()
-        {
-        }
-
-        [Datapoints]
-        GameAction[] allActions =
+        // ReSharper disable once UnusedMember.Local
+        [Datapoints] private GameAction[] _allActions =
         {
             GameAction.LookAtEverythingInSquare, //test that cursor opens
             GameAction.LookAtPerson, //test that cursor opens
@@ -36,8 +29,8 @@ namespace Tests.UI.Components
             GameAction.RefocusOnPlayer, //switch focus elsewhere, then assert that player has focus again.
         };
 
-        [DatapointSource]
-        (GameAction, GameAction)[] newCursorActions =
+        // ReSharper disable once UnusedMember.Local
+        [DatapointSource] private (GameAction, GameAction)[] _newCursorActions =
         {
             (GameAction.LookAtEverythingInSquare, GameAction.LookAtEverythingInSquare),
             (GameAction.LookAtPerson, GameAction.LookAtPerson),
@@ -45,7 +38,8 @@ namespace Tests.UI.Components
             (GameAction.GetItem, GameAction.GetItem),
         };
         [DatapointSource]
-        (GameAction, string)[] buttonsAndWindowsToggled =
+        // ReSharper disable once UnusedMember.Local
+        (GameAction, string)[] _buttonsAndWindowsToggled =
         {
             (GameAction.TakePhotograph, "Photograph of "),
             (GameAction.ToggleInventory, "Evidence"),
@@ -57,6 +51,7 @@ namespace Tests.UI.Components
         [SetUp]
         public void SetUp()
         {
+            // ReSharper disable once AccessToStaticMemberViaDerivedType
             _component = (MenuKeyboardComponent)MockGame.Menu.Player.GetComponent<MenuKeyboardComponent>();
         }
 

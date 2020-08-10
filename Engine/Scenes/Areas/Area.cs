@@ -45,7 +45,6 @@ namespace Engine.Scenes.Areas
             Name = name;
             Generate(se, ne, nw, sw);
         }
-        private Area() { }
 
         #region miscellaneous features
         public override string ToString()
@@ -197,8 +196,6 @@ namespace Engine.Scenes.Areas
         public virtual Area Rotate(float degrees, bool doToSelf, Coord origin = default)
         {
             Coord center;
-            Area area;
-            int quarterTurns = 0;
             double radians = Calculate.DegreesToRadians(degrees);
             
             List<Coord> corners = new List<Coord>();
@@ -250,31 +247,6 @@ namespace Engine.Scenes.Areas
 
             ne = corners.OrderBy(c => -c.X).First();
 
-            List<int> nconnections = new List<int>();
-            List<int> wconnections = new List<int>();
-            List<int> econnections = new List<int>();
-            List<int> sconnections = new List<int>();
-
-            List<Coord> boundary = NorthBoundary.OrderBy(x => x.X).ToList(); //from left to right
-            for (int i = 0; i < boundary.Count; i++)
-                if (Connections.Contains(boundary[i]))
-                    nconnections.Add(i);
-
-            boundary = SouthBoundary.OrderBy(x => -x.X).ToList(); //from right to left
-            for (int i = 0; i < boundary.Count; i++)
-                if (Connections.Contains(boundary[i]))
-                    sconnections.Add(i);
-
-            boundary = EastBoundary.OrderBy(x => x.Y).ToList(); //from top to bottom
-            for (int i = 0; i < boundary.Count; i++)
-                if (Connections.Contains(boundary[i]))
-                    econnections.Add(i);
-
-            boundary = WestBoundary.OrderBy(x => -x.Y).ToList(); //from bottom to top
-            for (int i = 0; i < boundary.Count; i++)
-                if (Connections.Contains(boundary[i]))
-                    wconnections.Add(i);
-
             if (doToSelf)
             {
                 Generate(se, ne, nw, sw);
@@ -289,43 +261,6 @@ namespace Engine.Scenes.Areas
                 return new Area(Name, se, ne, nw, sw);
         }
 
-        private Area QuarterRotation(bool doToSelf, Coord origin)
-        {
-            //transpose 
-            //reverse horizontal
-
-            int radius = Math.Abs(origin.X - Right);
-
-            int nextDiff = Math.Abs(origin.X - Left);
-            radius = radius < nextDiff ? nextDiff : radius;
-
-            nextDiff = Math.Abs(origin.Y - Bottom);
-            radius = radius < nextDiff ? nextDiff : radius;
-
-            nextDiff = Math.Abs(origin.Y - Top);
-            radius = radius < nextDiff ? nextDiff : radius;
-
-            Coord nw = SouthWestCorner - Center; 
-            nw = new Coord(radius - nw.Y, nw.X) + Center;
-
-            Coord ne = NorthWestCorner;
-            ne = new Coord(radius - ne.Y, ne.X) + Center;
-
-            Coord se = NorthEastCorner;
-            se = new Coord(radius - se.Y, se.X) + Center;
-
-            Coord sw = SouthEastCorner;
-            sw = new Coord(radius - sw.Y, sw.X) + Center;
-
-            if (doToSelf)
-            {
-                Generate(se, ne, nw, sw);
-                return this;
-            }
-            else
-                return new Area(Name, se, ne, nw, sw);
-
-        }
         #endregion
     }
 }

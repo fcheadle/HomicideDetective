@@ -9,12 +9,12 @@ namespace Tests.Scenes.Areas
     [TestFixture]
     public class BlockTests
     {
-        Block block;
+        Block _block;
 
-        RoadIntersection nwIntersection;
-        RoadIntersection swIntersection;
-        RoadIntersection neIntersection;
-        RoadIntersection seIntersection;
+        RoadIntersection _nwIntersection;
+        RoadIntersection _swIntersection;
+        RoadIntersection _neIntersection;
+        RoadIntersection _seIntersection;
         [SetUp]
         public void SetUp()
         {
@@ -26,7 +26,7 @@ namespace Tests.Scenes.Areas
                 new Coord(2,2)
             };
 
-            nwIntersection = new RoadIntersection(RoadNumbers.TwentyFirst, RoadNames.Neumann, points);
+            _nwIntersection = new RoadIntersection(RoadNumbers.TwentyFirst, RoadNames.Neumann, points);
 
             points = new List<Coord>()
             {
@@ -36,7 +36,7 @@ namespace Tests.Scenes.Areas
                 new Coord(6,3)
             };
 
-            neIntersection = new RoadIntersection(RoadNumbers.TwentyFirst, RoadNames.Olive, points);
+            _neIntersection = new RoadIntersection(RoadNumbers.TwentyFirst, RoadNames.Olive, points);
 
 
             points = new List<Coord>()
@@ -47,7 +47,7 @@ namespace Tests.Scenes.Areas
                 new Coord(7,9)
             };
 
-            seIntersection = new RoadIntersection(RoadNumbers.TwentySecond, RoadNames.Neumann, points);
+            _seIntersection = new RoadIntersection(RoadNumbers.TwentySecond, RoadNames.Neumann, points);
 
 
             points = new List<Coord>()
@@ -58,51 +58,51 @@ namespace Tests.Scenes.Areas
                 new Coord(5,7)
             };
 
-            swIntersection = new RoadIntersection(RoadNumbers.TwentySecond, RoadNames.Olive, points);
+            _swIntersection = new RoadIntersection(RoadNumbers.TwentySecond, RoadNames.Olive, points);
 
-            block = new Block(nwIntersection, swIntersection, seIntersection, neIntersection);
+            _block = new Block(_nwIntersection, _swIntersection, _seIntersection, _neIntersection);
         }
         [Test]
         public void NewBlockTest()
         {
-            Assert.AreEqual(new Coord(5, 3), block.NorthEastCorner);
-            Assert.AreEqual(new Coord(6, 8), block.SouthEastCorner);
-            Assert.AreEqual(new Coord(2, 2), block.NorthWestCorner);
-            Assert.AreEqual(new Coord(5, 6), block.SouthWestCorner);
+            Assert.AreEqual(new Coord(5, 3), _block.NorthEastCorner);
+            Assert.AreEqual(new Coord(6, 8), _block.SouthEastCorner);
+            Assert.AreEqual(new Coord(2, 2), _block.NorthWestCorner);
+            Assert.AreEqual(new Coord(5, 6), _block.SouthWestCorner);
         }
         [Test]
         public void ToStringOverrideTest()
         {
-            Assert.AreEqual("2200 Block Olive", block.ToString());
+            Assert.AreEqual("2200 Block Olive", _block.ToString());
         }
         [Test]
         public void GetFenceLocationsTest()
         {
-            List<Coord> locations = block.GetFenceLocations().ToList();
+            List<Coord> locations = _block.GetFenceLocations().ToList();
             Assert.IsEmpty(locations);
 
-            nwIntersection = new RoadIntersection(RoadNumbers.Seventh, RoadNames.Guthrow, new List<Coord>()
+            _nwIntersection = new RoadIntersection(RoadNumbers.Seventh, RoadNames.Guthrow, new List<Coord>()
             {
                 new Coord(0, 0),
                 new Coord(0, 1),
                 new Coord(1, 0),
                 new Coord(1, 1),
             });
-            swIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
+            _swIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
             {
                 new Coord(3, 40),
                 new Coord(3, 41),
                 new Coord(4, 40),
                 new Coord(4, 41),
             });
-            neIntersection = new RoadIntersection(RoadNumbers.Seventh, RoadNames.Guthrow, new List<Coord>()
+            _neIntersection = new RoadIntersection(RoadNumbers.Seventh, RoadNames.Guthrow, new List<Coord>()
             {
                 new Coord(55, 0),
                 new Coord(55, 1),
                 new Coord(56, 0),
                 new Coord(56, 1),
             });
-            seIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
+            _seIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
             {
                 new Coord(50, 50),
                 new Coord(50, 51),
@@ -110,11 +110,11 @@ namespace Tests.Scenes.Areas
                 new Coord(51, 51),
             });
 
-            block = new Block(nwIntersection, swIntersection, seIntersection, neIntersection);
-            locations = block.GetFenceLocations().ToList();
+            _block = new Block(_nwIntersection, _swIntersection, _seIntersection, _neIntersection);
+            locations = _block.GetFenceLocations().ToList();
             Assert.IsNotEmpty(locations);
 
-            swIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
+            _swIntersection = new RoadIntersection(RoadNumbers.Eighth, RoadNames.MatrinLuthorKingJr, new List<Coord>()
             {
                 new Coord(3, 70),
                 new Coord(3, 71),
@@ -122,8 +122,8 @@ namespace Tests.Scenes.Areas
                 new Coord(4, 71),
             });
 
-            block = new Block(nwIntersection, swIntersection, seIntersection, neIntersection);
-            locations = block.GetFenceLocations().ToList();
+            _block = new Block(_nwIntersection, _swIntersection, _seIntersection, _neIntersection);
+            locations = _block.GetFenceLocations().ToList();
             Assert.IsNotEmpty(locations);
         }
     }

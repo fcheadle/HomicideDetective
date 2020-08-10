@@ -1,5 +1,4 @@
-﻿using Engine.Components;
-using Engine.Utilities;
+﻿using Engine.Utilities;
 using Engine.Utilities.Mathematics;
 using GoRogue;
 using SadConsole;
@@ -7,13 +6,10 @@ using System;
 
 namespace Engine.Scenes.Components
 {
-    public class WeatherComponent : Component
+    public class WeatherComponent : ComponentBase
     {
         //add this to the game's map, not individual tiles... although, it isn't working for some reason.
         private SceneMap _map => Game.Map;
-
-        private int _width;
-        private int _height;
         Func<int, int, TimeSpan, double> Fxyt;// F of x, y, and t
         Direction.Types WindDirection;
         float WindStrength; //meters per second
@@ -37,9 +33,9 @@ namespace Engine.Scenes.Components
 
         public override void ProcessTimeUnit()
         {
-            _elapsed += TimeSpan.FromMilliseconds(100);
+            Elapsed += TimeSpan.FromMilliseconds(100);
             BlowWind();
-            Game.UIManager.Display.IsDirty = true;
+            Game.UiManager.Display.IsDirty = true;
         }
 
         private void BlowWind()
@@ -53,7 +49,7 @@ namespace Engine.Scenes.Components
                     {
                         if (terrain.HasComponent<AnimateGlyphComponent>())
                         {
-                            double z = Fxyt(x, y, _elapsed);
+                            double z = Fxyt(x, y, Elapsed);
                             var component = terrain.GetComponent<AnimateGlyphComponent>();
                             if (z > 1.75 || z < -1.75)
                                 component.Start();

@@ -6,7 +6,6 @@ using Engine.Utilities.Mathematics;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -54,11 +53,11 @@ namespace Engine.Scenes
             //MakeBackrooms();//very, very, very slow
             MakeRoadsAndBlocks();
             MakeHouses();
-            //MakePeople();
+            MakePeople();
         }
         public void MakeBackrooms()
         {
-            House backrooms = new House("Backrooms", new Coord(0, 0), HouseType.Backrooms, Direction.Types.DOWN);
+            House backrooms = new House("Backrooms", new Coord(0, 0), HouseType.Backrooms);
             backrooms.Generate();
             Houses.Add(backrooms);
             foreach (Coord floor in backrooms.Floor)
@@ -146,7 +145,7 @@ namespace Engine.Scenes
                 foreach (Coord houseOrigin in block.Addresses)
                 {
                     string address = block.Name[0] + block.Name[1] + i.ToString() + block.Name.Substring(9);
-                    house = new House(address, houseOrigin, HouseType.PrairieHome, Direction.Types.DOWN);
+                    house = new House(address, houseOrigin, HouseType.PrairieHome);
                     house.Generate();
                     house.Rotate(_rotationDegrees, true);
                     Houses.Add(house);
@@ -164,8 +163,7 @@ namespace Engine.Scenes
                 {
                     switch (chance % 8)
                     {
-                        default:
-                        case 0: floor = factory.OliveCarpet(target); break;
+                        default: floor = factory.OliveCarpet(target); break;
                         case 1: floor = factory.LightCarpet(target); break;
                         case 2: floor = factory.ShagCarpet(target); break;
                         case 3: floor = factory.BathroomLinoleum(target); break;

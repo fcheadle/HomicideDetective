@@ -1,5 +1,4 @@
 ﻿using Engine;
-using Engine.Utilities;
 using GoRogue;
 using NUnit.Framework;
 using System.Linq;

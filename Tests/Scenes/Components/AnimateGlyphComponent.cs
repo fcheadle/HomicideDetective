@@ -2,9 +2,6 @@
 using Engine.Scenes.Terrain;
 using GoRogue;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Scenes.Components
 {

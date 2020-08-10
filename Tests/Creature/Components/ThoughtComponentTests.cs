@@ -1,8 +1,5 @@
 ﻿using Engine.Creatures.Components;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Creature.Components
 {
@@ -14,7 +11,7 @@ namespace Tests.Creature.Components
         [SetUp]
         public void SetUp()
         {
-            _base = (ThoughtsComponent)_game.Player.GetComponent<ThoughtsComponent>();
+            _base = (ThoughtsComponent)Game.Player.GetComponent<ThoughtsComponent>();
             _answer = _base.GetDetails();
         }
 
@@ -26,16 +23,16 @@ namespace Tests.Creature.Components
         [Test]
         public void ThinkThoughtsTest()
         {
-            _game.RunOnce();
-            _game.RunOnce();
-            _game.RunOnce();
+            Game.RunOnce();
+            Game.RunOnce();
+            Game.RunOnce();
             Assert.AreEqual(0, _answer.Length);
             _base.Think("hello there.");
-            _game.RunOnce();
+            Game.RunOnce();
             _answer = _base.GetDetails();
             Assert.AreEqual(1, _answer.Length);
             _base.Think("oh, I'm alone...");
-            _game.RunOnce();
+            Game.RunOnce();
             _answer = _base.GetDetails();
             Assert.AreEqual(2, _answer.Length);
             string[] thoughts =
@@ -46,7 +43,7 @@ namespace Tests.Creature.Components
                 "I Hear it in my Fillings...",
             };
             _base.Think(thoughts);
-            _game.RunOnce();
+            Game.RunOnce();
             _answer = _base.GetDetails();
             Assert.AreEqual(4, _answer.Length);
 

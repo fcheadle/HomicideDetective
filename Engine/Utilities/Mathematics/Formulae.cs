@@ -1,6 +1,7 @@
 ﻿using GoRogue;
 using System;
 using System.Collections.Generic;
+// ReSharper disable PossibleLossOfFraction
 
 namespace Engine.Utilities.Mathematics
 {
@@ -82,7 +83,7 @@ namespace Engine.Utilities.Mathematics
 
         public static List<Func<int, int, TimeSpan, double>> NorthBoundWindFormulae = new List<Func<int, int, TimeSpan, double>>()
         {
-            //(x,y,t) => Math.Cos(t.TotalMilliseconds / 666 + Math.Sqrt(Math.Abs((x * y) + y))) > 0.9, //waves going northwest
+            (x,y,t) => Math.Cos(t.TotalMilliseconds / 666 + Math.Sqrt(Math.Abs((x * y) + y))), //waves going northwest
             //(x,y,t) => Math.Sin(x * 7.77 + t.TotalSeconds) + Math.Cos(y / 7.77 + t.TotalSeconds) > 1.1, //lines snaking north-northwest
             //(x,y,t) => Math.Sin(x / 3.33 + t.TotalMilliseconds / 666) + Math.Cos(y * 8.76 + t.TotalMilliseconds / 222), //fast north-northwest bubbles
             //(x,y,t) => Math.Cos(x * 1.125 - t.TotalMilliseconds / 111) + Math.Sin(y + t.TotalMilliseconds / 999) > 1.55, //wavy line crawling north
@@ -95,7 +96,7 @@ namespace Engine.Utilities.Mathematics
         public static List<Func<int, int, TimeSpan, double>> SouthBoundWindFormulae = new List<Func<int, int, TimeSpan, double>>()
         {
             //(x,y,t) => Math.Tan(y*.1 + x*1.75 - t.TotalSeconds) % 10,//south marching lines
-            //(x,y,t) => Math.Sin(x + t.TotalMilliseconds / 111) + Math.Cos(y - t.TotalMilliseconds / 555) > 1.25, //waves zig-zagging south
+            (x,y,t) => Math.Sin(x + t.TotalMilliseconds / 111) + Math.Cos(y - t.TotalMilliseconds / 555), //waves zig-zagging south
             //(x,y,t) => Math.Sin(x - t.TotalMilliseconds / 650) - Math.Cos(y - t.TotalMilliseconds / 325), //bubbles snake south-southeast
             //(x,y,t) => Math.Cos(x * 3.45 - t.TotalMilliseconds / 500) - Math.Sin(y*0.77 - t.TotalMilliseconds / 250), //bubbles waving south
             //(x,y,t) => Math.Cos(x * y - t.TotalMilliseconds / 999) + Math.Sin(y - t.TotalMilliseconds / 111) > 1.55, //chaotic blowing south with cross-breezes 
@@ -106,7 +107,7 @@ namespace Engine.Utilities.Mathematics
 
         public static List<Func<int, int, TimeSpan, double>> ChaoticWindPatterns = new List<Func<int, int, TimeSpan, double>>()
         {
-            //(x,y,t) => 2 * Math.Cos(-t.TotalMilliseconds / 1111 + Math.Sqrt((x-70)*(x-70) / 111 + (y-90)*(y-90) / 111)), //concentric waves from (90,90)
+            (x,y,t) => 2 * Math.Cos(-t.TotalMilliseconds / 1111 + Math.Sqrt((x-70)*(x-70) / 111 + (y-90)*(y-90) / 111)), //concentric waves from (90,90)
             //(x,y,t) => Math.Cos(t.TotalMilliseconds / 222 + Math.Sqrt((x*x) + (y*y))) * 1.751, //concentric waves converging on northwest
 
             //(x,y,t) => 2 * Math.Cos(t.TotalMilliseconds / 777 + Math.Sqrt(Math.Abs(y * y * 0.75 - x * 3.5))), //odd waves
@@ -131,12 +132,12 @@ namespace Engine.Utilities.Mathematics
         };
         public static Func<int, int, TimeSpan, double> RandomWindPattern()
         {
-            List<Func<int, int, TimeSpan, double>> Functions4d = EastBoundWindFormulae;
-            Functions4d.AddRange(WestBoundWindFormulae);
-            Functions4d.AddRange(SouthBoundWindFormulae);
-            Functions4d.AddRange(NorthBoundWindFormulae);
+            List<Func<int, int, TimeSpan, double>> functions4d = EastBoundWindFormulae;
+            functions4d.AddRange(WestBoundWindFormulae);
+            functions4d.AddRange(SouthBoundWindFormulae);
+            functions4d.AddRange(NorthBoundWindFormulae);
 
-            return Functions4d.RandomItem();
+            return functions4d.RandomItem();
         }
         #endregion
     }

@@ -1,10 +1,7 @@
 ﻿using Engine.Scenes;
-using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using SadConsole;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Tests.Mocks;
 
 namespace Tests.Scenes
 {
@@ -14,13 +11,9 @@ namespace Tests.Scenes
         [Test]
         public void NewSceneMapTest()
         {
-            _map = MockGame.UIManager.Map;
+            // ReSharper disable once AccessToStaticMemberViaDerivedType
+            _map = MockGame.UiManager.Map;
             Assert.NotNull(_map);
-        }
-
-        private void NewSceneMap(GameTime obj)
-        {
-            _map = Engine.Game.Map;
             for (int i = 0; i < _map.Width; i++)
             {
                 for (int j = 0; j < _map.Height; j++)

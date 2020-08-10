@@ -1,5 +1,4 @@
-﻿using Engine;
-using Engine.Scenes.Areas;
+﻿using Engine.Scenes.Areas;
 using Engine.Utilities.Mathematics;
 using GoRogue;
 using NUnit.Framework;
@@ -10,11 +9,9 @@ namespace Tests.Scenes.Areas
     [TestFixture]
     class AreaFactoryTests
     {
-        private readonly Coord start = new Coord(1, 1);
+        private readonly Coord _start = new Coord(1, 1);
         private readonly int width = 9;
         private readonly int height = 7;
-        private readonly int rise = 1;
-        private readonly int run = 4;
         private readonly double angleRadians = 0.25;
         [SetUp]
         public void SetUp()
@@ -24,7 +21,7 @@ namespace Tests.Scenes.Areas
         public void RectangleTest()
         {
 
-            Area room = AreaFactory.Rectangle("my office", start, width, height, angleRadians);
+            Area room = AreaFactory.Rectangle("my office", _start, width, height, angleRadians);
 
             Coord nw = room.NorthWestCorner;
             Coord sw = room.SouthWestCorner;
@@ -76,7 +73,7 @@ namespace Tests.Scenes.Areas
             int length = 25;
             Coord origin = new Coord(length, length);
             Coord horizontalBound = origin + new Coord(length, 0);
-            Coord verticalBound = origin + new Coord(0, length);
+            
             Area parallelogram = AreaFactory.RegularParallelogram("My Parallelogram", origin, length, length, 0);
             Assert.IsTrue(parallelogram.Contains(origin), "Didn't contain the origin.");
             Assert.IsTrue(parallelogram.Contains(origin + length), "Didn't contain expected coordinate of " + (origin + length).ToString());

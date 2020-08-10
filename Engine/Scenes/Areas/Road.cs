@@ -27,7 +27,6 @@ namespace Engine.Scenes.Areas
             InnerPoints = Calculate.PointsAlongStraightLine(start, stop, 8);
             switch (Orientation)
             {
-                default:
                 case SadConsole.Orientation.Vertical:
                     OuterPoints = Calculate.PointsAlongStraightLine(new Coord(start.X - 4, start.Y), new Coord(stop.X - 4, stop.Y)).ToList();
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X + 4, start.Y), new Coord(stop.X + 4, stop.Y)).ToList());
@@ -60,7 +59,6 @@ namespace Engine.Scenes.Areas
             InnerPoints = Calculate.PointsAlongStraightLine(start, stop, 8);
             switch (Orientation)
             {
-                default:
                 case SadConsole.Orientation.Vertical:
                     OuterPoints = Calculate.PointsAlongStraightLine(new Coord(start.X - 4, start.Y), new Coord(stop.X - 4, stop.Y)).ToList();
                     OuterPoints.AddRange(Calculate.PointsAlongStraightLine(new Coord(start.X + 4, start.Y), new Coord(stop.X + 4, stop.Y)).ToList());
