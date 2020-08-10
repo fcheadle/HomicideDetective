@@ -1,5 +1,4 @@
-﻿using Engine.Components.UI;
-using Engine.Creatures.Components;
+﻿using Engine.Creatures.Components;
 using Engine.Scenes;
 using Engine.Scenes.Areas;
 using Engine.UI.Components;
@@ -7,7 +6,6 @@ using GoRogue;
 using GoRogue.GameFramework;
 using SadConsole;
 using SadConsole.Components;
-using System;
 using System.Collections.Generic;
 
 namespace Engine.UI
@@ -18,7 +16,7 @@ namespace Engine.UI
         //public ScrollingConsole Display { get; private set; }
         public MagnifyingGlass LookingGlass { get; private set; }
         public ActorComponent Actor => (ActorComponent)Player.GetComponent<ActorComponent>();
-        public CSIKeyboardComponent KeyBoardComponent => (CSIKeyboardComponent)Player.GetComponent<CSIKeyboardComponent>();
+        public CsiKeyboardComponent KeyBoardComponent => (CsiKeyboardComponent)Player.GetComponent<CsiKeyboardComponent>();
         public PageComponent<ThoughtsComponent> Thoughts => (PageComponent<ThoughtsComponent>)Player.GetComponent<PageComponent<ThoughtsComponent>>();
         public PageComponent<HealthComponent> Health => (PageComponent<HealthComponent>)Player.GetComponent<PageComponent<HealthComponent>>();
 
@@ -85,7 +83,10 @@ namespace Engine.UI
                         Controls.Add(display.MaximizeButton);
                     }
                 }
-                catch { } //dont care
+                catch
+                {
+                    // ignored
+                }
             }
             Children.Add(Controls);
 
@@ -105,16 +106,12 @@ namespace Engine.UI
 
             foreach (Area area in Map.GetRegions(Player.Position))
             {
-                answer += area.ToString() + ", ";
+                answer += area + ", ";
             }
             output.Add(answer);
             Thoughts.Component.Think(output.ToArray());
             Health.Print();
             Display.CenterViewPortOnPoint(Map.ControlledGameObject.Position);
-        }
-        public override void Update(TimeSpan timeElapsed)
-        {
-            base.Update(timeElapsed);
         }
 
         private void ControlledGameObject_Changed(object s, ControlledGameObjectChangedArgs e)

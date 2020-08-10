@@ -1,5 +1,4 @@
-﻿using Engine.Components.UI;
-using Engine.UI.Components;
+﻿using Engine.UI.Components;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
@@ -8,11 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedParameter.Local
 
 namespace Engine.UI
 {
-    public class MenuUi : UserInterface
+    public sealed class MenuUi : UserInterface
     {
         //public ScrollingConsole Display { get; private set; } //the main box that covers the screen
         //public BasicEntity ControlledGameObject { get; private set; } //the cursor
@@ -29,14 +29,10 @@ namespace Engine.UI
         readonly int _width = Game.Settings.GameWidth / 3;
         readonly int _height = Game.Settings.GameHeight / 3;
 
-        readonly Coord middlePosition;
-        readonly Coord openSubMenuOffset;
         public MenuUi()
         {
             IsVisible = false;
             IsFocused = false;
-            middlePosition = new Coord(_width, _height);
-            openSubMenuOffset = new Coord(_width / 2, _height / 2);
             UseMouse = true;
             UseKeyboard = true;
             InitDisplay();
@@ -145,8 +141,8 @@ namespace Engine.UI
         public override void Hide()
         {
             base.Hide();
-            Global.CurrentScreen = Game.UIManager;
-            Game.UIManager.Player.IsFocused = true;
+            Global.CurrentScreen = Game.UiManager;
+            Game.UiManager.Player.IsFocused = true;
         }
         public override void Show()
         {
@@ -174,7 +170,6 @@ namespace Engine.UI
             {
                 MainOptions.IsVisible = true;
                 Game.SwitchUserInterface();
-                return;
             }
         }
         public void MoveSelectorTo(MenuPanel panel)
@@ -192,6 +187,8 @@ namespace Engine.UI
         {
             throw new NotImplementedException();
         }
+        // ReSharper disable once UnusedMember.Local
+        // ReSharper disable once UnusedParameter.Local
         private void HelpButton_Click(object sender, EventArgs e)
         {
             //open help console
@@ -204,6 +201,9 @@ namespace Engine.UI
             //open settings console
         }
 
+        // ReSharper disable once UnusedParameter.Local
+        // ReSharper disable once UnusedParameter.Local
+        // ReSharper disable once UnusedMember.Local
         private void NewGameButton_Click(object sender, EventArgs e)
         {
             // open quickstart or advanced start console

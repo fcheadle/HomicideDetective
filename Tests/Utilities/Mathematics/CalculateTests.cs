@@ -1,11 +1,11 @@
-﻿using Engine.Utilities.Mathematics;
-using GoRogue;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Engine.Utilities.Mathematics;
+using GoRogue;
+using NUnit.Framework;
 
-namespace Tests.Utilities
+namespace Tests.Utilities.Mathematics
 {
     [TestFixture]
     public class CalculateTests

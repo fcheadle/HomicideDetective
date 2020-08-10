@@ -3,17 +3,15 @@ using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Controls;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Engine.UI.Components
 {
     public class MenuKeyboardComponent : KeyboardConsoleComponent //as opposed to my own `component` class, which i should really refactor out
     {
-        SadConsole.Console Parent { get; }
+        Console Parent { get; }
         public Coord Position { get => Parent.Position; }
-        private int _buttonIndex = 0;
+        private int _buttonIndex;
         private ReadOnlyCollection<ControlBase> _controls;
         public bool IsPaused
         {
@@ -21,12 +19,12 @@ namespace Engine.UI.Components
             set => Global.CurrentScreen.IsPaused = value;
         }
         //private Dictionary<GameActions, Keys> KeyBindings => Game.Settings.KeyBindings;
-        public MenuKeyboardComponent(SadConsole.Console parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
+        public MenuKeyboardComponent(Console parent)// : base(isUpdate: true, isKeyboard: true, isDraw: false, isMouse: false)
         {
             Parent = parent;
         }
 
-        public override void ProcessKeyboard(SadConsole.Console console, SadConsole.Input.Keyboard info, out bool handled)
+        public override void ProcessKeyboard(Console console, SadConsole.Input.Keyboard info, out bool handled)
         {
             _controls = Game.Menu.ActivePanels.Peek().Controls;
             if (info.IsKeyPressed(Keys.Up))

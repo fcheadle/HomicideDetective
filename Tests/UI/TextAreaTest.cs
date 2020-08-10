@@ -2,9 +2,6 @@
 using GoRogue;
 using Microsoft.Xna.Framework.Input;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.UI
 {
@@ -59,8 +56,8 @@ namespace Tests.UI
         [Test]
         public void WriteLineTest()
         {
-            Coord startingPos = _area.CursorPosition;
-            Coord expectedPos = startingPos + new Coord(0, 1);
+            //Coord startingPos = _area.CursorPosition;
+            //Coord expectedPos = startingPos + new Coord(0, 1);
             _area.WriteLine("Boy howdy, sure is hot today!");
             Assert.True(_area.Text.Contains("Boy howdy"));
             Assert.True(_area.Text.Contains("sure is hot today!"));

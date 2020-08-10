@@ -1,7 +1,6 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using SadConsole;
-using System;
 
 namespace Engine.Scenes.Components
 {
@@ -9,12 +8,9 @@ namespace Engine.Scenes.Components
     public class AnimateGlyphComponent : IGameObjectComponent//ComponentBase
     {
         //AnimatedConsole animation;
-        int _ogGlyph;
-        int[] _animationSteps;
-        int _animationIndex = 0;
-        TimeSpan _interval = TimeSpan.FromMilliseconds(100);
-        TimeSpan _counter = TimeSpan.FromSeconds(0);
-        Timer _timer = new Timer(TimeSpan.FromMilliseconds(15));
+        readonly int _ogGlyph;
+        readonly int[] _animationSteps;
+        int _animationIndex;
         public IGameObject Parent { get; set; }
         public bool Blowing { get; internal set; }
 

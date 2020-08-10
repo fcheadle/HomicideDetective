@@ -1,9 +1,6 @@
 ﻿using Engine.Creatures.Components;
 using Engine.Utilities;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Utilities
 {
@@ -14,7 +11,7 @@ namespace Tests.Utilities
         [Category("NonGraphical")]
         public void EnumValueFromIndexTest()
         {
-            BloodType first = (BloodType)0;
+            BloodType first = 0;
             int amountOfTypes = EnumUtils.EnumLength<BloodType>();
             BloodType last = (BloodType)(amountOfTypes - 1);
             Assert.AreNotEqual(first, last);
@@ -36,7 +33,7 @@ namespace Tests.Utilities
             BloodType type = EnumUtils.RandomEnumValue<BloodType>();
             bool makesnew = false;
             bool makesA = false;
-            bool makesAB = false;
+            bool makesAb = false;
             bool makesO = false;
             bool makesB = false;
             for (int i = 0; i < 50; i++)
@@ -48,7 +45,7 @@ namespace Tests.Utilities
                 if (type == BloodType.B)
                     makesB = true;
                 if (type == BloodType.AB)
-                    makesAB = true;
+                    makesAb = true;
                 if (type == BloodType.O)
                     makesO = true;
 
@@ -58,7 +55,7 @@ namespace Tests.Utilities
             Assert.IsTrue(makesnew);
             Assert.IsTrue(makesA);
             Assert.IsTrue(makesB);
-            Assert.IsTrue(makesAB);
+            Assert.IsTrue(makesAb);
             Assert.IsTrue(makesO);
 
         }

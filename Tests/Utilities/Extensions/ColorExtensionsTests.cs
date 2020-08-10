@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
 
-namespace Tests.Utilities
+namespace Tests.Utilities.Extensions
 {
     [TestFixture]
     public class ColorExtensionsTests

@@ -1,12 +1,9 @@
-﻿using Engine.Components.UI;
-using Engine.UI.Components;
+﻿using Engine.UI.Components;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Engine.UI
 {

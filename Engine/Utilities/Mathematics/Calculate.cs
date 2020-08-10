@@ -10,17 +10,17 @@ namespace Engine.Utilities.Mathematics
     {
         #region map generation
 
-        private static Random _random { get; } = new Random();
-        private const float _piOverOneEighty = (float)(Math.PI / 180);
-        private const float _oneEightyOverPi = (float)(180 / Math.PI);
-        public static float RadiansToDegrees(float theta) => theta * _oneEightyOverPi;
-        public static float DegreesToRadians(int degrees) => degrees * _piOverOneEighty;
-        public static float DegreesToRadians(float degrees) => degrees * _piOverOneEighty;
+        private static Random Random { get; } = new Random();
+        private const float PiOverOneEighty = (float)(Math.PI / 180);
+        private const float OneEightyOverPi = (float)(180 / Math.PI);
+        public static float RadiansToDegrees(float theta) => theta * OneEightyOverPi;
+        public static float DegreesToRadians(int degrees) => degrees * PiOverOneEighty;
+        public static float DegreesToRadians(float degrees) => degrees * PiOverOneEighty;
         #endregion
 
         #region chances
         public static bool PercentChance(int percentChance) => percentChance >= PercentValue();
-        public static int PercentValue() => _random.Next(1, 101);
+        public static int PercentValue() => Random.Next(1, 101);
         #endregion
 
         #region MapUtils
@@ -69,7 +69,7 @@ namespace Engine.Utilities.Mathematics
         public static List<Coord> PointsAlongStraightLine(Coord start, Coord stop, int width)
         {
             if (width == 0)
-                throw new ArgumentOutOfRangeException("width must be equal to or greater than 1.");
+                throw new ArgumentOutOfRangeException(nameof(width));
 
             List<Coord> points = PointsAlongStraightLine(start, stop).ToList();
             List<Coord> answer = new List<Coord>();
@@ -111,12 +111,12 @@ namespace Engine.Utilities.Mathematics
             borderCells.AddRange(PointsAlongStraightLine(min, bl).ToList());
             borderCells.AddRange(PointsAlongStraightLine(bl, max).ToList());
 
-            return borderCells.Distinct().ToList(); ;
+            return borderCells.Distinct().ToList();
         }
 
         internal static int RandomInt(int min, int max)
         {
-            return _random.Next(min, max);
+            return Random.Next(min, max);
         }
         #endregion
     }

@@ -8,7 +8,7 @@ namespace Engine.Scenes.Areas
         public static Area Rectangle(string name, Coord start, int width, int height, double angleRads = 0)
         {
             if (angleRads <= -1 || angleRads >= 1)
-                throw new ArgumentOutOfRangeException("angleRads must be between -1 and 1.");
+                throw new ArgumentOutOfRangeException(nameof(angleRads));
 
             int hRatio = (int)(height * angleRads);
             int wRatio = (int)(width * angleRads);
@@ -26,7 +26,7 @@ namespace Engine.Scenes.Areas
         }
         public static Area Closet(string name, Coord origin)
         {
-            return Rectangle(name, origin, 3, 3, 0);
+            return Rectangle(name, origin, 3, 3);
         }
         public static Area FromRectangle(string name, Rectangle rectangle)
         {

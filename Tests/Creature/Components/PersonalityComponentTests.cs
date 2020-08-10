@@ -1,8 +1,5 @@
 ﻿using Engine.Creatures.Components;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tests.Creature.Components
 {
@@ -14,7 +11,7 @@ namespace Tests.Creature.Components
         [SetUp]
         public void SetUp()
         {
-            _component = (PersonalityComponent)_game.Player.GetComponent<PersonalityComponent>();
+            _component = (PersonalityComponent)Game.Player.GetComponent<PersonalityComponent>();
         }
         [Test]
         public void NewPersonalityComponentTest()

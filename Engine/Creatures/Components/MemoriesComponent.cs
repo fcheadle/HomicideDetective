@@ -1,9 +1,8 @@
-﻿using Engine.Components;
-using SadConsole;
+﻿using SadConsole;
 
 namespace Engine.Creatures.Components
 {
-    public class MemoriesComponent : Component
+    public class MemoriesComponent : ComponentBase
     {
         //List<Memory> Memories;
         public MemoriesComponent(BasicEntity parent) : base(isUpdate: true, isKeyboard: false, isDraw: true, isMouse: false)

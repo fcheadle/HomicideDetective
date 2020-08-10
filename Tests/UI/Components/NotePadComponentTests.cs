@@ -1,7 +1,6 @@
-﻿using Engine.Components.UI;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SadConsole.Input;
-using System.Linq;
+using Engine.UI.Components;
 
 namespace Tests.UI.Components
 {
@@ -13,7 +12,7 @@ namespace Tests.UI.Components
         [SetUp]
         public void SetUp()
         {
-            _component = (NotePadComponent)_game.Player.GetComponent<NotePadComponent>();
+            _component = (NotePadComponent)Game.Player.GetComponent<NotePadComponent>();
         }
 
         [Test]
@@ -30,22 +29,22 @@ namespace Tests.UI.Components
         public void GetDetailsTest()
         {
             _answer = _component.GetDetails();
-            _game.SwapUpdate(GetDetails);
-            _game.RunOnce();
+            Game.SwapUpdate(GetDetails);
+            Game.RunOnce();
             Assert.AreEqual(1, _answer.Length);
         }
         private void GetDetails(Microsoft.Xna.Framework.GameTime time)
         {
-            _component = (NotePadComponent)_game.Player.GetComponent<NotePadComponent>();
+            _component = (NotePadComponent)Game.Player.GetComponent<NotePadComponent>();
         }
 
         [Test]
         public void MinimizeMaximizeTest()
         {
-            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
+            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UiManager, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UIManager, new Mouse() { RightClicked = true })));
+            _component.MouseButton_Clicked(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UiManager, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
         }

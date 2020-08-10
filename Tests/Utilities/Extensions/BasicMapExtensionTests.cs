@@ -1,13 +1,14 @@
 using Engine.Scenes.Terrain;
 using Engine.Utilities.Extensions;
 using GoRogue;
-using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using SadConsole;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Color = Microsoft.Xna.Framework.Color;
+// ReSharper disable InconsistentNaming
+// ReSharper disable PossibleLossOfFraction
+// ReSharper disable CollectionNeverQueried.Local
 
 namespace Tests.Utilities.Extensions
 {
@@ -97,7 +98,7 @@ namespace Tests.Utilities.Extensions
         [Test]
         public void SwapXYTest()
         {
-            BasicMap reversed = _map.SwapXY();
+            BasicMap reversed = _map.SwapXy();
 
             for (int i = 0; i < reversed.Width; i++)
             {
