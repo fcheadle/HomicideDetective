@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net5.0;netcoreapp3.1;netstandard2.1</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
     <ApplicationIcon>hd_icon.ico</ApplicationIcon>
   </PropertyGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\HomicideDetective.Engine\HomicideDetective.Engine.csproj" />
+    <ProjectReference Include="..\HomicideDetective.Old\HomicideDetective.Old.csproj" />
   </ItemGroup>
 </Project>

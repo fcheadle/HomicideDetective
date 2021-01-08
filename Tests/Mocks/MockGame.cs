@@ -1,11 +1,11 @@
 ﻿using System;
-using Engine.Creatures;
-using Engine.Items;
-using Engine.Scenes.Components;
-using Engine.Scenes.Terrain;
+using HomicideDetective.Old.Creatures;
+using HomicideDetective.Old.Items;
+using HomicideDetective.Old.Scenes.Components;
+using HomicideDetective.Old.Scenes.Terrain;
 using Microsoft.Xna.Framework;
-using Game = Engine.Game;
-using Settings = Engine.Settings;
+using Game = HomicideDetective.Old.Game;
+using Settings = HomicideDetective.Old.Settings;
 
 namespace Tests.Mocks
 {

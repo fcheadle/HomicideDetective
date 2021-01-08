@@ -1,4 +1,4 @@
-﻿using Engine.Creatures.Components;
+﻿using HomicideDetective.Old.Creatures.Components;
 using NUnit.Framework;
 
 namespace Tests.Creature.Components

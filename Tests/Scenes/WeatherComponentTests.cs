@@ -1,4 +1,4 @@
-﻿using Engine.Scenes.Components;
+﻿using HomicideDetective.Old.Scenes.Components;
 using NUnit.Framework;
 
 namespace Tests.Scenes
@@ -11,7 +11,7 @@ namespace Tests.Scenes
         [SetUp]
         public void SetUp()
         {
-            _component = (WeatherComponent)Engine.Game.UiManager.GetComponent<WeatherComponent>();
+            _component = (WeatherComponent)HomicideDetective.Old.Game.UiManager.GetComponent<WeatherComponent>();
         }
         [Test]
         public void NewWeatherComponentTest()

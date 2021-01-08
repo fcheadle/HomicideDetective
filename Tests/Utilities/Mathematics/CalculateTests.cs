@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Engine.Utilities.Mathematics;
+using HomicideDetective.Old.Utilities.Mathematics;
 using GoRogue;
 using NUnit.Framework;
 

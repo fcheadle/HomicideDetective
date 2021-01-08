@@ -1,5 +1,5 @@
-﻿using Engine.Utilities.Extensions;
-using Engine.Utilities.Mathematics;
+﻿using HomicideDetective.Old.Utilities.Extensions;
+using HomicideDetective.Old.Utilities.Mathematics;
 using GoRogue;
 using NUnit.Framework;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
 ﻿using System;
-using Engine.Utilities.Mathematics;
+using HomicideDetective.Old.Utilities.Mathematics;
 using NUnit.Framework;
 
 namespace Tests.Utilities.Mathematics

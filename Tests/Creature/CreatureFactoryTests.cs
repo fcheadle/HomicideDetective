@@ -1,5 +1,5 @@
-﻿using Engine.Creatures;
-using Engine.Creatures.Components;
+﻿using HomicideDetective.Old.Creatures;
+using HomicideDetective.Old.Creatures.Components;
 using GoRogue;
 using NUnit.Framework;
 using SadConsole;

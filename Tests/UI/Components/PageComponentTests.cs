@@ -1,7 +1,7 @@
-﻿using Engine.Creatures.Components;
+﻿using HomicideDetective.Old.Creatures.Components;
 using NUnit.Framework;
 using SadConsole.Input;
-using Engine.UI.Components;
+using HomicideDetective.Old.UI.Components;
 
 namespace Tests.UI.Components
 {
@@ -39,10 +39,10 @@ namespace Tests.UI.Components
         [Test]
         public void MinimizeMaximizeTest()
         {
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UiManager, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(HomicideDetective.Old.Game.UiManager, new Mouse() { RightClicked = true })));
             Assert.True(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
-            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(Engine.Game.UiManager, new Mouse() { RightClicked = true })));
+            _component.MinimizeMaximize(this, new MouseEventArgs(new MouseConsoleState(HomicideDetective.Old.Game.UiManager, new Mouse() { RightClicked = true })));
             Assert.False(_component.Window.IsVisible);
             Assert.True(_component.MaximizeButton.IsVisible);
         }

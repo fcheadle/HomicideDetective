@@ -1,7 +1,7 @@
-﻿using Engine.Scenes;
-using Engine.Scenes.Areas;
-using Engine.Scenes.Terrain;
-using Engine.Utilities.Extensions;
+﻿using HomicideDetective.Old.Scenes;
+using HomicideDetective.Old.Scenes.Areas;
+using HomicideDetective.Old.Scenes.Terrain;
+using HomicideDetective.Old.Utilities.Extensions;
 using GoRogue;
 using Microsoft.Xna.Framework;
 using SadConsole;

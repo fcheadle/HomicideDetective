@@ -1,5 +1,5 @@
-﻿using Engine.Scenes.Areas;
-using Engine.Utilities.Mathematics;
+﻿using HomicideDetective.Old.Scenes.Areas;
+using HomicideDetective.Old.Utilities.Mathematics;
 using GoRogue;
 using NUnit.Framework;
 using System.Linq;

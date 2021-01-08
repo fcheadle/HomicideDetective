@@ -1,5 +1,5 @@
-﻿using Engine.UI.Components;
-using Engine.Utilities;
+﻿using HomicideDetective.Old.UI.Components;
+using HomicideDetective.Old.Utilities;
 using GoRogue;
 using NUnit.Framework;
 using Tests.Mocks;

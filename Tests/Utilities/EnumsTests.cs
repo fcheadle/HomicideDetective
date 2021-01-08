@@ -1,5 +1,5 @@
-﻿using Engine.Creatures.Components;
-using Engine.Utilities;
+﻿using HomicideDetective.Old.Creatures.Components;
+using HomicideDetective.Old.Utilities;
 using NUnit.Framework;
 
 namespace Tests.Utilities
