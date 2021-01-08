@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net5.0;netcoreapp3.1;netstandard2.1</TargetFrameworks>
+        <LangVersion>9</LangVersion>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="GoRogue" Version="3.0.0-alpha01-debug" />
+      <PackageReference Include="SadConsole.Host.SFML" Version="9.0.0-beta3" />
+      <PackageReference Include="TheSadRogue.Integration" Version="0.0.0.2" />
+    </ItemGroup>
+
+</Project>

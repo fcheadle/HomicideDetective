@@ -24,7 +24,7 @@ namespace Engine.Scenes.Areas
                 )
         { }
 
-        //this reads like the drunken noodling of a redneck whose had one too many. fix it later.
+        //this reads like the drunken noodling of a redneck whose had a few too many. fix it later.
         public IEnumerable<Coord> GetFenceLocations()
         {
             List<Coord> answer = new List<Coord>();

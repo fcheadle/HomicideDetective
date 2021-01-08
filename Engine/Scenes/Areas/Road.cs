@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Engine.Scenes.Areas
 {
+    //Requires significant refactor
     public class Road : Area
     {
         public Coord Start { get; }

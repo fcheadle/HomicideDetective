@@ -58,23 +58,23 @@ namespace Engine.Utilities.Mathematics
         public static List<Func<int, int, TimeSpan, double>> EastBoundWindFormulae = new List<Func<int, int, TimeSpan, double>>()
         {
             //these are cleared - safe and pretty
-            //(x,y,t) => -Math.Cos(x * 3.45 - t.TotalMilliseconds / 777) - Math.Sin(y*0.77 - t.TotalMilliseconds / 77), //east waves - beautiful
-            //(x,y,t) => Math.Sin(x - t.TotalMilliseconds / 650) + Math.Cos(y - t.TotalMilliseconds / 325), //bubbles going south-southeast - beautiful
-            //(x,y,t) => 2 * Math.Cos(-t.TotalSeconds + Math.Sqrt((x+180)*(x+180)/444 + (y+90)*(y+90)/444)), // waves going southeast - beautiful
-            //(x,y,t) => 2 * Math.Cos(-t.TotalSeconds + Math.Sqrt(x*x/66 + (y+13)*(y+80)/222)), // waves going southeast - beautiful
-            //(x,y,t) => 2 * Math.Cos(-t.TotalSeconds + Math.Sqrt((x+222)*(x+222)/222 + (y+15)*(y+15)/66)), // waves going southeast - beautiful
-            //(x,y,t) => 2 * Math.Cos(t.TotalSeconds + Math.Sqrt((x-2222)*(x-2222)/222 + (y-1000)*(y-1000)/66)), // waves going southeast - beautiful
-            //(x,y,t) => 2 * Math.Cos(t.TotalSeconds + Math.Sqrt((x-1111)*(x-1111)/33 + (y-555)*(y-555)/99)), // waves going southeast - beautiful  
-            //(x,y,t) => 2 * Math.Cos(1.75*t.TotalSeconds + Math.Sqrt((x-2222)*(x-2222)/33 + (y-1000)*(y-1000)/99)), // waves going southeast - beautiful
+            (x,y,t) => -Math.Cos(x * 3.45 - t.TotalMilliseconds / 777) - Math.Sin(y*0.77 - t.TotalMilliseconds / 77), //east waves - beautiful
+            (x,y,t) => Math.Sin(x - t.TotalMilliseconds / 650) + Math.Cos(y - t.TotalMilliseconds / 325), //bubbles going south-southeast - beautiful
+            (x,y,t) => 2 * Math.Cos(-t.TotalSeconds + Math.Sqrt((x+180)*(x+180)/444 + (y+90)*(y+90)/444)), // waves going southeast - beautiful
+            (x,y,t) => 2 * Math.Cos(-t.TotalSeconds + Math.Sqrt(x*x/66 + (y+13)*(y+80)/222)), // waves going southeast - beautiful
+            (x,y,t) => 2 * Math.Cos(-t.TotalSeconds + Math.Sqrt((x+222)*(x+222)/222 + (y+15)*(y+15)/66)), // waves going southeast - beautiful
+            (x,y,t) => 2 * Math.Cos(t.TotalSeconds + Math.Sqrt((x-2222)*(x-2222)/222 + (y-1000)*(y-1000)/66)), // waves going southeast - beautiful
+            (x,y,t) => 2 * Math.Cos(t.TotalSeconds + Math.Sqrt((x-1111)*(x-1111)/33 + (y-555)*(y-555)/99)), // waves going southeast - beautiful  
+            (x,y,t) => 2 * Math.Cos(1.75*t.TotalSeconds + Math.Sqrt((x-2222)*(x-2222)/33 + (y-1000)*(y-1000)/99)), // waves going southeast - beautiful
             (x,y,t) => 2 * Math.Sin(x * (y / 8) + y * Math.Sin(y / (x+1)) + t.TotalSeconds),//bizarre and cool
         };
         public static List<Func<int, int, TimeSpan, double>> WestBoundWindFormulae = new List<Func<int, int, TimeSpan, double>>()
         {
             //cleared - safe and pretty
-            //(x,y,t) => 1.5 * Math.Sin(x / 3.33 + t.TotalSeconds) + Math.Cos(y * 3.33 + t.TotalSeconds), //bubbles northwest
-            //(x,y,t) => Math.Sin(x + t.TotalMilliseconds / 444) + Math.Cos(y + t.TotalMilliseconds / 333),//bubbles going northwest
-            //(x,y,t) => -Math.Cos(x - t.TotalSeconds) - Math.Sin(y + t.TotalSeconds), //NW bubbles - so so
-            //(x,y,t) => Math.Tan(y*.625 + x*1.75 - t.TotalSeconds / 100) % 2.01,//odd lines marching west, unbound
+            (x,y,t) => 1.5 * Math.Sin(x / 3.33 + t.TotalSeconds) + Math.Cos(y * 3.33 + t.TotalSeconds), //bubbles northwest
+            (x,y,t) => Math.Sin(x + t.TotalMilliseconds / 444) + Math.Cos(y + t.TotalMilliseconds / 333),//bubbles going northwest
+            (x,y,t) => -Math.Cos(x - t.TotalSeconds) - Math.Sin(y + t.TotalSeconds), //NW bubbles - so so
+            (x,y,t) => Math.Tan(y*.625 + x*1.75 - t.TotalSeconds / 100) % 2.01,//odd lines marching west, unbound
             (x,y,t) => 2* Math.Cos(t.TotalSeconds + Math.Sqrt(Math.Abs(x * y + y * 180))), //badass west waves
             (x,y,t) => 2* Math.Cos(t.TotalSeconds / 2 + Math.Sqrt(Math.Abs(x * y + y * 1400))), //badass west waves
             (x,y,t) => 2* Math.Cos(-t.TotalMilliseconds / 888 + Math.Sqrt(Math.Abs(x * y - y * 1400))), //badass west waves

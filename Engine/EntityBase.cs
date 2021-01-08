@@ -7,6 +7,8 @@ using SadConsole;
 
 namespace Engine
 {
+    //going away in favor of RogueLikeEntity
+    //and markings on the IsPhysical component
     public class EntityBase : BasicEntity
     {
         //public string Name { get; set; }

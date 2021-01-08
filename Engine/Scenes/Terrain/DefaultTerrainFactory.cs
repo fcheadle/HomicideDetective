@@ -7,6 +7,8 @@ using SadConsole;
 
 namespace Engine.Scenes.Terrain
 {
+    //can probably do without this class
+    //refactor methods into a GoRogue GenerationStep upon alpha
     public class DefaultTerrainFactory : ITerrainFactory
     {
         public BasicTerrain Generic(Coord position, int glyph)

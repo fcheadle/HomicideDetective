@@ -2,6 +2,7 @@
 
 namespace Engine.Creatures
 {
+    //can probably do without this class
     public interface ICreatureFactory
     {
         EntityBase Person(Coord position);

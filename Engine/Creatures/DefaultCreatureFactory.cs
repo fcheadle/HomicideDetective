@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace Engine.Creatures
 {
+    //can probably do without this class
     public class DefaultCreatureFactory : ICreatureFactory
     {
         public EntityBase Person(Coord position)
@@ -36,10 +37,10 @@ namespace Engine.Creatures
         private void PersonComponents(EntityBase critter)
         {
             critter.Components.Add(new ThoughtsComponent(critter));
-            critter.Components.Add(new PersonalityComponent(critter));
-            critter.Components.Add(new EmotionsComponent(critter));
+            // critter.Components.Add(new PersonalityComponent(critter));
+            // critter.Components.Add(new EmotionsComponent(critter));
             critter.Components.Add(new ActorComponent(critter));
-            critter.Components.Add(new SpeechComponent(critter));
+            // critter.Components.Add(new SpeechComponent(critter));
         }
 
         private void PlayerComponents(EntityBase critter)

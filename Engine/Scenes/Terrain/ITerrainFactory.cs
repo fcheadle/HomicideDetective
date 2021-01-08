@@ -3,6 +3,7 @@ using SadConsole;
 
 namespace Engine.Scenes.Terrain
 {
+    //refactor this out
     public interface ITerrainFactory
     {
         BasicTerrain Generic(Coord position, int glyph);

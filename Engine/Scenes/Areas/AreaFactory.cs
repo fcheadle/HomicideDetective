@@ -3,6 +3,7 @@ using System;
 
 namespace Engine.Scenes.Areas
 {
+    //going away in favor of GoRogue.Region
     public static class AreaFactory
     {
         public static Area Rectangle(string name, Coord start, int width, int height, double angleRads = 0)

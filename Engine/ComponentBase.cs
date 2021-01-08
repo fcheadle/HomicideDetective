@@ -8,6 +8,7 @@ using SadConsole.Input;
 
 namespace Engine
 {
+    //Going away in favore of RogueLikeComponentBase
     public abstract class ComponentBase : IConsoleComponent, IGameObjectComponent
     {
         public string Name { get; set; }

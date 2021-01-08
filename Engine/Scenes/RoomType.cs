@@ -1,5 +1,6 @@
 ﻿namespace Engine.Scenes
 {
+    //reconsider how we're using this and if we even need this?
     public enum RoomType
     {
         Parlor,

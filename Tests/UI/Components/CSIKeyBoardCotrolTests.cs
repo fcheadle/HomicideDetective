@@ -8,7 +8,7 @@ namespace Tests.UI.Components
     class CsiKeyboardControlTests : TestBase
     {
         CsiKeyboardComponent _component;
-        MagnifyingGlassComponent _lookingGlass;
+        //MagnifyingGlassComponent _lookingGlass;
 
         // ReSharper disable once UnusedMember.Local
         [Datapoints] private GameAction[] _allActions =
@@ -116,17 +116,17 @@ namespace Tests.UI.Components
         }
 
         //[Theory] //todo - just takes too long for now
-        public void QueriableActionOpensACursorTest((GameAction actionkey, GameAction purpose) dataset)
-        {
-            _lookingGlass = (MagnifyingGlassComponent)Game.Player.GetComponent<MagnifyingGlassComponent>();
-            Assert.Null(_lookingGlass);
-
-            _component.TakeAction(dataset.actionkey);
-            if (dataset.actionkey == dataset.purpose)
-                Assert.AreEqual(dataset.purpose, _lookingGlass.Purpose);
-            else
-                Assert.AreNotEqual(dataset.purpose, _lookingGlass.Purpose);
-        }
+        // public void QueriableActionOpensACursorTest((GameAction actionkey, GameAction purpose) dataset)
+        // {
+        //     _lookingGlass = (MagnifyingGlassComponent)Game.Player.GetComponent<MagnifyingGlassComponent>();
+        //     Assert.Null(_lookingGlass);
+        //
+        //     _component.TakeAction(dataset.actionkey);
+        //     if (dataset.actionkey == dataset.purpose)
+        //         Assert.AreEqual(dataset.purpose, _lookingGlass.Purpose);
+        //     else
+        //         Assert.AreNotEqual(dataset.purpose, _lookingGlass.Purpose);
+        // }
 
         //[Theory]//todo -- just takes too long for now
         public void TogglesWindowsTest((GameAction action, string windowTitle) dataset)

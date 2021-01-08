@@ -9,8 +9,8 @@ using Console = SadConsole.Console;
 
 namespace Engine.UI.Components
 {
-    //Everything is working in this class,
-    //except scrolling back and forth
+    //refactor this upon alpha
+    //there are likely much better ways of doing this
     public class NotePadComponent : ComponentBase, IDisplay
     {
         public Window Window { get; private set; }

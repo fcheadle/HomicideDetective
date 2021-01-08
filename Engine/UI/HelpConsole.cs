@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Engine.UI
 {
+    //this should become a component that opens (or is added) from the Keyboard component?
     public class HelpPanel : MenuPanel
     {
         public TextBox SearchField { get; private set; }

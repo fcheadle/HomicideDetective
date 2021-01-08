@@ -9,6 +9,7 @@ using System;
 
 namespace Engine.UI.Components
 {
+    //remove this in favor of PlayerControlsComponent upon alpha
     public class CsiKeyboardComponent : KeyboardConsoleComponent //as opposed to my own `component` class, which i should really refactor out
     {
         BasicEntity Parent { get; }
@@ -104,7 +105,8 @@ namespace Engine.UI.Components
 
         private void OpenCursor(GameAction purpose)
         {
-            Parent.Components.Add(new MagnifyingGlassComponent(Parent, Parent.Position, purpose));
+            //todo 
+            // Parent.Components.Add(new MagnifyingGlassComponent(Parent, Parent.Position, purpose));
         }
 
         public void ToggleMenu()

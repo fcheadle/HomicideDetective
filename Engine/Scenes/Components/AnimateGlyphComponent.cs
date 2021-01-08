@@ -4,7 +4,7 @@ using SadConsole;
 
 namespace Engine.Scenes.Components
 {
-    //Can't add ComponentBase to terrain objects, and we need this to be able to do that
+    //Refactor this into a "blowing grass" entity that disposes of itself when finished
     public class AnimateGlyphComponent : IGameObjectComponent//ComponentBase
     {
         //AnimatedConsole animation;

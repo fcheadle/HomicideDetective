@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace Engine.UI.Components
 {
+    //refactor for clarity upon alpha
     public class MenuKeyboardComponent : KeyboardConsoleComponent //as opposed to my own `component` class, which i should really refactor out
     {
         Console Parent { get; }

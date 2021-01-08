@@ -10,6 +10,7 @@ using Console = SadConsole.Console;
 
 namespace Engine.UI.Components
 {
+    //refactor this for clarity upon alpha
     public class PageComponent<T> : ComponentBase, IDisplay where T : ComponentBase
     {
         const int Width = 24;

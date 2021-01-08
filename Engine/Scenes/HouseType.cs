@@ -1,5 +1,6 @@
 ﻿namespace Engine.Scenes
 {
+    //refactor this out eventually
     public enum HouseType
     {
         //Testing,

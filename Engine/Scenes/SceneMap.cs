@@ -11,6 +11,8 @@ using System.Linq;
 
 namespace Engine.Scenes
 {
+    //remove this in favor of RogueLikeMap
+    //and refactor the generation parts into generation steps
     public class SceneMap : BasicMap
     {
         private int _width;

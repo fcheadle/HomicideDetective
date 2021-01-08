@@ -7,7 +7,8 @@ using System.Collections.Generic;
 
 namespace Engine
 {
-    public class Settings// : ISettings
+    //may want to refactor out, somehow?
+    public class Settings
     {
         public GameMode Mode { get; set; } = GameMode.RealTimeWithPause;
         public int MapWidth { get; set; } = 360;

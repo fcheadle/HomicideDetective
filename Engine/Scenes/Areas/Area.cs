@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace Engine.Scenes.Areas
 {
+    //Going away in favor of GoRogue Region
     public class Area
     {
         public string Name { get; set; }

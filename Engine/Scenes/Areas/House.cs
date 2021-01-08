@@ -7,6 +7,7 @@ using Rectangle = GoRogue.Rectangle;
 
 namespace Engine.Scenes.Areas
 {
+    //requires refactor after alpha
     public class House : Area
     {
         //public BasicMap Map;

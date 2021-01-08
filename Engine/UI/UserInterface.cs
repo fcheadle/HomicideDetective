@@ -5,6 +5,7 @@ using System;
 
 namespace Engine.UI
 {
+    //refactor out and only support one UI, which is itself a ScreenSurface
     public class UserInterface : ContainerConsole
     {
         public virtual ScrollingConsole Display { get; protected set; }    

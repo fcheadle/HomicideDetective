@@ -1,15 +1,16 @@
 ﻿namespace HomicideDetective
 {
+    //need to reduce the memory footprint of this significantly
     class Program
     {
         // ReSharper disable once UnusedParameter.Local
         static void Main(string[] args)
         {
-            Engine.Settings settings = new Engine.Settings();
-            Engine.Creatures.DefaultCreatureFactory creatureFactory = new Engine.Creatures.DefaultCreatureFactory();
-            Engine.Items.IItemFactory itemFactory = new Engine.Items.DefaultItemFactory();
-            Engine.Scenes.Terrain.DefaultTerrainFactory terrainFactory = new Engine.Scenes.Terrain.DefaultTerrainFactory();
-            Engine.Program.Start(settings, creatureFactory,itemFactory,terrainFactory);
+            // Engine.Settings settings = new Engine.Settings();
+            // Engine.Creatures.DefaultCreatureFactory creatureFactory = new Engine.Creatures.DefaultCreatureFactory();
+            // Engine.Items.IItemFactory itemFactory = new Engine.Items.DefaultItemFactory();
+            // Engine.Scenes.Terrain.DefaultTerrainFactory terrainFactory = new Engine.Scenes.Terrain.DefaultTerrainFactory();
+            // Engine.Program.Start(settings, creatureFactory,itemFactory,terrainFactory);
         }
     }
 }

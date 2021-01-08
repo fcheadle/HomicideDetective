@@ -6,9 +6,9 @@ using System;
 
 namespace Engine.Scenes.Components
 {
+    //Requires significant refactor on alpha
     public class WeatherComponent : ComponentBase
     {
-        //add this to the game's map, not individual tiles... although, it isn't working for some reason.
         private SceneMap _map => Game.Map;
         Func<int, int, TimeSpan, double> Fxyt;// F of x, y, and t
         Direction.Types WindDirection;
