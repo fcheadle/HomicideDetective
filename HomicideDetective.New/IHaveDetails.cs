@@ -1,4 +1,4 @@
-namespace ExampleGame.UserInterface
+namespace HomicideDetective.New
 {
     public interface IHaveDetails
     {

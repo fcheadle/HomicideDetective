@@ -5,9 +5,9 @@ using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using TheSadRogue.Integration;
 
-namespace HomicideDetective.New.Scenes.Generation
+namespace HomicideDetective.New.Places.Generation
 {
-    public class ColorfulGrassStep : GenerationStep
+    public class GrassStep : GenerationStep
     {
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {

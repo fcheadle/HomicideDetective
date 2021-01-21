@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ExampleGame.UserInterface;
 using SadRogue.Primitives;
 using TheSadRogue.Integration.Components;
 
-namespace HomicideDetective.New
+namespace HomicideDetective.New.People
 {
-    public enum BloodType
+    public enum BloodTypes
     {
         O,
         A,

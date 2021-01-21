@@ -1,30 +1,33 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using GoRogue.GameFramework;
 using GoRogue.MapGeneration;
-using HomicideDetective.New;
-using HomicideDetective.New.Scenes.Generation;
-using HomicideDetective.New.UserInterface;
+using HomicideDetective.New.People;
+using HomicideDetective.New.Places;
+using HomicideDetective.New.Places.Generation;
 using SadConsole;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using TheSadRogue.Integration;
 using TheSadRogue.Integration.Components;
+using TheSadRogue.Integration.Maps;
 
-namespace ExampleGame
+namespace HomicideDetective.New
 {
-    /// <summary>
-    /// A tiny game to give examples of how to use GoRogue
-    /// </summary>
     class Program
     {
         public const int Width = 80;
         public const int Height = 25;
-        private const int MapWidth = 80;// for now
-        private const int MapHeight = 25; // for now
-        private static RogueLikeMap Map;
-        private static RogueLikeEntity PlayerCharacter;
-        private static SettableCellSurface MapWindow;
-        private static ScreenSurface MessageWindow;
+        private const int MapWidth = 160;// for now
+        private const int MapHeight = 50; // for now
+        public static readonly Random GlobalRandom = new Random();
         
+        private static RogueLikeMap _map;
+        private static RogueLikeEntity _playerCharacter;
+        private static ThoughtComponent _thoughts => _playerCharacter.AllComponents.GetFirst<ThoughtComponent>();
+        private static SettableCellSurface _mapWindow;
+        private static ScreenSurface _messageWindow;
         static void Main(/*string[] args*/)
         {
             Game.Create(Width, Height);
@@ -38,64 +41,40 @@ namespace ExampleGame
         /// </summary>
         private static void Init()
         {
-            Map = GenerateMap();
-            PlayerCharacter = GeneratePlayerCharacter();
-            GameHost.Instance.Screen = Map.CreateRenderer();
-            MessageWindow = GenerateMessageWindow();
+            _map = GenerateMap();
+            _playerCharacter = GeneratePlayerCharacter();
+            GameHost.Instance.Screen = _map;
+            _messageWindow = GenerateMessageWindow();
         }
 
         private static RogueLikeMap GenerateMap()
         {
-            var generator = new Generator(MapWidth, MapHeight)
-                .AddStep(new ColorfulGrassStep())
-                .AddStep(new BlockGenerationStep())
-                .AddStep(new HouseGenerationStep())
-                .Generate();
-            
-            RogueLikeMap map = new RogueLikeMap(MapWidth, MapHeight, 4, Distance.Euclidean);
-            
-            
-            var generatedMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
-            foreach(var location in generatedMap.Positions())
-                map.SetTerrain(generatedMap[location]);
-            
-            generatedMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("block");
-            foreach(var location in generatedMap.Positions().Where(p=> generatedMap[p] != null))
-                map.SetTerrain(generatedMap[location]);
-
-            generatedMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("house");
-            foreach(var location in generatedMap.Positions().Where(p => generatedMap[p] != null))
-                map.SetTerrain(generatedMap[location]);
-            
-            var cells = new ArrayView<ColoredGlyph>(MapWidth, MapHeight);
-            cells.ApplyOverlay(map.TerrainView);
-
-            MapWindow = new SettableCellSurface(map, Width, Height);
-            
-            return map;
+            var crimeScene = new CrimeScene(MapWidth, MapHeight);
+            crimeScene.Generate();
+            return crimeScene;
         }
 
         private static RogueLikeEntity GeneratePlayerCharacter()
         {
-            var position = Map.WalkabilityView.Positions().First(p => Map.WalkabilityView[p]);
-            var player = new RogueLikeEntity(position, 1, false, true, 1);
+            var position = _map.WalkabilityView.Positions().First(p => _map.WalkabilityView[p]);
+            var player = new Person(position);
 
-            player.AddComponent(new PlayerControlsComponent());
+            player.AllComponents.Add(new PlayerControlsComponent());
             player.IsFocused = true;
-            Map.AddEntity(player);
+            _map.AddEntity(player);
 
             return player;
         }
 
         private static ScreenSurface GenerateMessageWindow()
         {
-            var health = new HealthComponent();
-            var page = new PageComponent<HealthComponent>(health);
-            
-            PlayerCharacter.AddComponent(health);
-            PlayerCharacter.AddComponent(page);
+            _thoughts.Think("Detective PlayerName is on the case!");
+            var page = new PageComponent<ThoughtComponent>(_thoughts);
+            page.Window.Position = (Width - page.Window.Surface.Width, 0);//);
+            page.Window.IsVisible = true;
+            _playerCharacter.AllComponents.Add(page);
 
-            GameHost.Instance.Screen.Children.Add(page.Window);
+            _map.Children.Add(page.Window);
             return page.Window;
         }
     }
