@@ -10,6 +10,17 @@ namespace HomicideDetective.New.Places.Generation
 {
     public class StreetStep : GenerationStep
     {
+        private int _angle;
+
+        public StreetStep()
+        {
+            _angle = 0;
+        }
+
+        public StreetStep(int angle)
+        {
+            _angle = angle;
+        }
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
@@ -17,7 +28,6 @@ namespace HomicideDetective.New.Places.Generation
 
             var roads = new List<Region>();
             var random = new Random();
-            double rotation = random.NextDouble() * 20;
             int horizontalNameIndex = random.Next(Enum.GetNames(typeof(RoadNames)).Length - 1);
             int verticalNameIndex = random.Next(Enum.GetNames(typeof(RoadNumbers)).Length - 1);
             
@@ -27,28 +37,28 @@ namespace HomicideDetective.New.Places.Generation
             Point ne = (map.Width + 3, -3);
             Point se = (map.Width + 3, 3);
 
-            roads.Add(new Region(((RoadNames)horizontalNameIndex).ToString(), nw, ne, se, sw).Rotate(rotation));
+            roads.Add(new Region(((RoadNames)horizontalNameIndex).ToString(), nw, ne, se, sw).Rotate(_angle));
             
             nw = (-3, map.Height - 3);
             sw = (-3, map.Height + 3);
             ne = (map.Width + 3, map.Height - 3);
             se = (map.Width + 3, map.Height + 3);
 
-            roads.Add(new Region(((RoadNames)horizontalNameIndex + 1).ToString(), nw, ne, se, sw).Rotate(rotation));
+            roads.Add(new Region(((RoadNames)horizontalNameIndex + 1).ToString(), nw, ne, se, sw).Rotate(_angle));
             
             nw = (-3, -3);
             sw = (-3, map.Height + 3);
             ne = (3, -3);
             se = (3, map.Height + 3);
 
-            roads.Add(new Region(((RoadNumbers)horizontalNameIndex).ToString(), nw, ne, se, sw).Rotate(rotation));
+            roads.Add(new Region(((RoadNumbers)horizontalNameIndex).ToString(), nw, ne, se, sw).Rotate(_angle));
             
             nw = (map.Width - 3, -3);
             sw = (map.Width - 3, map.Height + 3);
             ne = (map.Width + 3, -3);
             se = (map.Width + 3, map.Height + 3);
 
-            roads.Add(new Region(((RoadNumbers)verticalNameIndex + 1).ToString(), nw, ne, se, sw).Rotate(rotation));
+            roads.Add(new Region(((RoadNumbers)verticalNameIndex + 1).ToString(), nw, ne, se, sw).Rotate(_angle));
 
             foreach (var road in roads)
             {
@@ -61,7 +71,7 @@ namespace HomicideDetective.New.Places.Generation
             }
         }
     }
-        public enum RoadNames
+    public enum RoadNames
     {
         Alder,
         Baskins,

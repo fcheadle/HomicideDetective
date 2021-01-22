@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using GoRogue;
 using GoRogue.MapGeneration;
 using HomicideDetective.New.People;
 using HomicideDetective.New.Places.Generation;
@@ -13,24 +14,25 @@ namespace HomicideDetective.New.Places
 {
     public class CrimeScene : RogueLikeMap
     {
-        private int _width;
-        private int _height;
+        public string Name { get; }
+        private readonly int _width;
+        private readonly int _height;
         
         public List<Region> Regions;
-        public CrimeScene(int width, int height) : base(width, height, 16, Distance.Manhattan)
+        public CrimeScene(int width, int height, string name) : base(width, height, 16, Distance.Manhattan)
         {
             _width = width;
             _height = height;
+            Name = name;
             Regions = new List<Region>();
         }
 
-        public void Generate()
+        public CrimeScene GenerateHouse()
         {
             var generator = new Generator(_width, _height)
                 .AddStep(new GrassStep())
                 .AddStep(new StreetStep())
                 .AddStep(new HouseStep())
-                .AddStep(new WitnessStep())
                 .Generate();
             
                         
@@ -45,15 +47,21 @@ namespace HomicideDetective.New.Places
             generatedMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("house");
             foreach(var location in generatedMap.Positions().Where(p => generatedMap[p] != null))
                 SetTerrain(generatedMap[location]);
-                        
-            var peopleMap = generator.Context.GetFirst<IEnumerable<Person>>("people");
-            foreach(var person in peopleMap)
-                if(Terrain[person.Position]!.IsWalkable)
-                    if(!GetEntitiesAt<Person>(person.Position).Any())
-                        AddEntity(person);
             
             var cells = new ArrayView<ColoredGlyph>(_width, _height);
             cells.ApplyOverlay(TerrainView);
+            
+            Regions = generator.Context.GetFirst<List<Region>>("rooms");
+            return this;
+        }
+
+        public void Populate(IEnumerable<Person> people)
+        {
+            foreach (Person person in people)
+            {
+                person.Position = Regions.RandomItem().Center;
+                AddEntity(person);
+            }
         }
     }
 }

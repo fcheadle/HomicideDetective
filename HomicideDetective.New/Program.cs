@@ -1,13 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoRogue.GameFramework;
-using GoRogue.MapGeneration;
 using HomicideDetective.New.People;
-using HomicideDetective.New.Places;
-using HomicideDetective.New.Places.Generation;
+using HomicideDetective.New.People.Components;
 using SadConsole;
-using SadRogue.Primitives;
+using SadConsole.Input;
 using SadRogue.Primitives.GridViews;
 using TheSadRogue.Integration;
 using TheSadRogue.Integration.Components;
@@ -19,13 +15,13 @@ namespace HomicideDetective.New
     {
         public const int Width = 80;
         public const int Height = 25;
-        private const int MapWidth = 160;// for now
-        private const int MapHeight = 50; // for now
-        public static readonly Random GlobalRandom = new Random();
+        public const int MapWidth = 80;// for now
+        public const int MapHeight = 25; // for now
         
+        private static Mystery CurrentMystery;
+        private static List<Mystery> _mysteries;
         private static RogueLikeMap _map;
         private static RogueLikeEntity _playerCharacter;
-        private static ThoughtComponent _thoughts => _playerCharacter.AllComponents.GetFirst<ThoughtComponent>();
         private static SettableCellSurface _mapWindow;
         private static ScreenSurface _messageWindow;
         static void Main(/*string[] args*/)
@@ -41,25 +37,26 @@ namespace HomicideDetective.New
         /// </summary>
         private static void Init()
         {
-            _map = GenerateMap();
+            CurrentMystery = new Mystery(0, 1);
+            _map = CurrentMystery.CurrentScene;
             _playerCharacter = GeneratePlayerCharacter();
             GameHost.Instance.Screen = _map;
             _messageWindow = GenerateMessageWindow();
         }
-
-        private static RogueLikeMap GenerateMap()
-        {
-            var crimeScene = new CrimeScene(MapWidth, MapHeight);
-            crimeScene.Generate();
-            return crimeScene;
-        }
-
+        
         private static RogueLikeEntity GeneratePlayerCharacter()
         {
             var position = _map.WalkabilityView.Positions().First(p => _map.WalkabilityView[p]);
-            var player = new Person(position);
-
-            player.AllComponents.Add(new PlayerControlsComponent());
+            var player = new Person(position, "Detective", "Player");
+            
+            var controls = new PlayerControlsComponent();
+            var speech = player.AllComponents.GetFirst<SpeechComponent>();
+            controls.AddKeyCommand(Keys.Left, speech.TalkLeft());
+            controls.AddKeyCommand(Keys.Right, speech.TalkRight());
+            controls.AddKeyCommand(Keys.Up, speech.TalkUp());
+            controls.AddKeyCommand(Keys.Down, speech.TalkRight());
+            
+            player.AllComponents.Add(controls);
             player.IsFocused = true;
             _map.AddEntity(player);
 
@@ -68,9 +65,10 @@ namespace HomicideDetective.New
 
         private static ScreenSurface GenerateMessageWindow()
         {
-            _thoughts.Think("Detective PlayerName is on the case!");
-            var page = new PageComponent<ThoughtComponent>(_thoughts);
-            page.Window.Position = (Width - page.Window.Surface.Width, 0);//);
+            var thoughts = _playerCharacter.AllComponents.GetFirst<ThoughtComponent>();
+            thoughts.Think($"Case number 1, {CurrentMystery.Victim.Name}.");
+            var page = new PageComponent<ThoughtComponent>(thoughts);
+            page.Window.Position = (Width - page.Window.Surface.Width, 0);
             page.Window.IsVisible = true;
             _playerCharacter.AllComponents.Add(page);
 

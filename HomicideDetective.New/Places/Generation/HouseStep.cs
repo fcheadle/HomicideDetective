@@ -12,6 +12,16 @@ namespace HomicideDetective.New.Places.Generation
         private readonly int _houseWidth = 50;
         private readonly int _houseHeight = 20;
         private readonly int _minimumDimension = 5;
+        private readonly int _angle;
+        public HouseStep()
+        {
+            _angle = 0;
+        }
+
+        public HouseStep(int angle)
+        {
+            _angle = angle;
+        }
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
@@ -28,13 +38,13 @@ namespace HomicideDetective.New.Places.Generation
 
                     foreach (var room in floorSpace.BisectRecursive(_minimumDimension))
                     {
-                        var region = Region.FromRectangle("room", room);
+                        var region = Region.FromRectangle("room", room).Rotate(_angle);
                         rooms.Add(region);
                         
                         foreach (var point in region.InnerPoints.Positions.Where(p => map.Contains(p)))
                         {
                             bool alt = (point.X + point.Y) % 2 == 0;
-                            map[point] = new RogueLikeCell(point, Color.Gray, Color.DarkGray, alt ? 9 : 10, 0);
+                            map[point] = new RogueLikeCell(point, Color.DarkSlateGray, Color.DarkGray, alt ? 9 : 10, 0);
                         }
                         
                         foreach (var point in region.OuterPoints.Positions.Where(p => map.Contains(p)))
@@ -42,7 +52,10 @@ namespace HomicideDetective.New.Places.Generation
                             map[point] = new RogueLikeCell(point, Color.DarkGoldenrod, Color.DarkGray, 178, 0, false, false);
                         }
 
-                        
+                        var points = region.NorthBoundary.Positions;
+                        var door = points[points.Count / 2];
+
+                        map[door] = new RogueLikeCell(door, Color.DarkGoldenrod, Color.Black, 254, 0, true, false);
                         yield return null;
                     }
                 }

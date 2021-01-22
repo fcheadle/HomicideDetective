@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HomicideDetective.New.People;
 using HomicideDetective.New.Places;
 using HomicideDetective.New.Things;
@@ -17,17 +18,18 @@ namespace HomicideDetective.New
     {
         public Person Victim => _victim;
         public int Number => _number;
-        
+        public CrimeScene CurrentScene { get; }
         private readonly int _seed;
         private readonly int _number;
         private CaseStatus _status = CaseStatus.Active;
         private readonly Random _random;
-
+        
         private CrimeScene _sceneOfTheCrime;
+        private CrimeScene _sceneWhereTheyFoundTheBody;
         private Item _murderWeapon;
         private Person _murderer;
-        private List<Person> _witnesses;
-        private List<CrimeScene> _scenes;
+        private IEnumerable<Person> _witnesses;
+        private IEnumerable<CrimeScene> _scenes;
         private Person _victim;
 
         string[] _maleGivenNames = { "Nate", "Tom", "Dick", "Harry", "Bob", "Matthew", "Mark", "Luke", "John", "Josh" };
@@ -41,44 +43,54 @@ namespace HomicideDetective.New
             _seed = seed;
             _number = caseNumber;
             _random = new Random(seed);
-            _victim = GenerateVictim();
-            _murderer = GenerateMurderer();
+            _victim = GeneratePerson();
+            _murderer = GeneratePerson();
             _murderWeapon = GenerateMurderWeapon();
-            _sceneOfTheCrime = GenerateSceneOfMurder();
-            _scenes = GenerateCrimeScenes();
+            _sceneOfTheCrime = GenerateScene();
             _witnesses = GenerateWitnesses();
-
+            _scenes = GenerateScenes();
+            
             CommitMurder();
+            CurrentScene = _sceneWhereTheyFoundTheBody;
         }
 
         private void CommitMurder()
         {
-            throw new NotImplementedException();
+            _victim.Murder(_murderer, _murderWeapon, _sceneOfTheCrime);
+            _sceneWhereTheyFoundTheBody = _sceneOfTheCrime;
+            _sceneWhereTheyFoundTheBody.AddEntity(_victim);
         }
 
-        private List<Person> GenerateWitnesses()
+        private IEnumerable<Person> GenerateWitnesses()
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < 50; i++)
+            {
+                yield return GeneratePerson();
+            }
         }
 
-        private List<CrimeScene> GenerateCrimeScenes()
+        private IEnumerable<CrimeScene> GenerateScenes()
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < 10; i++)
+            {
+                int j = i * 5;
+                var scene =  GenerateScene();
+                scene.Populate(_witnesses.ToList().GetRange(j, 5));
+                yield return scene;
+            }        
         }
 
-        private CrimeScene GenerateSceneOfMurder()
-        {
-            throw new NotImplementedException();
-        }
+        private CrimeScene GenerateScene() 
+            => new CrimeScene(Program.MapWidth, Program.MapHeight, $"Case Number {_number} location of interest").GenerateHouse();
 
-        private Person GenerateVictim()
+        private Person GeneratePerson()
         {
             string description = "";
 
-            bool isMale = _random.Next(0, 6) <= 4; //women are more likely to be victims of murder
+            bool isMale = _random.Next(0, 2) == 0;
             bool isTall = _random.Next(0, 2) == 0;
             bool isFat = _random.Next(0, 2) == 0;
-            bool isYoung = _random.Next(0, 3) <= 1; //young people more likely to be murdered than old people
+            bool isYoung = _random.Next(0, 3) <= 1; 
 
             string noun = isMale ? "man" : "woman";
             string pronoun = isMale ? "he" : "she";
@@ -97,37 +109,57 @@ namespace HomicideDetective.New
             return new Person((0, 0), givenName, surname, description);
         }
 
-        private Person GenerateMurderer()
-        {
-            string description = "";
-
-            bool isMale = _random.Next(0, 5) <= 3; //men are more likely to murder
-            bool isTall = _random.Next(0, 2) == 0;
-            bool isFat = _random.Next(0, 2) == 0;
-            bool isYoung = _random.Next(0, 2) == 2; //young people more likely to murder
-
-            string noun = isMale ? "man" : "woman";
-            string pronoun = isMale ? "he" : "she";
-            string pronounPossessive = isMale ? "his" : "her";
-            string pronounPassive = isMale ? "him" : "her";
-
-            string height = isTall ? "tall" : "short";
-            string width = isFat ? "full-figured" : "slender";
-            string age = isYoung ? "young" : "middle-aged";
-
-            description = $"{pronoun} is a {height}, {width} {age} {noun}.";
-            int i = _random.Next(0, _maleGivenNames.Length);
-            string givenName = isMale ? _maleGivenNames[i] : _femaleGivenNames[i];
-            string surname = _surnames[_random.Next(0, _surnames.Length)];
-            
-            return new Person((0, 0), givenName, surname, description);        
-        }
-
         private Item GenerateMurderWeapon()
         {
-            string name = "hammer";
-            string desctription = "a small tool, normally used for carpentry";
-            return new Item((0, 0), Color.Gray, 'T', name, desctription);
+            string name;
+            string description;
+            
+            switch (_random.Next(0,10))
+            {
+                default:
+                case 0: 
+                    name = "hammer";
+                    description = "a small tool, normally used for carpentry";
+                    break;
+                case 1: 
+                    name = "switchblade"; 
+                    description = "a small, concealable knife";
+                    break;
+                case 2: 
+                    name = "pistol"; 
+                    description = "a small, concealable handgun";
+                    break;
+                case 3: 
+                    name = "poison"; 
+                    description = "a lethal dose of hydrogen-cyanide";
+                    break;
+                case 4: 
+                    name = "kitchen knife"; 
+                    description = "a small tool used for preparing food";
+                    break;
+                case 5: 
+                    name = "shotgun";
+                    description = "a large gun used for scaring off vermin";
+                    break;
+                case 6: 
+                    name = "rock"; 
+                    description = "a stone from off the ground";
+                    break;
+                case 7: 
+                    name = "poison"; 
+                    description = "a small tool, normally used for carpentry";
+                    break;
+                case 8: 
+                    name = "poison"; 
+                    description = "a small tool, normally used for carpentry";
+                    break;
+                case 9: 
+                    name = "poison"; 
+                    description = "a small tool, normally used for carpentry";
+                    break;
+            }
+                
+            return new Item((0, 0), Color.Gray, name[0], name, description);
         }
     }
 }

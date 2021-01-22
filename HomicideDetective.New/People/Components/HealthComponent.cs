@@ -4,7 +4,7 @@ using System.Linq;
 using SadRogue.Primitives;
 using TheSadRogue.Integration.Components;
 
-namespace HomicideDetective.New.People
+namespace HomicideDetective.New.People.Components
 {
     public enum BloodTypes
     {
@@ -17,6 +17,7 @@ namespace HomicideDetective.New.People
     {
         public string Name { get; }
         public string Description { get; }
+        public bool Alive { get; private set; }= true;
         public double SystoleBloodPressure { get; private set; }
         public double DiastoleBloodPressure { get; private set; }
         public double Pulse { get => _heartBeatsPerMinute; set => _heartBeatsPerMinute = value; }
@@ -116,9 +117,14 @@ namespace HomicideDetective.New.People
 
         public void ProcessTimeUnit()
         {
-            _timeUnitsElapsed++;
-            BeatHeart(_timeUnitsElapsed);
-            Breathe(_timeUnitsElapsed);
+            if (Alive)
+            {
+                _timeUnitsElapsed++;
+                BeatHeart(_timeUnitsElapsed);
+                Breathe(_timeUnitsElapsed);
+            }
         }
+
+        public void Murder() => Alive = false;
     }
 }

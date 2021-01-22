@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SadConsole;
 using TheSadRogue.Integration.Components;
 
-namespace HomicideDetective.New.People
+namespace HomicideDetective.New.People.Components
 {
 
     public class ThoughtComponent : RogueLikeComponentBase, IHaveDetails
@@ -28,12 +28,13 @@ namespace HomicideDetective.New.People
         public void Think()
         {
             //todo - flesh out
-            Think(Parent.Position.ToString());
-            Think("Currently thinking about...");
+            //Think(Parent.Position.ToString());
+            //Think("Currently thinking about");
         }
         
         public void Think(string[] thoughts)
         {
+            _thoughts.Clear();
             foreach (string thought in thoughts) 
                 Think(thought);
         }
