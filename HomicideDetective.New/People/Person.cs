@@ -3,7 +3,7 @@ using TheSadRogue.Integration;
 
 namespace HomicideDetective.New.People
 {
-    public class Person : RogueLikeEntity
+    public class Person : RogueLikeEntity, IHaveDetails
     {
         public string Name => $"{GivenName} {FamilyName}";
         
@@ -22,6 +22,11 @@ namespace HomicideDetective.New.People
             
             var thoughts = new ThoughtComponent();
             AllComponents.Add(thoughts);
+        }
+        
+        public string[] GetDetails()
+        {
+            return new[] { Description };
         }
     }
 }
