@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomicideDetective.Old", "HomicideDetective.Old\HomicideDetective.Old.csproj", "{9C4048EA-C31B-4EC6-BDA9-3B4B99EE7BDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{E8A816A4-8C4C-4506-8FAA-4862FBA0B41E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomicideDetective.Old.Tests", "HomicideDetective.Old.Tests\HomicideDetective.Old.Tests.csproj", "{E8A816A4-8C4C-4506-8FAA-4862FBA0B41E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomicideDetective.New", "HomicideDetective.New\HomicideDetective.New.csproj", "{80DEF724-D78E-4130-89AA-454B7739840C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomicideDetective", "HomicideDetective\HomicideDetective.csproj", "{80DEF724-D78E-4130-89AA-454B7739840C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
