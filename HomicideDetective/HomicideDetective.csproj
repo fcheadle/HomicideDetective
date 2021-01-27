@@ -10,7 +10,7 @@
     <ItemGroup>
       <PackageReference Include="GoRogue" Version="3.0.0-alpha01-debug" />
       <PackageReference Include="SadConsole.Host.SFML" Version="9.0.0-beta4" />
-      <PackageReference Include="TheSadRogue.Integration" Version="0.0.0.3" />
+      <PackageReference Include="TheSadRogue.Integration" Version="0.0.0.4" />
     </ItemGroup>
 
 </Project>

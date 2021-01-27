@@ -24,7 +24,6 @@ namespace HomicideDetective
         private static List<Mystery> _mysteries;
         private static RogueLikeMap _map;
         private static RogueLikeEntity _playerCharacter;
-        private static SettableCellSurface _mapWindow;
         private static ScreenSurface _messageWindow;
         static void Main(/*string[] args*/)
         {

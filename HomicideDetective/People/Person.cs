@@ -10,14 +10,10 @@ namespace HomicideDetective.People
     public class Person : RogueLikeEntity, IHaveDetails
     {
         public string Description => Substantive.Description!;
-        public ThoughtComponent Thoughts 
-            => AllComponents.GetFirst<ThoughtComponent>();
-        public SpeechComponent Speech 
-            => AllComponents.GetFirst<SpeechComponent>();
-        public HealthComponent Health 
-            => AllComponents.GetFirst<HealthComponent>();
-        public Substantive Substantive 
-            => AllComponents.GetFirst<Substantive>();
+        public ThoughtComponent Thoughts => AllComponents.GetFirst<ThoughtComponent>();
+        public SpeechComponent Speech => AllComponents.GetFirst<SpeechComponent>();
+        public HealthComponent Health => AllComponents.GetFirst<HealthComponent>();
+        public Substantive Substantive => AllComponents.GetFirst<Substantive>();
 
         public Person(Point position, Substantive substantive) : base(position, 1, false)
         {
@@ -54,7 +50,7 @@ namespace HomicideDetective.People
         public string[] GetDetails()
             => Substantive.GetDetails();
 
-        public void Murder(Person murderer, Thing murderWeapon, CrimeScene sceneOfTheCrime)
+        public void Murder(Person murderer, Thing murderWeapon, Place sceneOfTheCrime)
         {
             //Name = $"Corpse of {Name}";
             Substantive.AddDetail($" Murdered by {murderer.Name} with a {murderWeapon.Name}, at {sceneOfTheCrime.Name}.");

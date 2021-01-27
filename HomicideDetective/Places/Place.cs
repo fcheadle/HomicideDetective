@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
+using GoRogue.Components;
 using GoRogue.MapGeneration;
 using HomicideDetective.People;
+using HomicideDetective.Places.Components;
 using HomicideDetective.Places.Generation;
 using SadConsole;
 using SadRogue.Primitives;
@@ -12,14 +14,14 @@ using TheSadRogue.Integration.Maps;
 
 namespace HomicideDetective.Places
 {
-    public class CrimeScene : RogueLikeMap
+    public class Place : RogueLikeMap
     {
         public string Name { get; }
         private readonly int _width;
         private readonly int _height;
         
         public List<Region> Regions;
-        public CrimeScene(int width, int height, string name) : base(width, height, 16, Distance.Manhattan)
+        public Place(int width, int height, string name) : base(width, height, 16, Distance.Manhattan)
         {
             _width = width;
             _height = height;
@@ -27,7 +29,7 @@ namespace HomicideDetective.Places
             Regions = new List<Region>();
         }
 
-        public CrimeScene GenerateHouse()
+        public Place GenerateHouse()
         {
             var generator = new Generator(_width, _height)
                 .AddStep(new GrassStep())
@@ -52,6 +54,23 @@ namespace HomicideDetective.Places
             cells.ApplyOverlay(TerrainView);
             
             Regions = generator.Context.GetFirst<List<Region>>("rooms");
+            return this;
+        }
+        public Place GeneratePlains()
+        {
+            var generator = new Generator(_width, _height)
+                .AddStep(new GrassStep())
+                .Generate();
+            
+            var generatedMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
+            foreach(var location in generatedMap.Positions())
+                SetTerrain(generatedMap[location]);
+
+            var weather = new WeatherComponent(this);
+            GoRogueComponents!.Add(weather);
+            var cells = new ArrayView<ColoredGlyph>(_width, _height);
+            cells.ApplyOverlay(TerrainView);
+            
             return this;
         }
 

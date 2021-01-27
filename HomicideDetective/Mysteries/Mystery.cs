@@ -13,19 +13,19 @@ namespace HomicideDetective.Mysteries
         public enum Statuses {Active, Closed, Cold}
         public Person Victim => _victim;
         public int Number => _number;
-        public CrimeScene CurrentScene { get; }
+        public Place CurrentScene { get; }
         
         private readonly int _seed;
         private readonly int _number;
         private Statuses _status = Statuses.Active;
         private readonly Random _random;
         
-        private CrimeScene _sceneOfTheCrime;
-        private CrimeScene _sceneWhereTheyFoundTheBody;
+        private Place _sceneOfTheCrime;
+        private Place _sceneWhereTheyFoundTheBody;
         private Thing _murderWeapon;
         private Person _murderer;
         private IEnumerable<Person> _witnesses;
-        private IEnumerable<CrimeScene> _scenes;
+        private IEnumerable<Place> _scenes;
         private Person _victim;
 
         string[] _maleGivenNames = { "Nate", "Tom", "Dick", "Harry", "Bob", "Matthew", "Mark", "Luke", "John", "Josh" };
@@ -47,7 +47,8 @@ namespace HomicideDetective.Mysteries
             _scenes = GenerateScenes();
             
             CommitMurder();
-            CurrentScene = _sceneWhereTheyFoundTheBody;
+            // CurrentScene = _sceneWhereTheyFoundTheBody;
+            CurrentScene = new Place(Program.MapWidth, Program.MapHeight, $"plains").GeneratePlains();
         }
 
         private void CommitMurder()
@@ -65,7 +66,7 @@ namespace HomicideDetective.Mysteries
             }
         }
 
-        private IEnumerable<CrimeScene> GenerateScenes()
+        private IEnumerable<Place> GenerateScenes()
         {
             for (int i = 0; i < 10; i++)
             {
@@ -76,8 +77,8 @@ namespace HomicideDetective.Mysteries
             }        
         }
 
-        private CrimeScene GenerateScene() 
-            => new CrimeScene(Program.MapWidth, Program.MapHeight, $"Case Number {_number} location of interest").GenerateHouse();
+        private Place GenerateScene() 
+            => new Place(Program.MapWidth, Program.MapHeight, $"Case Number {_number} location of interest").GenerateHouse();
 
         private Person GeneratePerson()
         {
