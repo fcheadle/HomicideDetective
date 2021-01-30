@@ -1,5 +1,6 @@
 ﻿using System;
 using SadConsole;
+using SadConsole.Components;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using TheSadRogue.Integration.Components;
@@ -55,13 +56,12 @@ namespace HomicideDetective
                 UsePixelPositioning = false,
                 Position = (1, 1),
             };
-            _textSurface.Surface.UsePrintProcessor = true;
-
-            int y = 0;
+            var cursor = new Cursor {IsVisible = false};
+            _textSurface.SadComponents.Add(cursor);
             foreach (string detail in GetDetails())
             {
-                _textSurface.Surface.Print(0, y, detail, Color.Blue);
-                y += 1 + (detail.Length / 22);
+                var answer = new ColoredString($"\r\n{detail}", Color.Blue, Color.Transparent);
+                cursor.Print(answer);
             }
 
             Window.Children.Add(_textSurface);

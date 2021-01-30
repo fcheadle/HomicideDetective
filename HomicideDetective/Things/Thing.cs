@@ -1,23 +1,51 @@
+using System.Collections.Generic;
 using HomicideDetective.Mysteries;
 using SadRogue.Primitives;
 using TheSadRogue.Integration;
 
 namespace HomicideDetective.Things
 {
-    public class Thing : RogueLikeEntity, IHaveDetails
+    public class Thing : RogueLikeEntity, ISubstantive
     {
-        public Substantive AsSubstantive => AllComponents.GetFirst<Substantive>();
+        public ISubstantive.Types? Type => ISubstantive.Types.Thing;
+        public string Description { get; }
+        public int Mass { get; }
+        public int Volume { get; }
+        public string SizeDescription { get; }
+        public string WeightDescription { get; }
 
-        public string Description  => AsSubstantive.Description;
-
-        public Thing(Point position, Substantive substantive) : base(position, Color.LightGray, Color.Transparent, substantive.Name[0], true, true, 2)
+        private List<string> _details;
+        public string[] Details
         {
-            Name = substantive.Name;
-            AllComponents.Add(substantive);
+            get
+            {
+                var answer = new List<string>();
+                answer.Add(Name); 
+                answer.Add($"Weight(grams): {Mass}"); 
+                answer.Add($"$Volume(cubic cm): {Volume}"); 
+                answer.Add(Description);
+                answer.AddRange(Details);
+                answer.AddRange(_details);
+                answer.Add(GetDetailedDescription());
+                return answer.ToArray();
+            }
         }
-        public string[] GetDetails()
+        public string GetDetailedDescription()
+            => $"This is {Name}. They {SizeDescription}, and they {WeightDescription}.";
+
+        public void AddDetail(string detail)=> _details.Add(detail);
+
+        public Thing(Point position, string name, string description, int mass, int volume, string sizeDescript, string weightDescript) 
+            : base(position, Color.LightGray, Color.Transparent, 't', true, true, 2)
         {
-            return new[] {Name, Description};
+            Name = name;
+            Description = description;
+            Mass = mass;
+            Volume = volume;
+            SizeDescription = sizeDescript;
+            WeightDescription = weightDescript;
+            _details = new List<string>();
+            // AllComponents.Add(substantive);
         }
     }
 }

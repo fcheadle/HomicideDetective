@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People.Components;
 using HomicideDetective.Places;
@@ -7,36 +8,48 @@ using TheSadRogue.Integration;
 
 namespace HomicideDetective.People
 {
-    public class Person : RogueLikeEntity, IHaveDetails
+    public class Person : RogueLikeEntity, ISubstantive
     {
-        public string Description => Substantive.Description!;
+        public ISubstantive.Types? Type { get; set; }
+        public string Description { get; set;}
+        public int Mass { get; set; }
+        public int Volume { get; set; }
+        public string SizeDescription { get; set; }
+        public string WeightDescription { get; set; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public string Name => $"{FirstName} {LastName}";
         public ThoughtComponent Thoughts => AllComponents.GetFirst<ThoughtComponent>();
         public SpeechComponent Speech => AllComponents.GetFirst<SpeechComponent>();
         public HealthComponent Health => AllComponents.GetFirst<HealthComponent>();
-        public Substantive Substantive => AllComponents.GetFirst<Substantive>();
-
-        public Person(Point position, Substantive substantive) : base(position, 1, false)
-        {
-            Name = substantive.Name;
-            AllComponents.Add(substantive);
-            InitRequiredComponents();
-        }
         
-        public Person(Point position, string firstname, string lastname, int size = 24, int weight = 240, 
-            string sizeDescription = "average in size", string weightDescription = "weighs about what you'd expect") 
-            : base(position, 1, false)
+        private readonly List<string> _details;
+        public string[] Details
         {
-            Name = $"{firstname} {lastname}";
-
-            var physical = new Substantive(Substantive.Types.Person, Name, weight, size,
-                sizeDescription, weightDescription);
-            
-            AllComponents.Add(physical);
-            InitRequiredComponents();
+            get
+            {
+                var answer = new List<string>();
+                answer.Add(Name); 
+                answer.Add($"Weight(grams): {Mass}"); 
+                answer.Add($"$Volume(cubic cm): {Volume}"); 
+                answer.Add(Description);
+                answer.AddRange(Details);
+                answer.AddRange(_details);
+                answer.Add(GetDetailedDescription());
+                return answer.ToArray();
+            }
         }
 
-        private void InitRequiredComponents()
+        public Person(Point position, string firstname, string lastname, int size, int weight, string sizeDescription, 
+            string weightDescription) : base(position, 1, false)
         {
+            FirstName = firstname;
+            LastName = lastname;
+            Mass = weight;
+            Volume = size;
+            SizeDescription = sizeDescription;
+            WeightDescription = weightDescription;
+            
             var health = new HealthComponent();
             AllComponents.Add(health);
             
@@ -44,16 +57,19 @@ namespace HomicideDetective.People
             AllComponents.Add(thoughts);
 
             var speech = new SpeechComponent();
-            AllComponents.Add(speech);        
+            AllComponents.Add(speech);
+
+            _details = new List<string>();
         }
 
-        public string[] GetDetails()
-            => Substantive.GetDetails();
+        public string GetDetailedDescription() 
+            => $"This is {Name}. They {SizeDescription}, and they {WeightDescription}.";
+
+        public void AddDetail(string detail) => _details.Add(detail);
 
         public void Murder(Person murderer, Thing murderWeapon, Place sceneOfTheCrime)
         {
-            //Name = $"Corpse of {Name}";
-            Substantive.AddDetail($" Murdered by {murderer.Name} with a {murderWeapon.Name}, at {sceneOfTheCrime.Name}.");
+            AddDetail($" Murdered by {murderer.Name} with a {murderWeapon.Name}, at {sceneOfTheCrime.Name}.");
             Health.Murder();
         }
     }

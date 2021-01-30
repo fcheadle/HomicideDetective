@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GoRogue;
 using HomicideDetective.People;
 using HomicideDetective.Places;
 using HomicideDetective.Things;
@@ -21,7 +22,7 @@ namespace HomicideDetective.Mysteries
         private readonly Random _random;
         
         private Place _sceneOfTheCrime;
-        private Place _sceneWhereTheyFoundTheBody;
+        // private Place _sceneWhereTheyFoundTheBody;
         private Thing _murderWeapon;
         private Person _murderer;
         private IEnumerable<Person> _witnesses;
@@ -38,49 +39,46 @@ namespace HomicideDetective.Mysteries
         {
             _seed = seed;
             _number = caseNumber;
-            _random = new Random(seed);
-            _victim = GeneratePerson();
-            _murderer = GeneratePerson();
-            _murderWeapon = GenerateMurderWeapon();
-            _sceneOfTheCrime = GenerateScene();
-            _witnesses = GenerateWitnesses();
-            _scenes = GenerateScenes();
-            
+            _random = new Random(seed + caseNumber);
             CommitMurder();
-            // CurrentScene = _sceneWhereTheyFoundTheBody;
-            CurrentScene = new Place(Program.MapWidth, Program.MapHeight, $"plains").GeneratePlains();
+            
+            CurrentScene = _sceneOfTheCrime;
+            // CurrentScene = new Place(Program.MapWidth, Program.MapHeight, $"plains").GeneratePlains();
         }
 
         private void CommitMurder()
         {
+            _scenes = GenerateScenes();
+            _sceneOfTheCrime = _scenes.First();
+            _murderer = GeneratePerson(_surnames.RandomItem());
+            _victim = GeneratePerson(_surnames.RandomItem());
+            _murderWeapon = GenerateMurderWeapon();
             _victim.Murder(_murderer, _murderWeapon, _sceneOfTheCrime);
-            _sceneWhereTheyFoundTheBody = _sceneOfTheCrime; //for now
-            _sceneWhereTheyFoundTheBody.AddEntity(_victim);
+            _sceneOfTheCrime.Populate(new[] {_victim});
+            _sceneOfTheCrime.Populate(new[] {_murderWeapon});
         }
 
-        private IEnumerable<Person> GenerateWitnesses()
-        {
-            for (int i = 0; i < 50; i++)
-            {
-                yield return GeneratePerson();
-            }
-        }
 
         private IEnumerable<Place> GenerateScenes()
         {
-            for (int i = 0; i < 10; i++)
+            _scenes = new List<Place>();
+            for (int i = 0; i < 15; i++)
             {
-                int j = i * 5;
-                var scene =  GenerateScene();
-                scene.Populate(_witnesses.ToList().GetRange(j, 5));
+                string surname = _surnames[_random.Next(0, _surnames.Length)];
+                var owner = GeneratePerson(surname);
+                var occupant = GeneratePerson(surname);
+                var child1 = GeneratePerson(surname);
+                var child2 = GeneratePerson(surname);
+                var scene =  new Place(Program.MapWidth, Program.MapHeight, $"{surname} Residence",$"Case {_number} Location of Interest").GenerateHouse();
+                scene.Populate(new[]{owner, occupant, child1, child2});
                 yield return scene;
-            }        
+            }
         }
 
-        private Place GenerateScene() 
-            => new Place(Program.MapWidth, Program.MapHeight, $"Case Number {_number} location of interest").GenerateHouse();
+        // private Place GenerateScene() 
+        //     => new Place(Program.MapWidth, Program.MapHeight, $"Case {_number} Location of Interest").GenerateHouse();
 
-        private Person GeneratePerson()
+        private Person GeneratePerson(string surname)
         {
             string description = "";
 
@@ -101,9 +99,10 @@ namespace HomicideDetective.Mysteries
             description = $"{pronoun} is a {height}, {width} {age} {noun}.";
             int i = _random.Next(0, _maleGivenNames.Length);
             string givenName = isMale ? _maleGivenNames[i] : _femaleGivenNames[i];
-            string surname = _surnames[_random.Next(0, _surnames.Length)];
-            
-            return new Person((0, 0), givenName, surname);
+
+            Person person = new Person((0, 0), givenName, surname, 24, 24, "average", "average");
+            //person.Substantive.AddDetail(description);
+            return person;
         }
 
         private Thing GenerateMurderWeapon()
@@ -143,22 +142,23 @@ namespace HomicideDetective.Mysteries
                     description = "a stone from off the ground";
                     break;
                 case 7: 
-                    name = "poison"; 
-                    description = "a small tool, normally used for carpentry";
+                    name = "screwdriver"; 
+                    description = "a small tool, used for all manner of handiwork";
                     break;
                 case 8: 
-                    name = "poison"; 
-                    description = "a small tool, normally used for carpentry";
+                    name = "revolver"; 
+                    description = "a handgun";
                     break;
                 case 9: 
-                    name = "poison"; 
-                    description = "a small tool, normally used for carpentry";
+                    name = "rifle"; 
+                    description = "a large gun, used for hunting animals";
                     break;
             }
 
-            var item = new Substantive(Substantive.Types.Thing, name, 240, 18,
-                "is almost exactly average in size", "weighs about as much as you would expect");
-            return new Thing((0, 0), item);
+            var item = new Thing((0, 0), name, description, 240, 240, "is exactly average in size", "weighs about what you expect");
+            
+            item.AddDetail(description);
+            return item;
         }
     }
 }

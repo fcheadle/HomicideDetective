@@ -53,7 +53,6 @@ namespace HomicideDetective.Places.Components
                     parent.Appearance.Glyph = _ogGlyph;
                     Blowing = false;
                 }
-
             }
         }
     }

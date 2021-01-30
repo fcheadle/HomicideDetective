@@ -48,14 +48,14 @@ namespace HomicideDetective
         private static RogueLikeEntity GeneratePlayerCharacter()
         {
             var position = _map.WalkabilityView.Positions().First(p => _map.WalkabilityView[p]);
-            var player = new Person(position, "Detective", "Player");
+            var player = new Person(position, "Detective", "Player", 2400, 2400, "positively tiny", "massive beyond belief");
             
             var controls = new PlayerControlsComponent();
             var speech = player.AllComponents.GetFirst<SpeechComponent>();
             controls.AddKeyCommand(Keys.Left, speech.TalkLeft());
             controls.AddKeyCommand(Keys.Right, speech.TalkRight());
             controls.AddKeyCommand(Keys.Up, speech.TalkUp());
-            controls.AddKeyCommand(Keys.Down, speech.TalkRight());
+            controls.AddKeyCommand(Keys.Down, speech.TalkDown());
             
             player.AllComponents.Add(controls);
             player.IsFocused = true;

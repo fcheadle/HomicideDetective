@@ -26,7 +26,7 @@ namespace HomicideDetective.People.Components
                 chance % 5 == 3 ? "G-good afternoon..." : "Oh! Hello, detective.";
             spoken += "\"";
             
-            string tone = "They say in a";
+            string tone = " They say in a ";
             tone +=
                 chance % 6 == 0 ? "stark and to the point" :
                 chance % 6 == 1 ? "higher pitched than usual" :
@@ -43,7 +43,7 @@ namespace HomicideDetective.People.Components
                 chance % 7 == 4 ? "briefly flashing open their eyes, then returning to neutral position." :
                 chance % 7 == 5 ? "with a fierce intensity of eye contact." : "as their pupils narrow.";
 
-            string bodyLang = "Posture-wise, they";
+            string bodyLang = " Posture-wise, they ";
             bodyLang += 
                 chance % 8 == 0 ? "are breathing heavily, arms somewhat out to the sides" :
                 chance % 8 == 1 ? "are very reserved, hands crossed in front of them" :
@@ -52,7 +52,7 @@ namespace HomicideDetective.People.Components
                 chance % 8 == 4 ? "stand with their legs wide and hands up" :
                 chance % 8 == 5 ? "speak emphatically with their hands" :
                 chance % 8 == 6 ? "lean slightly back on one leg and cross their arms" : "stand  tall, with head held high";
-            bodyLang += ".";
+            bodyLang += ". ";
             
             if (Parent is Person parent)
                 return new[] { parent.Name, parent.Description, spoken, tone, expression, bodyLang };
