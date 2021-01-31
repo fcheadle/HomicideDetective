@@ -12,13 +12,13 @@ namespace HomicideDetective.Mysteries
     public class Mystery
     {
         public enum Statuses {Active, Closed, Cold}
+        private Statuses _status = Statuses.Active;
         public Person Victim => _victim;
         public int Number => _number;
         public Place CurrentScene { get; }
         
         private readonly int _seed;
         private readonly int _number;
-        private Statuses _status = Statuses.Active;
         private readonly Random _random;
         
         private Place _sceneOfTheCrime;

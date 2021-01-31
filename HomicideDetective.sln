@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomicideDetective.Old.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomicideDetective", "HomicideDetective\HomicideDetective.csproj", "{80DEF724-D78E-4130-89AA-454B7739840C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomicideDetective.Tests", "HomicideDetective.Tests\HomicideDetective.Tests.csproj", "{169FCC0E-DD0F-4561-B50C-4973F590602D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{80DEF724-D78E-4130-89AA-454B7739840C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80DEF724-D78E-4130-89AA-454B7739840C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80DEF724-D78E-4130-89AA-454B7739840C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{169FCC0E-DD0F-4561-B50C-4973F590602D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{169FCC0E-DD0F-4561-B50C-4973F590602D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{169FCC0E-DD0F-4561-B50C-4973F590602D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{169FCC0E-DD0F-4561-B50C-4973F590602D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

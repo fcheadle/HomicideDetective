@@ -20,21 +20,23 @@ namespace HomicideDetective.People.Components
 
             string spoken = "\"";
             spoken +=
-                chance % 5 == 0 ? "Good Afternoon, Detective." :
-                chance % 5 == 1 ? "It's about time you showed up." : 
-                chance % 5 == 2 ? "No, I don't remember anything new." : 
-                chance % 5 == 3 ? "G-good afternoon..." : "Oh! Hello, detective.";
+                chance % 5 == 0 ? "Good Afternoon, Detective," :
+                chance % 5 == 1 ? "It's about time you showed up," : 
+                chance % 5 == 2 ? "No, I don't remember anything new," : 
+                chance % 5 == 3 ? "G-good afternoon..." : "Oh! Hello, detective,";
             spoken += "\"";
             
-            string tone = " They say in a ";
+            chance = new Random().Next(0, 100);
+            string tone = " they say in a ";
             tone +=
                 chance % 6 == 0 ? "stark and to the point" :
                 chance % 6 == 1 ? "higher pitched than usual" :
                 chance % 6 == 2 ? "slow drawl" :
                 chance % 6 == 3 ? "drunken slur" :
                 chance % 6 == 4 ? "measured and even" : "steady, neutral";
-            tone += "tone, ";
+            tone += " tone, ";
             
+            chance = new Random().Next(0, 100);
             string expression = 
                 chance % 7 == 0 ? "with furrowed brow and narrowed eyes." :
                 chance % 7 == 1 ? "with one eyebrow raised." :
@@ -43,6 +45,7 @@ namespace HomicideDetective.People.Components
                 chance % 7 == 4 ? "briefly flashing open their eyes, then returning to neutral position." :
                 chance % 7 == 5 ? "with a fierce intensity of eye contact." : "as their pupils narrow.";
 
+            chance = new Random().Next(0, 100);
             string bodyLang = " Posture-wise, they ";
             bodyLang += 
                 chance % 8 == 0 ? "are breathing heavily, arms somewhat out to the sides" :
@@ -54,11 +57,11 @@ namespace HomicideDetective.People.Components
                 chance % 8 == 6 ? "lean slightly back on one leg and cross their arms" : "stand  tall, with head held high";
             bodyLang += ". ";
             
-            if (Parent is Person parent)
-                return new[] { parent.Name, parent.Description, spoken, tone, expression, bodyLang };
-            
-            else
-                return new[] { spoken, tone, expression, bodyLang };
+            // if (Parent is Person parent)
+            //     return new[] { parent.Name, parent.Description, spoken, tone, expression, bodyLang };
+            //
+            // else
+            return new[] { spoken, tone, expression, bodyLang };
         }
 
         public string[] Talk(Direction direction)

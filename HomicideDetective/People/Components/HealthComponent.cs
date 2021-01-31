@@ -28,6 +28,7 @@ namespace HomicideDetective.People.Components
         public double LungCapacity { get; private set; } //cm^3
         public double CurrentBreathVolume { get; private set; } //cm^3
         public double TypicalBloodVolume { get; set; } //in ml
+        public double CurrentHeartStatus => _heartBeatStatus;
         private int _timeUnitsElapsed;
         private double _heartBeatsPerMinute;
         private double _breathsPerMinute;
@@ -53,7 +54,7 @@ namespace HomicideDetective.People.Components
             CurrentBreathVolume = _halfBreathVolume;
         }
 
-        private void Breathe(float ms)
+        public void Breathe(double ms)
         {
             //period is _breathsPerMinute
 
@@ -71,11 +72,11 @@ namespace HomicideDetective.People.Components
             int y = (int)Math.Round(_heartBeatStatus);
             return (x, y);
         }
-        private void BeatHeart(int timeUnits)
+        public void BeatHeart(int timeUnits)
         {
             //a graph that stays really close to 0 until we get close to zero, then it pulses up and down real quick-like
             //period goes from -15 to 15
-            timeUnits = timeUnits % 15;
+            timeUnits %= 15;
             timeUnits -= 15;
             timeUnits = timeUnits == 0 ? 1 : timeUnits;
             double period = _heartBeatsPerMinute / 60 * timeUnits;
@@ -95,7 +96,7 @@ namespace HomicideDetective.People.Components
             return message.Concat(HeartMonitorStrings()).ToArray();
         }
 
-        private string[] HeartMonitorStrings()
+        public string[] HeartMonitorStrings()
         {
             var beep = MonitorHeart();
             List<string> answer = new List<string>();
