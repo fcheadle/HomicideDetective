@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
-using GoRogue.Components;
 using GoRogue.MapGeneration;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
-using HomicideDetective.Places.Components;
 using HomicideDetective.Places.Generation;
 using HomicideDetective.Things;
 using SadConsole;
@@ -16,47 +14,29 @@ using TheSadRogue.Integration.Maps;
 
 namespace HomicideDetective.Places
 {
-    public class Place : RogueLikeMap, ISubstantive
+    public class Place : RogueLikeMap, IDetailed
     {
-        public ISubstantive.Types? Type => ISubstantive.Types.Place;
         public string Name { get; }
         public string Description { get; }
-        public int Mass => 0; //mass of place doesn't make sense
-        public int Volume { get; }
-        public string SizeDescription => "";
-        public string WeightDescription => "";
-        public string[] Details { get; }
-
-        public string GetDetailedDescription()
-            => $"This is {Name}. It is {Volume / 1000} cubic meters.";
-
-        public void AddDetail(string detail) => _details.Add(detail);
-
-        private readonly int _width;
-        private readonly int _height;
-        
+        public Substantive Substantive { get; }
         public List<Region> Regions;
-        private List<string> _details;
 
         public Place(int width, int height, string name, string description) : base(width, height, 16, Distance.Manhattan)
         {
-            _width = width;
-            _height = height;
-            Volume = width * height * 1000;
             Description = description;
             Name = name;
             Regions = new List<Region>();
+            Substantive = new Substantive(Substantive.Types.Place, name, description, 0, Width * Height * 1000, "", "");
         }
 
         public Place GenerateHouse()
         {
-            var generator = new Generator(_width, _height)
+            var generator = new Generator(Width, Height)
                 .AddStep(new GrassStep())
                 .AddStep(new StreetStep())
                 .AddStep(new HouseStep())
                 .Generate();
             
-                        
             var generatedMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
             foreach(var location in generatedMap.Positions())
                 SetTerrain(generatedMap[location]);
@@ -69,7 +49,7 @@ namespace HomicideDetective.Places
             foreach(var location in generatedMap.Positions().Where(p => generatedMap[p] != null))
                 SetTerrain(generatedMap[location]);
             
-            var cells = new ArrayView<ColoredGlyph>(_width, _height);
+            var cells = new ArrayView<ColoredGlyph>(Width, Height);
             cells.ApplyOverlay(TerrainView);
             
             Regions = generator.Context.GetFirst<List<Region>>("rooms");
@@ -77,7 +57,7 @@ namespace HomicideDetective.Places
         }
         public Place GeneratePlains()
         {
-            var generator = new Generator(_width, _height)
+            var generator = new Generator(Width, Height)
                 .AddStep(new GrassStep())
                 .Generate();
             
@@ -85,9 +65,9 @@ namespace HomicideDetective.Places
             foreach(var location in generatedMap.Positions())
                 SetTerrain(generatedMap[location]);
 
-            var weather = new WeatherComponent(this);
+            var weather = new Weather(this);
             GoRogueComponents!.Add(weather);
-            var cells = new ArrayView<ColoredGlyph>(_width, _height);
+            var cells = new ArrayView<ColoredGlyph>(Width, Height);
             cells.ApplyOverlay(TerrainView);
             
             return this;
@@ -97,7 +77,7 @@ namespace HomicideDetective.Places
         {
             foreach (Person person in people)
             {
-                person.Position = Regions.RandomItem().Points.Last(p => GetTerrainAt(p).IsWalkable && !GetEntitiesAt<RogueLikeEntity>(p).Any());
+                person.Position = Regions.RandomItem().Points.Last(p => GetTerrainAt(p)!.IsWalkable && !GetEntitiesAt<RogueLikeEntity>(p).Any());
                 AddEntity(person);
             }
         }
@@ -106,9 +86,11 @@ namespace HomicideDetective.Places
         {
             foreach (Thing thing in things)
             {
-                thing.Position = Regions.RandomItem().Points.Last(p => GetTerrainAt(p).IsWalkable && !GetEntitiesAt<RogueLikeEntity>(p).Any());
+                thing.Position = Regions.RandomItem().Points.Last(p => GetTerrainAt(p)!.IsWalkable && !GetEntitiesAt<RogueLikeEntity>(p).Any());
                 AddEntity(thing);
             }        
         }
+        
+        public string[] GetDetails() => Substantive.Details;
     }
 }

@@ -39,6 +39,7 @@ namespace HomicideDetective
         private static void Init()
         {
             CurrentMystery = new Mystery(GlobalRandom.DefaultRNG.Next(), 1);
+            CurrentMystery.CommitMurder();
             _map = CurrentMystery.CurrentScene;
             _playerCharacter = GeneratePlayerCharacter();
             GameHost.Instance.Screen = _map;
@@ -48,10 +49,10 @@ namespace HomicideDetective
         private static RogueLikeEntity GeneratePlayerCharacter()
         {
             var position = _map.WalkabilityView.Positions().First(p => _map.WalkabilityView[p]);
-            var player = new Person(position, "Detective", "Player", 2400, 2400, "positively tiny", "massive beyond belief");
+            var player = new Person(position, "Detective", "Player", "You", 2400, 2400, "positively tiny", "massive beyond belief");
             
             var controls = new PlayerControlsComponent();
-            var speech = player.AllComponents.GetFirst<SpeechComponent>();
+            var speech = player.AllComponents.GetFirst<Speech>();
             controls.AddKeyCommand(Keys.Left, speech.TalkLeft());
             controls.AddKeyCommand(Keys.Right, speech.TalkRight());
             controls.AddKeyCommand(Keys.Up, speech.TalkUp());
@@ -66,9 +67,9 @@ namespace HomicideDetective
 
         private static ScreenSurface GenerateMessageWindow()
         {
-            var thoughts = _playerCharacter.AllComponents.GetFirst<ThoughtComponent>();
+            var thoughts = _playerCharacter.AllComponents.GetFirst<Thoughts>();
             thoughts.Think($"Case number 1, {CurrentMystery.Victim.Name}.");
-            var page = new PageComponent<ThoughtComponent>(thoughts);
+            var page = new PageComponent<Thoughts>(thoughts);
             page.Window.Position = (Width - page.Window.Surface.Width, 0);
             page.Window.IsVisible = true;
             _playerCharacter.AllComponents.Add(page);

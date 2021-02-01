@@ -1,14 +1,14 @@
 using HomicideDetective.People.Components;
 using Xunit;
 
-namespace HomicideDetective.Tests
+namespace HomicideDetective.Tests.People
 {
     public class ThoughtComponentTests
     {
         [Fact]
         public void NewThoughtComponentTest()
         {
-            ThoughtComponent component = new ThoughtComponent();
+            Thoughts component = new Thoughts();
             Assert.Equal("The Thought Process of a creature.", component.Description);
             Assert.Equal("Thoughts", component.Name);
         }
@@ -16,7 +16,7 @@ namespace HomicideDetective.Tests
         [Fact]
         public void GetDetailsTest()
         {
-            ThoughtComponent component = new ThoughtComponent();
+            Thoughts component = new Thoughts();
             var answer = component.GetDetails();
             Assert.Empty(answer);
         }
@@ -24,7 +24,7 @@ namespace HomicideDetective.Tests
         [Fact]
         public void ThinkSingleThoughtTest()
         {
-            ThoughtComponent component = new ThoughtComponent();
+            Thoughts component = new Thoughts();
             component.Think("Cogito Ergo Sum");
             Assert.Single(component.GetDetails());
             
@@ -42,7 +42,7 @@ namespace HomicideDetective.Tests
         public void ThinkMultipleThoughtsTest()
         {
             //arrange
-            ThoughtComponent component = new ThoughtComponent();
+            Thoughts component = new Thoughts();
             component.Think("Cogito Ergo Sum");       
             component.Think("Non Illegitamae Corporundum");
             string[] thoughts =

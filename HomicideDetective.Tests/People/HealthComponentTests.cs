@@ -1,16 +1,15 @@
-﻿using System.Threading;
-using HomicideDetective.People.Components;
-using SadRogue.Primitives;
+﻿using System;
+using HomicideDetective.People;
 using Xunit;
 
-namespace HomicideDetective.Tests
+namespace HomicideDetective.Tests.People
 {
     public class HealthComponentTests
     {
         [Fact]
         public void NewHealthComponentTest()
         {
-            HealthComponent component = new HealthComponent();
+            Health component = new Health();
             Assert.True(0 < component.SystoleBloodPressure);
             Assert.True(0 < component.DiastoleBloodPressure);
             Assert.True(0 < component.Pulse);
@@ -26,7 +25,7 @@ namespace HomicideDetective.Tests
         [Fact]
         public void GetDetailsTest()
         {
-            HealthComponent component = new HealthComponent();
+            Health component = new Health();
             var answer = component.GetDetails();
             Assert.True(4 < answer.Length);
         }
@@ -34,7 +33,7 @@ namespace HomicideDetective.Tests
         [Fact]
         public void BreatheTest()
         {
-            HealthComponent component = new HealthComponent();
+            Health component = new Health();
             double prev = 0;
             for (int i = 0; i < 10; i++)
             {
@@ -42,7 +41,7 @@ namespace HomicideDetective.Tests
                 var breath = component.CurrentBreathVolume;
                 Assert.True(0 < breath); // don't ever FULLY run out of breath
                 Assert.True(1000 > breath);
-                Assert.False(prev == breath);
+                Assert.False(Math.Abs(prev - breath) < 0.005);
                 prev = breath;
             }
         }
@@ -50,7 +49,7 @@ namespace HomicideDetective.Tests
         [Fact]
         public void HeartBeatTest()
         {
-            HealthComponent component = new HealthComponent();
+            Health component = new Health();
             double prev = 0;
             for (int i = 0; i < 30; i++)
             {
@@ -66,7 +65,7 @@ namespace HomicideDetective.Tests
         [Fact]
         public void MonitorHeartTest()
         {
-            HealthComponent component = new HealthComponent();
+            Health component = new Health();
             for (int i = 0; i < 30; i++)
             {
                 component.BeatHeart(i * 250);
@@ -79,7 +78,7 @@ namespace HomicideDetective.Tests
         [Fact]
         public void MonitorHeartStringsTest()
         {
-            HealthComponent component = new HealthComponent();
+            Health component = new Health();
             component.BeatHeart(250);
             var heart = component.HeartMonitorStrings();
             Assert.Equal(5, heart.Length);
@@ -88,7 +87,7 @@ namespace HomicideDetective.Tests
         [Fact]
         public void MurderTest()
         {
-            HealthComponent component = new HealthComponent();
+            Health component = new Health();
             component.ProcessTimeUnit();
             var heart = component.CurrentHeartStatus;
             var breath = component.CurrentBreathVolume;
@@ -110,7 +109,7 @@ namespace HomicideDetective.Tests
         [Fact]
         public void ProcessTimeUnitTest()
         {
-            HealthComponent component = new HealthComponent();
+            Health component = new Health();
             double prevCardio = 0;
             double prevRespiratory = 0;
             for (int i = 0; i < 30; i++)

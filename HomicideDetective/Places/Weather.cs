@@ -1,35 +1,28 @@
 ﻿using System;
-using SadConsole.Components;
+using HomicideDetective.Mysteries;
+using HomicideDetective.UserInterface;
 using TheSadRogue.Integration;
 using TheSadRogue.Integration.Components;
 
-namespace HomicideDetective.Places.Components
+namespace HomicideDetective.Places
 {
     //Requires significant refactor on alpha
-    public class WeatherComponent : RogueLikeComponentBase, IHaveDetails
+    public class Weather : RogueLikeComponentBase, IDetailed
     {
         private Place _place;
         public string Name { get; }
         public string Description { get; }
         public TimeSpan Elapsed { get; private set; } = TimeSpan.Zero;
+        
+        //F(x, y, t) // f of xyt
         private Func<int, int, TimeSpan, double> Fxyt 
             => (x, y, t) => 2 * Math.Cos(-t.TotalSeconds + Math.Sqrt((x + 180) * (x + 180) / 444 + (y + 90) * (y + 90) / 444));
         
-        public WeatherComponent(Place place) : base(true, false, false, false)
+        public Weather(Place place) : base(true, false, false, false)
         {
+            Name = "Weather";
+            Description = $"The weather of {place.Name}";
             _place = place;
-            Timer timer = new Timer(TimeSpan.FromMilliseconds(100))
-            {
-                Repeat = true,
-                IsPaused = false,
-            };
-            
-            timer.TimerElapsed += (sender, args) =>
-            {
-                ProcessTimeUnit();
-            };
-            
-            place.AllComponents.Add(timer);
         }
         
         public string[] GetDetails()
@@ -53,18 +46,15 @@ namespace HomicideDetective.Places.Components
             {
                 for (int y = 0; y < _place.Height; y++)
                 {
-                    RogueLikeCell terrain = _place.GetTerrainAt<RogueLikeCell>((x, y));
-                    if (terrain != null)
+                    RogueLikeCell? terrain = _place.GetTerrainAt<RogueLikeCell>((x, y));
+                    var component = terrain?.GoRogueComponents.GetFirstOrDefault<AnimatingGlyph>();
+                    if (component != null)
                     {
-                        var component = terrain.GoRogueComponents.GetFirstOrDefault<ChangingGlyphComponent>();
-                        if (component != null)
-                        {
-                            double z = Fxyt(x, y, Elapsed);
-                            if (z > 1.75 || z < -1.75)
-                                component.Start();
+                        double z = Fxyt(x, y, Elapsed);
+                        if (z > 1.75 || z < -1.75)
+                            component.Start();
 
-                            component.ProcessTimeUnit();
-                        }
+                        component.ProcessTimeUnit();
                     }
                 }
             }

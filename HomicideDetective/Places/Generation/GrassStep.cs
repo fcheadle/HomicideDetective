@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GoRogue.MapGeneration;
-using HomicideDetective.Places.Components;
+using HomicideDetective.UserInterface;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using TheSadRogue.Integration;
@@ -22,7 +22,7 @@ namespace HomicideDetective.Places.Generation
                     byte green = Convert.ToByte((Math.Cos(Math.Sqrt(i*i+j*j))+1) * 32 + 32);
                     Color color = new Color(0, green, 0);
                     var cell =  new RogueLikeCell((i, j), color, Color.Black, '"', 0);
-                    cell.GoRogueComponents.Add(new ChangingGlyphComponent('"', new int[]{ '\\', '|', '/'}));
+                    cell.GoRogueComponents.Add(new AnimatingGlyph('"', new int[]{ '\\', '|', '/'}));
                     map[i, j] = cell;
                 }
             }

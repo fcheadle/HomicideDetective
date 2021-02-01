@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HomicideDetective.Mysteries;
 using SadRogue.Primitives;
 using TheSadRogue.Integration.Components;
 
-namespace HomicideDetective.People.Components
+namespace HomicideDetective.People
 {
     public enum BloodTypes
     {
@@ -13,7 +14,7 @@ namespace HomicideDetective.People.Components
         B,
         AB
     }
-    public class HealthComponent : RogueLikeComponentBase, IHaveDetails
+    public class Health : RogueLikeComponentBase, IDetailed
     {
         public string Name { get; }
         public string Description { get; }
@@ -35,7 +36,7 @@ namespace HomicideDetective.People.Components
         private double _heartBeatStatus;
         private double _halfBreathVolume;
 
-        public HealthComponent(float systoleBloodPressure = 120, float diastoleBloodPressure = 80, float pulse = 85, float bodyTemperature = 96.7f, float lungCapacity = 1000, float bloodVolume = 6000)
+        public Health(float systoleBloodPressure = 120, float diastoleBloodPressure = 80, float pulse = 85, float bodyTemperature = 96.7f, float lungCapacity = 1000, float bloodVolume = 6000)
             : base(true,false,false, false)
         {
             Name = "Health";

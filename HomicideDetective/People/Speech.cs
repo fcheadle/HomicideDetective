@@ -1,17 +1,22 @@
 using System;
+using GoRogue.GameFramework;
+using GoRogue.GameFramework.Components;
+using HomicideDetective.Mysteries;
+using HomicideDetective.People.Components;
 using SadRogue.Primitives;
 using TheSadRogue.Integration.Components;
 
-namespace HomicideDetective.People.Components
+namespace HomicideDetective.People
 {
-    public class SpeechComponent : RogueLikeComponentBase, IHaveDetails
+    public class Speech : IGameObjectComponent, IDetailed
     {
+        public IGameObject? Parent { get; set; }
         public string Name { get; }
         public string Description { get; }
-        public SpeechComponent() : base(false, false, false, false, 7)
+        public Speech() 
         {
-            Name = "Speech Component";
-            Description = "I handle Speech.";
+            Name = "Speech";
+            Description = $"I handle Speech for {Parent}";
         }
 
         public string[] GetDetails()
@@ -71,8 +76,8 @@ namespace HomicideDetective.People.Components
             {
                 if (entity is Person person)
                 {
-                    var speech = person.AllComponents.GetFirst<SpeechComponent>();
-                    var thoughts = ((Person)Parent).AllComponents.GetFirst<ThoughtComponent>();
+                    var speech = person.AllComponents.GetFirst<Speech>();
+                    var thoughts = ((Person)Parent).AllComponents.GetFirst<Thoughts>();
                     thoughts.Think(speech.GetDetails());
                     return speech.GetDetails();
                 }

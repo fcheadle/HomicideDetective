@@ -2,10 +2,10 @@ using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using TheSadRogue.Integration;
 
-namespace HomicideDetective.Places.Components
+namespace HomicideDetective.UserInterface
 {
     //Refactor this into a "blowing grass" entity that disposes of itself when finished
-    public class ChangingGlyphComponent : IGameObjectComponent
+    public class AnimatingGlyph : IGameObjectComponent
     {
         //AnimatedConsole animation;
         readonly int _ogGlyph;
@@ -14,7 +14,7 @@ namespace HomicideDetective.Places.Components
         public IGameObject Parent { get; set; }
         public bool Blowing { get; internal set; }
 
-        public ChangingGlyphComponent(int glyph, int[] animationSteps)
+        public AnimatingGlyph(int glyph, int[] animationSteps)
         {
             _ogGlyph = glyph;
             _animationSteps = animationSteps;

@@ -5,7 +5,6 @@ using GoRogue;
 using HomicideDetective.People;
 using HomicideDetective.Places;
 using HomicideDetective.Things;
-using SadRogue.Primitives;
 
 namespace HomicideDetective.Mysteries
 {
@@ -15,7 +14,7 @@ namespace HomicideDetective.Mysteries
         private Statuses _status = Statuses.Active;
         public Person Victim => _victim;
         public int Number => _number;
-        public Place CurrentScene { get; }
+        public Place CurrentScene { get; private set; }
         
         private readonly int _seed;
         private readonly int _number;
@@ -40,13 +39,9 @@ namespace HomicideDetective.Mysteries
             _seed = seed;
             _number = caseNumber;
             _random = new Random(seed + caseNumber);
-            CommitMurder();
-            
-            CurrentScene = _sceneOfTheCrime;
-            // CurrentScene = new Place(Program.MapWidth, Program.MapHeight, $"plains").GeneratePlains();
         }
 
-        private void CommitMurder()
+        public void CommitMurder()
         {
             _scenes = GenerateScenes();
             _sceneOfTheCrime = _scenes.First();
@@ -56,9 +51,9 @@ namespace HomicideDetective.Mysteries
             _victim.Murder(_murderer, _murderWeapon, _sceneOfTheCrime);
             _sceneOfTheCrime.Populate(new[] {_victim});
             _sceneOfTheCrime.Populate(new[] {_murderWeapon});
+            CurrentScene = _sceneOfTheCrime;
         }
-
-
+        
         private IEnumerable<Place> GenerateScenes()
         {
             _scenes = new List<Place>();
@@ -74,9 +69,6 @@ namespace HomicideDetective.Mysteries
                 yield return scene;
             }
         }
-
-        // private Place GenerateScene() 
-        //     => new Place(Program.MapWidth, Program.MapHeight, $"Case {_number} Location of Interest").GenerateHouse();
 
         private Person GeneratePerson(string surname)
         {
@@ -100,8 +92,7 @@ namespace HomicideDetective.Mysteries
             int i = _random.Next(0, _maleGivenNames.Length);
             string givenName = isMale ? _maleGivenNames[i] : _femaleGivenNames[i];
 
-            Person person = new Person((0, 0), givenName, surname, 24, 24, "average", "average");
-            //person.Substantive.AddDetail(description);
+            Person person = new Person((0, 0), givenName, surname, description, 24, 24, "average", "average");
             return person;
         }
 
@@ -157,7 +148,7 @@ namespace HomicideDetective.Mysteries
 
             var item = new Thing((0, 0), name, description, 240, 240, "is exactly average in size", "weighs about what you expect");
             
-            item.AddDetail(description);
+            item.Substantive.AddDetail(description);
             return item;
         }
     }

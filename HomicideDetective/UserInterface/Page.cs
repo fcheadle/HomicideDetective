@@ -1,4 +1,5 @@
 ﻿using System;
+using HomicideDetective.Mysteries;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.UI.Controls;
@@ -8,7 +9,7 @@ using TheSadRogue.Integration.Components;
 namespace HomicideDetective
 {
     //refactor this for clarity upon alpha
-    public class PageComponent<T> : RogueLikeComponentBase, IHaveDetails where T : IHaveDetails
+    public class PageComponent<T> : RogueLikeComponentBase, IDetailed where T : IDetailed
     {
         const int Width = 24;
         const int Height = 24;
