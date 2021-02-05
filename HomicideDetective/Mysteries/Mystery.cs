@@ -38,7 +38,7 @@ namespace HomicideDetective.Mysteries
         {
             _seed = seed;
             _number = caseNumber;
-            _random = new Random(seed + caseNumber);
+            _random = new Random(_seed + _number);
         }
 
         public void CommitMurder()

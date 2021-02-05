@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
+using HomicideDetective.Places;
 
 namespace HomicideDetective.Mysteries
 {
@@ -9,6 +9,7 @@ namespace HomicideDetective.Mysteries
     {
         public enum Types {Person, Place, Thing}
         public IGameObject? Parent { get; set; }
+        public Place? Subject { get; set; }
         public Types Type { get; set; } 
         public string Name { get; set; } 
         public string Description { get; set; }
@@ -46,6 +47,7 @@ namespace HomicideDetective.Mysteries
             SizeDescription = sizeDescription;
             WeightDescription = weightDescription;
             _details = new List<string>();
+            
         }
 
         public void AddDetail(string detail) => _details.Add(detail);

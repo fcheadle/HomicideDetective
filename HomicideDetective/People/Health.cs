@@ -7,15 +7,10 @@ using TheSadRogue.Integration.Components;
 
 namespace HomicideDetective.People
 {
-    public enum BloodTypes
-    {
-        O,
-        A,
-        B,
-        AB
-    }
     public class Health : RogueLikeComponentBase, IDetailed
     {
+        public enum BloodTypes { O, A, B, AB }
+        public BloodTypes BloodType { get; }
         public string Name { get; }
         public string Description { get; }
         public bool Alive { get; private set; } = true;

@@ -1,9 +1,9 @@
-﻿namespace HomicideDetective.Things.Markings
+﻿namespace HomicideDetective.Things.Marks
 {
     /// <summary>
     /// A "Marking" is left by an interaction. Includes fingerprints, scuff marks, blood stains, bruises, so on.
     /// </summary>
-    public class Marking
+    public class Mark
     {
         public string? Name { get; set; }
         public string? Color { get; set; }

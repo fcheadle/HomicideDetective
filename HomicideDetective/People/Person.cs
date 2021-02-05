@@ -2,7 +2,7 @@ using HomicideDetective.Mysteries;
 using HomicideDetective.People.Components;
 using HomicideDetective.Places;
 using HomicideDetective.Things;
-using HomicideDetective.Things.Markings;
+using HomicideDetective.Things.Marks;
 using SadRogue.Primitives;
 using TheSadRogue.Integration;
 
@@ -17,7 +17,7 @@ namespace HomicideDetective.People
         public Thoughts Thoughts => AllComponents.GetFirst<Thoughts>();
         public Speech Speech => AllComponents.GetFirst<Speech>();
         public Health Health => AllComponents.GetFirst<Health>();
-        public MarkingCollection Markings => AllComponents.GetFirst<MarkingCollection>();
+        public Markings Markings => AllComponents.GetFirst<Markings>();
         
 
         public Person(Point position, string firstname, string lastname, string description, int mass, int volume, 
@@ -40,7 +40,7 @@ namespace HomicideDetective.People
             var speech = new Speech();
             AllComponents.Add(speech);
 
-            var markings = new MarkingCollection();
+            var markings = new Markings();
             var print = new Fingerprint(64);
             markings.AddUnlimitedMarkings(print);
             AllComponents.Add(markings);

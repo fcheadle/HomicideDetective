@@ -10,6 +10,7 @@ namespace HomicideDetective.Places
     public class Weather : RogueLikeComponentBase, IDetailed
     {
         private Place _place;
+        public Place Place => _place;
         public string Name { get; }
         public string Description { get; }
         public TimeSpan Elapsed { get; private set; } = TimeSpan.Zero;

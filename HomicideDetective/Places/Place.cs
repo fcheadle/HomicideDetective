@@ -16,17 +16,23 @@ namespace HomicideDetective.Places
 {
     public class Place : RogueLikeMap, IDetailed
     {
-        public string Name { get; }
-        public string Description { get; }
+        public string Name => Substantive.Name;
+        public string Description => Substantive.Description;
         public Substantive Substantive { get; }
         public List<Region> Regions;
 
         public Place(int width, int height, string name, string description) : base(width, height, 16, Distance.Manhattan)
         {
-            Description = description;
-            Name = name;
             Regions = new List<Region>();
             Substantive = new Substantive(Substantive.Types.Place, name, description, 0, Width * Height * 1000, "", "");
+            Substantive.Subject = this;
+        }
+
+        public Place(int width, int height, Substantive substantive) : base(width, height, 16, Distance.Manhattan)
+        {
+            Regions = new List<Region>();
+            Substantive = substantive;
+            Substantive.Subject = this;
         }
 
         public Place GenerateHouse()
