@@ -3,20 +3,20 @@ using HomicideDetective.Things.Marks;
 
 namespace HomicideDetective.Tests.Things.Marks
 {
-    public class MarkingsTests
+    public class MarkingCollectionTests
     {
         [Fact]
         public void NewMarkingsTest()
         {
-            var subject = new Markings();
+            var subject = new MarkingCollection();
             Assert.Empty(subject.MarkingsOn);
             Assert.Empty(subject.MarkingsLeftBy);
         }
         [Fact]
         public void AddUnlimitedMarkingsTest()
         {
-            var subject = new Markings();
-            var fingerprint = new Mark
+            var subject = new MarkingCollection();
+            var fingerprint = new Marking
             {
                 Adjective = "greasy",
                 Color = "yellow",
@@ -30,8 +30,8 @@ namespace HomicideDetective.Tests.Things.Marks
         [Fact]
         public void AddLimitedMarkingsTest()
         {
-            var subject = new Markings();
-            var fingerprint = new Mark
+            var subject = new MarkingCollection();
+            var fingerprint = new Marking
             {
                 Adjective = "greasy",
                 Color = "yellow",
@@ -45,8 +45,8 @@ namespace HomicideDetective.Tests.Things.Marks
         [Fact]
         public void LeaveMarkTest()
         {
-            var subject = new Markings();
-            var fingerprint = new Mark
+            var subject = new MarkingCollection();
+            var fingerprint = new Marking
             {
                 Adjective = "greasy",
                 Color = "yellow",

@@ -8,7 +8,7 @@ namespace HomicideDetective.Tests.Things.Marks
         [Fact]
         public void NewMarkingTest()
         {
-            Mark mark = new Mark()
+            Marking mark = new Marking()
             {
                 Name = "footprint",
                 Description = "with a zig-zag pattern on the sole",

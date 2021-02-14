@@ -5,5 +5,6 @@ namespace HomicideDetective.Mysteries
         string Name { get; }
         string Description { get; }
         string[] GetDetails();
+        string[] AllDetails();
     }
 }

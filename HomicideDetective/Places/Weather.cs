@@ -6,7 +6,6 @@ using TheSadRogue.Integration.Components;
 
 namespace HomicideDetective.Places
 {
-    //Requires significant refactor on alpha
     public class Weather : RogueLikeComponentBase, IDetailed
     {
         private Place _place;
@@ -14,27 +13,21 @@ namespace HomicideDetective.Places
         public string Name { get; }
         public string Description { get; }
         public TimeSpan Elapsed { get; private set; } = TimeSpan.Zero;
-        
+
         //F(x, y, t) // f of xyt
-        private Func<int, int, TimeSpan, double> Fxyt 
-            => (x, y, t) => 2 * Math.Cos(-t.TotalSeconds + Math.Sqrt((x + 180) * (x + 180) / 444 + (y + 90) * (y + 90) / 444));
-        
+        private Func<int, int, TimeSpan, double> Fxyt
+            => (x, y, t) =>
+                2 * Math.Cos(-t.TotalSeconds + Math.Sqrt((x + 180) * (x + 180) / 444 + (y + 90) * (y + 90) / 444));
+
         public Weather(Place place) : base(true, false, false, false)
         {
             Name = "Weather";
             Description = $"The weather of {place.Name}";
             _place = place;
         }
-        
-        public string[] GetDetails()
-        {
-            string[] answer =
-            {
-                "This is the weather component. It's parent is a map, not a regular entity."
-            };
-            return answer;
-        }
 
+        public string[] GetDetails() => new[]{ "This is the weather component. It's parent is a map, not a regular entity." };
+        public string[] AllDetails() => new[] {Description, GetDetails()[0], $"Time Elapsed: {Elapsed.ToString()}"};
         public void ProcessTimeUnit()
         {
             Elapsed += TimeSpan.FromMilliseconds(100);

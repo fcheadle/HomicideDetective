@@ -28,7 +28,6 @@ namespace HomicideDetective
             InitWindow();
             InitBackground();
             InitTextSurface();
-            //InitButton();
         }
 
         private void InitWindow()
@@ -39,7 +38,6 @@ namespace HomicideDetective
                 IsFocused = false,
                 FocusOnMouseClick = true,
             };
-            // Window.MouseButtonClicked += MinimizeMaximize;
         }
 
         private void InitBackground()
@@ -74,40 +72,13 @@ namespace HomicideDetective
             Window.IsDirty = true;
             base.Update(host, delta);
         }
-
-        // private void MaximizeButtonClicked(object sender, MouseEventArgs e)
-        // {
-        //     if (Window.IsVisible)
-        //         Window.Hide();
-        //     else
-        //         Window.Show();
-        //     Game.UiManager.Player.IsFocused = true;
-        // }
         public void Print()
         {
             Window.Children.Remove(_textSurface);
             InitTextSurface();
         }
 
-        // public override void Update(Console console, TimeSpan delta)
-        // {
-        //     Print(GetDetails());
-        //     if (Window.IsFocused) Game.UiManager.Player.IsFocused = true;
-        //     if (MaximizeButton.IsFocused) Game.UiManager.Player.IsFocused = true;
-        //     base.Update(console, delta);
-        // }
-
-        // public void MinimizeMaximize(object? sender, MouseScreenObjectState mouseScreenObjectState)
-        // {
-        //     if (args.MouseState.Mouse.RightClicked)
-        //     {
-        //         if (Window.IsVisible)
-        //             Window.Hide();
-        //         else
-        //             Window.Show();
-        //     }
-        // }
-
         public string[] GetDetails() => Component.GetDetails();
+        public string[] AllDetails() => Component.AllDetails();
     }
 }

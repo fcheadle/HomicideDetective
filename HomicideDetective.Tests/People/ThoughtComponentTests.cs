@@ -1,4 +1,4 @@
-using HomicideDetective.People.Components;
+using HomicideDetective.People;
 using Xunit;
 
 namespace HomicideDetective.Tests.People

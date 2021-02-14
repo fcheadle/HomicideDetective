@@ -3,7 +3,6 @@ using System.Linq;
 using GoRogue.Random;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
-using HomicideDetective.People.Components;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives.GridViews;
@@ -40,6 +39,7 @@ namespace HomicideDetective
         {
             CurrentMystery = new Mystery(GlobalRandom.DefaultRNG.Next(), 1);
             CurrentMystery.CommitMurder();
+            CurrentMystery.Open();
             _map = CurrentMystery.CurrentScene;
             _playerCharacter = GeneratePlayerCharacter();
             GameHost.Instance.Screen = _map;
@@ -49,14 +49,14 @@ namespace HomicideDetective
         private static RogueLikeEntity GeneratePlayerCharacter()
         {
             var position = _map.WalkabilityView.Positions().First(p => _map.WalkabilityView[p]);
-            var player = new Person(position, "Detective", "Player", "You", 2400, 2400, "positively tiny", "massive beyond belief");
+            var player = new Person(position, new Substantive());
             
             var controls = new PlayerControlsComponent();
-            var speech = player.AllComponents.GetFirst<Speech>();
-            controls.AddKeyCommand(Keys.Left, speech.TalkLeft());
-            controls.AddKeyCommand(Keys.Right, speech.TalkRight());
-            controls.AddKeyCommand(Keys.Up, speech.TalkUp());
-            controls.AddKeyCommand(Keys.Down, speech.TalkDown());
+            
+            controls.AddKeyCommand(Keys.Left, player.InteractLeft);
+            controls.AddKeyCommand(Keys.Right, player.InteractRight);
+            controls.AddKeyCommand(Keys.Up, player.InteractUp);
+            controls.AddKeyCommand(Keys.Down, player.InteractDown);
             
             player.AllComponents.Add(controls);
             player.IsFocused = true;

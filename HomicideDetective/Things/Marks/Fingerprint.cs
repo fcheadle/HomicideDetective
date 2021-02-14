@@ -8,7 +8,7 @@ using SadRogue.Primitives.GridViews;
 
 namespace HomicideDetective.Things.Marks
 {
-    public class Fingerprint : Mark, IGameObjectComponent, IDetailed
+    public class Fingerprint : Marking, IGameObjectComponent, IDetailed
     {
         public IGameObject? Parent { get; set; }
         private int _seed;
@@ -65,5 +65,7 @@ namespace HomicideDetective.Things.Marks
 
             return answer;
         }
+
+        public string[] AllDetails() => GetDetails(); //smells bad, man
     }
 }

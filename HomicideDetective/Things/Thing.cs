@@ -7,16 +7,16 @@ namespace HomicideDetective.Things
 {
     public class Thing : RogueLikeEntity, IDetailed
     {
-        public string Description { get; }
+        public string Description => Substantive.Description!;
         public Substantive Substantive { get; }
         public string[] GetDetails() => Substantive.Details;
+        public string[] AllDetails() => Substantive.AllDetails;
 
-        public Thing(Point position, string name, string description, int mass, int volume, string sizeDescript, string weightDescript) 
-            : base(position, Color.LightGray, Color.Transparent, name[0], true, true, 2)
+        public Thing(Point position, Substantive substantive) 
+            : base(position, Color.LightGray, Color.Transparent, substantive.Name![0], true, true, 2)
         {
-            Name = name;
-            Description = description;
-            Substantive = new Substantive(Substantive.Types.Person, name, description, mass, volume, sizeDescript, weightDescript);
+            Substantive = substantive;
+            Name = substantive.Name;
         }
     }
 }

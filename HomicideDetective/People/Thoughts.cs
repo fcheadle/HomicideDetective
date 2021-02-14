@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using HomicideDetective.Mysteries;
+using HomicideDetective.Things;
 using SadConsole;
+using SadRogue.Primitives;
 using TheSadRogue.Integration.Components;
 
-namespace HomicideDetective.People.Components
+namespace HomicideDetective.People
 {
 
     public class Thoughts : RogueLikeComponentBase, IDetailed
@@ -13,6 +15,8 @@ namespace HomicideDetective.People.Components
         public string Description { get; }
         private readonly List<string> _thoughts;
         public string[] GetDetails() => _thoughts.ToArray();
+        public string[] AllDetails() => _thoughts.ToArray(); //for now
+            
 
         public Thoughts() : base(true, false, false, false)
         {
@@ -45,6 +49,23 @@ namespace HomicideDetective.People.Components
             //todo - more complexity
             if(!_thoughts.Contains(thought))
                 _thoughts.Add(thought);
+        }
+
+        public string[] Look(Direction d)
+        {
+            var entities = Parent!.CurrentMap!.Entities.GetItemsAt(Parent!.Position + d);
+            foreach (var entity in entities)
+            {
+                if (entity is Thing thing)
+                {
+                    Think(thing.GetDetails());
+                    return thing.GetDetails();
+                }
+            }
+
+
+            return new[] { "" };
+            
         }
     }
 }

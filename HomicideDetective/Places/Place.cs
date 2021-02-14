@@ -21,13 +21,6 @@ namespace HomicideDetective.Places
         public Substantive Substantive { get; }
         public List<Region> Regions;
 
-        public Place(int width, int height, string name, string description) : base(width, height, 16, Distance.Manhattan)
-        {
-            Regions = new List<Region>();
-            Substantive = new Substantive(Substantive.Types.Place, name, description, 0, Width * Height * 1000, "", "");
-            Substantive.Subject = this;
-        }
-
         public Place(int width, int height, Substantive substantive) : base(width, height, 16, Distance.Manhattan)
         {
             Regions = new List<Region>();
@@ -46,9 +39,9 @@ namespace HomicideDetective.Places
             var generatedMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
             foreach(var location in generatedMap.Positions())
                 SetTerrain(generatedMap[location]);
-            
+
             generatedMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("block");
-            foreach(var location in generatedMap.Positions().Where(p=> generatedMap[p] != null))
+            foreach(var location in generatedMap.Positions().Where(p => generatedMap[p] != null))
                 SetTerrain(generatedMap[location]);
 
             generatedMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("house");
@@ -79,6 +72,20 @@ namespace HomicideDetective.Places
             return this;
         }
 
+        public void Populate(IEnumerable<Substantive> entities)
+        {
+            var people = new List<Person>();
+            foreach(var entity in entities.Where(e => e.Type == Substantive.Types.Person))
+                people.Add(new Person((0,0), entity));
+
+            var things = new List<Thing>();
+            foreach(var entity in entities.Where(e => e.Type == Substantive.Types.Thing))
+                things.Add(new Thing(Point.None, entity));
+            
+            Populate(people);
+            Populate(things);
+        }
+        
         public void Populate(IEnumerable<Person> people)
         {
             foreach (Person person in people)
@@ -98,5 +105,6 @@ namespace HomicideDetective.Places
         }
         
         public string[] GetDetails() => Substantive.Details;
+        public string[] AllDetails() => Substantive.AllDetails;
     }
 }

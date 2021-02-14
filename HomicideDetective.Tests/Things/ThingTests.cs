@@ -1,3 +1,5 @@
+using HomicideDetective.Mysteries;
+using HomicideDetective.People;
 using HomicideDetective.Things;
 using SadRogue.Primitives;
 using Xunit;
@@ -16,7 +18,11 @@ namespace HomicideDetective.Tests.Things
         [Fact]
         public void NewThingTest()
         {
-            var thing = new Thing((1, 1), _name, _description, _mass, _volume, _sizeDescr, _weightDescr);
+            var subs = new Substantive(Substantive.Types.Thing, _name, 16, null, "a", "it", 
+                "its", _description, _mass, _volume, _sizeDescr, _weightDescr);
+            
+            var thing = new Thing((1,1), subs);
+            
             Assert.Equal(new Point(1,1), thing.Position);
             Assert.Equal(_name, thing.Name);
             Assert.Equal(_description, thing.Description);
@@ -27,7 +33,10 @@ namespace HomicideDetective.Tests.Things
         [Fact]
         public void GetDetailedDescriptionTest()
         {
-            var thing = new Thing((1, 1), _name, _description, _mass, _volume, _sizeDescr, _weightDescr);
+            var subs = new Substantive(Substantive.Types.Thing, _name, 16, null, "a", "it", 
+                "its", _description, _mass, _volume, _sizeDescr, _weightDescr);
+            
+            var thing = new Thing((1,1), subs);
             var answer = thing.Substantive.GenerateDetailedDescription();
             Assert.Contains(_sizeDescr, answer);
             Assert.Contains(_weightDescr, answer);
@@ -36,7 +45,11 @@ namespace HomicideDetective.Tests.Things
         [Fact]
         public void DetailsTest()
         {
-            var thing = new Thing((1, 1), _name, _description, _mass, _volume, _sizeDescr, _weightDescr);
+            var subs = new Substantive(Substantive.Types.Thing, _name, 16, null, "a", "it", 
+                "its", _description, _mass, _volume, _sizeDescr, _weightDescr);
+            
+            var thing = new Thing((1,1), subs);
+            
             var answer = thing.GetDetails();
             Assert.Contains(thing.Name, answer);
             Assert.Contains(thing.Description, answer);

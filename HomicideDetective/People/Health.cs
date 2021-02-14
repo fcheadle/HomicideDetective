@@ -82,11 +82,23 @@ namespace HomicideDetective.People
 
         public string[] GetDetails()
         {
+            return new[] {
+                "Temp: " + CurrentBodyTemperature,
+                "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
+                "Pulse: " + Pulse + "bpm",
+            };
+        }
+        
+        public string[] AllDetails()
+        {
             string[] message = {
                 "Temp: " + CurrentBodyTemperature,
                 "Pulse: " + Pulse + "bpm",
+                "Heart BP: " + _heartBeatStatus,
+                "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
+                "Blood Volume: " + BloodVolume,
+                "Blood Type: " + BloodType,
                 "Breath: " + CurrentBreathVolume + "/" + LungCapacity,
-                "Heart BP: " + _heartBeatStatus
             };
 
             return message.Concat(HeartMonitorStrings()).ToArray();
