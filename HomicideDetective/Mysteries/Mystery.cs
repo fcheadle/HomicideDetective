@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GoRogue;
+using HomicideDetective.People;
 using HomicideDetective.Places;
 using HomicideDetective.Places.Generation;
 
@@ -19,8 +21,8 @@ namespace HomicideDetective.Mysteries
         public Substantive[] Witnesses { get; set; }
         public Substantive[] LocationsOfInterest { get; set; }
         public Substantive[] Evidence { get; set; }
-        public Place CurrentScene { get; set; }
-        public Place[] Scenes { get; set; }
+        public Scene CurrentScene { get; set; }
+        public Scene[] Scenes { get; set; }
         public Random Random { get; set; }
 
         string[] _maleGivenNames = { "Nate", "Tom", "Dick", "Harry", "Bob", "Matthew", "Mark", "Luke", "John", "Josh" };
@@ -85,13 +87,17 @@ namespace HomicideDetective.Mysteries
             SceneOfCrime = new Substantive(Substantive.Types.Place, $"{Victim.Name}'s Home", Random.Next(),
                 article: "It", description: $"Location of interest in the Murder of {Victim.Name}");
             
+            
         }
 
         public void Open()
         {
-            CurrentScene = new Place(Program.MapWidth, Program.MapHeight, SceneOfCrime);
+            CurrentScene = new Scene(Program.MapWidth, Program.MapHeight, SceneOfCrime);
             CurrentScene.GenerateHouse();
             CurrentScene.Populate(new Substantive[]{Victim, Murderer, MurderWeapon});
+            var victim = CurrentScene.Entities.Items.First
+                (e => ((ISubstantive) e).Substantive.Name == Victim.Name);
+            ((Person)victim).Murder(Murderer, MurderWeapon, SceneOfCrime);
             //CurrentScene.Populate();
         }
         
@@ -133,53 +139,53 @@ namespace HomicideDetective.Mysteries
             {
                 default:
                 case 0: 
-                    name = "hammer";
-                    description = "a small tool, normally used for carpentry";
+                    name = "Hammer";
+                    description = "A small tool, normally used for carpentry";
                     mass = 710;
                     volume = 490;
-                    detail = "is completely free of dust, and has a slight smell of bleach";
+                    detail = "It is completely free of dust, and has a slight smell of bleach";
                     size = "is exactly average in size";
                     weight = "weighs a little less than it looks like";
                     break;
                 case 1: 
-                    name = "switchblade"; 
-                    description = "a small, concealable knife";
+                    name = "Switchblade"; 
+                    description = "A small, concealable knife";
                     mass = 125;
                     volume = 325;
-                    detail = "with a small patch of red rust near the hinge";
+                    detail = "There is a small patch of red rust near the hinge";
                     size = "is tiny";
                     weight = "weighs almost nothing";
                     break;
                 case 2: 
-                    name = "pistol"; 
-                    description = "a small, concealable handgun";
+                    name = "Pistol"; 
+                    description = "A small, concealable handgun";
                     mass = 6750;
                     volume = 465;
-                    detail = "there are residue patterns on the muzzle";
+                    detail = "There are residue patterns on the muzzle";
                     size = "is easily concealable";
                     weight = "weighs more than it looks like";
                     break;
                 case 3: 
-                    name = "poison"; 
-                    description = "a lethal dose of hydrogen-cyanide";
+                    name = "Poison"; 
+                    description = "A lethal dose of hydrogen-cyanide";
                     mass = 15;
                     volume = 12;
-                    detail = "there is a puncture hole in the cap";
+                    detail = "There is a puncture hole in the cap";
                     size = "is fits within an insulin bottle";
                     weight = "weighs little more than water";
                     break;
                 case 4: 
-                    name = "kitchen knife"; 
-                    description = "a small tool used for preparing food";
+                    name = "Kitchen Knife"; 
+                    description = "A small tool used for preparing food";
                     mass = 240;
                     volume = 390;
-                    detail = "it is somewhat warped along its flat plane";
+                    detail = "It is somewhat warped along its flat plane";
                     size = "is long and curved";
                     weight = "weighs very little";
                     break;
                 case 5: 
-                    name = "shotgun";
-                    description = "a large gun used for scaring off vermin";
+                    name = "Shotgun";
+                    description = "A large gun used for scaring off vermin";
                     mass = 13500;
                     volume = 8825;
                     detail = "there is one shell in the chamber";
@@ -187,26 +193,26 @@ namespace HomicideDetective.Mysteries
                     weight = "is heavy and has powerful kickback";
                     break;
                 case 6: 
-                    name = "rock"; 
-                    description = "a stone from off the ground";
+                    name = "Rock"; 
+                    description = "A stone from off the ground";
                     mass = 10000;
                     volume = 750;
-                    detail = "it is covered in blood and haphazardly discarded nearby";
+                    detail = "It is covered in blood and haphazardly discarded nearby";
                     size = "is three times the size of your fist";
                     weight = "is very dense and hard";
                     break;
                 case 7: 
-                    name = "screwdriver"; 
-                    description = "a small tool, used for all manner of handiwork";
+                    name = "Screwdriver"; 
+                    description = "A small tool, used for all manner of handiwork";
                     mass = 120;
                     volume = 200;
-                    detail = "this flathead has been recently cleaned";
+                    detail = "This flathead has been recently cleaned";
                     size = "is four and a half inches long";
                     weight = "has a clear plastic handle";
                     break;
                 case 8: 
-                    name = "revolver"; 
-                    description = "a handgun";
+                    name = "Revolver"; 
+                    description = "A handgun";
                     mass = 7000;
                     volume = 700;
                     detail = "it has five bullets, and one empty chamber";
@@ -214,11 +220,11 @@ namespace HomicideDetective.Mysteries
                     weight = "looks like it costs a lot of money";
                     break;
                 case 9: 
-                    name = "rifle"; 
-                    description = "a large gun, used for hunting animals";
+                    name = "Rifle"; 
+                    description = "A large gun, used for hunting animals";
                     mass = 12000;
                     volume = 8200;
-                    detail = "it is coated with gunpowder residue";
+                    detail = "It is coated with gunpowder residue.";
                     size = "has scuff marks on the butt";
                     weight = "looks like it has taken a beating";
                     break;

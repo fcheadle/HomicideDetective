@@ -1,3 +1,4 @@
+using HomicideDetective.Mysteries;
 using HomicideDetective.People;
 using Xunit;
 
@@ -8,17 +9,19 @@ namespace HomicideDetective.Tests.People
         [Fact]
         public void NewSpeechComponentTest()
         {
-            Speech component = new Speech();
+            var subs = new Substantive(Substantive.Types.Person, "Billy", 16, "male");
+            var billy = new Person((1,1), subs);
+            var component = billy.Speech;
             Assert.Contains("Their voice is ", component.Description);
-            Assert.Equal("'s Voice", component.Name);//because it has no owner
+            Assert.Equal("Voice", component.Name);//because it has no owner
         }
 
         [Fact]
         public void GetDetailsTest()
         {
-            Speech component = new Speech();
-            var answer = component.Details;
-            Assert.Equal(5, answer.Length);
+            var subs = new Substantive(Substantive.Types.Person, "Billy", 16, "male");
+            var billy = new Person((1,1), subs);
+            Assert.Equal(5, billy.Speech.Details.Length);
         }
     }
 }

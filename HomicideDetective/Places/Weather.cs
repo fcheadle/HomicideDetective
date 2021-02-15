@@ -8,8 +8,8 @@ namespace HomicideDetective.Places
 {
     public class Weather : RogueLikeComponentBase, IDetailed
     {
-        private Place _place;
-        public Place Place => _place;
+        private Scene _place;
+        public Scene Place => _place;
         public string Name { get; }
         public string Description { get; }
         public TimeSpan Elapsed { get; private set; } = TimeSpan.Zero;
@@ -19,10 +19,10 @@ namespace HomicideDetective.Places
             => (x, y, t) =>
                 2 * Math.Cos(-t.TotalSeconds + Math.Sqrt((x + 180) * (x + 180) / 444 + (y + 90) * (y + 90) / 444));
 
-        public Weather(Place place) : base(true, false, false, false)
+        public Weather(Scene place) : base(true, false, false, false)
         {
             Name = "Weather";
-            Description = $"The weather of {place.Name}";
+            Description = $"The weather.";
             _place = place;
         }
 

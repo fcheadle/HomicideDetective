@@ -6,7 +6,7 @@ namespace HomicideDetective.Things
 {
     public class Thing : RogueLikeEntity, ISubstantive
     {
-        public string Description => Substantive.Description!;
+        public string? Description => Substantive.Description!;
         public Substantive Substantive => AllComponents.GetFirst<Substantive>();
 
         public Thing(Point position, Substantive substantive) 

@@ -38,15 +38,5 @@ namespace HomicideDetective.People
             if(!_thoughts.Contains(thought))
                 _thoughts.Add(thought);
         }
-
-        public void Look(Direction d)
-        {
-            var entities = Parent!.CurrentMap!.Entities.GetItemsAt(Parent!.Position + d);
-            
-            foreach (var entity in entities)
-                if (entity is Thing thing)
-                    Think(thing.Substantive.Details);
-
-        }
     }
 }
