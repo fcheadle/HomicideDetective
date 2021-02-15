@@ -7,9 +7,8 @@ using TheSadRogue.Integration;
 
 namespace HomicideDetective.People
 {
-    public class Person : RogueLikeEntity, IDetailed
+    public class Person : RogueLikeEntity, ISubstantive
     {
-        public string Description => Substantive.Description!;
         public Substantive Substantive => AllComponents.GetFirst<Substantive>();
         public Thoughts Thoughts => AllComponents.GetFirst<Thoughts>();
         public Speech Speech => AllComponents.GetFirst<Speech>();
@@ -30,23 +29,7 @@ namespace HomicideDetective.People
 
             Name = substantive.Name;
         }
-        
-        public void Murder(Substantive murderer, Substantive murderWeapon, Substantive sceneOfTheCrime)
-        {
-            Substantive.AddDetail($" Murdered by {murderer.Name} with a {murderWeapon.Name}, at {sceneOfTheCrime.Name}.");
-            Health.Murder();
-        }
-        public string[] GetDetails() => Substantive.Details;
 
-        public string[] AllDetails()
-        {
-            var answer = new List<string>();
-            answer.AddRange(Substantive.AllDetails);
-            answer.AddRange(Health.AllDetails());
-            answer.AddRange(Thoughts.AllDetails());
-            answer.AddRange(Speech.AllDetails());
-            return answer.ToArray();
-        }
         public Action InteractUp => () => Interact(Direction.Up);
         public Action InteractDown => () => Interact(Direction.Down);
         public Action InteractLeft => () => Interact(Direction.Left);

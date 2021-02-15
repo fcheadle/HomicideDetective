@@ -12,20 +12,12 @@ namespace HomicideDetective.UserInterface
         readonly int[] _animationSteps;
         int _animationIndex;
         public IGameObject Parent { get; set; }
-        public bool Blowing { get; internal set; }
+        public bool Blowing { get; private set; }
 
         public AnimatingGlyph(int glyph, int[] animationSteps)
         {
             _ogGlyph = glyph;
             _animationSteps = animationSteps;
-        }
-        public string[] GetDetails()
-        {
-            string[] answer =
-            {
-                "This entity blows in the wind."
-            };
-            return answer;
         }
 
         public void Start()
@@ -51,7 +43,7 @@ namespace HomicideDetective.UserInterface
                 {
                     _animationIndex = 0;
                     parent.Appearance.Glyph = _ogGlyph;
-                    Blowing = false;
+                    Stop();
                 }
             }
         }

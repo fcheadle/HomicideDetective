@@ -25,36 +25,5 @@ namespace HomicideDetective.Tests.People
             Assert.Equal(_size, billy.Substantive.Volume);
             Assert.Equal(_weight, billy.Substantive.Mass);
         }
-        
-        
-        [Fact]
-        public void GetDetailedDescriptionTest()
-        {
-            
-            var subs = new Substantive(Substantive.Types.Person, $"{_firstname} {_lastname}", 16, "male",
-                description: _description, weightDescription: _weightDescription, sizeDescription: _sizeDescription,
-                mass: _weight, volume: _size);
-            
-            var billy = new Person((1,1), subs);
-            var answer = billy.Substantive.GenerateDetailedDescription();
-            Assert.Contains(_sizeDescription, answer);
-            Assert.Contains(_weightDescription, answer);
-        }
-
-        [Fact]
-        public void DetailsTest()
-        {
-            var subs = new Substantive(Substantive.Types.Person, $"{_firstname} {_lastname}", 16, "male",
-                description: _description, weightDescription: _weightDescription, sizeDescription: _sizeDescription,
-                mass: _weight, volume: _size);
-            
-            var billy = new Person((1,1), subs);
-            var answer = billy.GetDetails();
-            Assert.Contains(billy.Name, answer);
-            Assert.Contains(billy.Substantive.Description, answer);
-            Assert.Contains($"Mass(g): {_weight}", answer);
-            Assert.Contains($"Volume(ml): {_size}", answer);
-            Assert.Contains(billy.Substantive.GenerateDetailedDescription(), answer);
-        }
     }
 }

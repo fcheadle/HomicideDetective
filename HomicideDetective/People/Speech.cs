@@ -18,9 +18,9 @@ namespace HomicideDetective.People
             Description = GenerateVoiceDescription();
         }
 
-        public string[] GetDetails() => new[]
-            {GenerateSpokenText(), GenerateToneOfVoice()};
-        
+        public string[] Details         
+            => new[] {GenerateSpokenText(), GenerateToneOfVoice(), Description, GenerateFacialExpression(), GenerateBodyLanguage()};
+
         private string GenerateVoiceDescription()
         {
             int chance = new Random().Next(0, 101);
@@ -35,7 +35,7 @@ namespace HomicideDetective.People
                 chance % 15 == 6 ? "a soft baritone" :
                 chance % 15 == 7 ? "a clear baritone" :
                 chance % 15 == 8 ? "a pleasant alto" :
-                chance % 15 == 9 ? "a gruff alto" :
+                chance % 15 == 9 ? "a playful alto" :
                 chance % 15 == 10 ? "a clear alto" :
                 chance % 15 == 11 ? "a nasally alto" :
                 chance % 15 == 12 ? "a fabulous soprano" :
@@ -85,7 +85,7 @@ namespace HomicideDetective.People
                 chance % 15 == 11 ? "through a forced smile" :
                 chance % 15 == 11 ? "beaming their teeth" :
                 chance % 15 == 12 ? "staring fiercely" :
-                chance % 15 == 13 ? "with intense eye contact." : "as their pupils narrow.";
+                chance % 15 == 13 ? "with intense eye contact" : "as their pupils narrow";
             return expression;
         }
 
@@ -108,7 +108,7 @@ namespace HomicideDetective.People
                 chance % 15 == 11 ? "forlorn" :
                 chance % 15 == 11 ? "pained" :
                 chance % 15 == 12 ? "cracking" :
-                chance % 15 == 13 ? "with intense eye contact." : "as their pupils narrow.";
+                chance % 15 == 13 ? "scornful" : "distraught";
             tone += " tone, ";
             return tone;
         }
@@ -136,12 +136,8 @@ namespace HomicideDetective.People
             spoken += "\"";
             return spoken;
         }
-
-        public string[] AllDetails() 
-            => new[] {GenerateSpokenText(), GenerateToneOfVoice(), Description, GenerateFacialExpression(), GenerateBodyLanguage()};
-
         
-        public string[] Talk(Direction direction)
+        public void Talk(Direction direction)
         {
             var entities = Parent!.CurrentMap!.Entities.GetItemsAt(Parent!.Position + direction);
             foreach (var entity in entities)
@@ -150,13 +146,9 @@ namespace HomicideDetective.People
                 {
                     var speech = person.AllComponents.GetFirst<Speech>();
                     var thoughts = ((Person)Parent).AllComponents.GetFirst<Thoughts>();
-                    thoughts.Think(speech.GetDetails());
-                    return speech.GetDetails();
+                    thoughts.Think(speech.Details); 
                 }
             }
-
-
-            return new[] { "" };
         }
     }
 }

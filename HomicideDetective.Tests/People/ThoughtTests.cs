@@ -3,7 +3,7 @@ using Xunit;
 
 namespace HomicideDetective.Tests.People
 {
-    public class ThoughtComponentTests
+    public class ThoughtTests
     {
         [Fact]
         public void NewThoughtComponentTest()
@@ -17,7 +17,7 @@ namespace HomicideDetective.Tests.People
         public void GetDetailsTest()
         {
             Thoughts component = new Thoughts();
-            var answer = component.GetDetails();
+            var answer = component.Details;
             Assert.Empty(answer);
         }
 
@@ -26,16 +26,16 @@ namespace HomicideDetective.Tests.People
         {
             Thoughts component = new Thoughts();
             component.Think("Cogito Ergo Sum");
-            Assert.Single(component.GetDetails());
+            Assert.Single(component.Details);
             
             component.Think("Cogito Ergo Sum");
-            Assert.Single(component.GetDetails());
+            Assert.Single(component.Details);
 
             component.Think("Non Illegitamae Corporundum");
-            Assert.Equal(2, component.GetDetails().Length);
+            Assert.Equal(2, component.Details.Length);
 
-            Assert.Contains("Cogito Ergo Sum", component.GetDetails());
-            Assert.Contains("Non Illegitamae Corporundum", component.GetDetails());
+            Assert.Contains("Cogito Ergo Sum", component.Details);
+            Assert.Contains("Non Illegitamae Corporundum", component.Details);
         }
 
         [Fact]
@@ -58,9 +58,10 @@ namespace HomicideDetective.Tests.People
             };
             //act
             component.Think(thoughts);
-            Assert.Equal(8, component.GetDetails().Length);
-            Assert.Contains("I will not fear", component.GetDetails());
-            Assert.DoesNotContain("Cogito Ergo Sum", component.GetDetails());
+            Assert.Equal(10, component.Details.Length);
+            Assert.Contains("I will not fear", component.Details);
+            Assert.Contains("Cogito Ergo Sum", component.Details);
+            Assert.Contains("Non Illegitamae Corporundum", component.Details);
         }
     }
 }

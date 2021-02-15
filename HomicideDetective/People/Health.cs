@@ -9,15 +9,33 @@ namespace HomicideDetective.People
 {
     public class Health : RogueLikeComponentBase, IDetailed
     {
-        public enum BloodTypes { O, A, B, AB }
+        public enum BloodTypes
+        {
+            O,
+            A,
+            B,
+            AB
+        }
+
         public BloodTypes BloodType { get; }
         public string Name { get; }
-        public string Description { get; }
+        public string Description { get; set; }
         public bool Alive { get; private set; } = true;
         public double SystoleBloodPressure { get; private set; }
         public double DiastoleBloodPressure { get; private set; }
-        public double Pulse { get => _heartBeatsPerMinute; set => _heartBeatsPerMinute = value; }
-        public double BreathRate { get => _breathsPerMinute; set => _breathsPerMinute = value; }
+
+        public double Pulse
+        {
+            get => _heartBeatsPerMinute;
+            set => _heartBeatsPerMinute = value;
+        }
+
+        public double BreathRate
+        {
+            get => _breathsPerMinute;
+            set => _breathsPerMinute = value;
+        }
+
         public double BloodVolume { get; private set; }
         public double NormalBodyTemperature { get; private set; }
         public double CurrentBodyTemperature { get; private set; } //celsius
@@ -31,8 +49,9 @@ namespace HomicideDetective.People
         private double _heartBeatStatus;
         private double _halfBreathVolume;
 
-        public Health(float systoleBloodPressure = 120, float diastoleBloodPressure = 80, float pulse = 85, float bodyTemperature = 96.7f, float lungCapacity = 1000, float bloodVolume = 6000)
-            : base(true,false,false, false)
+        public Health(float systoleBloodPressure = 120, float diastoleBloodPressure = 80, float pulse = 85,
+            float bodyTemperature = 96.7f, float lungCapacity = 1000, float bloodVolume = 6000)
+            : base(true, false, false, false)
         {
             Name = "Health";
             Description = "I track the health of an Entity.";
@@ -65,9 +84,10 @@ namespace HomicideDetective.People
         {
             //x position is between 0-23
             int x = _timeUnitsElapsed % 24;
-            int y = (int)Math.Round(_heartBeatStatus);
+            int y = (int) Math.Round(_heartBeatStatus);
             return (x, y);
         }
+
         public void BeatHeart(int timeUnits)
         {
             //a graph that stays really close to 0 until we get close to zero, then it pulses up and down real quick-like
@@ -79,30 +99,13 @@ namespace HomicideDetective.People
             _heartBeatStatus = 2 * Math.Sin(Math.Sin(10 / period));
         }
 
+        private string BodyTempString => $"Temp: {CurrentBodyTemperature}";
+        private string PulseString => $"Pulse: {Pulse}bpm";
+        private string BloodPressureString => $"Blood Pressure: {SystoleBloodPressure}/{DiastoleBloodPressure}";
+        private string BloodTypeString => $"Blood Type: {BloodType}";
+        private string BreathString => $"Blood Pressure: {CurrentBreathVolume}/{LungCapacity}";
 
-        public string[] GetDetails()
-        {
-            return new[] {
-                "Temp: " + CurrentBodyTemperature,
-                "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
-                "Pulse: " + Pulse + "bpm",
-            };
-        }
-        
-        public string[] AllDetails()
-        {
-            string[] message = {
-                "Temp: " + CurrentBodyTemperature,
-                "Pulse: " + Pulse + "bpm",
-                "Heart BP: " + _heartBeatStatus,
-                "Blood Pressure: " + SystoleBloodPressure + "/" + DiastoleBloodPressure,
-                "Blood Volume: " + BloodVolume,
-                "Blood Type: " + BloodType,
-                "Breath: " + CurrentBreathVolume + "/" + LungCapacity,
-            };
-
-            return message.Concat(HeartMonitorStrings()).ToArray();
-        }
+        public string[] Details => new []{ BodyTempString, PulseString, BloodPressureString, BloodTypeString, BreathString };
 
         public string[] HeartMonitorStrings()
         {
@@ -135,5 +138,11 @@ namespace HomicideDetective.People
         }
 
         public void Murder() => Alive = false;
+
+        public void Murder(Substantive murderer, Substantive murderWeapon, Substantive sceneOfTheCrime)
+        {
+            Murder();
+            Description = $" Murdered by {murderer.Name} with a {murderWeapon.Name}, at {sceneOfTheCrime.Name}.";
+        }
     }
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using GoRogue.GameFramework;
+using GoRogue.GameFramework.Components;
 using HomicideDetective.Mysteries;
 using HomicideDetective.Things;
 using SadConsole;
@@ -9,38 +11,24 @@ using TheSadRogue.Integration.Components;
 namespace HomicideDetective.People
 {
 
-    public class Thoughts : RogueLikeComponentBase, IDetailed
+    public class Thoughts : IGameObjectComponent, IDetailed
     {
+        public IGameObject? Parent { get; set; }
         public string Name { get; }
         public string Description { get; }
         private readonly List<string> _thoughts;
-        public string[] GetDetails() => _thoughts.ToArray();
-        public string[] AllDetails() => _thoughts.ToArray(); //for now
-            
-
-        public Thoughts() : base(true, false, false, false)
+        public string[] Details => _thoughts.ToArray();
+        
+        public Thoughts() 
         {
             Name = "Thoughts";
             Description = "The Thought Process of a creature.";
             _thoughts = new List<string>();
         }
-
-        public override void Update(IScreenObject host, TimeSpan delta)
-        {
-            Think();
-            base.Update(host, delta);
-        }
-
-        public void Think()
-        {
-            //todo - flesh out
-            //Think(Parent.Position.ToString());
-            //Think("Currently thinking about");
-        }
         
         public void Think(string[] thoughts)
         {
-            _thoughts.Clear();
+            //_thoughts.Clear();
             foreach (string thought in thoughts) 
                 Think(thought);
         }
@@ -51,21 +39,14 @@ namespace HomicideDetective.People
                 _thoughts.Add(thought);
         }
 
-        public string[] Look(Direction d)
+        public void Look(Direction d)
         {
             var entities = Parent!.CurrentMap!.Entities.GetItemsAt(Parent!.Position + d);
-            foreach (var entity in entities)
-            {
-                if (entity is Thing thing)
-                {
-                    Think(thing.GetDetails());
-                    return thing.GetDetails();
-                }
-            }
-
-
-            return new[] { "" };
             
+            foreach (var entity in entities)
+                if (entity is Thing thing)
+                    Think(thing.Substantive.Details);
+
         }
     }
 }

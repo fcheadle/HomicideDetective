@@ -53,7 +53,7 @@ namespace HomicideDetective.Tests.Mysteries
             var firstAnswer = firstMystery.GeneratePerson("test");
             var secondAnswer = secondMystery.GeneratePerson("test");
             
-            Assert.Equal(firstAnswer.AllDetails, secondAnswer.AllDetails);
+            Assert.Equal(firstAnswer.Details, secondAnswer.Details);
             // Assert.NotNull(firstAnswer.SizeDescription);
             // Assert.NotEmpty(firstAnswer.SizeDescription);
             // Assert.NotNull(firstAnswer.WeightDescription);
@@ -76,7 +76,7 @@ namespace HomicideDetective.Tests.Mysteries
             var firstAnswer = firstMystery.GenerateMurderWeapon();
             var secondAnswer = secondMystery.GenerateMurderWeapon();
             
-            Assert.Equal(firstAnswer.AllDetails, secondAnswer.AllDetails);
+            Assert.Equal(firstAnswer.Details, secondAnswer.Details);
             Assert.NotNull(firstAnswer.SizeDescription);
             Assert.NotEmpty(firstAnswer.SizeDescription);
             Assert.NotNull(firstAnswer.WeightDescription);

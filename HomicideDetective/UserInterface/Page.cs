@@ -9,12 +9,10 @@ using TheSadRogue.Integration.Components;
 namespace HomicideDetective
 {
     //refactor this for clarity upon alpha
-    public class PageComponent<T> : RogueLikeComponentBase, IDetailed where T : IDetailed
+    public class PageComponent<T> : RogueLikeComponentBase where T : IDetailed
     {
         const int Width = 24;
         const int Height = 24;
-        public string Name { get; }
-        public string Description { get; }
         public ScreenSurface Window { get; private set; }
         public T Component { get; }
         private ScreenSurface _backgroundSurface;
@@ -22,8 +20,6 @@ namespace HomicideDetective
         
         public PageComponent(T component) : base(true, false, true, true)
         {
-            Name = $"PageComponent<{nameof(T)}>";
-            Description = "I display information about a component.";
             Component = component;
             InitWindow();
             InitBackground();
@@ -57,7 +53,7 @@ namespace HomicideDetective
             };
             var cursor = new Cursor {IsVisible = false};
             _textSurface.SadComponents.Add(cursor);
-            foreach (string detail in GetDetails())
+            foreach (string detail in Component.Details)
             {
                 var answer = new ColoredString($"\r\n{detail}", Color.Blue, Color.Transparent);
                 cursor.Print(answer);
@@ -77,8 +73,5 @@ namespace HomicideDetective
             Window.Children.Remove(_textSurface);
             InitTextSurface();
         }
-
-        public string[] GetDetails() => Component.GetDetails();
-        public string[] AllDetails() => Component.AllDetails();
     }
 }

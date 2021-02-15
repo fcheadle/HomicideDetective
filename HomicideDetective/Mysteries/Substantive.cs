@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
-using HomicideDetective.Places;
 
 namespace HomicideDetective.Mysteries
 {
@@ -13,7 +12,7 @@ namespace HomicideDetective.Mysteries
         public int Volume { get; set; } = 0;//in ml
         public enum Types {Person, Place, Thing}
         public IGameObject? Parent { get; set; }
-        public Place? Subject { get; set; }
+        public ISubstantive? Subject { get; set; }
         public Types? Type { get; set; } 
         public string? Name { get; set; } 
         public string? Article { get; set; }
@@ -28,20 +27,6 @@ namespace HomicideDetective.Mysteries
         private List<string> _details = new List<string>();
 
         public string[] Details => _details.ToArray();
-        public string[] AllDetails
-        {
-            get
-            {
-                var answer = new List<string>();
-                answer.Add(Name); 
-                answer.Add($"Mass(g): {Mass}"); 
-                answer.Add($"Volume(ml): {Volume}"); 
-                answer.Add(Description);
-                answer.AddRange(_details);
-                answer.Add(GenerateDetailedDescription());
-                return answer.ToArray();
-            }
-        }
 
         public Substantive()
         {
@@ -73,6 +58,12 @@ namespace HomicideDetective.Mysteries
             Description = description;
             SizeDescription = sizeDescription;
             WeightDescription = weightDescription;
+            _details = new();
+            _details.Add(Name); 
+            _details.Add($"Mass(g): {Mass}"); 
+            _details.Add($"Volume(ml): {Volume}"); 
+            _details.Add(Description!);
+            _details.Add(GenerateDetailedDescription());
         }
 
         public Substantive Generate()
@@ -82,21 +73,20 @@ namespace HomicideDetective.Mysteries
 
             if (Type == Types.Person)
             {
-                
+                throw new NotImplementedException();
             }
             else if (Type == Types.Place)
             {
-                
+                throw new NotImplementedException();
             }
             else if (Type == Types.Thing)
             {
-                
+                throw new NotImplementedException();
             }
 
             return this;
         }
         public void AddDetail(string detail) => _details.Add(detail);
-        public void RemoveDetails() => _details.Clear();
         public string GenerateDetailedDescription()
         {
             var description = "This is ";

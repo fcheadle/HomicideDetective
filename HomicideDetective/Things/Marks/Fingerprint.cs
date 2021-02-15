@@ -48,24 +48,25 @@ namespace HomicideDetective.Things.Marks
             }
         }
 
-        public string[] GetDetails()
+        public string[] Details
         {
-            var answer = new string[64];
-            for (int i = 0; i < Pattern.Height; i++)
+            get
             {
-                var line = "";
-                
-                for (int j = 0; j < Pattern.Width; j++)
+                var answer = new string[64];
+                for (int i = 0; i < Pattern.Height; i++)
                 {
-                    line += Pattern[j, i] ? "X" : " ";
+                    var line = "";
+
+                    for (int j = 0; j < Pattern.Width; j++)
+                    {
+                        line += Pattern[j, i] ? "X" : " ";
+                    }
+
+                    answer[i] = line;
                 }
 
-                answer[i] = line;
+                return answer;
             }
-
-            return answer;
         }
-
-        public string[] AllDetails() => GetDetails(); //smells bad, man
     }
 }

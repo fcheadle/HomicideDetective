@@ -3,22 +3,22 @@ using Xunit;
 
 namespace HomicideDetective.Tests.People
 {
-    public class SpeechComponentTests
+    public class SpeechTests
     {
         [Fact]
         public void NewSpeechComponentTest()
         {
             Speech component = new Speech();
-            Assert.Equal("I handle Speech for ", component.Description);
-            Assert.Equal("Speech", component.Name);
+            Assert.Contains("Their voice is ", component.Description);
+            Assert.Equal("'s Voice", component.Name);//because it has no owner
         }
 
         [Fact]
         public void GetDetailsTest()
         {
             Speech component = new Speech();
-            var answer = component.GetDetails();
-            Assert.Equal(4, answer.Length);
+            var answer = component.Details;
+            Assert.Equal(5, answer.Length);
         }
     }
 }

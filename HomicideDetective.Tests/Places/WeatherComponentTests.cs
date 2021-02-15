@@ -3,7 +3,7 @@ using Xunit;
 
 namespace HomicideDetective.Tests.Places
 {
-    public class WeatherComponentTests
+    public class WeatherTests
     {
         [Fact(Skip = "nullref when we try to init place")]
         public void NewWeatherComponentTest()

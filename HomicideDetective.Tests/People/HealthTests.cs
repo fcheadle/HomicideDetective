@@ -4,7 +4,7 @@ using Xunit;
 
 namespace HomicideDetective.Tests.People
 {
-    public class HealthComponentTests
+    public class HealthTests
     {
         [Fact]
         public void NewHealthComponentTest()
@@ -26,8 +26,8 @@ namespace HomicideDetective.Tests.People
         public void GetDetailsTest()
         {
             Health component = new Health();
-            var answer = component.GetDetails();
-            Assert.True(4 < answer.Length);
+            var answer = component.Details;
+            Assert.True(3 < answer.Length);
         }
 
         [Fact]

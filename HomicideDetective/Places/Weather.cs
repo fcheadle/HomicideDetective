@@ -26,8 +26,7 @@ namespace HomicideDetective.Places
             _place = place;
         }
 
-        public string[] GetDetails() => new[]{ "This is the weather component. It's parent is a map, not a regular entity." };
-        public string[] AllDetails() => new[] {Description, GetDetails()[0], $"Time Elapsed: {Elapsed.ToString()}"};
+        public string[] Details => new[] {Description, $"Time Elapsed: {Elapsed.ToString()}"};
         public void ProcessTimeUnit()
         {
             Elapsed += TimeSpan.FromMilliseconds(100);

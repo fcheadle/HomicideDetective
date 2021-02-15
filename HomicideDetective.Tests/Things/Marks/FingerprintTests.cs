@@ -27,7 +27,7 @@ namespace HomicideDetective.Tests.Things.Marks
             var print = new Fingerprint(128);
             print.Generate();
 
-            foreach (var answer in print.GetDetails())
+            foreach (var answer in print.Details)
             {
                 _testOutputHelper.WriteLine(answer);
             }

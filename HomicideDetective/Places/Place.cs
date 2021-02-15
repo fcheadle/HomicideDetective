@@ -14,10 +14,9 @@ using TheSadRogue.Integration.Maps;
 
 namespace HomicideDetective.Places
 {
-    public class Place : RogueLikeMap, IDetailed
+    public class Place : RogueLikeMap, ISubstantive
     {
-        public string Name => Substantive.Name;
-        public string Description => Substantive.Description;
+        public string Name => Substantive.Name!;
         public Substantive Substantive { get; }
         public List<Region> Regions;
 
@@ -103,8 +102,5 @@ namespace HomicideDetective.Places
                 AddEntity(thing);
             }        
         }
-        
-        public string[] GetDetails() => Substantive.Details;
-        public string[] AllDetails() => Substantive.AllDetails;
     }
 }
