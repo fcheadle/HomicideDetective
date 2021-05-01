@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using HomicideDetective.Mysteries;
 using HomicideDetective.UserInterface;
-using TheSadRogue.Integration;
-using TheSadRogue.Integration.Components;
+using SadRogue.Integration;
+using SadRogue.Integration.Components;
 
 namespace HomicideDetective.Places
 {
@@ -26,7 +27,7 @@ namespace HomicideDetective.Places
             _place = place;
         }
 
-        public string[] Details => new[] {Description, $"Time Elapsed: {Elapsed.ToString()}"};
+        public List<string> Details => new List<string>() {Description, $"Time Elapsed: {Elapsed.ToString()}"};
         public void ProcessTimeUnit()
         {
             Elapsed += TimeSpan.FromMilliseconds(100);

@@ -9,15 +9,15 @@ using HomicideDetective.Things;
 using SadConsole;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
-using TheSadRogue.Integration;
-using TheSadRogue.Integration.Maps;
+using SadRogue.Integration;
+using SadRogue.Integration.Maps;
 
 namespace HomicideDetective.Places
 {
     public class Scene : RogueLikeMap
     {
         public List<Place> Locations;
-        private Substantive withScene;
+        private Substantive _withScene;
         public Scene(int width, int height) : base(width, height, 16, Distance.Manhattan)
         {
             Locations = new List<Place>();
@@ -25,7 +25,7 @@ namespace HomicideDetective.Places
 
         public Scene(int width, int height, Substantive place) : this(width, height)
         {
-            withScene = place;
+            _withScene = place;
         }
         
         public Scene GenerateHouse()
@@ -64,10 +64,12 @@ namespace HomicideDetective.Places
             foreach(var location in generatedMap.Positions())
                 SetTerrain(generatedMap[location]);
 
+            /*
             var weather = new Weather(this);
             GoRogueComponents!.Add(weather);
             var cells = new ArrayView<ColoredGlyph>(Width, Height);
             cells.ApplyOverlay(TerrainView);
+            */
             
             return this;
         }

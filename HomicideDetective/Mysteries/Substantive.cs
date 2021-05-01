@@ -11,9 +11,9 @@ namespace HomicideDetective.Mysteries
         public int Mass { get; set; } = 0;//in grams
         public int Volume { get; set; } = 0;//in ml
         public enum Types {Person, Place, Thing}
+        public Types? Type { get; set; } 
         public IGameObject? Parent { get; set; }
         public ISubstantive? Subject { get; set; }
-        public Types? Type { get; set; } 
         public string? Name { get; set; } 
         public string? Article { get; set; }
         public string? Pronoun { get; set; }
@@ -24,7 +24,7 @@ namespace HomicideDetective.Mysteries
         public string? WeightDescription { get; set; }
         public Random? Random { get; set; }
 
-        private List<string> _details = new List<string>();
+        private readonly List<string> _details = new List<string>();
 
         public string[] Details => _details.ToArray();
 
@@ -58,7 +58,7 @@ namespace HomicideDetective.Mysteries
             Description = description;
             SizeDescription = sizeDescription;
             WeightDescription = weightDescription;
-            _details = new();
+            
             _details.Add(Name); 
             _details.Add($"Mass(g): {Mass}"); 
             _details.Add($"Volume(ml): {Volume}"); 

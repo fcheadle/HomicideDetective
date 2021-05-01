@@ -10,7 +10,6 @@ namespace HomicideDetective.Tests.People
         {
             Thoughts component = new Thoughts();
             Assert.Equal("The Thought Process of a creature.", component.Description);
-            Assert.Equal("Thoughts", component.Name);
         }
 
         [Fact]
@@ -32,7 +31,7 @@ namespace HomicideDetective.Tests.People
             Assert.Single(component.Details);
 
             component.Think("Non Illegitamae Corporundum");
-            Assert.Equal(2, component.Details.Length);
+            Assert.Equal(2, component.Details.Count);
 
             Assert.Contains("Cogito Ergo Sum", component.Details);
             Assert.Contains("Non Illegitamae Corporundum", component.Details);
@@ -58,7 +57,7 @@ namespace HomicideDetective.Tests.People
             };
             //act
             component.Think(thoughts);
-            Assert.Equal(10, component.Details.Length);
+            Assert.Equal(10, component.Details.Count);
             Assert.Contains("I will not fear", component.Details);
             Assert.Contains("Cogito Ergo Sum", component.Details);
             Assert.Contains("Non Illegitamae Corporundum", component.Details);

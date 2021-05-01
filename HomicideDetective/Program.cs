@@ -6,9 +6,9 @@ using HomicideDetective.People;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives.GridViews;
-using TheSadRogue.Integration;
-using TheSadRogue.Integration.Components;
-using TheSadRogue.Integration.Maps;
+using SadRogue.Integration;
+using SadRogue.Integration.Components;
+using SadRogue.Integration.Maps;
 
 namespace HomicideDetective
 {
@@ -24,7 +24,7 @@ namespace HomicideDetective
         private static RogueLikeMap _map;
         private static RogueLikeEntity _playerCharacter;
         private static ScreenSurface _messageWindow;
-        static void Main(/*string[] args*/)
+        static void Main()
         {
             Game.Create(Width, Height);
             Game.Instance.OnStart = Init;

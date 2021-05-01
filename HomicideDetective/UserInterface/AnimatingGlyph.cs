@@ -1,6 +1,6 @@
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
-using TheSadRogue.Integration;
+using SadRogue.Integration;
 
 namespace HomicideDetective.UserInterface
 {

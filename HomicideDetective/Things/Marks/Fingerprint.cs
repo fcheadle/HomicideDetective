@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using HomicideDetective.Mysteries;
@@ -48,7 +49,7 @@ namespace HomicideDetective.Things.Marks
             }
         }
 
-        public string[] Details
+        public List<string> Details
         {
             get
             {
@@ -65,7 +66,7 @@ namespace HomicideDetective.Things.Marks
                     answer[i] = line;
                 }
 
-                return answer;
+                return answer.ToList();
             }
         }
     }

@@ -21,7 +21,7 @@ namespace HomicideDetective.Tests.People
         {
             var subs = new Substantive(Substantive.Types.Person, "Billy", 16, "male");
             var billy = new Person((1,1), subs);
-            Assert.Equal(5, billy.Speech.Details.Length);
+            Assert.Equal(5, billy.Speech.Details.Count);
         }
     }
 }

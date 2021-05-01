@@ -4,7 +4,7 @@ using GoRogue.MapGeneration;
 using HomicideDetective.Mysteries;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
-using TheSadRogue.Integration;
+using SadRogue.Integration;
 
 namespace HomicideDetective.Places.Generation
 {
@@ -42,16 +42,16 @@ namespace HomicideDetective.Places.Generation
                         var region = new Place(new Substantive(), room.MinExtent, room.MaxExtent + 1);
                         rooms.Add(region);
                         
-                        foreach (var point in region.InnerPoints.Positions.Where(p => map.Contains(p)))
+                        foreach (var point in region.InnerPoints.Where(p => map.Contains(p)))
                             map[point] = new RogueLikeCell(point, Color.Brown, Color.Black, 240, 0);
                         
                         
-                        foreach (var point in region.OuterPoints.Positions.Where(p => map.Contains(p)))
+                        foreach (var point in region.OuterPoints.Where(p => map.Contains(p)))
                         {
                             map[point] = new RogueLikeCell(point, Color.DarkGoldenrod, Color.DarkGray, 178, 0, false, false);
                         }
 
-                        var points = region.NorthBoundary.Positions;
+                        var points = region.NorthBoundary;
                         var door = points[points.Count / 2];
 
                         map[door] = new RogueLikeCell(door, Color.DarkGoldenrod, Color.Black, 254, 0, true, false);

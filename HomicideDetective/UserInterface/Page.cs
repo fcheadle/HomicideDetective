@@ -4,7 +4,7 @@ using SadConsole;
 using SadConsole.Components;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
-using TheSadRogue.Integration.Components;
+using SadRogue.Integration.Components;
 
 namespace HomicideDetective
 {

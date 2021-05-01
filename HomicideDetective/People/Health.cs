@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using HomicideDetective.Mysteries;
 using SadRogue.Primitives;
-using TheSadRogue.Integration.Components;
+using SadRogue.Integration.Components;
 
 namespace HomicideDetective.People
 {
     public class Health : RogueLikeComponentBase, IDetailed
     {
-        public enum BloodTypes
-        {
-            O,
-            A,
-            B,
-            AB
-        }
+        public enum BloodTypes { O, A, B, AB }
 
         public BloodTypes BloodType { get; }
         public string Name { get; }
@@ -105,7 +98,8 @@ namespace HomicideDetective.People
         private string BloodTypeString => $"Blood Type: {BloodType}";
         private string BreathString => $"Blood Pressure: {CurrentBreathVolume}/{LungCapacity}";
 
-        public string[] Details => new []{ BodyTempString, PulseString, BloodPressureString, BloodTypeString, BreathString };
+        public List<string> Details 
+            => new List<string>(){BodyTempString, PulseString, BloodPressureString, BloodTypeString, BreathString};
 
         public string[] HeartMonitorStrings()
         {
@@ -131,9 +125,9 @@ namespace HomicideDetective.People
         {
             if (Alive)
             {
-                _timeUnitsElapsed++;
-                BeatHeart(_timeUnitsElapsed);
-                Breathe(_timeUnitsElapsed);
+                // _timeUnitsElapsed++;
+                // BeatHeart(_timeUnitsElapsed);
+                // Breathe(_timeUnitsElapsed);
             }
         }
 

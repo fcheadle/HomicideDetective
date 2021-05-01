@@ -18,11 +18,11 @@ namespace HomicideDetective.Mysteries
         public Substantive Murderer { get; set; }
         public Substantive MurderWeapon { get; set; }
         public Substantive SceneOfCrime { get; set; }
-        public Substantive[] Witnesses { get; set; }
-        public Substantive[] LocationsOfInterest { get; set; }
-        public Substantive[] Evidence { get; set; }
+        public List<Substantive> Witnesses { get; set; }
+        public List<Substantive> LocationsOfInterest { get; set; }
+        public List<Substantive> Evidence { get; set; }
         public Scene CurrentScene { get; set; }
-        public Scene[] Scenes { get; set; }
+        public List<Scene> Scenes { get; set; }
         public Random Random { get; set; }
 
         string[] _maleGivenNames = { "Nate", "Tom", "Dick", "Harry", "Bob", "Matthew", "Mark", "Luke", "John", "Josh" };
@@ -31,11 +31,13 @@ namespace HomicideDetective.Mysteries
 
         string[] _surnames = {"Smith", "Johnson", "Michaels", "Douglas", "Andrews", "MacDonald", "Jenkins", "Peterson"};
         
+        //Dangerous, do not use
         public Mystery(){}
         
+        //preferred constructor
         public Mystery(int seed, int caseNumber)
         {
-            Seed = seed + caseNumber;
+            Seed = seed;
             CaseNumber = caseNumber;
             Random = new Random(Seed + CaseNumber);
         }
@@ -82,8 +84,8 @@ namespace HomicideDetective.Mysteries
                 locations.Add(substantive);
             }
 
-            LocationsOfInterest = locations.ToArray();
-            Witnesses = witnesses.ToArray();
+            LocationsOfInterest = locations;
+            Witnesses = witnesses;
             SceneOfCrime = new Substantive(Substantive.Types.Place, $"{Victim.Name}'s Home", Random.Next(),
                 article: "It", description: $"Location of interest in the Murder of {Victim.Name}");
             
