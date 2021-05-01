@@ -24,7 +24,7 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
-                (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "block");
+                (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "street");
 
             var roads = new List<Region>();
             var random = new Random();
