@@ -1,42 +1,48 @@
-using System;
 using System.Collections.Generic;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using HomicideDetective.Mysteries;
-using HomicideDetective.Things;
-using SadConsole;
-using SadRogue.Primitives;
-using TheSadRogue.Integration.Components;
 
 namespace HomicideDetective.People
 {
-
+    //currently how speech and senses communicate with the player.
     public class Thoughts : IGameObjectComponent, IDetailed
     {
         public IGameObject? Parent { get; set; }
-        public string Name { get; }
+        //public string Name { get; }
         public string Description { get; }
-        private readonly List<string> _thoughts;
-        public string[] Details => _thoughts.ToArray();
+        private readonly List<string> _shortTermMemory;
+        private readonly List<string> _longTermMemory;
+        public List<string> Details => _shortTermMemory;
         
         public Thoughts() 
         {
-            Name = "Thoughts";
+            //Name = "Thoughts";
             Description = "The Thought Process of a creature.";
-            _thoughts = new List<string>();
+            _shortTermMemory = new List<string>();
+            _longTermMemory = new List<string>();
         }
         
         public void Think(string[] thoughts)
         {
-            //_thoughts.Clear();
+            CommitLongTermMemory();
             foreach (string thought in thoughts) 
                 Think(thought);
         }
+
+        private void CommitLongTermMemory()
+        {
+            foreach(var thought in _shortTermMemory)
+                if(!_longTermMemory.Contains(thought))
+                    _longTermMemory.Add(thought);
+            
+            _shortTermMemory.Clear();
+        }
+
         public void Think(string thought)
         {
-            //todo - more complexity
-            if(!_thoughts.Contains(thought))
-                _thoughts.Add(thought);
+            if(!_shortTermMemory.Contains(thought))
+                _shortTermMemory.Add(thought);
         }
     }
 }

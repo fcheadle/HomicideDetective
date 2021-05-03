@@ -4,74 +4,54 @@ using SadConsole;
 using SadConsole.Components;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
-using TheSadRogue.Integration.Components;
+using SadRogue.Integration.Components;
 
 namespace HomicideDetective
 {
     //refactor this for clarity upon alpha
     public class PageComponent<T> : RogueLikeComponentBase where T : IDetailed
     {
-        const int Width = 24;
-        const int Height = 24;
-        public ScreenSurface Window { get; private set; }
+        // const int Width = 24;
+        // const int Height = 24;
+        public ScreenSurface Page { get; private set; }
         public T Component { get; }
-        private ScreenSurface _backgroundSurface;
-        private ScreenSurface _textSurface;
         
         public PageComponent(T component) : base(true, false, true, true)
         {
             Component = component;
             InitWindow();
-            InitBackground();
-            InitTextSurface();
         }
 
         private void InitWindow()
         {
-            Window = new ScreenSurface(Width, Height)
+            Page = new ScreenSurface(Program.Width / 3, Program.Height)
             {
-                IsVisible = false,
+                IsVisible = true,
                 IsFocused = false,
                 FocusOnMouseClick = true,
+                Position = (1,1)
             };
-        }
-
-        private void InitBackground()
-        {
-            _backgroundSurface = new ScreenSurface(Width - 2, Height - 2);
-            _backgroundSurface.Position = (1, 1);
-            _backgroundSurface.Surface.Fill(Color.Blue, Color.Tan, '_');
-            Window.Children.Add(_backgroundSurface);
-        }
-
-        private void InitTextSurface()
-        {
-            _textSurface = new ScreenSurface(Width - 2, Height - 2) 
+            Page.Surface.Fill(Color.Blue, Color.Tan, '_');
+            
+            var cursor = new Cursor()
             {
-                UsePixelPositioning = false,
-                Position = (1, 1),
+                IsVisible = false,
+                UsePrintEffect = true,
             };
-            var cursor = new Cursor {IsVisible = false};
-            _textSurface.SadComponents.Add(cursor);
-            foreach (string detail in Component.Details)
-            {
-                var answer = new ColoredString($"\r\n{detail}", Color.Blue, Color.Transparent);
-                cursor.Print(answer);
-            }
-
-            Window.Children.Add(_textSurface);
-        }
-
-        public override void Update(IScreenObject host, TimeSpan delta)
-        {
-            Print();
-            Window.IsDirty = true;
-            base.Update(host, delta);
+            Page.SadComponents.Add(cursor);
         }
         public void Print()
         {
-            Window.Children.Remove(_textSurface);
-            InitTextSurface();
+            Page.Surface.Clear();
+            Page.Surface.Fill(Color.Blue, Color.Tan, '_');
+
+            var cursor = Page.GetSadComponent<Cursor>();
+            cursor.Position = (0, 0);
+            foreach (string detail in Component.Details)
+            {
+                var answer = new ColoredString($"\r\n{detail}", Color.Blue, Color.Tan);
+                cursor.Print(answer);
+            }
         }
     }
 }

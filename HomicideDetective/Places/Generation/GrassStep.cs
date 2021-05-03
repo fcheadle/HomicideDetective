@@ -4,7 +4,7 @@ using GoRogue.MapGeneration;
 using HomicideDetective.UserInterface;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
-using TheSadRogue.Integration;
+using SadRogue.Integration;
 
 namespace HomicideDetective.Places.Generation
 {

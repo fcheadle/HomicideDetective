@@ -1,6 +1,6 @@
 using HomicideDetective.Mysteries;
 using SadRogue.Primitives;
-using TheSadRogue.Integration;
+using SadRogue.Integration;
 
 namespace HomicideDetective.Things
 {

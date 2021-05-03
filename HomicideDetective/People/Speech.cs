@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using HomicideDetective.Mysteries;
@@ -27,8 +28,14 @@ namespace HomicideDetective.People
             Alive = true;
         }
 
-        public string[] Details         
-            => new[] {GenerateSpokenText(), GenerateToneOfVoice(), GenerateFacialExpression(), GenerateBodyLanguage(), Description};
+        public List<string> Details => new ()
+            {
+                GenerateSpokenText(), 
+                GenerateToneOfVoice(), 
+                GenerateFacialExpression(), 
+                GenerateBodyLanguage(),
+                Description
+            };
 
         private string GenerateSpokenText()
         {
@@ -65,7 +72,7 @@ namespace HomicideDetective.People
             if(Alive)
             {
                 int chance = new Random().Next(0, 100);
-                string tone = $"{((Person) Parent!).Name} says in a ";
+                string tone = $"They say in a ";
                 tone +=
                     chance % 15 == 0 ? "neutral" :
                     chance % 15 == 1 ? "slightly higher-pitched" :

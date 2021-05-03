@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using HomicideDetective.Mysteries;
 using HomicideDetective.Things;
 using HomicideDetective.Things.Marks;
 using SadRogue.Primitives;
-using TheSadRogue.Integration;
+using SadRogue.Integration;
 
 namespace HomicideDetective.People
 {
@@ -14,12 +13,12 @@ namespace HomicideDetective.People
         public Substantive Substantive => AllComponents.GetFirst<Substantive>();
         public Thoughts Thoughts => AllComponents.GetFirst<Thoughts>();
         public Speech Speech => AllComponents.GetFirst<Speech>();
-        public Health Health => AllComponents.GetFirst<Health>();
+        //public Health Health => AllComponents.GetFirst<Health>();
         public MarkingCollection Markings => AllComponents.GetFirst<MarkingCollection>();
         public Person(Point position, Substantive substantive) : base(position, 1, false)
         {
             AllComponents.Add(substantive);
-            AllComponents.Add(new Health());
+            //AllComponents.Add(new Health());
             AllComponents.Add(new Thoughts());
             AllComponents.Add(new Speech());
 
@@ -42,7 +41,7 @@ namespace HomicideDetective.People
             foreach (var entity in entities)
             {
                 if (entity is Person person)
-                    Thoughts.Think(person.Speech.Details); 
+                    Thoughts.Think(person.Speech.Details.ToArray()); 
                 
                 else if (entity is Thing thing)
                     Thoughts.Think(thing.Substantive.Details);
@@ -52,7 +51,7 @@ namespace HomicideDetective.People
         public void Murder(Substantive murderer, Substantive murderWeapon, Substantive sceneOfTheCrime)
         {
             Alive = false;
-            Health.Murder(murderer, murderWeapon, sceneOfTheCrime);
+            //Health.Murder(murderer, murderWeapon, sceneOfTheCrime);
             Speech.Alive = false;
         }
     }

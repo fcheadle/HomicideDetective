@@ -39,8 +39,8 @@ namespace HomicideDetective.Tests.Mysteries
             Assert.Equal(5, answer.Length);
             Assert.Contains("Test", answer);
             Assert.Contains("a test substantive", answer);
-            Assert.Contains("Mass(g): 36", answer);
-            Assert.Contains("Volume(ml): 64", answer);
+            Assert.Contains("Mass: 36g", answer);
+            Assert.Contains("Volume: 64ml", answer);
         }
         
         [Theory]
