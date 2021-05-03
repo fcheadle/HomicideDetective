@@ -57,10 +57,10 @@ namespace HomicideDetective.Tests.People
             };
             //act
             component.Think(thoughts);
-            Assert.Equal(10, component.Details.Count);
+            Assert.Equal(8, component.Details.Count);
             Assert.Contains("I will not fear", component.Details);
-            Assert.Contains("Cogito Ergo Sum", component.Details);
-            Assert.Contains("Non Illegitamae Corporundum", component.Details);
+            Assert.DoesNotContain("Cogito Ergo Sum", component.Details);
+            Assert.DoesNotContain("Non Illegitamae Corporundum", component.Details);
         }
     }
 }
