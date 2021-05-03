@@ -21,8 +21,8 @@ namespace HomicideDetective.Mysteries
         public List<Substantive> Witnesses { get; set; }
         public List<Substantive> LocationsOfInterest { get; set; }
         public List<Substantive> Evidence { get; set; }
-        public Scene CurrentScene { get; set; }
-        public List<Scene> Scenes { get; set; }
+        // public Scene CurrentScene { get; set; }
+        // public List<Scene> Scenes { get; set; }
         public Random Random { get; set; }
 
         string[] _maleGivenNames = { "Nate", "Tom", "Dick", "Harry", "Bob", "Matthew", "Mark", "Luke", "John", "Josh" };
@@ -94,12 +94,12 @@ namespace HomicideDetective.Mysteries
 
         public void Open()
         {
-            CurrentScene = new Scene(Program.MapWidth, Program.MapHeight, SceneOfCrime);
-            CurrentScene.GenerateHouse();
-            CurrentScene.Populate(new Substantive[]{Victim, Murderer, MurderWeapon});
-            var victim = CurrentScene.Entities.Items.First
-                (e => ((ISubstantive) e).Substantive.Name == Victim.Name);
-            ((Person)victim).Murder(Murderer, MurderWeapon, SceneOfCrime);
+            // CurrentScene = new Scene(Program.MapWidth, Program.MapHeight, SceneOfCrime);
+            // CurrentScene.GenerateHouse();
+            // CurrentScene.Populate(new Substantive[]{Victim, Murderer, MurderWeapon});
+            // var victim = CurrentScene.Entities.Items.First
+            //     (e => ((ISubstantive) e).Substantive.Name == Victim.Name);
+            // ((Person)victim).Murder(Murderer, MurderWeapon, SceneOfCrime);
             //CurrentScene.Populate();
         }
         
@@ -123,7 +123,7 @@ namespace HomicideDetective.Mysteries
             string givenName = isMale ? _maleGivenNames[ Random.Next(0, _maleGivenNames.Length)] : _femaleGivenNames[ Random.Next(0, _femaleGivenNames.Length)];
 
             var substantive = new Substantive(Substantive.Types.Person, $"{givenName} {surname}", Random.Next(),
-                isMale ? "male" : "female", null, pronoun, pronounPossessive, description, 37500, 24000);  
+                isMale ? "male" : "female", pronounPassive, pronoun, pronounPossessive, description, 37500, 24000, height, width);  
             
             return substantive;
         }
@@ -236,6 +236,16 @@ namespace HomicideDetective.Mysteries
                 description: description, mass: mass, volume: volume, sizeDescription:size, weightDescription: weight);
             substantive.AddDetail(detail);
             return substantive;
+        }
+
+        public Substantive GenerateVictim(string surname)
+        {
+            var victim = GeneratePerson(surname);
+            string descr = $"This is the body of {victim.Name}. {victim.Pronoun} was a";
+            victim.Description = victim.Description.Replace($"{victim.Pronoun} is a", descr);
+            victim.SizeDescription = "is bloated from gases building up it's interior";
+            victim.WeightDescription = "is discolored from decay";
+            return victim;
         }
     }
 }

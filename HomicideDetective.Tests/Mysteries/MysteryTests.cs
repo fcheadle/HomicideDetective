@@ -9,11 +9,11 @@ namespace HomicideDetective.Tests.Mysteries
         public void NewMysteryTest()
         {
             var mystery = new Mystery(0, 1);
-//            Assert.Equal(1, mystery.Seed);
+            //Assert.Equal(1, mystery.Seed);
             Assert.Equal(1, mystery.CaseNumber);
             Assert.Null(mystery.Victim);
             Assert.Null(mystery.Witnesses);
-            Assert.Null(mystery.CurrentScene);
+            //Assert.Null(mystery.CurrentScene);
             Assert.Null(mystery.SceneOfCrime);
             Assert.Null(mystery.Murderer);
         }

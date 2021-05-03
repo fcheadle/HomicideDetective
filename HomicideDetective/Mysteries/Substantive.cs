@@ -24,7 +24,14 @@ namespace HomicideDetective.Mysteries
         public string? WeightDescription { get; set; }
         public Random? Random { get; set; }
 
-        private readonly List<string> _details = new List<string>();
+        private List<string> _details => new List<string>()
+        {
+            Name,
+            $"Mass: {Mass}g",
+            $"Volume: {Volume}ml",
+            Description!,
+            GenerateDetailedDescription()
+        };
 
         public string[] Details => _details.ToArray();
 
@@ -58,12 +65,6 @@ namespace HomicideDetective.Mysteries
             Description = description;
             SizeDescription = sizeDescription;
             WeightDescription = weightDescription;
-            
-            _details.Add(Name); 
-            _details.Add($"Mass(g): {Mass}"); 
-            _details.Add($"Volume(ml): {Volume}"); 
-            _details.Add(Description!);
-            _details.Add(GenerateDetailedDescription());
         }
 
         public Substantive Generate()
