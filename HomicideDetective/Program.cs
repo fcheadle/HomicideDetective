@@ -23,7 +23,8 @@ namespace HomicideDetective
         // Initialized in Init, so null-override is used.
         public static RogueLikeMap Map = null!;
         public static RogueLikeEntity PlayerCharacter = null!;
-        public static ScreenSurface MessageWindow = null!;
+        public static PageComponent<Thoughts> Page = null!;
+        public static Mystery Mystery = null!;
         static void Main(/*string[] args*/)
         {
             Game.Create(Width, Height);
@@ -34,54 +35,60 @@ namespace HomicideDetective
         
         private static void Init()
         {
-            // Generate map
             Map = GenerateMap();
-
-            // Generate player and add to map
             PlayerCharacter = GeneratePlayerCharacter();
             Map.AddEntity(PlayerCharacter);
+            Map.AllComponents.Add(new SurfaceComponentFollowTarget { Target = PlayerCharacter });
+            Page = GenerateMessageWindow();
+            Map.Children.Add(Page.BackgroundSurface);
             
             foreach(RogueLikeEntity entity in GenerateMystery())
                 Map.AddEntity(entity);
             
-            // Center view on player
-            Map.AllComponents.Add(new SurfaceComponentFollowTarget { Target = PlayerCharacter });
-            
-            MessageWindow = GenerateMessageWindow();
-            Map.Children.Add(MessageWindow);
-            
             GameHost.Instance.Screen = Map;
         }
 
-        private static ScreenSurface GenerateMessageWindow()
+        private static PageComponent<Thoughts> GenerateMessageWindow()
         {            
              var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
-             thoughts.Think("Good Luck, detective.");
              var page = new PageComponent<Thoughts>(thoughts);
-             page.Page.Position = (Width - page.Page.Surface.Width, 0);
-             page.Page.IsVisible = true;
-             PlayerCharacter.AllComponents.Add(page);
-             page.Print();
-             return page.Page;
+             page.BackgroundSurface.Position = (Width - page.TextSurface.Surface.Width - 1, 0);
+             page.BackgroundSurface.IsVisible = true;
+             // PlayerCharacter.AllComponents.Add(page);
+             return page;
         }
 
         private static IEnumerable<RogueLikeEntity> GenerateMystery()
         {
             Mystery mystery = new Mystery(1,1);
-            var murderWeapon = new RogueLikeEntity(Map.WalkabilityView.RandomPosition(), 'm', false, true, 1);
-            murderWeapon.AllComponents.Add(mystery.GenerateMurderWeapon());
+            mystery.Generate();
+            
+            var murderWeapon = new RogueLikeEntity(Map.WalkabilityView.RandomPosition(), (char)mystery.MurderWeapon.Name![0], false);
+            murderWeapon.AllComponents.Add(mystery.MurderWeapon);
             yield return murderWeapon;
             
             var murderer = new RogueLikeEntity(Map.WalkabilityView.RandomPosition(), 1, false);
-            murderer.AllComponents.Add(mystery.GeneratePerson("Thornton"));
+            murderer.AllComponents.Add(mystery.Murderer);
             murderer.AllComponents.Add(new Thoughts());
             murderer.AllComponents.Add(new Speech());
             yield return murderer;
             
             var victim = new RogueLikeEntity(Map.WalkabilityView.RandomPosition(), 2, false);
-            var victimInfo = mystery.GenerateVictim("Reed");
-            victim.AllComponents.Add(victimInfo);
+            victim.AllComponents.Add(mystery.Victim);
             yield return victim;
+
+            foreach(var witnessDetails in mystery.Witnesses)
+            {
+                var witness = new RogueLikeEntity(Map.WalkabilityView.RandomPosition(), 1, false);
+                witness.AllComponents.Add(witnessDetails);
+                witness.AllComponents.Add(new Thoughts());
+                witness.AllComponents.Add(new Speech());
+                yield return witness;
+            }
+
+            var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
+            thoughts.Think(mystery.SceneOfCrime.Details);
+            Page.Print();
         }
 
         private static RogueLikeMap GenerateMap()
@@ -110,7 +117,6 @@ namespace HomicideDetective
                 
                 else
                     map.SetTerrain(grassMap[location]);
-
             }
 
             return map;
@@ -118,11 +124,10 @@ namespace HomicideDetective
 
         private static RogueLikeEntity GeneratePlayerCharacter()
         {
-            //var position = Map.WalkabilityView.Positions().First(p => Map.WalkabilityView[p]);
-            var position = (Map.Width / 2, Map.Height / 2);
+            var position = Map.WalkabilityView.RandomPosition();
             var player = new RogueLikeEntity(position, 1, false);
-            // player.AllComponents.Add(GeneratePersonalInfo());
             player.AllComponents.Add(new Thoughts());
+            player.AllComponents.Add(new Speech());
             var motionControl = new PlayerControlsComponent();
             motionControl.AddKeyCommand(Keys.T, Talk);
             motionControl.AddKeyCommand(Keys.L, Look);
@@ -138,20 +143,22 @@ namespace HomicideDetective
             {
                 for (int j = PlayerCharacter.Position.Y - 1; j < PlayerCharacter.Position.Y + 2; j++)
                 {
-                    if (Map.Contains((i, j)))
+                    if (Map.Contains((i, j)) && (i,j) != PlayerCharacter.Position)
                     {
                         foreach (var entity in Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
                         {
                             var speech = entity.AllComponents.GetFirstOrDefault<Speech>();
-                            if(speech is not null)
+                            if (speech is not null)
+                            {
                                 thoughts.Think(speech.Details.ToArray());
+                                Page.Print();
+                            }
                         }
                     }
                 }
             }
 
-            var page = PlayerCharacter.AllComponents.GetFirst<PageComponent<Thoughts>>();
-            page.Print();
+            Page.Print();
         }
 
         private static void Look()
@@ -173,8 +180,7 @@ namespace HomicideDetective
                 }
             }
 
-            var page = PlayerCharacter.AllComponents.GetFirst<PageComponent<Thoughts>>();
-            page.Print();
+            Page.Print();
         }
     }
 }

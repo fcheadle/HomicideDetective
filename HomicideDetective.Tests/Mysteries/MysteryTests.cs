@@ -29,7 +29,7 @@ namespace HomicideDetective.Tests.Mysteries
         public void CommitMurderTest(int seed)
         {
             var mystery = new Mystery(seed, 0);
-            mystery.CommitMurder();
+            mystery.Generate();
             Assert.NotNull(mystery.Victim);
             Assert.NotNull(mystery.Witnesses);
             Assert.NotNull(mystery.SceneOfCrime);

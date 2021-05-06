@@ -13,7 +13,8 @@ namespace HomicideDetective
     {
         // const int Width = 24;
         // const int Height = 24;
-        public ScreenSurface Page { get; private set; }
+        public ScreenSurface TextSurface { get; private set; }
+        public ScreenSurface BackgroundSurface { get; private set; }
         public T Component { get; }
         
         public PageComponent(T component) : base(true, false, true, true)
@@ -24,32 +25,41 @@ namespace HomicideDetective
 
         private void InitWindow()
         {
-            Page = new ScreenSurface(Program.Width / 3, Program.Height)
+            
+            BackgroundSurface = new ScreenSurface(Program.Width / 3, Program.Height)
             {
                 IsVisible = true,
                 IsFocused = false,
                 FocusOnMouseClick = true,
                 Position = (1,1)
             };
-            Page.Surface.Fill(Color.Blue, Color.Tan, '_');
+            BackgroundSurface.Surface.Fill(Color.Blue, Color.Tan, '_');
+            
+            TextSurface = new ScreenSurface(Program.Width / 3 - 2, Program.Height - 2)
+            {
+                IsVisible = true,
+                IsFocused = false,
+                FocusOnMouseClick = true,
+                Position = (1,1)
+            };
             
             var cursor = new Cursor()
             {
                 IsVisible = false,
                 UsePrintEffect = true,
             };
-            Page.SadComponents.Add(cursor);
+            TextSurface.SadComponents.Add(cursor);
+            BackgroundSurface.Children.Add(TextSurface);
         }
         public void Print()
         {
-            Page.Surface.Clear();
-            Page.Surface.Fill(Color.Blue, Color.Tan, '_');
+            TextSurface.Surface.Clear();
 
-            var cursor = Page.GetSadComponent<Cursor>();
+            var cursor = TextSurface.GetSadComponent<Cursor>();
             cursor.Position = (0, 0);
             foreach (string detail in Component.Details)
             {
-                var answer = new ColoredString($"\r\n{detail}", Color.Blue, Color.Tan);
+                var answer = new ColoredString($"\r\n{detail}", Color.Blue, Color.Transparent);
                 cursor.Print(answer);
             }
         }

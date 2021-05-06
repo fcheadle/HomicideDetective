@@ -2,9 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
-using HomicideDetective.People;
-using HomicideDetective.Places;
-using HomicideDetective.Places.Generation;
 
 namespace HomicideDetective.Mysteries
 {
@@ -21,8 +18,7 @@ namespace HomicideDetective.Mysteries
         public List<Substantive> Witnesses { get; set; }
         public List<Substantive> LocationsOfInterest { get; set; }
         public List<Substantive> Evidence { get; set; }
-        // public Scene CurrentScene { get; set; }
-        // public List<Scene> Scenes { get; set; }
+        
         public Random Random { get; set; }
 
         string[] _maleGivenNames = { "Nate", "Tom", "Dick", "Harry", "Bob", "Matthew", "Mark", "Luke", "John", "Josh" };
@@ -30,10 +26,7 @@ namespace HomicideDetective.Mysteries
         string[] _femaleGivenNames = { "Alice", "Betty", "Jesse", "Sarah", "Angela", "Christine",  "Mary", "Liz", "Joan", "Jen" };
 
         string[] _surnames = {"Smith", "Johnson", "Michaels", "Douglas", "Andrews", "MacDonald", "Jenkins", "Peterson"};
-        
-        //Dangerous, do not use
-        public Mystery(){}
-        
+
         //preferred constructor
         public Mystery(int seed, int caseNumber)
         {
@@ -43,66 +36,47 @@ namespace HomicideDetective.Mysteries
         }
 
         private int Chance() => Random.Next(0, 101);
-        
-        public void CommitMurder()
-        {
-            if (Random == null)
-                Random = new Random(Seed + CaseNumber);
 
-            Victim = GeneratePerson(_surnames.RandomItem());
+        
+        public void Generate()
+        {
+            Victim = GenerateVictim(_surnames.RandomItem());
             Murderer = GeneratePerson(_surnames.RandomItem());
             MurderWeapon = GenerateMurderWeapon();
             var locations = new List<Substantive>();
-            var witnesses = new List<Substantive>();
-            for (int i = 0; i < 15; i++)
-            {
-                string surname = _surnames[Random.Next(0, _surnames.Length)];
-                
-                var address = $"{Chance()} {Enum.GetNames<RoadNames>().RandomItem()}";
-                var substantive = new Substantive(Substantive.Types.Place, address, Random.Next(),
-                    article: "It", description: $"Location of interest in the Murder of {Victim.Name}");
-
-                
-                var placeOfResidence = $"Lives at {address}";
-                var owner = GeneratePerson(surname);
-                owner.AddDetail(placeOfResidence);
-                witnesses.Add(owner);
-                
-                var occupant = GeneratePerson(surname);
-                occupant.AddDetail(placeOfResidence);
-                witnesses.Add(occupant);
-
-                var child1 = GeneratePerson(surname);
-                child1.AddDetail(placeOfResidence);
-                witnesses.Add(child1);
-
-                var child2 = GeneratePerson(surname);
-                child2.AddDetail(placeOfResidence);
-                witnesses.Add(child2);
-
-                substantive.AddDetail($"{owner.Name}, {occupant.Name}, {child1.Name}, and {child2.Name} live here.");
-                locations.Add(substantive);
-            }
-
             LocationsOfInterest = locations;
-            Witnesses = witnesses;
-            SceneOfCrime = new Substantive(Substantive.Types.Place, $"{Victim.Name}'s Home", Random.Next(),
-                article: "It", description: $"Location of interest in the Murder of {Victim.Name}");
-            
-            
+            Witnesses = GenerateWitnesses().ToList();
+            SceneOfCrime = GenerateSceneOfMurder();
         }
 
-        public void Open()
+        private IEnumerable<Substantive> GenerateWitnesses()
         {
-            // CurrentScene = new Scene(Program.MapWidth, Program.MapHeight, SceneOfCrime);
-            // CurrentScene.GenerateHouse();
-            // CurrentScene.Populate(new Substantive[]{Victim, Murderer, MurderWeapon});
-            // var victim = CurrentScene.Entities.Items.First
-            //     (e => ((ISubstantive) e).Substantive.Name == Victim.Name);
-            // ((Person)victim).Murder(Murderer, MurderWeapon, SceneOfCrime);
-            //CurrentScene.Populate();
+            for (int i = 0; i < 10; i++)
+            {
+                yield return GeneratePerson(_surnames.RandomItem());
+            }
         }
-        
+
+        private Substantive GenerateSceneOfMurder()
+        {
+            var name = $"{Victim.Name}'s home";
+            string noun = "location";
+            string pronoun = "it";
+            string pronounPossessive = "its";
+            string pronounPassive = "it";
+
+            
+            string height = "long and low";
+            string width = "slim";
+
+            string description = $"{pronoun} is a {height}, {width}{noun}.";
+
+            var substantive = new Substantive(Substantive.Types.Place, name, Random.Next(), "", "It", pronoun,
+                pronounPossessive, description, 0, 0, height, width);
+            substantive.AddDetail($"Location of interest in the Murder of {Victim.Name}");
+            return substantive;
+        }
+
         public Substantive GeneratePerson(string surname)
         {
             bool isMale = Random.Next(0, 2) == 0;
