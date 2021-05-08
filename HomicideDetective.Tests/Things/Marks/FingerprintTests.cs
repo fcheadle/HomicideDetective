@@ -1,5 +1,5 @@
 using System;
-using HomicideDetective.Things.Marks;
+using HomicideDetective.Things;
 using Xunit;
 using Xunit.Abstractions;
 

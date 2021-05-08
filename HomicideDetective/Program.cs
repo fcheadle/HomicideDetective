@@ -61,29 +61,25 @@ namespace HomicideDetective
         {
             Mystery mystery = new Mystery(1,1);
             mystery.Generate();
-            
-            var murderWeapon = new RogueLikeEntity(RandomFreeSpace(), (char)mystery.MurderWeapon.Name![0], false, true, 2);
-            murderWeapon.AllComponents.Add(mystery.MurderWeapon);
+
+            var murderWeapon = mystery.MurderWeaponAsEntity();
+            murderWeapon.Position = RandomFreeSpace();
             Map.AddEntity(murderWeapon);
-            
-            var murderer = new RogueLikeEntity(RandomFreeSpace(), 1, false);
-            murderer.AllComponents.Add(mystery.Murderer);
-            murderer.AllComponents.Add(new Thoughts());
-            murderer.AllComponents.Add(new Speech());
+
+            var murderer = mystery.MurdererAsEntity();
+            murderer.Position = RandomFreeSpace();
             Map.AddEntity(murderer);
-            
-            var victim = new RogueLikeEntity(RandomFreeSpace(), 2, false);
-            victim.AllComponents.Add(mystery.Victim);
+
+            var victim = mystery.VictimAsEntity();
+            victim.Position = RandomFreeSpace();
             Map.AddEntity(victim);
 
-            foreach(var witnessDetails in mystery.Witnesses)
+            foreach (var witness in mystery.WitnessesAsEntity())
             {
-                var witness = new RogueLikeEntity(RandomFreeSpace(), 1, false);
-                witness.AllComponents.Add(witnessDetails);
-                witness.AllComponents.Add(new Thoughts());
-                witness.AllComponents.Add(new Speech());
+                witness.Position = RandomFreeSpace();
                 Map.AddEntity(witness);
             }
+            
 
             var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
             thoughts.Think(mystery.SceneOfCrime.Details);

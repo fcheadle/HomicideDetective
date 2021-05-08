@@ -7,7 +7,7 @@ using HomicideDetective.Mysteries;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
-namespace HomicideDetective.Things.Marks
+namespace HomicideDetective.Things
 {
     public class Fingerprint : Marking, IGameObjectComponent, IDetailed
     {

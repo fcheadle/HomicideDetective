@@ -5,7 +5,7 @@ using GoRogue;
 
 namespace HomicideDetective.Mysteries
 {
-    public class Mystery
+    public partial class Mystery
     {
         public enum Statuses {Active, Closed, Cold}
         public Statuses Status { get; set; } = Statuses.Active;
@@ -43,8 +43,7 @@ namespace HomicideDetective.Mysteries
             Victim = GenerateVictim(_surnames.RandomItem());
             Murderer = GeneratePerson(_surnames.RandomItem());
             MurderWeapon = GenerateMurderWeapon();
-            var locations = new List<Substantive>();
-            LocationsOfInterest = locations;
+            LocationsOfInterest = new List<Substantive>();;
             Witnesses = GenerateWitnesses().ToList();
             SceneOfCrime = GenerateSceneOfMurder();
         }
@@ -71,8 +70,8 @@ namespace HomicideDetective.Mysteries
 
             string description = $"{pronoun} is a {height}, {width}{noun}.";
 
-            var substantive = new Substantive(Substantive.Types.Place, name, Random.Next(), "", "It", pronoun,
-                pronounPossessive, description, 0, 0, height, width);
+            var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: "It", pronoun: pronoun,
+                pronounPossessive: pronounPossessive, description: description, mass: 0, volume: 0, sizeDescription: height, weightDescription: width);
             substantive.AddDetail($"Location of interest in the Murder of {Victim.Name}");
             return substantive;
         }
@@ -96,8 +95,8 @@ namespace HomicideDetective.Mysteries
             string description = $"{pronoun} is a {height}, {width} {age} {noun}.";
             string givenName = isMale ? _maleGivenNames[ Random.Next(0, _maleGivenNames.Length)] : _femaleGivenNames[ Random.Next(0, _femaleGivenNames.Length)];
 
-            var substantive = new Substantive(Substantive.Types.Person, $"{givenName} {surname}", Random.Next(),
-                isMale ? "male" : "female", pronounPassive, pronoun, pronounPossessive, description, 37500, 24000, height, width);  
+            var substantive = new Substantive(Substantive.Types.Person, $"{givenName} {surname}",
+                gender: isMale ? "male" : "female", article: pronounPassive, pronoun: pronoun, pronounPossessive: pronounPossessive, description: description, mass: 37500, volume: 24000, sizeDescription: height, weightDescription: width);  
             
             return substantive;
         }
@@ -206,8 +205,8 @@ namespace HomicideDetective.Mysteries
                     break;
             }
 
-            var substantive = new Substantive(Substantive.Types.Thing, name, Random.Next(), 
-                description: description, mass: mass, volume: volume, sizeDescription:size, weightDescription: weight);
+            var substantive = new Substantive(Substantive.Types.Thing, name, 
+                description: description, mass: mass, volume: volume, sizeDescription: size, weightDescription: weight);
             substantive.AddDetail(detail);
             return substantive;
         }
@@ -221,5 +220,6 @@ namespace HomicideDetective.Mysteries
             victim.WeightDescription = "is discolored from decay";
             return victim;
         }
+
     }
 }

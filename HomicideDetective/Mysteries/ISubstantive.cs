@@ -1,7 +1,7 @@
-namespace HomicideDetective.Mysteries
-{
-    public interface ISubstantive
-    {
-        Substantive Substantive { get; }
-    }
-}
+// namespace HomicideDetective.Mysteries
+// {
+//     public interface ISubstantive
+//     {
+//         Substantive Substantive { get; }
+//     }
+// }

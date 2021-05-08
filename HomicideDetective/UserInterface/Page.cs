@@ -1,8 +1,6 @@
-﻿using System;
-using HomicideDetective.Mysteries;
+﻿using HomicideDetective.Mysteries;
 using SadConsole;
 using SadConsole.Components;
-using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using SadRogue.Integration.Components;
 
@@ -11,10 +9,9 @@ namespace HomicideDetective
     //refactor this for clarity upon alpha
     public class PageComponent<T> : RogueLikeComponentBase where T : IDetailed
     {
-        // const int Width = 24;
-        // const int Height = 24;
         public ScreenSurface TextSurface { get; private set; }
         public ScreenSurface BackgroundSurface { get; private set; }
+        
         public T Component { get; }
         
         public PageComponent(T component) : base(true, false, true, true)
@@ -25,22 +22,20 @@ namespace HomicideDetective
 
         private void InitWindow()
         {
-            
-            BackgroundSurface = new ScreenSurface(Program.Width / 3, Program.Height)
+            BackgroundSurface = new ScreenSurface(Program.Width / 3 + 1, Program.Height)
             {
                 IsVisible = true,
                 IsFocused = false,
                 FocusOnMouseClick = true,
-                Position = (1,1)
             };
             BackgroundSurface.Surface.Fill(Color.Blue, Color.Tan, '_');
             
-            TextSurface = new ScreenSurface(Program.Width / 3 - 2, Program.Height - 2)
+            TextSurface = new ScreenSurface(Program.Width / 3 - 1, Program.Height)
             {
                 IsVisible = true,
                 IsFocused = false,
                 FocusOnMouseClick = true,
-                Position = (1,1)
+                Position = (1,0)
             };
             
             var cursor = new Cursor()
@@ -51,6 +46,7 @@ namespace HomicideDetective
             TextSurface.SadComponents.Add(cursor);
             BackgroundSurface.Children.Add(TextSurface);
         }
+        
         public void Print()
         {
             TextSurface.Surface.Clear();

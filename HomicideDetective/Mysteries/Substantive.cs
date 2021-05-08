@@ -7,13 +7,11 @@ namespace HomicideDetective.Mysteries
 {
     public class Substantive : IGameObjectComponent
     {
-        public int Seed { get; set; }
         public int Mass { get; set; } = 0;//in grams
         public int Volume { get; set; } = 0;//in ml
         public enum Types {Person, Place, Thing}
         public Types? Type { get; set; } 
         public IGameObject? Parent { get; set; }
-        public ISubstantive? Subject { get; set; }
         public string? Name { get; set; } 
         public string? Article { get; set; }
         public string? Pronoun { get; set; }
@@ -35,27 +33,17 @@ namespace HomicideDetective.Mysteries
 
         public string[] Details => _details.ToArray();
 
-        public Substantive()
-        {
-            var temp = new Random();
-            Seed = temp.Next();
-            Random = new Random(Seed);
-        }
-
-        public Substantive(Types type, int seed)
+        public Substantive(Types type)
         {
             Type = type;
-            Seed = seed;
-            Random = new Random(Seed);
         }
 
-        public Substantive(Types type, string name, int seed, string? gender = null, string? article = null, string? pronoun = null, 
+        public Substantive(Types type, string name, string? gender = null, string? article = null, string? pronoun = null, 
             string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0,
             string? sizeDescription = null, string? weightDescription = null)
         {
             Type = type;
             Name = name;
-            Seed = seed;
             Article = article;
             Pronoun = pronoun;
             PronounPossessive = pronounPossessive;
@@ -66,27 +54,7 @@ namespace HomicideDetective.Mysteries
             SizeDescription = sizeDescription;
             WeightDescription = weightDescription;
         }
-
-        public Substantive Generate()
-        {
-            if (Type == null) 
-                throw new NullReferenceException("Tried to Generate a Substantive that doesn't have a Type.");
-
-            if (Type == Types.Person)
-            {
-                throw new NotImplementedException();
-            }
-            else if (Type == Types.Place)
-            {
-                throw new NotImplementedException();
-            }
-            else if (Type == Types.Thing)
-            {
-                throw new NotImplementedException();
-            }
-
-            return this;
-        }
+        
         public void AddDetail(string detail) => _details.Add(detail);
         public string GenerateDetailedDescription()
         {
@@ -100,9 +68,5 @@ namespace HomicideDetective.Mysteries
 
             return description;
         }
-
-        public static Substantive Person(int seed) => new Substantive(Types.Person, seed).Generate();
-        public static Substantive Place(int seed) => new Substantive(Types.Place, seed).Generate();
-        public static Substantive Thing(int seed) => new Substantive(Types.Thing, seed).Generate();
     }
 }

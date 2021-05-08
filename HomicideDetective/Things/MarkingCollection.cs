@@ -4,7 +4,7 @@ using GoRogue;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 
-namespace HomicideDetective.Things.Marks
+namespace HomicideDetective.Things
 {
     public class MarkingCollection : IGameObjectComponent
     {

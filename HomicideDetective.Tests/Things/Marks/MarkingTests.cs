@@ -1,4 +1,4 @@
-using HomicideDetective.Things.Marks;
+using HomicideDetective.Things;
 using Xunit;
 
 namespace HomicideDetective.Tests.Things.Marks
