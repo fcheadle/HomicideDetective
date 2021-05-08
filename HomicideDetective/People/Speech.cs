@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GoRogue;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using HomicideDetective.Mysteries;
@@ -9,174 +10,153 @@ namespace HomicideDetective.People
     public class Speech : IGameObjectComponent, IDetailed
     {
         public IGameObject? Parent { get; set; }
-        public string Name { get; }
         public string Description { get; private set; }
-        private bool _alive;
-
-        public bool Alive
+        public List<string> Details => new ()
         {
-            get => _alive;
-            set
-            {
-                _alive = value;
-                Description = GenerateVoiceDescription();
-            }
-        } 
+            SpokenText(), 
+            ToneOfVoice(), 
+            FacialExpression(), 
+            BodyLanguage(),
+            Description
+        };
+        
+        public List<string> CommonSayings { get; private set; } = new List<string>();
+        public List<string> CommonTones { get; private set; } = new List<string>();
+        public List<string> CommonFacialExpressions { get; private set; } = new List<string>();
+        public List<string> CommonBodyPosture { get; private set; } = new List<string>();
+        public List<string> TruthSayings { get; private set; } = new List<string>();
+        public List<string> TruthTones { get; private set; } = new List<string>();
+        public List<string> TruthFacialExpressions { get; private set; } = new List<string>();
+        public List<string> TruthBodyPosture { get; private set; } = new List<string>();
+        public List<string> LieSayings { get; private set; } = new List<string>();
+        public List<string> LieTones { get; private set; } = new List<string>();
+        public List<string> LieFacialExpressions { get; private set; } = new List<string>();
+        public List<string> LieBodyPosture { get; private set; } = new List<string>();
+        
         public Speech()
         {
-            Name = $"Voice";
-            Alive = true;
+            InitSayings();
+            InitTones();
+            InitFacialExpressions();
+            InitBodyPostures();
+            Description = GenerateVoiceDescription();
         }
 
-        public List<string> Details => new ()
-            {
-                GenerateSpokenText(), 
-                GenerateToneOfVoice(), 
-                GenerateFacialExpression(), 
-                GenerateBodyLanguage(),
-                Description
-            };
-
-        private string GenerateSpokenText()
+        private void InitSayings()
         {
-            if(Alive)
-            {
-                int chance = new Random().Next(100);
-
-                string spoken = "\"";
-                spoken +=
-                    chance % 15 == 0 ? "Good day." :
-                    chance % 15 == 1 ? "Good afternoon, Detective." :
-                    chance % 15 == 2 ? "Hello, Detective." :
-                    chance % 15 == 3 ? "Finally off your ass and on the case, eh?" :
-                    chance % 15 == 4 ? "I don't remember anything new since the last time we spoke." :
-                    chance % 15 == 5 ? "I- I'm sorry. I need a few moments to collect myself." :
-                    chance % 15 == 6 ? "I have to tell someone what I've seen, the guilt is just too much" :
-                    chance % 15 == 7 ? "I didn't know the victim." :
-                    chance % 15 == 8 ? "Oh yeah, I know the victim." :
-                    chance % 15 == 9 ? "Too bad about your current case. I really liked the victim." :
-                    chance % 15 == 10 ? "Who?" :
-                    chance % 15 == 11 ? "... Why does that matter?" :
-                    chance % 15 == 11 ? "I don't want to talk to you anymore." :
-                    chance % 15 == 12 ? "I don't anything about the case, and I'm certainly not going to know anything when I go to Lou's Diner after I get off work." :
-                    chance % 15 == 13 ? "Any new leads?" : "How's the mystery coming along?";
-                spoken += "\"";
-                return spoken;
-            }
-
-            return $"This is the corpse of {((Person) Parent!).Name}. ";
+            CommonSayings.Add("Common: Good day, Detective.");
+            TruthSayings.Add("Truth: I saw the victim the night before she died.");
+            LieSayings.Add("Lie: I'm not sure I've ever met the victim.");
         }
 
-        private string GenerateToneOfVoice()
+        private void InitTones()
         {
-            if(Alive)
-            {
-                int chance = new Random().Next(0, 100);
-                string tone = $"They say in a ";
-                tone +=
-                    chance % 15 == 0 ? "neutral" :
-                    chance % 15 == 1 ? "slightly higher-pitched" :
-                    chance % 15 == 2 ? "pointed" :
-                    chance % 15 == 3 ? "low and commanding" :
-                    chance % 15 == 4 ? "highly distressed" :
-                    chance % 15 == 5 ? "calm and measured" :
-                    chance % 15 == 6 ? "frantic" :
-                    chance % 15 == 7 ? "panicked" :
-                    chance % 15 == 8 ? "hushed" :
-                    chance % 15 == 9 ? "cheerful" :
-                    chance % 15 == 10 ? "playful" :
-                    chance % 15 == 11 ? "forlorn" :
-                    chance % 15 == 11 ? "pained" :
-                    chance % 15 == 12 ? "cracking" :
-                    chance % 15 == 13 ? "scornful" : "distraught";
-                tone += " tone, ";
-                return tone;
-            }
+            CommonTones.Add("Common: they say in a neutral tone");
+            TruthTones.Add("Truth: they say in a low-pitched tone");
+            LieTones.Add("Lie: they say in a high-pitched tone");
+        }
 
-            return "Their body is stiff with rigor mortis. ";
+        private void InitFacialExpressions()
+        {
+            CommonFacialExpressions.Add("Common: through a flat expression");
+            CommonFacialExpressions.Add("Common: with furrowed brow and narrowed eyes");
+            CommonFacialExpressions.Add("Common: with furrowed brow");
+            CommonFacialExpressions.Add("Common: with one eyebrow raised");
+            CommonFacialExpressions.Add("Common: looking down");
+            CommonFacialExpressions.Add("Common: with a smile");
+            CommonFacialExpressions.Add("Common: staring fiercely");
+            TruthFacialExpressions.Add("Truth: while frowning");
+            TruthFacialExpressions.Add("Truth: through a forced smile");
+            TruthFacialExpressions.Add("Truth: staring fiercely");
+            TruthFacialExpressions.Add("Truth: with their brows arched in anger");
+            TruthFacialExpressions.Add("Truth: beaming their teeth");
+            TruthFacialExpressions.Add("Truth: with intense eye contact");
+            LieFacialExpressions.Add("Lie: with their brows arched in anger");
+            LieFacialExpressions.Add("Lie: eyebrows conveying a look of concern");
+            LieFacialExpressions.Add("Lie: with narrowed eyes");
+            LieFacialExpressions.Add("Lie: shifting their eyes about");
+            LieFacialExpressions.Add("Lie: their eyes flicker up and to the left before answering");
+            LieFacialExpressions.Add("Lie: batting their lashes");
+            LieFacialExpressions.Add("Lie: through a non-smiling wink");
+            LieFacialExpressions.Add("Lie: with their brows arched in anger");
+            LieFacialExpressions.Add("Lie: beaming their teeth");
+            LieFacialExpressions.Add("Lie: as their pupils narrow");
+        }
+
+        private void InitBodyPostures()
+        {
+            CommonBodyPosture.Add("Common: their arms hang blankly to their sides");
+            CommonBodyPosture.Add("Common: they are breathing heavily, arms somewhat out to the sides");
+            CommonBodyPosture.Add("Common: they are very reserved, hands crossed in front of them");
+            CommonBodyPosture.Add("Common: their arms hang blankly to their sides");
+            CommonBodyPosture.Add("Common: they put their hands in their pockets");
+            CommonBodyPosture.Add("Common: they pick their ear");
+            CommonBodyPosture.Add("Common: they lean against a wall");
+            
+            TruthBodyPosture.Add("Truth: they cross their arms in front of their chest");
+            TruthBodyPosture.Add("Truth: they speak emphatically with their hands");
+            TruthBodyPosture.Add("Truth: they lean slightly back on one leg and cross their arms");
+            TruthBodyPosture.Add("Truth: they crack their neck in a subtle motion");
+            TruthBodyPosture.Add("Truth: they wipe something from their eye");
+            
+            LieBodyPosture.Add("Lie: they reach their hand in their pocket and fidget with something");
+            LieBodyPosture.Add("Lie: they scratch their neck, then put a hand in a pocket");
+            LieBodyPosture.Add("Lie: they hang their head ever so slightly lower");
+            LieBodyPosture.Add("Lie: scratch their neck feverishly");
+            LieBodyPosture.Add("Lie: they reach their hand in their pocket and fidget with something");
+        }
+
+        private string ToneOfVoice(bool lying = false)
+        {
+            int chance = new Random().Next(100);
+            if (lying)
+                return chance > 50 ? LieTones.RandomItem() : CommonTones.RandomItem();
+            else
+                return chance > 50 ? TruthTones.RandomItem() : CommonTones.RandomItem();
         }
         
-        private string GenerateFacialExpression()
+        private string SpokenText(bool lying = false)
         {
-            if (Alive)
-            {
-                int chance = new Random().Next(0, 100);
-                string expression =
-                    chance % 15 == 0 ? "with furrowed brow and narrowed eyes" :
-                    chance % 15 == 1 ? "with furrowed brow" :
-                    chance % 15 == 2 ? "with one eyebrow raised" :
-                    chance % 15 == 3 ? "eyebrows conveying a look of concern" :
-                    chance % 15 == 4 ? "with narrowed eyes" :
-                    chance % 15 == 5 ? "shifting their eyes about" :
-                    chance % 15 == 6 ? "looking down" :
-                    chance % 15 == 7 ? "their eyes flicker up and to the left before answering" :
-                    chance % 15 == 8 ? "batting their lashes" :
-                    chance % 15 == 9 ? "through a non-smiling wink" :
-                    chance % 15 == 10 ? "with a smile" :
-                    chance % 15 == 11 ? "through a forced smile" :
-                    chance % 15 == 11 ? "beaming their teeth" :
-                    chance % 15 == 12 ? "staring fiercely" :
-                    chance % 15 == 13 ? "with intense eye contact" : "as their pupils narrow";
-                return expression;
-            }
-
-            return "Their face is contorted into a look of fright, ";
-        }
-
-        private string GenerateBodyLanguage()
-        {
-            if(Alive)
-            {
-                int chance = new Random().Next(0, 100);
-                string bodyLang = "Posture-wise, they ";
-                bodyLang +=
-                    chance % 15 == 0 ? "are breathing heavily, arms somewhat out to the sides" :
-                    chance % 15 == 1 ? "are very reserved, hands crossed in front of them" :
-                    chance % 15 == 2 ? "scratch their neck, then put a hand in a pocket" :
-                    chance % 15 == 3 ? "hang their head ever so slightly lower" :
-                    chance % 15 == 4 ? "stand with their legs wide and hands up" :
-                    chance % 15 == 5 ? "speak emphatically with their hands" :
-                    chance % 15 == 6 ? "lean slightly back on one leg and cross their arms" :
-                    chance % 15 == 7 ? "crack their neck in a subtle motion" :
-                    chance % 15 == 8 ? "put their hands in their pockets" :
-                    chance % 15 == 9 ? "scratch their neck feverishly" :
-                    chance % 15 == 10 ? "wipes something from their eye" :
-                    chance % 15 == 11 ? "picks their ear" :
-                    chance % 15 == 12 ? "speaks louder with their hands" :
-                    chance % 15 == 13 ? "lean against a wall" : "stand tall, with head held high";
-                bodyLang += ". ";
-                return bodyLang;
-            }
-
-            return "and they are posed as though they died defending themself.";
+            int chance = new Random().Next(100);
+            if (lying)
+                return chance > 50 ? LieSayings.RandomItem() : CommonSayings.RandomItem();
+            else
+                return chance > 50 ? TruthSayings.RandomItem() : CommonSayings.RandomItem();
         }
         
+        private string FacialExpression(bool lying = false)
+        {
+            int chance = new Random().Next(100);
+            if (lying)
+                return chance > 50 ? LieFacialExpressions.RandomItem() : CommonFacialExpressions.RandomItem();
+            else
+                return chance > 50 ? TruthFacialExpressions.RandomItem() : CommonFacialExpressions.RandomItem();
+        }
+
+        private string BodyLanguage(bool lying = false)
+        {
+            int chance = new Random().Next(100);
+            if (lying)
+                return chance > 50 ? LieBodyPosture.RandomItem() : CommonBodyPosture.RandomItem();
+            else
+                return chance > 50 ? TruthBodyPosture.RandomItem() : CommonBodyPosture.RandomItem();
+        }
+
         private string GenerateVoiceDescription()
         {
-            if (Alive)
+            List<string> timbres = new List<string>()
             {
-                int chance = new Random().Next(0, 101);
-                string voice = "Their voice is ";
-                voice +=
-                    chance % 15 == 0 ? "a deep bass" :
-                    chance % 15 == 1 ? "a rumbling bass" :
-                    chance % 15 == 2 ? "a raspy bass" :
-                    chance % 15 == 3 ? "a soft bass" :
-                    chance % 15 == 4 ? "a deep baritone" :
-                    chance % 15 == 5 ? "a rumbling baritone" :
-                    chance % 15 == 6 ? "a soft baritone" :
-                    chance % 15 == 7 ? "a clear baritone" :
-                    chance % 15 == 8 ? "a pleasant alto" :
-                    chance % 15 == 9 ? "a playful alto" :
-                    chance % 15 == 10 ? "a clear alto" :
-                    chance % 15 == 11 ? "a nasally alto" :
-                    chance % 15 == 12 ? "a fabulous soprano" :
-                    chance % 15 == 13 ? "a nasally soprano" : "a crystal-clear tenor";
-                voice += ".";
-                return voice;
-            }
-            
-            return "You wonder what they sounded like.";
+                "rumbly", "raspy", "smooth", "shrill", "soft", "hard", "light", "gruff", "clear", "crystal-clear",
+                "grating", "muddy", "aged", "youthly", "mature", "sagely", "rolling", "wisened", "bubbly", "enchanting",
+                "bewitching", "lovely", "magnetic", "irritating", "poetic", "artistic", "flavorful", "repulsive", 
+                "repugnant",
+            };
+            List<string> tones = new List<string>()
+            {
+                "ultra-bass", "bass", "baritone", "alto", "tenor", "countertenor", "soprano", "falsetto",
+                "coloratura soprano", "mezzo-soprano", "contralto"
+            };
+            return $"Their voice is {timbres.RandomItem()} {tones.RandomItem()}.";
         }
     }
 }

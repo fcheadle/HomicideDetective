@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using GoRogue.MapGeneration;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
@@ -42,8 +43,7 @@ namespace HomicideDetective
             Page = GenerateMessageWindow();
             Map.Children.Add(Page.BackgroundSurface);
             
-            foreach(RogueLikeEntity entity in GenerateMystery())
-                Map.AddEntity(entity);
+            GenerateMystery();
             
             GameHost.Instance.Screen = Map;
         }
@@ -54,41 +54,49 @@ namespace HomicideDetective
              var page = new PageComponent<Thoughts>(thoughts);
              page.BackgroundSurface.Position = (Width - page.TextSurface.Surface.Width - 1, 0);
              page.BackgroundSurface.IsVisible = true;
-             // PlayerCharacter.AllComponents.Add(page);
              return page;
         }
 
-        private static IEnumerable<RogueLikeEntity> GenerateMystery()
+        private static void GenerateMystery()
         {
             Mystery mystery = new Mystery(1,1);
             mystery.Generate();
             
-            var murderWeapon = new RogueLikeEntity(Map.WalkabilityView.RandomPosition(), (char)mystery.MurderWeapon.Name![0], false);
+            var murderWeapon = new RogueLikeEntity(RandomFreeSpace(), (char)mystery.MurderWeapon.Name![0], false, true, 2);
             murderWeapon.AllComponents.Add(mystery.MurderWeapon);
-            yield return murderWeapon;
+            Map.AddEntity(murderWeapon);
             
-            var murderer = new RogueLikeEntity(Map.WalkabilityView.RandomPosition(), 1, false);
+            var murderer = new RogueLikeEntity(RandomFreeSpace(), 1, false);
             murderer.AllComponents.Add(mystery.Murderer);
             murderer.AllComponents.Add(new Thoughts());
             murderer.AllComponents.Add(new Speech());
-            yield return murderer;
+            Map.AddEntity(murderer);
             
-            var victim = new RogueLikeEntity(Map.WalkabilityView.RandomPosition(), 2, false);
+            var victim = new RogueLikeEntity(RandomFreeSpace(), 2, false);
             victim.AllComponents.Add(mystery.Victim);
-            yield return victim;
+            Map.AddEntity(victim);
 
             foreach(var witnessDetails in mystery.Witnesses)
             {
-                var witness = new RogueLikeEntity(Map.WalkabilityView.RandomPosition(), 1, false);
+                var witness = new RogueLikeEntity(RandomFreeSpace(), 1, false);
                 witness.AllComponents.Add(witnessDetails);
                 witness.AllComponents.Add(new Thoughts());
                 witness.AllComponents.Add(new Speech());
-                yield return witness;
+                Map.AddEntity(witness);
             }
 
             var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
             thoughts.Think(mystery.SceneOfCrime.Details);
             Page.Print();
+        }
+
+        private static Point RandomFreeSpace()
+        {
+            var point = Map.WalkabilityView.RandomPosition();
+            while(Map.GetEntitiesAt<RogueLikeEntity>(point).Any())
+                point = Map.WalkabilityView.RandomPosition();
+            
+            return point;
         }
 
         private static RogueLikeMap GenerateMap()
