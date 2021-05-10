@@ -1,7 +1,7 @@
 using HomicideDetective.Things;
 using Xunit;
 
-namespace HomicideDetective.Tests.Things.Marks
+namespace HomicideDetective.Tests.Things
 {
     public class MarkingCollectionTests
     {

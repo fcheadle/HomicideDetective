@@ -1,9 +1,8 @@
-using System;
 using HomicideDetective.Things;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace HomicideDetective.Tests.Things.Marks
+namespace HomicideDetective.Tests.Things
 {
     public class FingerprintTests
     {
