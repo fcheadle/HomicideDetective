@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using GoRogue.MapGeneration;
 using HomicideDetective.Mysteries;
@@ -62,19 +61,19 @@ namespace HomicideDetective
             Mystery mystery = new Mystery(1,1);
             mystery.Generate();
 
-            var murderWeapon = mystery.MurderWeaponAsEntity();
+            var murderWeapon = mystery.MurderWeapon;
             murderWeapon.Position = RandomFreeSpace();
             Map.AddEntity(murderWeapon);
 
-            var murderer = mystery.MurdererAsEntity();
+            var murderer = mystery.Murderer;
             murderer.Position = RandomFreeSpace();
             Map.AddEntity(murderer);
 
-            var victim = mystery.VictimAsEntity();
+            var victim = mystery.Victim;
             victim.Position = RandomFreeSpace();
             Map.AddEntity(victim);
 
-            foreach (var witness in mystery.WitnessesAsEntity())
+            foreach (var witness in mystery.Witnesses)
             {
                 witness.Position = RandomFreeSpace();
                 Map.AddEntity(witness);

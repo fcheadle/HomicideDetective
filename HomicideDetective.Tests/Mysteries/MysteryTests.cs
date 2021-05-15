@@ -50,8 +50,8 @@ namespace HomicideDetective.Tests.Mysteries
             var firstMystery = new Mystery(seed, 0);
             var secondMystery = new Mystery(seed, 0);
             
-            var firstAnswer = firstMystery.GeneratePerson("test");
-            var secondAnswer = secondMystery.GeneratePerson("test");
+            var firstAnswer = firstMystery.GeneratePersonalInfo("test");
+            var secondAnswer = secondMystery.GeneratePersonalInfo("test");
             
             Assert.Equal(firstAnswer.Details, secondAnswer.Details);
             // Assert.NotNull(firstAnswer.SizeDescription);
@@ -73,8 +73,8 @@ namespace HomicideDetective.Tests.Mysteries
             var firstMystery = new Mystery(seed, 0);
             var secondMystery = new Mystery(seed, 0);
             
-            var firstAnswer = firstMystery.GenerateMurderWeapon();
-            var secondAnswer = secondMystery.GenerateMurderWeapon();
+            var firstAnswer = firstMystery.GenerateMurderWeaponInfo();
+            var secondAnswer = secondMystery.GenerateMurderWeaponInfo();
             
             Assert.Equal(firstAnswer.Details, secondAnswer.Details);
             Assert.NotNull(firstAnswer.SizeDescription);
