@@ -3,8 +3,8 @@ namespace HomicideDetective.Mysteries
     public enum Motive
     {
         AbusiveLover,
-        MuggingGoneWrong,
-        JealousFriend,
-        AccidentHandledPoorly,
+        // MuggingGoneWrong,
+        // JealousFriend,
+        // AccidentHandledPoorly,
     }
 }

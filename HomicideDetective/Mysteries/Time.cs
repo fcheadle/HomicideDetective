@@ -1,8 +1,9 @@
+using System;
+
 namespace HomicideDetective.Mysteries
 {
-    public class Timeline
+    public class Time
     {
-        private int _day = -1;
         private int _hours;
         public int Hours
         {
@@ -11,7 +12,6 @@ namespace HomicideDetective.Mysteries
             {
                 if (value >= 24)
                 {
-                    _day++;
                     value -= 24;
                     _hours = value;
                 }
@@ -33,21 +33,17 @@ namespace HomicideDetective.Mysteries
             }
         }
 
-        public int TimeOfDeath => Hours * 100 + Minutes;
-        
-        public Timeline(int hours, int minutes)
+        public Time(int hours, int minutes)
         {
-            Hours = hours;
-            Minutes = minutes;
-            GenerateTimeline();
+            if (hours < 0 || hours >= 24)
+                throw new ArgumentException($"Hours must be between 00 and 23 (was {hours})");
+            if (minutes < 0 || minutes >= 60)
+                throw new ArgumentException($"Minutes must be between 00 and 59 (was {minutes})");
+
+            _hours = hours;
+            _minutes = minutes;
         }
-        
-        private void GenerateTimeline()
-        {
-            while (Hours > 1 && Hours < 7)
-            {
-                
-            }
-        }
+
+        public override string ToString() => $"{_hours}{_minutes} hours";
     }
 }
