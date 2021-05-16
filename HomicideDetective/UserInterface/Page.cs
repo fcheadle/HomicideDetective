@@ -1,12 +1,15 @@
 ﻿using HomicideDetective.Mysteries;
 using SadConsole;
 using SadConsole.Components;
-using SadRogue.Primitives;
 using SadRogue.Integration.Components;
+using SadRogue.Primitives;
 
-namespace HomicideDetective
+namespace HomicideDetective.UserInterface
 {
-    //refactor this for clarity upon alpha
+    /// <summary>
+    /// The Message Window and it's background that looks like notepad paper
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class PageComponent<T> : RogueLikeComponentBase where T : IDetailed
     {
         public ScreenSurface TextSurface { get; private set; }

@@ -7,11 +7,14 @@ using HomicideDetective.Mysteries;
 
 namespace HomicideDetective.People
 {
+    /// <summary>
+    /// The speech component given to RogueLikeEntities who can speak.
+    /// </summary>
     public class Speech : IGameObjectComponent, IDetailed
     {
         public IGameObject? Parent { get; set; }
         public string Description { get; private set; }
-        public List<string> Details => new ()
+        public List<string> Details => new () //todo - better method
         {
             SpokenText(), 
             ToneOfVoice(), 
@@ -20,14 +23,19 @@ namespace HomicideDetective.People
             Description
         };
         
+        //strings to pull details from when either telling the truth or lying
         public List<string> CommonSayings { get; private set; } = new List<string>();
         public List<string> CommonTones { get; private set; } = new List<string>();
         public List<string> CommonFacialExpressions { get; private set; } = new List<string>();
         public List<string> CommonBodyPosture { get; private set; } = new List<string>();
+        
+        //strings to pull details from when people are telling the truth
         public List<string> TruthSayings { get; private set; } = new List<string>();
         public List<string> TruthTones { get; private set; } = new List<string>();
         public List<string> TruthFacialExpressions { get; private set; } = new List<string>();
         public List<string> TruthBodyPosture { get; private set; } = new List<string>();
+        
+        //strings to pull details from when people are lying
         public List<string> LieSayings { get; private set; } = new List<string>();
         public List<string> LieTones { get; private set; } = new List<string>();
         public List<string> LieFacialExpressions { get; private set; } = new List<string>();
@@ -41,22 +49,22 @@ namespace HomicideDetective.People
             InitBodyPostures();
             Description = GenerateVoiceDescription();
         }
-
-        private void InitSayings()
+        
+        private void InitSayings() //todo - delete
         {
             CommonSayings.Add("Common: Good day, Detective.");
             TruthSayings.Add("Truth: I saw the victim the night before she died.");
             LieSayings.Add("Lie: I'm not sure I've ever met the victim.");
         }
 
-        private void InitTones()
+        private void InitTones() //todo - delete
         {
             CommonTones.Add("Common: they say in a neutral tone");
             TruthTones.Add("Truth: they say in a low-pitched tone");
             LieTones.Add("Lie: they say in a high-pitched tone");
         }
 
-        private void InitFacialExpressions()
+        private void InitFacialExpressions() // todo - delete
         {
             CommonFacialExpressions.Add("Common: through a flat expression");
             CommonFacialExpressions.Add("Common: with furrowed brow and narrowed eyes");
@@ -83,7 +91,7 @@ namespace HomicideDetective.People
             LieFacialExpressions.Add("Lie: as their pupils narrow");
         }
 
-        private void InitBodyPostures()
+        private void InitBodyPostures() //todo - delete
         {
             CommonBodyPosture.Add("Common: their arms hang blankly to their sides");
             CommonBodyPosture.Add("Common: they are breathing heavily, arms somewhat out to the sides");

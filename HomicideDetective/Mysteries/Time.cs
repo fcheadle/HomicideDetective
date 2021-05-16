@@ -1,7 +1,9 @@
 using System;
-
 namespace HomicideDetective.Mysteries
 {
+    /// <summary>
+    /// The hours/minutes, given in 24 hour military time.
+    /// </summary>
     public class Time
     {
         private int _hours;
@@ -15,6 +17,7 @@ namespace HomicideDetective.Mysteries
                     value -= 24;
                     _hours = value;
                 }
+                else _hours = value;
             }
         }
         private int _minutes;
@@ -24,12 +27,13 @@ namespace HomicideDetective.Mysteries
             get => _minutes;
             set
             {
-                if (value >= 24)
+                if (value >= 60)
                 {
                     _hours++;
-                    value -= 24;
+                    value -= 60;
                     _minutes = value;
                 }
+                else _minutes = value;
             }
         }
 
@@ -44,6 +48,11 @@ namespace HomicideDetective.Mysteries
             _minutes = minutes;
         }
 
-        public override string ToString() => $"{_hours}{_minutes} hours";
+        public override string ToString() => $"{ToInt()} hundred hours";
+        public int ToInt() => Hours * 100 + Minutes; 
+        public bool LessThan(Time other) => ToInt() < other.ToInt();
+        public bool GreaterThan(Time other) => ToInt() > other.ToInt();
+        public bool Equals(Time other) => ToInt() == other.ToInt();
+
     }
 }

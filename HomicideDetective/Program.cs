@@ -1,9 +1,9 @@
-using System;
 using System.Linq;
 using GoRogue.MapGeneration;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
 using HomicideDetective.Places;
+using HomicideDetective.UserInterface;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;
@@ -17,17 +17,20 @@ namespace HomicideDetective
 {
     class Program
     {
+        //game window properties
         public const int Width = 80;
         public const int Height = 25;
+        
+        //map properties
         public const int MapWidth = 100;
         public const int MapHeight = 60;
-
-        // Initialized in Init, so null-override is used.
         public static RogueLikeMap Map = null!;
+        public static Weather Weather = null!;
+
+        //ui and game properties
         public static RogueLikeEntity PlayerCharacter = null!;
         public static PageComponent<Thoughts> Page = null!;
         public static Mystery Mystery = null!;
-        public static Weather Weather = null!;
         
         static void Main()
         {
@@ -47,65 +50,15 @@ namespace HomicideDetective
         {
             Map = GenerateMap();
             PlayerCharacter = GeneratePlayerCharacter();
-            Map.AddEntity(PlayerCharacter);
-            Map.AllComponents.Add(new SurfaceComponentFollowTarget { Target = PlayerCharacter });
             Page = GenerateMessageWindow();
-            Map.Children.Add(Page.BackgroundSurface);
-            
-            GenerateMystery();
+            Mystery = GenerateMystery();
             
             GameHost.Instance.Screen = Map;
         }
 
-        private static PageComponent<Thoughts> GenerateMessageWindow()
-        {            
-             var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
-             var page = new PageComponent<Thoughts>(thoughts);
-             page.BackgroundSurface.Position = (Width - page.TextSurface.Surface.Width - 1, 0);
-             page.BackgroundSurface.IsVisible = true;
-             return page;
-        }
-
-        private static void GenerateMystery()
-        {
-            Mystery mystery = new Mystery(1,1);
-            mystery.Generate();
-
-            var murderWeapon = mystery.MurderWeapon;
-            murderWeapon.Position = RandomFreeSpace();
-            Map.AddEntity(murderWeapon);
-
-            var murderer = mystery.Murderer;
-            murderer.Position = RandomFreeSpace();
-            Map.AddEntity(murderer);
-
-            var victim = mystery.Victim;
-            victim.Position = RandomFreeSpace();
-            Map.AddEntity(victim);
-
-            foreach (var witness in mystery.Witnesses)
-            {
-                witness.Position = RandomFreeSpace();
-                Map.AddEntity(witness);
-            }
-            
-
-            var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
-            thoughts.Think(mystery.SceneOfCrime.Details);
-            Page.Print();
-        }
-
-        private static Point RandomFreeSpace()
-        {
-            var point = Map.WalkabilityView.RandomPosition();
-            while(Map.GetEntitiesAt<RogueLikeEntity>(point).Any() || !Map.WalkabilityView[point])
-                point = Map.WalkabilityView.RandomPosition();
-            
-            return point;
-        }
-
         private static RogueLikeMap GenerateMap()
         {
+            //use GoRogue generator to combine the steps in Places/Generation and get the resulting three maps
             var generator = new Generator(MapWidth, MapHeight)
                 .ConfigAndGenerateSafe(gen =>
                 {
@@ -117,9 +70,9 @@ namespace HomicideDetective
             var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
             var streetMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("street");
             var houseMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("house");
-
+            
+            //combine the three smaller maps into one real map
             RogueLikeMap map = new RogueLikeMap(MapWidth, MapHeight, 4, Distance.Euclidean, viewSize: (Width * 2 / 3 + 1, Height));
-
             foreach(var location in map.Positions())
             {
                 if(houseMap[location] != null)
@@ -132,69 +85,96 @@ namespace HomicideDetective
                     map.SetTerrain(grassMap[location]);
             }
 
+            //add additional components
             Weather = new Weather(map);
+            
             return map;
         }
 
         private static RogueLikeEntity GeneratePlayerCharacter()
         {
+            //creation
             var position = Map.WalkabilityView.RandomPosition();
-            var player = new RogueLikeEntity(position, 1, false);
+            var player = new RogueLikeEntity(position, 1, false)
+            {
+                IsFocused = true,
+            };
+            
+            //general personhood
             player.AllComponents.Add(new Thoughts());
             player.AllComponents.Add(new Speech());
+            
+            //player controls
             var motionControl = new PlayerControlsComponent();
-            motionControl.AddKeyCommand(Keys.T, Talk);
-            motionControl.AddKeyCommand(Keys.L, Look);
+            motionControl.AddKeyCommand(Keys.T, KeyCommands.Talk);
+            motionControl.AddKeyCommand(Keys.L, KeyCommands.Look);
             player.AllComponents.Add(motionControl);
-            player.IsFocused = true;
+            
+            //add to map and make view center on player
+            Map.AddEntity(player);
+            Map.AllComponents.Add(new SurfaceComponentFollowTarget { Target = player });
+            
             return player;
         }
 
-        private static void Talk()
+        private static PageComponent<Thoughts> GenerateMessageWindow()
         {
+            //create the component and feed it the player's current thoughts
             var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
-            for (int i = PlayerCharacter.Position.X - 1; i < PlayerCharacter.Position.X + 2; i++)
-            {
-                for (int j = PlayerCharacter.Position.Y - 1; j < PlayerCharacter.Position.Y + 2; j++)
-                {
-                    if (Map.Contains((i, j)) && (i,j) != PlayerCharacter.Position)
-                    {
-                        foreach (var entity in Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
-                        {
-                            var speech = entity.AllComponents.GetFirstOrDefault<Speech>();
-                            if (speech is not null)
-                            {
-                                thoughts.Think(speech.Details.ToArray());
-                                Page.Print();
-                            }
-                        }
-                    }
-                }
-            }
+            var page = new PageComponent<Thoughts>(thoughts);
+            
+            //size the background surface to perfection
+            page.BackgroundSurface.Position = (Width - page.TextSurface.Surface.Width - 1, 0);
+            page.BackgroundSurface.IsVisible = true;
 
-            Page.Print();
+            //add it to the map
+            Map.Children.Add(page.BackgroundSurface);
+            
+            return page;
         }
 
-        private static void Look()
+        private static Mystery GenerateMystery()
         {
-            var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
-            for (int i = PlayerCharacter.Position.X - 1; i < PlayerCharacter.Position.X + 2; i++)
-            {
-                for (int j = PlayerCharacter.Position.Y - 1; j < PlayerCharacter.Position.Y + 2; j++)
-                {
-                    if (Map.Contains((i, j)) && PlayerCharacter.Position != (i,j))
-                    {
-                        foreach (var entity in Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
-                        {
-                            var substantive = entity.AllComponents.GetFirstOrDefault<Substantive>();
-                            if(substantive is not null)
-                                thoughts.Think(substantive.Details);
-                        }
-                    }
-                }
-            }
+            //create the mystery
+            Mystery mystery = new Mystery(1,1);
+            mystery.Generate();
 
+            //put the murder weapon on the map
+            var murderWeapon = mystery.MurderWeapon;
+            murderWeapon.Position = RandomFreeSpace();
+            Map.AddEntity(murderWeapon);
+
+            //put the murderer on the map
+            var murderer = mystery.Murderer;
+            murderer.Position = RandomFreeSpace();
+            Map.AddEntity(murderer);
+
+            //add victim's corpse to the map
+            var victim = mystery.Victim;
+            victim.Position = RandomFreeSpace();
+            Map.AddEntity(victim);
+
+            //populate the map with witnesses
+            foreach (var witness in mystery.Witnesses)
+            {
+                witness.Position = RandomFreeSpace();
+                Map.AddEntity(witness);
+            }
+            
+            //think thoughts about the crime scene
+            var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
+            thoughts.Think(mystery.SceneOfCrime.Details);
             Page.Print();
+            return mystery;
+        }
+
+        private static Point RandomFreeSpace()
+        {
+            var point = Map.WalkabilityView.RandomPosition();
+            while(Map.GetEntitiesAt<RogueLikeEntity>(point).Any() || !Map.WalkabilityView[point])
+                point = Map.WalkabilityView.RandomPosition();
+            
+            return point;
         }
     }
 }

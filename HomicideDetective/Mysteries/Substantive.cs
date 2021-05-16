@@ -1,14 +1,16 @@
-using System;
 using System.Collections.Generic;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 
 namespace HomicideDetective.Mysteries
 {
+    /// <summary>
+    /// A substantive is a person, place, or thing.
+    /// </summary>
     public class Substantive : IGameObjectComponent
     {
-        public int Mass { get; set; } = 0;//in grams
-        public int Volume { get; set; } = 0;//in ml
+        public int Mass { get; set; } //in grams
+        public int Volume { get; set; } //in ml
         public enum Types {Person, Place, Thing}
         public Types? Type { get; set; } 
         public IGameObject? Parent { get; set; }
@@ -20,23 +22,10 @@ namespace HomicideDetective.Mysteries
         public string? Description { get; set; }
         public string? SizeDescription { get; set; }
         public string? WeightDescription { get; set; }
-        public Random? Random { get; set; }
 
-        private List<string> _details => new List<string>()
-        {
-            Name,
-            $"Mass: {Mass}g",
-            $"Volume: {Volume}ml",
-            Description!,
-            GenerateDetailedDescription()
-        };
+        private List<string> _details;
 
         public string[] Details => _details.ToArray();
-
-        public Substantive(Types type)
-        {
-            Type = type;
-        }
 
         public Substantive(Types type, string name, string? gender = null, string? article = null, string? pronoun = null, 
             string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0,
@@ -53,6 +42,14 @@ namespace HomicideDetective.Mysteries
             Description = description;
             SizeDescription = sizeDescription;
             WeightDescription = weightDescription;
+            _details = new List<string>()
+            {
+                Name,
+                $"Mass: {Mass}g",
+                $"Volume: {Volume}ml",
+                Description!,
+                GenerateDetailedDescription()
+            };
         }
         
         public void AddDetail(string detail) => _details.Add(detail);

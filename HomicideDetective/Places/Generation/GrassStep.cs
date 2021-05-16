@@ -11,6 +11,7 @@ namespace HomicideDetective.Places.Generation
 {
     public class GrassStep : GenerationStep
     {
+        //different patterns that grass can blow in
         public static List<Func<int, int, double>> TerrainGenerationFormulae = new List<Func<int, int, double>>()
         {
             (x,y) => 59.00 * (Math.Sin(x + x * 2.25) + Math.Cos(y + y/7)), //fast, personal fave
@@ -28,16 +29,21 @@ namespace HomicideDetective.Places.Generation
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
                 (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "grass");
 
+            //iterate the whole map
             for (int i = 0; i < map.Width; i++)
             {
                 for (int j = 0; j < map.Height; j++)
                 {
+                    //figure out grass color
                     int green = (int) (Math.Abs(f(i, j)));
                     Color color = new Color(0, green, 0);
 
+                    //create grass
                     var cell =  new RogueLikeCell((i, j), color, Color.Black, '"', 0);
-                    cell.GoRogueComponents.Add(new AnimatingGlyph('"', new int[]{ '\\', '|', '/'}));
                     map[i, j] = cell;
+                    
+                    //set up weather
+                    cell.GoRogueComponents.Add(new AnimatingGlyph('"', new int[]{ '\\', '|', '/'}));
                 }
             }
 

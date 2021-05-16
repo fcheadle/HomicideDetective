@@ -9,19 +9,24 @@ using SadRogue.Primitives.GridViews;
 
 namespace HomicideDetective.Things
 {
+    /// <summary>
+    /// A fingerprint, the unlimited marking which leaves partial prints
+    /// </summary>
+    /// <remarks>
+    /// The pattern is represented in a 64x64 ArrayView of bool for easy memory/rending.
+    /// </remarks>
     public class Fingerprint : Marking, IGameObjectComponent, IDetailed
     {
         public IGameObject? Parent { get; set; }
+        
         private int _seed;
+        
         public ArrayView<bool> Pattern { get; }
 
         public Fingerprint(int seed)
         {
             _seed = seed;
             Name = "fingerprint";
-            Adjective = ""; //for now
-            Color = ""; //for now
-            Description = "";//for now
             Pattern = new ArrayView<bool>(64, 64);
         }
 
@@ -47,8 +52,11 @@ namespace HomicideDetective.Things
             {
                 Pattern[point] = true;
             }
+            
+            //todo - use a CA / pathfinder to finish from starting points
         }
 
+        //returns the pattern as a list of strings
         public List<string> Details
         {
             get

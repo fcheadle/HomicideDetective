@@ -4,7 +4,9 @@ using SadRogue.Integration;
 
 namespace HomicideDetective.UserInterface
 {
-    //Refactor this into a "blowing grass" entity that disposes of itself when finished
+    /// <summary>
+    /// The blowing grass animation
+    /// </summary>
     public class AnimatingGlyph : IGameObjectComponent
     {
         //AnimatedConsole animation;

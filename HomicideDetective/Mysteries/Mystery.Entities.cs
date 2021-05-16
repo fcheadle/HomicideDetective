@@ -7,11 +7,15 @@ namespace HomicideDetective.Mysteries
 {
     public partial class Mystery
     {
+        /// <summary>
+        /// Generates a RogueLikeEntity that is the victim in a murder investigation.
+        /// </summary>
+        /// <returns></returns>
         public RogueLikeEntity GenerateVictim()
         {
             var victimInfo = GeneratePersonalInfo(_surnames.RandomItem());
             string descr = $"This is the body of {victimInfo.Name}. {victimInfo.Pronoun} was a";
-            victimInfo.Description = victimInfo.Description.Replace($"{victimInfo.Pronoun} is a", descr);
+            victimInfo.Description = victimInfo.Description!.Replace($"{victimInfo.Pronoun} is a", descr);
             victimInfo.SizeDescription = "is bloated from gases building up it's interior";
             victimInfo.WeightDescription = "is discolored from decay";
             
@@ -23,6 +27,10 @@ namespace HomicideDetective.Mysteries
             return victim;
         }
         
+        /// <summary>
+        /// Generates a RogueLikeEntity who is the murderer in a murder investigation.
+        /// </summary>
+        /// <returns></returns>
         public RogueLikeEntity GenerateMurderer()
         {
             var murdererInfo = GeneratePersonalInfo(_surnames.RandomItem());
@@ -36,6 +44,10 @@ namespace HomicideDetective.Mysteries
             return murderer;
         }
         
+        /// <summary>
+        /// Generates the item which was used to kill someone
+        /// </summary>
+        /// <returns></returns>
         public RogueLikeEntity GenerateMurderWeapon()
         {
             var itemInfo = GenerateMurderWeaponInfo();
@@ -47,6 +59,10 @@ namespace HomicideDetective.Mysteries
             return murderWeapon;
         }
         
+        /// <summary>
+        /// Generates everyone related to the case: family members, friends, coworkers, etc.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<RogueLikeEntity> GenerateWitnesses()
         {
             for(int i = 0; i < 10; i++)

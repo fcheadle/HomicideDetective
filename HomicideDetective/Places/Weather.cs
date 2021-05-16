@@ -6,15 +6,21 @@ using HomicideDetective.UserInterface;
 using SadRogue.Integration;
 using SadRogue.Integration.Components;
 using SadRogue.Integration.Maps;
+// ReSharper disable PossibleLossOfFraction
 
 namespace HomicideDetective.Places
 {
+    /// <summary>
+    /// The weather component added to
+    /// </summary>
     public class Weather : RogueLikeComponentBase, IDetailed
     {
         private RogueLikeMap _map;
         public string Name { get; }
         public string Description { get; }
         public TimeSpan Elapsed { get; private set; } = TimeSpan.Zero;
+        
+        //the possible ways for wind to blow
         public static List<Func<int, int, TimeSpan, double>> WindPatterns = new List<Func<int, int, TimeSpan, double>>()
         {
             (x,y,t) => 2 * Math.Cos(-t.TotalMilliseconds / 1111 + Math.Sqrt((x-70)*(x-70) / 111 + (y-90)*(y-90) / 111)), //concentric waves from (90,90)
@@ -50,22 +56,21 @@ namespace HomicideDetective.Places
         {
             Elapsed += TimeSpan.FromMilliseconds(100);
             BlowWind();
-            if (Elapsed.Milliseconds % 10000 > 9000)
-            {
-                Fxyt = WindPatterns.RandomItem();
-            }
         }
 
         private void BlowWind()
         {
+            //iterate over the whole map
             for (int x = 0; x < _map.Width; x++)
             {
                 for (int y = 0; y < _map.Height; y++)
                 {
+                    //if the cell has an AnimatingGlyph component...
                     RogueLikeCell? terrain = _map.GetTerrainAt<RogueLikeCell>((x, y));
                     var component = terrain?.GoRogueComponents.GetFirstOrDefault<AnimatingGlyph>();
                     if (component != null)
                     {
+                        //perform the function and blow wind on a subset of tiles
                         double z = Fxyt(x, y, Elapsed);
                         if (z > 1.75 || z < -1.75)
                             component.Start();

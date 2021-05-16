@@ -1,23 +1,11 @@
 using HomicideDetective.Mysteries;
+using HomicideDetective.People;
 using Xunit;
 
 namespace HomicideDetective.Tests.Mysteries
 {
     public class MysteryTests
     {
-        [Fact]
-        public void NewMysteryTest()
-        {
-            var mystery = new Mystery(0, 1);
-            //Assert.Equal(1, mystery.Seed);
-            Assert.Equal(1, mystery.CaseNumber);
-            Assert.Null(mystery.Victim);
-            Assert.Null(mystery.Witnesses);
-            //Assert.Null(mystery.CurrentScene);
-            Assert.Null(mystery.SceneOfCrime);
-            Assert.Null(mystery.Murderer);
-        }
-
         [Theory]
         [InlineData(79)]
         [InlineData(144)]
@@ -26,15 +14,20 @@ namespace HomicideDetective.Tests.Mysteries
         [InlineData(10050)]
         [InlineData(69696)]
         [InlineData(999999)]
-        public void CommitMurderTest(int seed)
+        public void GenerateMysteryTest(int seed)
         {
             var mystery = new Mystery(seed, 0);
             mystery.Generate();
             Assert.NotNull(mystery.Victim);
-            Assert.NotNull(mystery.Witnesses);
+            Assert.NotNull(mystery.Victim.AllComponents.GetFirstOrDefault<Substantive>());
             Assert.NotNull(mystery.SceneOfCrime);
             Assert.NotNull(mystery.Murderer);
+            Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Speech>());
+            Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Thoughts>());
+            Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Substantive>());
+            
             Assert.NotNull(mystery.MurderWeapon);
+            Assert.NotNull(mystery.MurderWeapon.AllComponents.GetFirst<Substantive>());
         }
 
         [Theory]
@@ -45,7 +38,7 @@ namespace HomicideDetective.Tests.Mysteries
         [InlineData(10050)]
         [InlineData(69696)]
         [InlineData(999999)]
-        public void GeneratePersonTest(int seed)
+        public void GeneratePersonalInfoTest(int seed)
         {
             var firstMystery = new Mystery(seed, 0);
             var secondMystery = new Mystery(seed, 0);
@@ -54,12 +47,143 @@ namespace HomicideDetective.Tests.Mysteries
             var secondAnswer = secondMystery.GeneratePersonalInfo("test");
             
             Assert.Equal(firstAnswer.Details, secondAnswer.Details);
-            // Assert.NotNull(firstAnswer.SizeDescription);
-            // Assert.NotEmpty(firstAnswer.SizeDescription);
-            // Assert.NotNull(firstAnswer.WeightDescription);
-            // Assert.NotEmpty(firstAnswer.WeightDescription);
+            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
+            Assert.NotNull(firstAnswer.Name);
+            Assert.NotEmpty(firstAnswer.Name);
+            Assert.NotNull(secondAnswer.Name);
+            Assert.NotEmpty(secondAnswer.Name);
         }
         
+        [Theory]
+        [InlineData(79)]
+        [InlineData(144)]
+        [InlineData(169)]
+        [InlineData(4026)]
+        [InlineData(10050)]
+        [InlineData(69696)]
+        [InlineData(999999)]
+        public void GenerateMurderWeaponInfoTest(int seed)
+        {
+            var firstMystery = new Mystery(seed, 0);
+            var secondMystery = new Mystery(seed, 0);
+            
+            var firstAnswer = firstMystery.GenerateMurderWeaponInfo();
+            var secondAnswer = secondMystery.GenerateMurderWeaponInfo();
+            
+            Assert.Equal(firstAnswer.Details, secondAnswer.Details);
+            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
+            Assert.NotNull(firstAnswer.Name);
+            Assert.NotEmpty(firstAnswer.Name);
+            Assert.NotNull(secondAnswer.Name);
+            Assert.NotEmpty(secondAnswer.Name);
+            Assert.NotNull(firstAnswer.SizeDescription);
+            Assert.NotEmpty(firstAnswer.SizeDescription);
+            Assert.NotNull(firstAnswer.WeightDescription);
+            Assert.NotEmpty(firstAnswer.WeightDescription);
+        }
+        
+        [Theory]
+        [InlineData(79)]
+        [InlineData(144)]
+        [InlineData(169)]
+        [InlineData(4026)]
+        [InlineData(10050)]
+        [InlineData(69696)]
+        [InlineData(999999)]
+        public void GenerateSceneOfMurderInfoTest(int seed)
+        {
+            var firstMystery = new Mystery(seed, 0);
+            var secondMystery = new Mystery(seed, 0);
+            
+            var firstAnswer = firstMystery.GenerateSceneOfMurderInfo();
+            var secondAnswer = secondMystery.GenerateSceneOfMurderInfo();
+            
+            Assert.Equal(firstAnswer.Details, secondAnswer.Details);
+            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
+            Assert.NotNull(firstAnswer.Name);
+            Assert.NotEmpty(firstAnswer.Name);
+            Assert.NotNull(secondAnswer.Name);
+            Assert.NotEmpty(secondAnswer.Name);
+            Assert.NotNull(firstAnswer.SizeDescription);
+            Assert.NotEmpty(firstAnswer.SizeDescription);
+            Assert.NotNull(firstAnswer.WeightDescription);
+            Assert.NotEmpty(firstAnswer.WeightDescription);
+        }
+        
+        [Theory]
+        [InlineData(79)]
+        [InlineData(144)]
+        [InlineData(169)]
+        [InlineData(4026)]
+        [InlineData(10050)]
+        [InlineData(69696)]
+        [InlineData(999999)]
+        public void GenerateVictimTest(int seed)
+        {
+            var firstMystery = new Mystery(seed, 0);
+            var secondMystery = new Mystery(seed, 0);
+            firstMystery.Generate();
+            secondMystery.Generate();
+            var firstAnswer = firstMystery.Victim;
+            var secondAnswer = secondMystery.Victim;
+            var firstSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
+            var secondSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
+            
+            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
+            Assert.NotNull(firstSubstantive.Name);
+            Assert.NotEmpty(firstSubstantive.Name);
+            Assert.NotNull(secondSubstantive.Name);
+            Assert.NotEmpty(secondSubstantive.Name);
+            Assert.Equal(firstSubstantive.Details, secondSubstantive.Details);
+            Assert.Equal(firstSubstantive.Description, secondSubstantive.Description);
+            Assert.NotNull(firstSubstantive.Description);
+            Assert.NotEmpty(firstSubstantive.Description);
+            Assert.NotNull(secondSubstantive.Description);
+            Assert.NotEmpty(secondSubstantive.Description);
+        }
+        
+        [Theory]
+        [InlineData(79)]
+        [InlineData(144)]
+        [InlineData(169)]
+        [InlineData(4026)]
+        [InlineData(10050)]
+        [InlineData(69696)]
+        [InlineData(999999)]
+        public void GenerateMurdererTest(int seed)
+        {
+            var firstMystery = new Mystery(seed, 0);
+            var secondMystery = new Mystery(seed, 0);
+            firstMystery.Generate();
+            secondMystery.Generate();
+            var firstAnswer = firstMystery.Murderer;
+            var firstSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
+            var firstSpeech = firstAnswer.AllComponents.GetFirst<Substantive>();
+            var firstThoughts = firstAnswer.AllComponents.GetFirst<Substantive>();
+            
+            var secondAnswer = secondMystery.Victim;
+            var secondSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
+            var secondSpeech = firstAnswer.AllComponents.GetFirst<Substantive>();
+            var secondThoughts = firstAnswer.AllComponents.GetFirst<Substantive>();
+            
+            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
+            Assert.NotNull(firstSubstantive.Name);
+            Assert.NotEmpty(firstSubstantive.Name);
+            Assert.NotNull(secondSubstantive.Name);
+            Assert.NotEmpty(secondSubstantive.Name);
+            Assert.Equal(firstSubstantive.Details, secondSubstantive.Details);
+            Assert.Equal(firstSubstantive.Description, secondSubstantive.Description);
+            Assert.NotNull(firstSubstantive.Description);
+            Assert.NotEmpty(firstSubstantive.Description);
+            Assert.NotNull(secondSubstantive.Description);
+            Assert.NotEmpty(secondSubstantive.Description);
+
+            Assert.NotNull(firstSpeech);
+            Assert.NotNull(firstThoughts);
+            Assert.NotNull(secondSpeech);
+            Assert.NotNull(secondThoughts);
+        }
+
         [Theory]
         [InlineData(79)]
         [InlineData(144)]
@@ -72,15 +196,56 @@ namespace HomicideDetective.Tests.Mysteries
         {
             var firstMystery = new Mystery(seed, 0);
             var secondMystery = new Mystery(seed, 0);
+            firstMystery.Generate();
+            secondMystery.Generate();
+            var firstAnswer = firstMystery.MurderWeapon;
+            var firstSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
             
-            var firstAnswer = firstMystery.GenerateMurderWeaponInfo();
-            var secondAnswer = secondMystery.GenerateMurderWeaponInfo();
+            var secondAnswer = secondMystery.Victim;
+            var secondSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
             
-            Assert.Equal(firstAnswer.Details, secondAnswer.Details);
-            Assert.NotNull(firstAnswer.SizeDescription);
-            Assert.NotEmpty(firstAnswer.SizeDescription);
-            Assert.NotNull(firstAnswer.WeightDescription);
-            Assert.NotEmpty(firstAnswer.WeightDescription);
+            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
+            Assert.NotNull(firstSubstantive.Name);
+            Assert.NotEmpty(firstSubstantive.Name);
+            Assert.NotNull(secondSubstantive.Name);
+            Assert.NotEmpty(secondSubstantive.Name);
+            Assert.Equal(firstSubstantive.Details, secondSubstantive.Details);
+            Assert.Equal(firstSubstantive.Description, secondSubstantive.Description);
+            Assert.NotNull(firstSubstantive.Description);
+            Assert.NotEmpty(firstSubstantive.Description);
+            Assert.NotNull(secondSubstantive.Description);
+            Assert.NotEmpty(secondSubstantive.Description);
+        }
+
+        [Theory]
+        [InlineData(79)]
+        [InlineData(144)]
+        [InlineData(169)]
+        [InlineData(4026)]
+        [InlineData(10050)]
+        [InlineData(69696)]
+        [InlineData(999999)]
+        public void GenerateWitnessesTest(int seed)
+        {
+            var mystery = new Mystery(seed, 0);
+            mystery.Generate();
+
+            foreach (var witness in mystery.GenerateWitnesses())
+            {
+                var substantive = witness.AllComponents.GetFirst<Substantive>();
+                var speech = witness.AllComponents.GetFirst<Speech>();
+                var thoughts = witness.AllComponents.GetFirst<Thoughts>();
+
+                Assert.NotNull(substantive.Name);
+                Assert.NotEmpty(substantive.Name);
+                Assert.NotNull(substantive.Name);
+                Assert.NotEmpty(substantive.Name);
+                Assert.NotNull(substantive.Description);
+                Assert.NotEmpty(substantive.Description);
+                
+                Assert.NotNull(speech);
+                Assert.NotNull(thoughts);
+            }
         }
     }
 }

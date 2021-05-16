@@ -5,7 +5,10 @@ using HomicideDetective.Mysteries;
 
 namespace HomicideDetective.People
 {
-    //currently how speech and senses communicate with the player.
+    /// <summary>
+    /// Currently a collection of strings used for printing to the message window.
+    /// </summary>
+    //todo - refactor significantly
     public class Thoughts : IGameObjectComponent, IDetailed
     {
         public IGameObject? Parent { get; set; }

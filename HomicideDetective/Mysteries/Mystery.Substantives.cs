@@ -5,9 +5,13 @@ namespace HomicideDetective.Mysteries
 {
     public partial class Mystery
     {
+        /// <summary>
+        /// Generates the descriptive information about the scene of the crime.
+        /// </summary>
+        /// <returns></returns>
         public Substantive GenerateSceneOfMurderInfo()
         {
-            var name = $"{Victim.Name}'s home";
+            var name = $"Brick Home";
             string noun = "location";
             string pronoun = "it";
             string pronounPossessive = "its";
@@ -21,10 +25,15 @@ namespace HomicideDetective.Mysteries
 
             var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: "It", pronoun: pronoun,
                 pronounPossessive: pronounPossessive, description: description, mass: 0, volume: 0, sizeDescription: height, weightDescription: width);
-            substantive.AddDetail($"Location of interest in the Murder of {Victim.Name}");
+
             return substantive;
         }
 
+        /// <summary>
+        /// Generate the descriptive info for any random person.
+        /// </summary>
+        /// <param name="surname">The Surname of the individual to generate.</param>
+        /// <returns></returns>
         public Substantive GeneratePersonalInfo(string surname)
         {
             bool isMale = Random.Next(0, 2) == 0;
@@ -50,6 +59,10 @@ namespace HomicideDetective.Mysteries
             return substantive;
         }
 
+        /// <summary>
+        /// Generate the descriptive info for the murder weapon.
+        /// </summary>
+        /// <returns></returns>
         public Substantive GenerateMurderWeaponInfo()
         {
             string name;
