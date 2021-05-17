@@ -6,25 +6,15 @@ namespace HomicideDetective.Mysteries
     /// <summary>
     /// The Timeline of events over the course of a single day.
     /// </summary>
-    public class Timeline : Dictionary<Time, string>
+    public class Timeline : List<Happening>
     {
         public string DoingAtTime(Time time)
         {
-            if (ContainsKey(time))
-                return base[time];
-
+            if (this.Any(h => h.OccurredAt.ToInt() == time.ToInt()))
+                return this.First(h => h.OccurredAt.ToInt() == time.ToInt()).Occurrence;
             
-            var temp = this.OrderBy(x => x.Key.ToInt()).ToList();
-            string answer = "";
-            foreach (var activityAtTime in temp)
-            {
-                if (activityAtTime.Key.LessThan(time))
-                {
-                    answer = activityAtTime.Value;
-                }
-            }
+            return this.Where(x => x.OccurredAt.LessThan(time)).OrderBy(x => -x.OccurredAt.ToInt()).First().Occurrence;
 
-            return answer;
         }
     }
 }

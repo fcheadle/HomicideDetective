@@ -1,49 +1,63 @@
-// using System;
-// using System.Linq;
-//
-// namespace HomicideDetective.Mysteries
-// {
-//     public partial class Mystery
-//     {
-//         private void GenerateTimeline()
-//         {
-//             if (Victim == null || Murderer == null || !Witnesses.Any())
-//                 throw new Exception("Attempted to generate a timeline before we have a murderer, victim, or witnesses.");
-//             
-//             Time timeOfDeath = new Time(Random.Next(0, 23), Random.Next(0, 59));
-//             Time startOfTimeLine = new Time(0, 0);
-//             AddSleepSpeech(timeOfDeath);
-//             
-//             Time startOfDay = new Time(6, 30);
-//             AddWakeUpSpeech(timeOfDeath);
-//
-//             Time schoolWork = new Time(8, 15);
-//             AddSchoolWorkSpeech(timeOfDeath);
-//
-//             Time afterSchoolWork = new Time(15, 55);
-//             AddAfterSchoolWorkSpeech(timeOfDeath);
-//
-//             Time evening = new Time(19, 00);
-//         }
-//
-//         private void AddAfterSchoolWorkSpeech(Time afterSchoolWork)
-//         {
-//             throw new System.NotImplementedException();
-//         }
-//
-//         private void AddSchoolWorkSpeech(Time startOfDay)
-//         {
-//             throw new System.NotImplementedException();
-//         }
-//
-//         private void AddWakeUpSpeech(Time startOfDay)
-//         {
-//             throw new System.NotImplementedException();
-//         }
-//
-//         private void AddSleepSpeech(Time at)
-//         {
-//             throw new System.NotImplementedException();
-//         }
-//     }
-// }
+using System;
+using System.Linq;
+using HomicideDetective.People;
+using SadRogue.Integration;
+
+namespace HomicideDetective.Mysteries
+{
+    public partial class Mystery
+    {
+        private void GenerateTimeline()
+        {
+            if (Victim == null || Murderer == null || !Witnesses.Any())
+                throw new Exception("Attempted to generate a timeline before we have a murderer, victim, or witnesses.");
+
+            foreach (var witness in Witnesses)
+            {
+                switch (Random.Next(1, 6))
+                {
+                    case 1: GenerateSchoolDay(witness); break;
+                    case 2: GenerateOfficeWorkDay(witness); break;
+                    case 3: GenerateRetailWorkDay(witness); break;
+                    case 4: GenerateActiveDayOff(witness); break;
+                    case 5: GenerateLazyDayOff(witness); break;
+                }
+            }
+        }
+
+        private void GenerateSchoolDay(RogueLikeEntity rogueLikeEntity)
+        {
+            var memories = rogueLikeEntity.AllComponents.GetFirst<Thoughts>();
+            var speech = rogueLikeEntity.AllComponents.GetFirst<Speech>();
+            throw new System.NotImplementedException();
+        }
+
+        private void GenerateOfficeWorkDay(RogueLikeEntity rogueLikeEntity)
+        {
+            var memories = rogueLikeEntity.AllComponents.GetFirst<Thoughts>();
+            var speech = rogueLikeEntity.AllComponents.GetFirst<Speech>();
+            throw new System.NotImplementedException();
+        }
+
+        private void GenerateRetailWorkDay(RogueLikeEntity rogueLikeEntity)
+        {
+            var memories = rogueLikeEntity.AllComponents.GetFirst<Thoughts>();
+            var speech = rogueLikeEntity.AllComponents.GetFirst<Speech>();
+            throw new System.NotImplementedException();
+        }
+
+        private void GenerateActiveDayOff(RogueLikeEntity rogueLikeEntity)
+        {
+            var memories = rogueLikeEntity.AllComponents.GetFirst<Thoughts>();
+            var speech = rogueLikeEntity.AllComponents.GetFirst<Speech>();
+            throw new System.NotImplementedException();
+        }
+        
+        private void GenerateLazyDayOff(RogueLikeEntity rogueLikeEntity)
+        {
+            var memories = rogueLikeEntity.AllComponents.GetFirst<Thoughts>();
+            var speech = rogueLikeEntity.AllComponents.GetFirst<Speech>();
+            throw new System.NotImplementedException();
+        }
+    }
+}

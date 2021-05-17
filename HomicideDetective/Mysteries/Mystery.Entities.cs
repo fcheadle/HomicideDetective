@@ -23,7 +23,7 @@ namespace HomicideDetective.Mysteries
             victim.AllComponents.Add(victimInfo);
             
             //todo - decompose
-            
+            TimeOfDeath = new Time(Random.Next(0, 23), Random.Next(0, 59));
             return victim;
         }
         

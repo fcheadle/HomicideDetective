@@ -16,9 +16,9 @@ namespace HomicideDetective.Tests.Mysteries
             Time endTime = new Time(16, 45);
             
             var timeline = new Timeline();
-            timeline.Add(startTime, startString);
-            timeline.Add(middleTime, middleString);
-            timeline.Add(endTime, endString);
+            timeline.Add(new Happening(startTime, startString));
+            timeline.Add(new Happening(middleTime, middleString));
+            timeline.Add(new Happening(endTime, endString));
             
             Assert.Equal(timeline.DoingAtTime(startTime), startString);
             Assert.Equal(timeline.DoingAtTime(new Time(9,00)), startString);

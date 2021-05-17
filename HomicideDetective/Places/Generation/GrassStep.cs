@@ -43,7 +43,7 @@ namespace HomicideDetective.Places.Generation
                     map[i, j] = cell;
                     
                     //set up weather
-                    cell.GoRogueComponents.Add(new AnimatingGlyph('"', new int[]{ '\\', '|', '/'}));
+                    cell.GoRogueComponents.Add(new AnimatingGlyph('"', new int[]{ '\\', '|', '/', '-', '\\', '|', '/'}));
                 }
             }
 

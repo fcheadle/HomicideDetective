@@ -15,6 +15,7 @@ namespace HomicideDetective.UserInterface
         /// </summary>
         public static void Talk()
         {
+            Program.CurrentTime.Minutes++;
             var thoughts = Program.PlayerCharacter.AllComponents.GetFirst<Thoughts>();
             for (int i = Program.PlayerCharacter.Position.X - 1; i < Program.PlayerCharacter.Position.X + 2; i++)
             {
@@ -42,6 +43,7 @@ namespace HomicideDetective.UserInterface
         /// </summary>
         public static void Look()
         {
+            Program.CurrentTime.Minutes++;
             var thoughts = Program.PlayerCharacter.AllComponents.GetFirst<Thoughts>();
             for (int i = Program.PlayerCharacter.Position.X - 1; i < Program.PlayerCharacter.Position.X + 2; i++)
             {

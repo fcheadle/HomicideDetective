@@ -29,8 +29,9 @@ namespace HomicideDetective
 
         //ui and game properties
         public static RogueLikeEntity PlayerCharacter = null!;
-        public static PageComponent<Thoughts> Page = null!;
+        public static Page<Thoughts> Page = null!;
         public static Mystery Mystery = null!;
+        public static Time CurrentTime = null!;
         
         static void Main()
         {
@@ -48,6 +49,7 @@ namespace HomicideDetective
 
         private static void Init()
         {
+            CurrentTime = new Time(18, 00);
             Map = GenerateMap();
             PlayerCharacter = GeneratePlayerCharacter();
             Page = GenerateMessageWindow();
@@ -117,11 +119,11 @@ namespace HomicideDetective
             return player;
         }
 
-        private static PageComponent<Thoughts> GenerateMessageWindow()
+        private static Page<Thoughts> GenerateMessageWindow()
         {
             //create the component and feed it the player's current thoughts
             var thoughts = PlayerCharacter.AllComponents.GetFirst<Thoughts>();
-            var page = new PageComponent<Thoughts>(thoughts);
+            var page = new Page<Thoughts>(thoughts);
             
             //size the background surface to perfection
             page.BackgroundSurface.Position = (Width - page.TextSurface.Surface.Width - 1, 0);

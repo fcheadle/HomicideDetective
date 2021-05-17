@@ -1,6 +1,9 @@
-﻿using HomicideDetective.Mysteries;
+﻿using System.Collections.Generic;
+using HomicideDetective.Mysteries;
 using SadConsole;
 using SadConsole.Components;
+using SadConsole.UI;
+using SadConsole.UI.Controls;
 using SadRogue.Integration.Components;
 using SadRogue.Primitives;
 
@@ -10,17 +13,62 @@ namespace HomicideDetective.UserInterface
     /// The Message Window and it's background that looks like notepad paper
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class PageComponent<T> : RogueLikeComponentBase where T : IDetailed
+    public class Page<T> : RogueLikeComponentBase where T : IDetailed
     {
+        //SadConsole Controls
         public ScreenSurface TextSurface { get; private set; }
         public ScreenSurface BackgroundSurface { get; private set; }
+        public Button PreviousButton { get; private set; }
+        public Button NextButton { get; private set; }
+        public ControlHost ButtonBar { get; private set; }
         
+        //the contents printed by the cursor
         public T Component { get; }
+        public List<string> Contents { get; private set; }
+        public List<List<string>> PastContents { get; private set; }
         
-        public PageComponent(T component) : base(true, false, true, true)
+        public Page(T component) : base(true, false, true, true)
         {
             Component = component;
+            InitContents();
             InitWindow();
+            //InitButtons();//todo
+        }
+
+        private void InitButtons()
+        {
+            ButtonBar = new ControlHost();
+            
+            PreviousButton = new Button(4,3)
+            {
+                MouseArea = new Rectangle((0, 0), (4, 3)),
+                CanFocus = false,
+            };
+            PreviousButton.Surface.DefaultBackground = Color.Tan;
+            PreviousButton.Surface.DefaultForeground = Color.Blue;
+            PreviousButton.Text = "<-";
+            ButtonBar.Add(PreviousButton);
+
+            NextButton = new Button(4,3)
+            {
+                MouseArea = new Rectangle((BackgroundSurface.Surface.Width - 4, 0), (BackgroundSurface.Surface.Width, 3)),
+                CanFocus = false,
+            };
+            PreviousButton.Surface.DefaultBackground = Color.Tan;
+            PreviousButton.Surface.DefaultForeground = Color.Blue;
+            PreviousButton.Text = "->";
+            
+            ButtonBar.Add(PreviousButton);
+            
+            ButtonBar.Add(NextButton);
+            
+            BackgroundSurface.SadComponents.Add(ButtonBar);
+        }
+
+        private void InitContents()
+        {
+            PastContents = new List<List<string>>();
+            Contents = Component.Details;
         }
 
         private void InitWindow()
@@ -53,10 +101,14 @@ namespace HomicideDetective.UserInterface
         public void Print()
         {
             TextSurface.Surface.Clear();
-
+            if(!PastContents.Contains(Contents))
+                PastContents.Add(Contents);
+            
             var cursor = TextSurface.GetSadComponent<Cursor>();
             cursor.Position = (0, 0);
-            foreach (string detail in Component.Details)
+
+            Contents = Component.Details;
+            foreach (string detail in Contents)
             {
                 var answer = new ColoredString($"\r\n{detail}", Color.Blue, Color.Transparent);
                 cursor.Print(answer);

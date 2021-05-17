@@ -16,10 +16,29 @@ namespace HomicideDetective.People
         public string Description { get; private set; }
         public List<string> Details => new () //todo - better method
         {
-            SpokenText(), 
-            ToneOfVoice(), 
-            FacialExpression(), 
-            BodyLanguage(),
+            GenerateSpokenWords(), 
+            GenerateToneOfVoice(), 
+            GenerateFacialExpression(), 
+            GenerateBodyLanguage(),
+            Description
+        };
+        
+        
+        public Speech()
+        {
+            // InitSayings();
+            // InitTones();
+            // InitFacialExpressions();
+            // InitBodyPostures();
+            Description = GenerateVoiceDescription();
+        }
+
+        public List<string> SpeakTo(bool lying = false) => new List<string>()
+        {
+            GenerateSpokenWords(lying),
+            GenerateToneOfVoice(lying),
+            GenerateFacialExpression(lying),
+            GenerateBodyLanguage(lying),
             Description
         };
         
@@ -28,93 +47,35 @@ namespace HomicideDetective.People
         public List<string> CommonTones { get; private set; } = new List<string>();
         public List<string> CommonFacialExpressions { get; private set; } = new List<string>();
         public List<string> CommonBodyPosture { get; private set; } = new List<string>();
+        public void AddCommonKnowledge(string knowledge) => CommonSayings.Add(knowledge);
+        public void AddCommonPosture(string posture) => CommonBodyPosture.Add(posture);
+        public void AddCommonFacialExpression(string expression) => CommonFacialExpressions.Add(expression);
+        public void AddCommonTone(string tone) => CommonTones.Add(tone);
         
-        //strings to pull details from when people are telling the truth
-        public List<string> TruthSayings { get; private set; } = new List<string>();
-        public List<string> TruthTones { get; private set; } = new List<string>();
-        public List<string> TruthFacialExpressions { get; private set; } = new List<string>();
-        public List<string> TruthBodyPosture { get; private set; } = new List<string>();
         
         //strings to pull details from when people are lying
         public List<string> LieSayings { get; private set; } = new List<string>();
         public List<string> LieTones { get; private set; } = new List<string>();
         public List<string> LieFacialExpressions { get; private set; } = new List<string>();
         public List<string> LieBodyPosture { get; private set; } = new List<string>();
+        public void AddLie(string lie) => LieSayings.Add(lie);
+        public void AddLiePosture(string lie) => LieBodyPosture.Add(lie);
+        public void AddLieFacialExpression(string lie) => LieFacialExpressions.Add(lie);
+        public void AddLieTone(string lie) => LieTones.Add(lie);
         
-        public Speech()
-        {
-            InitSayings();
-            InitTones();
-            InitFacialExpressions();
-            InitBodyPostures();
-            Description = GenerateVoiceDescription();
-        }
         
-        private void InitSayings() //todo - delete
-        {
-            CommonSayings.Add("Common: Good day, Detective.");
-            TruthSayings.Add("Truth: I saw the victim the night before she died.");
-            LieSayings.Add("Lie: I'm not sure I've ever met the victim.");
-        }
-
-        private void InitTones() //todo - delete
-        {
-            CommonTones.Add("Common: they say in a neutral tone");
-            TruthTones.Add("Truth: they say in a low-pitched tone");
-            LieTones.Add("Lie: they say in a high-pitched tone");
-        }
-
-        private void InitFacialExpressions() // todo - delete
-        {
-            CommonFacialExpressions.Add("Common: through a flat expression");
-            CommonFacialExpressions.Add("Common: with furrowed brow and narrowed eyes");
-            CommonFacialExpressions.Add("Common: with furrowed brow");
-            CommonFacialExpressions.Add("Common: with one eyebrow raised");
-            CommonFacialExpressions.Add("Common: looking down");
-            CommonFacialExpressions.Add("Common: with a smile");
-            CommonFacialExpressions.Add("Common: staring fiercely");
-            TruthFacialExpressions.Add("Truth: while frowning");
-            TruthFacialExpressions.Add("Truth: through a forced smile");
-            TruthFacialExpressions.Add("Truth: staring fiercely");
-            TruthFacialExpressions.Add("Truth: with their brows arched in anger");
-            TruthFacialExpressions.Add("Truth: beaming their teeth");
-            TruthFacialExpressions.Add("Truth: with intense eye contact");
-            LieFacialExpressions.Add("Lie: with their brows arched in anger");
-            LieFacialExpressions.Add("Lie: eyebrows conveying a look of concern");
-            LieFacialExpressions.Add("Lie: with narrowed eyes");
-            LieFacialExpressions.Add("Lie: shifting their eyes about");
-            LieFacialExpressions.Add("Lie: their eyes flicker up and to the left before answering");
-            LieFacialExpressions.Add("Lie: batting their lashes");
-            LieFacialExpressions.Add("Lie: through a non-smiling wink");
-            LieFacialExpressions.Add("Lie: with their brows arched in anger");
-            LieFacialExpressions.Add("Lie: beaming their teeth");
-            LieFacialExpressions.Add("Lie: as their pupils narrow");
-        }
-
-        private void InitBodyPostures() //todo - delete
-        {
-            CommonBodyPosture.Add("Common: their arms hang blankly to their sides");
-            CommonBodyPosture.Add("Common: they are breathing heavily, arms somewhat out to the sides");
-            CommonBodyPosture.Add("Common: they are very reserved, hands crossed in front of them");
-            CommonBodyPosture.Add("Common: their arms hang blankly to their sides");
-            CommonBodyPosture.Add("Common: they put their hands in their pockets");
-            CommonBodyPosture.Add("Common: they pick their ear");
-            CommonBodyPosture.Add("Common: they lean against a wall");
-            
-            TruthBodyPosture.Add("Truth: they cross their arms in front of their chest");
-            TruthBodyPosture.Add("Truth: they speak emphatically with their hands");
-            TruthBodyPosture.Add("Truth: they lean slightly back on one leg and cross their arms");
-            TruthBodyPosture.Add("Truth: they crack their neck in a subtle motion");
-            TruthBodyPosture.Add("Truth: they wipe something from their eye");
-            
-            LieBodyPosture.Add("Lie: they reach their hand in their pocket and fidget with something");
-            LieBodyPosture.Add("Lie: they scratch their neck, then put a hand in a pocket");
-            LieBodyPosture.Add("Lie: they hang their head ever so slightly lower");
-            LieBodyPosture.Add("Lie: scratch their neck feverishly");
-            LieBodyPosture.Add("Lie: they reach their hand in their pocket and fidget with something");
-        }
-
-        private string ToneOfVoice(bool lying = false)
+        //strings to pull details from when people are telling the truth
+        public List<string> TruthSayings { get; private set; } = new List<string>();
+        public List<string> TruthTones { get; private set; } = new List<string>();
+        public List<string> TruthFacialExpressions { get; private set; } = new List<string>();
+        public List<string> TruthBodyPosture { get; private set; } = new List<string>();
+        public void AddTruth(string truth) => TruthSayings.Add(truth);
+        public void AddTruthPosture(string truth) => TruthBodyPosture.Add(truth);
+        public void AddTruthFacialExpression(string truth) => TruthFacialExpressions.Add(truth);
+        public void AddTruthTone(string truth) => TruthTones.Add(truth);
+        
+        
+        private string GenerateToneOfVoice(bool lying = false)
         {
             int chance = new Random().Next(100);
             if (lying)
@@ -123,16 +84,16 @@ namespace HomicideDetective.People
                 return chance > 50 ? TruthTones.RandomItem() : CommonTones.RandomItem();
         }
         
-        private string SpokenText(bool lying = false)
+        private string GenerateSpokenWords(bool lying = false)
         {
             int chance = new Random().Next(100);
-            if (lying)
+            if (lying) 
                 return chance > 50 ? LieSayings.RandomItem() : CommonSayings.RandomItem();
             else
                 return chance > 50 ? TruthSayings.RandomItem() : CommonSayings.RandomItem();
         }
         
-        private string FacialExpression(bool lying = false)
+        private string GenerateFacialExpression(bool lying = false)
         {
             int chance = new Random().Next(100);
             if (lying)
@@ -141,7 +102,7 @@ namespace HomicideDetective.People
                 return chance > 50 ? TruthFacialExpressions.RandomItem() : CommonFacialExpressions.RandomItem();
         }
 
-        private string BodyLanguage(bool lying = false)
+        private string GenerateBodyLanguage(bool lying = false)
         {
             int chance = new Random().Next(100);
             if (lying)

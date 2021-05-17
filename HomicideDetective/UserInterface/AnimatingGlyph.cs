@@ -14,7 +14,7 @@ namespace HomicideDetective.UserInterface
         readonly int[] _animationSteps;
         int _animationIndex;
         public IGameObject Parent { get; set; }
-        public bool Blowing { get; private set; }
+        public bool Animating { get; private set; }
 
         public AnimatingGlyph(int glyph, int[] animationSteps)
         {
@@ -24,19 +24,19 @@ namespace HomicideDetective.UserInterface
 
         public void Start()
         {
-            Blowing = true;
+            Animating = true;
         }
 
         public void Stop()
         {
-            Blowing = false;
+            Animating = false;
             var parent = (RogueLikeCell)Parent;
             parent.Appearance.Glyph = _ogGlyph;
         }
 
         public void ProcessTimeUnit()
         {
-            if (Blowing)
+            if (Animating)
             {
                 var parent = (RogueLikeCell)Parent;
                 parent.Appearance.Glyph = _animationSteps[_animationIndex];

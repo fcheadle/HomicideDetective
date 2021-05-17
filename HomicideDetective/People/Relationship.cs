@@ -1,4 +1,4 @@
-namespace HomicideDetective.Mysteries
+namespace HomicideDetective.People
 {
     /// <summary>
     /// The relationship between one person and another

@@ -1,12 +1,25 @@
 # _Homicide Detective_
 _A Procedurally Generated Murder-Mystery Game_
 
+![screenshot](https://i.imgur.com/gS5WIyC.gif "an image of how the game will look when it's done (roughly)")
+
 Investigate small-town murders. These homicides are procedurally generated from ranges given in the .json files^(Coming Soon). This readme also serves as the design document.
 
 [Subreddit](https://www.reddit.com/r/HomicideDetective )
 
 ### Playing
-Clone it, run it. There is currently no content and nothing to do. Requires vs19, netcoreapp3.1
+
+There is currently no content and nothing to do. To get it to build on your system,
+
+1. Clone [TheSadRogue.Integration](https://github.com/thesadrogue/TheSadRogue.Integration ) locally
+2. Open in Visual Studio or Rider
+3. Right Click `TheSadRogue.Integration` project > `Properties...`
+4. Click `Nuget > Generate Nuget Package During Build`
+5. Give it the version, `1.0.0-alpha01-debug`, and build the solution
+6. Find the output nuget package (at `Solution Folder/TheSadRogue.Integration/bin/Debug`)
+7. Add that file location to your IDE's package sources. [Visual Studio](https://support.microsoft.com/en-us/topic/how-to-use-a-local-package-repository-79a79bd8-090e-78f6-b396-8d03cee41981 ) [Rider](https://www.jetbrains.com/help/rider/Using_NuGet.html#sources )
+8. Close your IDE, and open Homicide Detective.
+9. Restore Nuget Packages if it isn't building.
 
 ## Features
 ***NOT DONE***
@@ -48,20 +61,8 @@ Clone it, run it. There is currently no content and nothing to do. Requires vs19
 	- Estimate time of death
 	- Figure out when evidence has been tampered with
 
-## Engine
-![design photo](https://i.imgur.com/v94gmcf.png "ugly, possibly incorrect diagram of how i think ECS works")
-- Handles the Game-y components
-- Render to the screen
-- Pathfinding
-- tracking status over time
-- handles keyboard / mouse input and accessibility options
-- handles saving and loading
-- has all utilities necessary to interface with our gamey libraries so our game itself doesn't have to
-- needs to accept implementations of interfaces
-
 ## HomicideDetective
-![design](https://i.imgur.com/Gd7uiP6.png "an image of how the game will look when it's done (roughly)")
-- Handles the statistical modeling/simulation, as well as evidence, witnesses, dialogue, so on
+
 
 ### ___[Case](https://i.imgur.com/uKsEYwv.png "Cases contain the Who, What, Where, Why, When, and How of the murder")___
 An `object` which holds references to all people, places, and things related to a single murder. All of a case's data must be contained within a single `map`
