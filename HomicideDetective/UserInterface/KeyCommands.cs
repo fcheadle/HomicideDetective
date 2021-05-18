@@ -28,14 +28,14 @@ namespace HomicideDetective.UserInterface
                             var speech = entity.AllComponents.GetFirstOrDefault<Speech>();
                             if (speech is not null)
                             {
-                                thoughts.Think(speech.Details.ToArray());
+                                thoughts.Think(speech.SpeakTo());
                             }
                         }
                     }
                 }
             }
 
-            Program.Page.Print();
+            Program.Page.Print(thoughts.SurfaceThought);
         }
 
         /// <summary>
@@ -55,13 +55,13 @@ namespace HomicideDetective.UserInterface
                         {
                             var substantive = entity.AllComponents.GetFirstOrDefault<Substantive>();
                             if(substantive is not null)
-                                thoughts.Think(substantive.Details);
+                                thoughts.Think(substantive.GenerateDetailedDescription());
                         }
                     }
                 }
             }
 
-            Program.Page.Print();
+            Program.Page.Print(thoughts.SurfaceThought);
         }
         
     }

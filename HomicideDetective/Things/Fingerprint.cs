@@ -15,7 +15,7 @@ namespace HomicideDetective.Things
     /// <remarks>
     /// The pattern is represented in a 64x64 ArrayView of bool for easy memory/rending.
     /// </remarks>
-    public class Fingerprint : Marking, IGameObjectComponent, IDetailed
+    public class Fingerprint : Marking, IGameObjectComponent//, IDetailed
     {
         public IGameObject? Parent { get; set; }
         
@@ -56,25 +56,18 @@ namespace HomicideDetective.Things
             //todo - use a CA / pathfinder to finish from starting points
         }
 
-        //returns the pattern as a list of strings
-        public List<string> Details
+        public IEnumerable<string> PatternMap()
         {
-            get
+            for (int i = 0; i < Pattern.Height; i++)
             {
-                var answer = new string[64];
-                for (int i = 0; i < Pattern.Height; i++)
+                var line = "";
+
+                for (int j = 0; j < Pattern.Width; j++)
                 {
-                    var line = "";
-
-                    for (int j = 0; j < Pattern.Width; j++)
-                    {
-                        line += Pattern[j, i] ? "X" : " ";
-                    }
-
-                    answer[i] = line;
+                    line += Pattern[j, i] ? "X" : " ";
                 }
 
-                return answer.ToList();
+                yield return line;
             }
         }
     }

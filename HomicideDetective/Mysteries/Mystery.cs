@@ -42,6 +42,7 @@ namespace HomicideDetective.Mysteries
             MurderWeapon = GenerateMurderWeapon();
             Witnesses = GenerateWitnesses().ToList();
             SceneOfCrime = GenerateSceneOfMurderInfo();
+            GenerateTimeline();
         }
     }
 }

@@ -41,7 +41,7 @@ namespace HomicideDetective.Places.Generation
 
                 //place floorson the inner points
                 foreach (var point in region.InnerPoints.Where(p => map.Contains(p)))
-                    map[point] = new RogueLikeCell(point, Color.DarkRed, Color.Black, 240, 0);
+                    map[point] = new RogueLikeCell(point, Color.DarkRed, Color.Black, '.', 0);
 
                 //place walls on the outer points
                 foreach (var point in region.OuterPoints.Where(p => map.Contains(p)))

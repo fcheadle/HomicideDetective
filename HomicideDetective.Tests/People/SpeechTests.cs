@@ -17,18 +17,9 @@ namespace HomicideDetective.Tests.People
         public void SpeakToTest()
         {
             var speech = SetUpComponent();
-            
+
             for (int i = 0; i < 15; i++)
-            {
-                foreach (var speakTo in speech.SpeakTo(false))
-                {
-                    Assert.DoesNotContain("lie", speakTo);
-                }
-                foreach (var speakTo in speech.SpeakTo(true))
-                {
-                    Assert.DoesNotContain("tru", speakTo);
-                }
-            }
+                Assert.DoesNotContain("lie", speech.SpeakTo(false));
         }
 
         private Speech SetUpComponent()

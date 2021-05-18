@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 
@@ -24,8 +25,7 @@ namespace HomicideDetective.Mysteries
         public string? WeightDescription { get; set; }
 
         private List<string> _details;
-
-        public string[] Details => _details.ToArray();
+        public List<string> Details => _details;
 
         public Substantive(Types type, string name, string? gender = null, string? article = null, string? pronoun = null, 
             string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0,
@@ -42,26 +42,21 @@ namespace HomicideDetective.Mysteries
             Description = description;
             SizeDescription = sizeDescription;
             WeightDescription = weightDescription;
-            _details = new List<string>()
-            {
-                Name,
-                $"Mass: {Mass}g",
-                $"Volume: {Volume}ml",
-                Description!,
-                GenerateDetailedDescription()
-            };
+            _details = new List<string>();
         }
         
         public void AddDetail(string detail) => _details.Add(detail);
         public string GenerateDetailedDescription()
         {
-            var description = "This is ";
-            if (Type == Types.Person || Type == Types.Place)
-                description += $"{Name}. ";
-            else
-                description += $"a {Name}. ";
-           
-            description += $"It {SizeDescription}, and it {WeightDescription}.";
+            var description = $"This is {Article} {Name}. ";
+            description += $"{Description}. ";
+            description += $"{Pronoun} weighs {Mass}g, {WeightDescription}. ";
+            description += $"{Pronoun} is {Volume}ml in size, {SizeDescription}. ";
+
+            foreach (var detail in _details)
+            {
+                description += $"{detail}. ";
+            }
 
             return description;
         }

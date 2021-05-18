@@ -32,20 +32,20 @@ namespace HomicideDetective.UserInterface
             Animating = false;
             var parent = (RogueLikeCell)Parent;
             parent.Appearance.Glyph = _ogGlyph;
+            _animationIndex = 0;
         }
 
         public void ProcessTimeUnit()
         {
             if (Animating)
             {
-                var parent = (RogueLikeCell)Parent;
-                parent.Appearance.Glyph = _animationSteps[_animationIndex];
-                _animationIndex++;
                 if (_animationIndex >= _animationSteps.Length)
-                {
-                    _animationIndex = 0;
-                    parent.Appearance.Glyph = _ogGlyph;
                     Stop();
+                
+                else
+                {
+                    ((RogueLikeCell)Parent).Appearance.Glyph = _animationSteps[_animationIndex];
+                    _animationIndex++;   
                 }
             }
         }

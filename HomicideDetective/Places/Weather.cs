@@ -13,7 +13,7 @@ namespace HomicideDetective.Places
     /// <summary>
     /// The weather component added to
     /// </summary>
-    public class Weather : RogueLikeComponentBase, IDetailed
+    public class Weather : RogueLikeComponentBase//, IDetailed
     {
         private RogueLikeMap _map;
         public string Name { get; }
@@ -51,7 +51,6 @@ namespace HomicideDetective.Places
             Fxyt = WindPatterns.RandomItem();
         }
 
-        public List<string> Details => new List<string>() {Description, $"Time Elapsed: {Elapsed.ToString()}"};
         public void ProcessTimeUnit()
         {
             Elapsed += TimeSpan.FromMilliseconds(100);

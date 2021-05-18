@@ -9,13 +9,13 @@ namespace HomicideDetective.People
     /// <summary>
     /// Currently a collection of strings used for printing to the message window.
     /// </summary>
-    public class Thoughts : IGameObjectComponent, IDetailed
+    public class Thoughts : IGameObjectComponent//, IDetailed
     {
         public IGameObject? Parent { get; set; }
         private Happening _shortTermMemory; //current thoughts only
         private Timeline _midTermMemory; //today's thoughts
         private List<Timeline> _longTermMemory; //1 timeline == 1 day
-        public List<string> Details => new List<string>() {_shortTermMemory.Occurrence};
+        public string SurfaceThought => _shortTermMemory.Occurrence;
         
         public Thoughts()
         {
@@ -24,11 +24,16 @@ namespace HomicideDetective.People
             _longTermMemory = new List<Timeline>();
         }
 
-        public void Think(string[] thoughts)
+        public void Think(IEnumerable<string> thoughts)
         {
             CommitMidTermMemory();
+
+            string observation = "";
+
             foreach (string thought in thoughts)
-                Think(thought);
+                observation += $" {thought}";
+
+            Think(observation);
         }
 
         public void Think(string thought)
@@ -48,6 +53,12 @@ namespace HomicideDetective.People
         {
             _longTermMemory.Add(_midTermMemory);
             _midTermMemory = new Timeline();
+        }
+
+        public void Think(Timeline thoughts)
+        {
+            _midTermMemory.AddRange(thoughts);
+            _shortTermMemory = thoughts.MostRecent();
         }
     }
 }

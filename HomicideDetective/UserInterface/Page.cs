@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GoRogue.GameFramework.Components;
 using HomicideDetective.Mysteries;
 using SadConsole;
 using SadConsole.Components;
@@ -12,8 +13,7 @@ namespace HomicideDetective.UserInterface
     /// <summary>
     /// The Message Window and it's background that looks like notepad paper
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class Page<T> : RogueLikeComponentBase where T : IDetailed
+    public class Page : RogueLikeComponentBase
     {
         //SadConsole Controls
         public ScreenSurface TextSurface { get; private set; }
@@ -23,13 +23,12 @@ namespace HomicideDetective.UserInterface
         public ControlHost ButtonBar { get; private set; }
         
         //the contents printed by the cursor
-        public T Component { get; }
-        public List<string> Contents { get; private set; }
-        public List<List<string>> PastContents { get; private set; }
+        public IGameObjectComponent Component { get; }
+        public string Contents { get; private set; }
+        public List<string> PastContents { get; private set; }
         
-        public Page(T component) : base(true, false, true, true)
+        public Page() : base(true, false, true, true)
         {
-            Component = component;
             InitContents();
             InitWindow();
             //InitButtons();//todo
@@ -67,8 +66,7 @@ namespace HomicideDetective.UserInterface
 
         private void InitContents()
         {
-            PastContents = new List<List<string>>();
-            Contents = Component.Details;
+            PastContents = new List<string>();
         }
 
         private void InitWindow()
@@ -98,21 +96,17 @@ namespace HomicideDetective.UserInterface
             BackgroundSurface.Children.Add(TextSurface);
         }
         
-        public void Print()
+        public void Print(string contents)
         {
             TextSurface.Surface.Clear();
             if(!PastContents.Contains(Contents))
                 PastContents.Add(Contents);
-            
+
+            Contents = contents;
             var cursor = TextSurface.GetSadComponent<Cursor>();
             cursor.Position = (0, 0);
 
-            Contents = Component.Details;
-            foreach (string detail in Contents)
-            {
-                var answer = new ColoredString($"\r\n{detail}", Color.Blue, Color.Transparent);
-                cursor.Print(answer);
-            }
+            cursor.Print(new ColoredString($"{Contents}", Color.Blue, Color.Transparent));
         }
     }
 }

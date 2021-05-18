@@ -36,7 +36,7 @@ namespace HomicideDetective.Tests.Mysteries
             var substantive = new Substantive(type, "Test", gender: "male",article: "",pronoun: "he", pronounPossessive: "his",
                 description: "a test substantive", mass: 36, volume: 64, sizeDescription: "smol", weightDescription: "lite");
             var answer = substantive.Details;
-            Assert.Equal(5, answer.Length);
+            Assert.Equal(5, answer.Count);
             Assert.Contains("Test", answer);
             Assert.Contains("a test substantive", answer);
             Assert.Contains("Mass: 36g", answer);

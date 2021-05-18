@@ -20,17 +20,17 @@ namespace HomicideDetective.Tests.Mysteries
             timeline.Add(new Happening(middleTime, middleString));
             timeline.Add(new Happening(endTime, endString));
             
-            Assert.Equal(timeline.DoingAtTime(startTime), startString);
-            Assert.Equal(timeline.DoingAtTime(new Time(9,00)), startString);
-            Assert.Equal(timeline.DoingAtTime(new Time(9,30)), startString);
+            Assert.Equal(timeline.OccurrenceAtTime(startTime), startString);
+            Assert.Equal(timeline.OccurrenceAtTime(new Time(9,00)), startString);
+            Assert.Equal(timeline.OccurrenceAtTime(new Time(9,30)), startString);
             
-            Assert.Equal(timeline.DoingAtTime(middleTime), middleString);
-            Assert.Equal(timeline.DoingAtTime(new Time(13,20)), middleString);
-            Assert.Equal(timeline.DoingAtTime(new Time(14,40)), middleString);
+            Assert.Equal(timeline.OccurrenceAtTime(middleTime), middleString);
+            Assert.Equal(timeline.OccurrenceAtTime(new Time(13,20)), middleString);
+            Assert.Equal(timeline.OccurrenceAtTime(new Time(14,40)), middleString);
             
-            Assert.Equal(timeline.DoingAtTime(endTime), endString);
-            Assert.Equal(timeline.DoingAtTime(new Time(17,20)), endString);
-            Assert.Equal(timeline.DoingAtTime(new Time(18,20)), endString);
+            Assert.Equal(timeline.OccurrenceAtTime(endTime), endString);
+            Assert.Equal(timeline.OccurrenceAtTime(new Time(17,20)), endString);
+            Assert.Equal(timeline.OccurrenceAtTime(new Time(18,20)), endString);
         }
     }
 }

@@ -4,43 +4,60 @@ using GoRogue;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using HomicideDetective.Mysteries;
+using SadRogue.Integration;
 
 namespace HomicideDetective.People
 {
     /// <summary>
     /// The speech component given to RogueLikeEntities who can speak.
     /// </summary>
-    public class Speech : IGameObjectComponent, IDetailed
+    public class Speech : IGameObjectComponent//, IDetailed
     {
         public IGameObject? Parent { get; set; }
         public string Description { get; private set; }
-        public List<string> Details => new () //todo - better method
-        {
-            GenerateSpokenWords(), 
-            GenerateToneOfVoice(), 
-            GenerateFacialExpression(), 
-            GenerateBodyLanguage(),
-            Description
-        };
-        
-        
+
         public Speech()
         {
-            // InitSayings();
-            // InitTones();
-            // InitFacialExpressions();
-            // InitBodyPostures();
+            InitLies();
+            InitTruth();
+            InitCommon();
             Description = GenerateVoiceDescription();
         }
 
-        public List<string> SpeakTo(bool lying = false) => new List<string>()
+        private void InitLies()
         {
-            GenerateSpokenWords(lying),
-            GenerateToneOfVoice(lying),
-            GenerateFacialExpression(lying),
-            GenerateBodyLanguage(lying),
-            Description
-        };
+            LieSayings.Add("I was busy");
+            LieTones.Add(", voice slightly cracking");
+            LieFacialExpressions.Add("eyes flutter upwards and to the left");
+            LieBodyPosture.Add("slouches");
+        }
+
+        private void InitTruth()
+        {
+            TruthSayings.Add("I'm telling you, I don't know anything");
+            TruthTones.Add("through an angry gasp");
+            TruthFacialExpressions.Add("determination shines through their eyes");
+            TruthBodyPosture.Add("holds his head up high");
+        }
+
+        private void InitCommon()
+        {
+            CommonSayings.Add("Hmm... Let me see...");
+            CommonTones.Add("in a flat monotone");
+            CommonFacialExpressions.Add("expression is blank");
+            CommonBodyPosture.Add("stands up straight");
+        }
+
+        public string SpeakTo(bool lying = false)
+        {
+            var info = ((RogueLikeEntity) Parent!).AllComponents.GetFirst<Substantive>();
+            var dialogue = $"\"{GenerateSpokenWords(lying)},\" ";
+            dialogue += $"{info.Name} says {GenerateToneOfVoice(lying)}, ";
+            dialogue += $"{info.PronounPossessive} {GenerateFacialExpression(lying)}. ";
+            dialogue += $"{info.Pronoun} {GenerateBodyLanguage(lying)}. ";
+            dialogue += Description;
+            return dialogue;
+        }
         
         //strings to pull details from when either telling the truth or lying
         public List<string> CommonSayings { get; private set; } = new List<string>();

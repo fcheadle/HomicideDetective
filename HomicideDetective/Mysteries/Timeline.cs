@@ -8,13 +8,27 @@ namespace HomicideDetective.Mysteries
     /// </summary>
     public class Timeline : List<Happening>
     {
-        public string DoingAtTime(Time time)
-        {
-            if (this.Any(h => h.OccurredAt.ToInt() == time.ToInt()))
-                return this.First(h => h.OccurredAt.ToInt() == time.ToInt()).Occurrence;
-            
-            return this.Where(x => x.OccurredAt.LessThan(time)).OrderBy(x => -x.OccurredAt.ToInt()).First().Occurrence;
+        public string OccurrenceAtTime(Time time) => HappeningAtTime(time).Occurrence;
 
+        public Happening MostRecent() => this.OrderBy(h => h.OccurredAt.ToInt()).First();
+
+        public Happening HappeningAtTime(Time time)
+        {            
+            if (this.Any(h => h.OccurredAt.ToInt() == time.ToInt()))
+                return this.First(h => h.OccurredAt.ToInt() == time.ToInt());
+            
+            return this.Where(x => x.OccurredAt.LessThan(time)).OrderBy(x => -x.OccurredAt.ToInt()).First();
+        }
+
+        public IEnumerable<string> Occurences
+        {
+            get
+            {
+                foreach (var happening in this)
+                {
+                    yield return happening.Occurrence;
+                }
+            }
         }
     }
 }

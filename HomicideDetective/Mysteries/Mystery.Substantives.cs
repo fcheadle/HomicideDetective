@@ -23,8 +23,8 @@ namespace HomicideDetective.Mysteries
 
             string description = $"{pronoun} is a {height}, {width}{noun}.";
 
-            var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: "It", pronoun: pronoun,
-                pronounPossessive: pronounPossessive, description: description, mass: 0, volume: 0, sizeDescription: height, weightDescription: width);
+            var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: "", pronoun: pronoun,
+                pronounPossessive: pronounPossessive, description: description, mass: 0, volume: 0);
 
             return substantive;
         }
@@ -44,17 +44,20 @@ namespace HomicideDetective.Mysteries
             string noun = isMale ? "man" : "woman";
             string pronoun = isMale ? "he" : "she";
             string pronounPossessive = isMale ? "his" : "her";
-            string pronounPassive = isMale ? "him" : "her";
+            string article = "";
 
             string height = isTall ? "tall" : "short";
+            string heightDescription = isTall ? "slightly taller than average" : $"rather short for someone {pronounPossessive} age";
             string width = isFat ? "full-figured" : "slender";
+            string widthDescription = isFat ? "which is slightly over-weight" : "rather slender compared to other adults";
             string age = isYoung ? "young" : "middle-aged";
 
-            string description = $"{pronoun} is a {height}, {width} {age} {noun}.";
+            string description = $"{pronoun} is a {height}, {width} {age} {noun}";
             string givenName = isMale ? _maleGivenNames[ Random.Next(0, _maleGivenNames.Length)] : _femaleGivenNames[ Random.Next(0, _femaleGivenNames.Length)];
 
             var substantive = new Substantive(Substantive.Types.Person, $"{givenName} {surname}",
-                gender: isMale ? "male" : "female", article: pronounPassive, pronoun: pronoun, pronounPossessive: pronounPossessive, description: description, mass: 37500, volume: 24000, sizeDescription: height, weightDescription: width);  
+                gender: isMale ? "male" : "female", article, pronoun, pronounPossessive, description,
+                37500, 24000, heightDescription, widthDescription);  
             
             return substantive;
         }
