@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using HomicideDetective.Mysteries;
 using Xunit;
 
-namespace HomicideDetective.Tests.Mysteries
+namespace HomicideDetective.Tests
 {
     public class SubstantiveTests
     {
@@ -20,13 +19,11 @@ namespace HomicideDetective.Tests.Mysteries
         public void NewSubstantiveTest(Substantive.Types type)
         {
             var substantive = new Substantive(type, "Test", gender: "male",article: "",pronoun: "he", pronounPossessive: "his",
-                description: "a test substantive", mass: 36, volume: 64, sizeDescription: "smol", weightDescription: "lite");
+                description: "a test substantive", mass: 36, volume: 64);
             Assert.Equal("Test", substantive.Name);    
             Assert.Equal("a test substantive", substantive.Description);    
             Assert.Equal(36, substantive.Mass);    
             Assert.Equal(64, substantive.Volume);    
-            Assert.Equal("smol", substantive.SizeDescription);    
-            Assert.Equal("lite", substantive.WeightDescription);    
         }
 
         [Theory]
@@ -34,13 +31,12 @@ namespace HomicideDetective.Tests.Mysteries
         public void DetailsTest(Substantive.Types type)
         {
             var substantive = new Substantive(type, "Test", gender: "male",article: "",pronoun: "he", pronounPossessive: "his",
-                description: "a test substantive", mass: 36, volume: 64, sizeDescription: "smol", weightDescription: "lite");
-            var answer = substantive.Details;
-            Assert.Equal(5, answer.Count);
-            Assert.Contains("Test", answer);
-            Assert.Contains("a test substantive", answer);
-            Assert.Contains("Mass: 36g", answer);
-            Assert.Contains("Volume: 64ml", answer);
+                description: "a test substantive", mass: 36, volume: 64);
+            
+            Assert.Empty(substantive.Details);
+            substantive.AddDetail("arbitrary detail");
+            Assert.Single(substantive.Details);
+            Assert.Contains("arbitrary detail", substantive.Details);
         }
         
         [Theory]
@@ -48,10 +44,9 @@ namespace HomicideDetective.Tests.Mysteries
         public void DetailedDescriptionTest(Substantive.Types type)
         {
             var substantive = new Substantive(type, "Test", gender: "male",article: "a ",pronoun: "he", pronounPossessive: "his",
-                description: "a test substantive", mass: 36, volume: 64, sizeDescription: "smol", weightDescription: "lite");
+                description: "a test substantive", mass: 36, volume: 64);
             var answer = substantive.GenerateDetailedDescription();
-            Assert.True(answer.Contains("This is a Test.") || answer.Contains("This is Test."));
-            Assert.Contains("It smol, and it lite", answer);
+            Assert.True(answer.Contains("This is a  Test.") || answer.Contains("This is Test."));
         }
     }
 }

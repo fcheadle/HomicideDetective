@@ -1,13 +1,17 @@
 using System.Collections.Generic;
-using System.Drawing;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 
-namespace HomicideDetective.Mysteries
+namespace HomicideDetective
 {
     /// <summary>
     /// A substantive is a person, place, or thing.
     /// </summary>
+    /// <remarks>
+    /// All other components may count on a RogueLikeEntity having a substantive component.
+    /// Substantive should not have any knowledge of any other components.
+    /// It exists purely to be a collection of strings to describe something.
+    /// </remarks>
     public class Substantive : IGameObjectComponent
     {
         public int Mass { get; set; } //in grams
@@ -21,15 +25,12 @@ namespace HomicideDetective.Mysteries
         public string? PronounPossessive { get; set; }
         public string? Gender { get; set; }
         public string? Description { get; set; }
-        public string? SizeDescription { get; set; }
-        public string? WeightDescription { get; set; }
 
         private List<string> _details;
         public List<string> Details => _details;
 
         public Substantive(Types type, string name, string? gender = null, string? article = null, string? pronoun = null, 
-            string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0,
-            string? sizeDescription = null, string? weightDescription = null)
+            string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0)
         {
             Type = type;
             Name = name;
@@ -40,8 +41,6 @@ namespace HomicideDetective.Mysteries
             Mass = mass;
             Volume = volume;
             Description = description;
-            SizeDescription = sizeDescription;
-            WeightDescription = weightDescription;
             _details = new List<string>();
         }
         
@@ -50,8 +49,8 @@ namespace HomicideDetective.Mysteries
         {
             var description = $"This is {Article} {Name}. ";
             description += $"{Description}. ";
-            description += $"{Pronoun} weighs {Mass}g, {WeightDescription}. ";
-            description += $"{Pronoun} is {Volume}ml in size, {SizeDescription}. ";
+            description += $"{Pronoun} weighs {Mass}g. ";
+            description += $"{Pronoun} is {Volume}ml in size. ";
 
             foreach (var detail in _details)
             {

@@ -18,7 +18,7 @@ namespace HomicideDetective.Mysteries
         public RogueLikeEntity Murderer { get; set; }
         public RogueLikeEntity MurderWeapon { get; set; }
         public Substantive SceneOfCrime { get; set; }
-        public Time TimeOfDeath { get; set; }
+        public DateTime TimeOfDeath { get; set; }
         public List<RogueLikeEntity> Witnesses { get; set; }
         
         public Random Random { get; set; }

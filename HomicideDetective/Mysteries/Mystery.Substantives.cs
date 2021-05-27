@@ -57,7 +57,7 @@ namespace HomicideDetective.Mysteries
 
             var substantive = new Substantive(Substantive.Types.Person, $"{givenName} {surname}",
                 gender: isMale ? "male" : "female", article, pronoun, pronounPossessive, description,
-                37500, 24000, heightDescription, widthDescription);  
+                37500, 24000);  
             
             return substantive;
         }
@@ -171,7 +171,7 @@ namespace HomicideDetective.Mysteries
             }
 
             var substantive = new Substantive(Substantive.Types.Thing, name, 
-                description: description, mass: mass, volume: volume, sizeDescription: size, weightDescription: weight);
+                description: description, mass: mass, volume: volume);
             substantive.AddDetail(detail);
             return substantive;
         }

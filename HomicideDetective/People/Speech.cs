@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GoRogue;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
-using HomicideDetective.Mysteries;
 using SadRogue.Integration;
 
 namespace HomicideDetective.People
@@ -11,10 +11,15 @@ namespace HomicideDetective.People
     /// <summary>
     /// The speech component given to RogueLikeEntities who can speak.
     /// </summary>
-    public class Speech : IGameObjectComponent//, IDetailed
+    /// <remarks>
+    /// Requires a RogueLikeEntity Parent who has a Substantive and Thoughts components
+    /// </remarks>
+    public class Speech : IGameObjectComponent
     {
         public IGameObject? Parent { get; set; }
         public string Description { get; private set; }
+        private Substantive? _info => ((RogueLikeEntity) Parent!).Info();
+        private Thoughts? _thoughts => ((RogueLikeEntity) Parent!).ThoughtProcess();
 
         public Speech()
         {
@@ -24,6 +29,7 @@ namespace HomicideDetective.People
             Description = GenerateVoiceDescription();
         }
 
+        #region lists
         private void InitLies()
         {
             LieSayings.Add("I was busy");
@@ -31,7 +37,7 @@ namespace HomicideDetective.People
             LieFacialExpressions.Add("eyes flutter upwards and to the left");
             LieBodyPosture.Add("slouches");
         }
-
+        
         private void InitTruth()
         {
             TruthSayings.Add("I'm telling you, I don't know anything");
@@ -39,7 +45,7 @@ namespace HomicideDetective.People
             TruthFacialExpressions.Add("determination shines through their eyes");
             TruthBodyPosture.Add("holds his head up high");
         }
-
+        
         private void InitCommon()
         {
             CommonSayings.Add("Hmm... Let me see...");
@@ -58,6 +64,7 @@ namespace HomicideDetective.People
             dialogue += Description;
             return dialogue;
         }
+        
         
         //strings to pull details from when either telling the truth or lying
         public List<string> CommonSayings { get; private set; } = new List<string>();
@@ -90,7 +97,56 @@ namespace HomicideDetective.People
         public void AddTruthPosture(string truth) => TruthBodyPosture.Add(truth);
         public void AddTruthFacialExpression(string truth) => TruthFacialExpressions.Add(truth);
         public void AddTruthTone(string truth) => TruthTones.Add(truth);
-        
+        #endregion
+
+        public string Greet()
+        {
+            //todo
+            return "Hello Detective.";
+        }
+        public string Introduce()
+        {
+            //todo
+            return $"My name is {_info?.Name}.";
+        }
+        public string InquireAboutSelf()
+        {
+            //todo
+            return $"{_info?.Description}.";
+        }
+        public string InquireWhereabouts(DateTime atTime)
+        {
+            var happening = _thoughts.HappeningAtTime(atTime);
+            return $"I was at {happening.Where}";
+        }
+        public string InquireAboutCompany(DateTime atTime)
+        {
+            var happening = _thoughts.HappeningAtTime(atTime);
+            var answer = "I was with ";
+            if (happening.Who.Any())
+                foreach (var person in happening.Who)
+                    answer += $"{person}, ";
+            else
+                answer += "no one";
+
+            return answer;
+        }
+        public string InquireAboutHappening(DateTime atTime)
+        {
+            return _thoughts.HappeningAtTime(atTime).ToString();
+        }
+        // public string InquireAboutPerson(string name)
+        // {
+        //     throw new NotImplementedException();
+        // }
+        // public string InquireAboutPlace(string name)
+        // {
+        //     throw new NotImplementedException();
+        // }
+        // public string InquireAboutThing(string name)
+        // {
+        //     throw new NotImplementedException();
+        // }
         
         private string GenerateToneOfVoice(bool lying = false)
         {

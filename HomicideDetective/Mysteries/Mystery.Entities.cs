@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GoRogue;
 using HomicideDetective.People;
@@ -16,14 +17,14 @@ namespace HomicideDetective.Mysteries
             var victimInfo = GeneratePersonalInfo(_surnames.RandomItem());
             string descr = $"This is the body of {victimInfo.Name}. {victimInfo.Pronoun} was a";
             victimInfo.Description = victimInfo.Description!.Replace($"{victimInfo.Pronoun} is a", descr);
-            victimInfo.SizeDescription = "is bloated from gases building up it's interior";
-            victimInfo.WeightDescription = "is discolored from decay";
+            victimInfo.AddDetail("It is bloated from gases building up it's interior.");
+            victimInfo.AddDetail("It is discolored from decay.");
             
             var victim = new RogueLikeEntity((0,0), 2, false);
             victim.AllComponents.Add(victimInfo);
             
             //todo - decompose
-            TimeOfDeath = new Time(Random.Next(0, 23), Random.Next(0, 59));
+            TimeOfDeath = new DateTime(1970, 7,4, Random.Next(0,24), Random.Next(0,60), 0);
             return victim;
         }
         

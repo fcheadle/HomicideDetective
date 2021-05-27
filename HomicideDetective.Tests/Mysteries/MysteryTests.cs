@@ -76,10 +76,6 @@ namespace HomicideDetective.Tests.Mysteries
             Assert.NotEmpty(firstAnswer.Name);
             Assert.NotNull(secondAnswer.Name);
             Assert.NotEmpty(secondAnswer.Name);
-            Assert.NotNull(firstAnswer.SizeDescription);
-            Assert.NotEmpty(firstAnswer.SizeDescription);
-            Assert.NotNull(firstAnswer.WeightDescription);
-            Assert.NotEmpty(firstAnswer.WeightDescription);
         }
         
         [Theory]
@@ -104,10 +100,6 @@ namespace HomicideDetective.Tests.Mysteries
             Assert.NotEmpty(firstAnswer.Name);
             Assert.NotNull(secondAnswer.Name);
             Assert.NotEmpty(secondAnswer.Name);
-            Assert.NotNull(firstAnswer.SizeDescription);
-            Assert.NotEmpty(firstAnswer.SizeDescription);
-            Assert.NotNull(firstAnswer.WeightDescription);
-            Assert.NotEmpty(firstAnswer.WeightDescription);
         }
         
         [Theory]
