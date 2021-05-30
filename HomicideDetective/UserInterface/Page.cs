@@ -93,7 +93,8 @@ namespace HomicideDetective.UserInterface
             contents.Add($"Location: ${happening.Where}");
 
             //var things = "Things involved: ";
-            // foreach(var thing in happening.What)
+            //foreach(var thing in happening.What)
+            //    things += $"{thing}, "; 
             var people = "People Involved: ";
             foreach (var person in happening.Who)
                 people += $"{person}, ";
@@ -126,13 +127,14 @@ namespace HomicideDetective.UserInterface
         public static void UpOneLine()
         {
             var page = Program.Page;
-            page.TextSurface.Surface.ShiftDown();
+            page.TextSurface.Surface.View = page.TextSurface.Surface.View.WithY(page.TextSurface.Surface.View.Y + 1);
+            
         }
 
         public static void DownOneLine()
         {
             var page = Program.Page;
-            page.TextSurface.Surface.ShiftUp();
+            page.TextSurface.Surface.View = page.TextSurface.Surface.View.WithY(page.TextSurface.Surface.View.Y - 1);
         }
 
         //temporary - for testing

@@ -10,17 +10,6 @@ namespace HomicideDetective.Places.Generation
 {
     public class StreetStep : GenerationStep
     {
-        private int _angle;
-
-        public StreetStep()
-        {
-            _angle = 0;
-        }
-
-        public StreetStep(int angle)
-        {
-            _angle = angle;
-        }
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
@@ -36,29 +25,28 @@ namespace HomicideDetective.Places.Generation
             Point sw = (-3, 3);
             Point ne = (map.Width + 3, -3);
             Point se = (map.Width + 3, 3);
-
-            roads.Add(new Region(((RoadNames)horizontalNameIndex).ToString(), nw, ne, se, sw).Rotate(_angle));
+            roads.Add(new Region(((RoadNames)horizontalNameIndex).ToString(), nw, ne, se, sw));
             
             nw = (-3, map.Height - 3);
             sw = (-3, map.Height + 3);
             ne = (map.Width + 3, map.Height - 3);
             se = (map.Width + 3, map.Height + 3);
 
-            roads.Add(new Region(((RoadNames)horizontalNameIndex + 1).ToString(), nw, ne, se, sw).Rotate(_angle));
+            roads.Add(new Region(((RoadNames)horizontalNameIndex + 1).ToString(), nw, ne, se, sw));
             
-            nw = (-3, -3);
-            sw = (-3, map.Height + 3);
-            ne = (3, -3);
-            se = (3, map.Height + 3);
+            nw = (13, -10);
+            sw = (13, map.Height + 10);
+            ne = (19, -10);
+            se = (19, map.Height + 10);
 
-            roads.Add(new Region(((RoadNumbers)horizontalNameIndex).ToString(), nw, ne, se, sw).Rotate(_angle));
+            roads.Add(new Region(((RoadNumbers)verticalNameIndex).ToString(), nw, ne, se, sw).Rotate(45));
             
-            nw = (map.Width - 3, -3);
-            sw = (map.Width - 3, map.Height + 3);
-            ne = (map.Width + 3, -3);
-            se = (map.Width + 3, map.Height + 3);
+            nw = (map.Width - 10, -10);
+            sw = (map.Width - 10, map.Height + 10);
+            ne = (map.Width - 4 , -10);
+            se = (map.Width - 4 , map.Height + 10);
 
-            roads.Add(new Region(((RoadNumbers)verticalNameIndex + 1).ToString(), nw, ne, se, sw).Rotate(_angle));
+            roads.Add(new Region(((RoadNumbers)verticalNameIndex + 1).ToString(), nw, ne, se, sw).Rotate(45));
 
             foreach (var road in roads)
             {
