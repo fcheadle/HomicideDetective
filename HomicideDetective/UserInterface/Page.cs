@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HomicideDetective.Happenings;
 using SadConsole;
 using SadConsole.Components;
@@ -71,7 +72,7 @@ namespace HomicideDetective.UserInterface
         public void Write(string contents)
         {
             Clear();
-            if(!Contents.Contains(contents))
+            if(!Contents.Any() || !Contents[PageNumber].Contains(contents))
                 Contents.Add(contents);
 
             PageNumber = Contents.Count - 1;
@@ -107,7 +108,7 @@ namespace HomicideDetective.UserInterface
         {
             List<string> contents = new();
             contents.Add(substantive.Name!);
-            contents.Add(substantive.Description!);
+            // contents.Add(substantive.Description!);
             contents.Add(substantive.GenerateDetailedDescription());
             contents.AddRange(substantive.Details);
             Write(contents);
@@ -119,6 +120,7 @@ namespace HomicideDetective.UserInterface
             if (page.PageNumber > 0)
                 page.PrintContents(--page.PageNumber);
         }
+        
         public static void ForwardPage()
         {
             var page = Program.Page;
@@ -130,14 +132,12 @@ namespace HomicideDetective.UserInterface
         {
             var page = Program.Page;
             page.TextSurface.Surface.ViewPosition -= (0, 1);
-            // page.TextSurface.Surface.View = page.TextSurface.Surface.View.WithPosition(page.TextSurface.Surface.ViewPosition - (0,1));
             page.TextSurface.IsDirty = true;
         }
 
         public static void DownOneLine()
         {
             var page = Program.Page;
-            // page.TextSurface.Surface.View = page.TextSurface.Surface.View.WithPosition(page.TextSurface.Surface.ViewPosition + (0,1));
             page.TextSurface.Surface.ViewPosition += (0, 1);
             page.TextSurface.IsDirty = true;
         }

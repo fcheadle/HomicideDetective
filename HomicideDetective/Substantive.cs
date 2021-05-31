@@ -49,9 +49,11 @@ namespace HomicideDetective
         {
             var description = $"This is {Article} {Name}. ";
             description += $"{Description}. ";
-            description += $"{Pronoun} weighs {Mass}g. ";
-            description += $"{Pronoun} is {Volume}ml in size. ";
-
+            if(Type != Types.Place)
+            {
+                description += $"{Pronoun} weighs {Mass}g. ";
+                description += $"{Pronoun} is {Volume}ml in size. ";
+            }
             foreach (var detail in _details)
             {
                 description += $"{detail}. ";

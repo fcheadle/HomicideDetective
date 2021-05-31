@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using GoRogue;
-
 namespace HomicideDetective.Mysteries
 {
     public partial class Mystery
@@ -11,19 +8,60 @@ namespace HomicideDetective.Mysteries
         /// <returns></returns>
         public Substantive GenerateSceneOfMurderInfo()
         {
-            var name = $"Brick Home";
-            string noun = "location";
-            string pronoun = "it";
-            string pronounPossessive = "its";
-            string pronounPassive = "it";
-
+            string name, noun, pronoun, pronounPossessive, pronounPassive, height, width;
             
-            string height = "long and low";
-            string width = "slim";
+            name = $"{Victim.Info().Name}'s home";
+            pronoun = "it";
+            pronounPossessive = "its";
+            pronounPassive = "the";
+            switch (Random.Next(1, 101) % 8)
+            {
+                default:
+                case 0:
+                    height = "two-story";
+                    width = "slender";
+                    noun = "brownstone";
+                    break;
+                case 1: 
+                    height = "single-floor";
+                    width = "slender";
+                    noun = "flat";
+                    break;
+                case 2: 
+                    height = "single-floor";
+                    width = "wide";
+                    noun = "row home";
+                    break;
+                case 3: 
+                    height = "single-floor";
+                    width = "wide";
+                    noun = "brick home";
+                    break;
+                case 4: 
+                    height = "two-story";
+                    width = "ornate";
+                    noun = "victorian";
+                    break;
+                case 5: 
+                    height = "two-story";
+                    width = "'L'-shaped";
+                    noun = "brick home";
+                    break;
+                case 6: 
+                    height = "single-floor";
+                    width = "modest";
+                    noun = "prarie home";
+                    break;
+                case 7:
+                    height = "two-story";
+                    width = "decadent";
+                    noun = "tutor";
+                    break;
+            }
 
-            string description = $"{pronoun} is a {height}, {width}{noun}.";
+            string description = $"{pronoun} is a {height}, {width} {noun}.";
 
-            var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: "", pronoun: pronoun,
+            var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: pronounPassive, pronoun: pronoun,
                 pronounPossessive: pronounPossessive, description: description, mass: 0, volume: 0);
 
             return substantive;
@@ -47,12 +85,12 @@ namespace HomicideDetective.Mysteries
             string article = "";
 
             string height = isTall ? "tall" : "short";
-            string heightDescription = isTall ? "slightly taller than average" : $"rather short for someone {pronounPossessive} age";
+            string heightDescription = isTall ? "slightly taller than average" : "rather short";
             string width = isFat ? "full-figured" : "slender";
-            string widthDescription = isFat ? "which is slightly over-weight" : "rather slender compared to other adults";
+            string widthDescription = isFat ? "moderately over-weight" : "rather slender";
             string age = isYoung ? "young" : "middle-aged";
 
-            string description = $"{pronoun} is a {height}, {width} {age} {noun}";
+            string description = $"{pronoun} is a {heightDescription}, {widthDescription} {age} {noun}. ";
             string givenName = isMale ? _maleGivenNames[ Random.Next(0, _maleGivenNames.Length)] : _femaleGivenNames[ Random.Next(0, _femaleGivenNames.Length)];
 
             var substantive = new Substantive(Substantive.Types.Person, $"{givenName} {surname}",
@@ -68,87 +106,94 @@ namespace HomicideDetective.Mysteries
         /// <returns></returns>
         public Substantive GenerateMurderWeaponInfo()
         {
-            string name;
-            string description;
-            string detail;
-            int mass;
-            int volume;
+            string name, description, detail, article;
+            int mass, volume;
             switch (Random.Next(0,10))
             {
                 default:
                 case 0: 
-                    name = "Hammer";
+                    name = "hammer";
                     description = "A small tool, normally used for carpentry";
+                    article = "a";
                     mass = 710;
                     volume = 490;
                     detail = "It is completely free of dust, and has a slight smell of bleach";
                     break;
                 case 1: 
-                    name = "Switchblade"; 
+                    name = "switchblade"; 
                     description = "A small, concealable knife";
+                    article = "a";
                     mass = 125;
                     volume = 325;
                     detail = "There is a small patch of red rust near the hinge";
                     break;
                 case 2: 
-                    name = "Pistol"; 
+                    name = "pistol"; 
                     description = "A small, concealable handgun";
+                    article = "a";
                     mass = 6750;
                     volume = 465;
                     detail = "There are residue patterns on the muzzle";
                     break;
                 case 3: 
-                    name = "Poison"; 
+                    name = "poison"; 
                     description = "A lethal dose of hydrogen-cyanide";
+                    article = "a";
                     mass = 15;
                     volume = 12;
                     detail = "There is a puncture hole in the cap";
                     break;
                 case 4: 
-                    name = "Kitchen Knife"; 
+                    name = "kitchen Knife"; 
                     description = "A small tool used for preparing food";
+                    article = "a";
                     mass = 240;
                     volume = 390;
                     detail = "It is somewhat warped along its flat plane";
                     break;
                 case 5: 
-                    name = "Shotgun";
+                    name = "shotgun";
                     description = "A large gun used for scaring off vermin";
+                    article = "a";
                     mass = 13500;
                     volume = 8825;
                     detail = "there is one shell in the chamber";
                     break;
                 case 6: 
-                    name = "Rock"; 
+                    name = "rock"; 
                     description = "A stone from off the ground";
+                    article = "a";
                     mass = 10000;
                     volume = 750;
                     detail = "It is covered in blood and haphazardly discarded nearby";
                     break;
                 case 7: 
-                    name = "Screwdriver"; 
+                    name = "screwdriver"; 
                     description = "A small tool, used for all manner of handiwork";
+                    article = "a";
                     mass = 120;
                     volume = 200;
                     detail = "This flathead has been recently cleaned";
                     break;
                 case 8: 
-                    name = "Revolver"; 
+                    name = "revolver"; 
                     description = "A handgun";
+                    article = "a";
                     mass = 7000;
                     volume = 700;
                     detail = "it has five bullets, and one empty chamber";
                     break;
                 case 9: 
-                    name = "Rifle"; 
+                    name = "rifle"; 
                     description = "A large gun, used for hunting animals";
+                    article = "a";
                     mass = 12000;
                     volume = 8200;
                     detail = "It is coated with gunpowder residue.";
                     break;
             }
 
-            var substantive = new Substantive(Substantive.Types.Thing, name, 
+            var substantive = new Substantive(Substantive.Types.Thing, name, article: article, pronoun: "it",
                 description: description, mass: mass, volume: volume);
             substantive.AddDetail(detail);
             return substantive;
@@ -237,7 +282,7 @@ namespace HomicideDetective.Mysteries
                     break;
             }   
             
-            var substantive = new Substantive(Substantive.Types.Thing, name, 
+            var substantive = new Substantive(Substantive.Types.Thing, name, article: "a", pronoun: "it",
                 description: description, mass: mass, volume: volume);
             substantive.AddDetail(detail);
             return substantive;

@@ -82,5 +82,17 @@ namespace HomicideDetective.Mysteries
                 yield return witness;
             }
         }
+
+        /// <summary>
+        /// Creates a generic rle item
+        /// </summary>
+        /// <returns></returns>
+        public RogueLikeEntity GenerateMiscellaneousItem()
+        {
+            var item = GenerateMiscellaneousItemInfo();
+            var rle = new RogueLikeEntity((0,0), item.Name![0]);
+            rle.AllComponents.Add(item);
+            return rle;
+        }
     }
 }
