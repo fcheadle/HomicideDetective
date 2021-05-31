@@ -6,6 +6,9 @@ using SadRogue.Integration;
 
 namespace HomicideDetective.Mysteries
 {
+    /// <remarks>
+    /// Generates the RogueLikeEntities and all of their components
+    /// </remarks>
     public partial class Mystery
     {
         /// <summary>

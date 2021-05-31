@@ -1,4 +1,3 @@
-using HomicideDetective.Mysteries;
 using HomicideDetective.People;
 using SadRogue.Integration;
 using SadRogue.Primitives.GridViews;
@@ -35,7 +34,7 @@ namespace HomicideDetective.UserInterface
                 }
             }
 
-            Program.Page.Print(thoughts.CurrentThought.What);
+            Program.Page.Write(thoughts.CurrentThought.What);
         }
 
         /// <summary>
@@ -61,8 +60,7 @@ namespace HomicideDetective.UserInterface
                 }
             }
 
-            Program.Page.Print(thoughts.CurrentThought.What);
+            Program.Page.Write(thoughts.CurrentThought.What);
         }
-        
     }
 }
