@@ -20,7 +20,7 @@ namespace HomicideDetective.Tests.Mysteries
             mystery.Generate();
             Assert.NotNull(mystery.Victim);
             Assert.NotNull(mystery.Victim.AllComponents.GetFirstOrDefault<Substantive>());
-            Assert.NotNull(mystery.SceneOfCrime);
+            Assert.NotNull(mystery.SceneOfCrimeInfo);
             Assert.NotNull(mystery.Murderer);
             Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Speech>());
             Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Thoughts>());

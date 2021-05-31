@@ -71,8 +71,6 @@ namespace HomicideDetective.Mysteries
             string name;
             string description;
             string detail;
-            string size;
-            string weight;
             int mass;
             int volume;
             switch (Random.Next(0,10))
@@ -84,8 +82,6 @@ namespace HomicideDetective.Mysteries
                     mass = 710;
                     volume = 490;
                     detail = "It is completely free of dust, and has a slight smell of bleach";
-                    size = "is exactly average in size";
-                    weight = "weighs a little less than it looks like";
                     break;
                 case 1: 
                     name = "Switchblade"; 
@@ -93,8 +89,6 @@ namespace HomicideDetective.Mysteries
                     mass = 125;
                     volume = 325;
                     detail = "There is a small patch of red rust near the hinge";
-                    size = "is tiny";
-                    weight = "weighs almost nothing";
                     break;
                 case 2: 
                     name = "Pistol"; 
@@ -102,8 +96,6 @@ namespace HomicideDetective.Mysteries
                     mass = 6750;
                     volume = 465;
                     detail = "There are residue patterns on the muzzle";
-                    size = "is easily concealable";
-                    weight = "weighs more than it looks like";
                     break;
                 case 3: 
                     name = "Poison"; 
@@ -111,8 +103,6 @@ namespace HomicideDetective.Mysteries
                     mass = 15;
                     volume = 12;
                     detail = "There is a puncture hole in the cap";
-                    size = "is fits within an insulin bottle";
-                    weight = "weighs little more than water";
                     break;
                 case 4: 
                     name = "Kitchen Knife"; 
@@ -120,8 +110,6 @@ namespace HomicideDetective.Mysteries
                     mass = 240;
                     volume = 390;
                     detail = "It is somewhat warped along its flat plane";
-                    size = "is long and curved";
-                    weight = "weighs very little";
                     break;
                 case 5: 
                     name = "Shotgun";
@@ -129,8 +117,6 @@ namespace HomicideDetective.Mysteries
                     mass = 13500;
                     volume = 8825;
                     detail = "there is one shell in the chamber";
-                    size = "is exactly average in size";
-                    weight = "is heavy and has powerful kickback";
                     break;
                 case 6: 
                     name = "Rock"; 
@@ -138,8 +124,6 @@ namespace HomicideDetective.Mysteries
                     mass = 10000;
                     volume = 750;
                     detail = "It is covered in blood and haphazardly discarded nearby";
-                    size = "is three times the size of your fist";
-                    weight = "is very dense and hard";
                     break;
                 case 7: 
                     name = "Screwdriver"; 
@@ -147,8 +131,6 @@ namespace HomicideDetective.Mysteries
                     mass = 120;
                     volume = 200;
                     detail = "This flathead has been recently cleaned";
-                    size = "is four and a half inches long";
-                    weight = "has a clear plastic handle";
                     break;
                 case 8: 
                     name = "Revolver"; 
@@ -156,8 +138,6 @@ namespace HomicideDetective.Mysteries
                     mass = 7000;
                     volume = 700;
                     detail = "it has five bullets, and one empty chamber";
-                    size = "has finely-etched filligree";
-                    weight = "looks like it costs a lot of money";
                     break;
                 case 9: 
                     name = "Rifle"; 
@@ -165,11 +145,98 @@ namespace HomicideDetective.Mysteries
                     mass = 12000;
                     volume = 8200;
                     detail = "It is coated with gunpowder residue.";
-                    size = "has scuff marks on the butt";
-                    weight = "looks like it has taken a beating";
                     break;
             }
 
+            var substantive = new Substantive(Substantive.Types.Thing, name, 
+                description: description, mass: mass, volume: volume);
+            substantive.AddDetail(detail);
+            return substantive;
+        }
+
+        /// <summary>
+        /// Generates info for a random item.
+        /// </summary>
+        /// <returns>A substantive for a generic item that could exist anywhere.</returns>
+        public Substantive GenerateMiscellaneousItemInfo()
+        {
+            string name, description, detail;
+            int mass, volume;
+            switch (Random.Next(1, 101) % 10)
+            {
+                default:
+                case 0:
+                    name = "coffee mug";
+                    description = "a small ceramic cup used for hot liquids";
+                    detail = "it has brown stains on the interior.";
+                    mass = 101;
+                    volume = 64;
+                    break;
+                case 1:
+                    name = "typewriter";
+                    description = "device used to write quickly and legibly";
+                    detail = "it is worn from years of use.";
+                    mass = 64000;
+                    volume = 320;
+                    break;
+                case 2:
+                    name = "photo album";
+                    description = "a booklet for holding photographs";
+                    detail = "there is a page in the middle with no photos.";
+                    mass = 2050;
+                    volume = 180;
+                    break;
+                case 3:
+                    name = "handsaw";
+                    description = "a small tool, normally used for carpentry";
+                    detail = "it is rusted all over.";
+                    mass = 881;
+                    volume = 200;
+                    break;
+                case 4:
+                    name = "record player";
+                    description = "a device which plays music from records";
+                    detail = "there is no record in it right now.";
+                    mass = 1675;
+                    volume = 850;
+                    break;
+                case 5:
+                    name = "schoolbook";
+                    description = "a book containing basic information about math";
+                    detail = "the inside is covered in crayon drawings";
+                    mass = 1750;
+                    volume = 600;
+                    break;
+                case 6:
+                    name = "toaster";
+                    description = "a device used for toasting bread";
+                    detail = "it is filled with crumbs.";
+                    mass = 1200;
+                    volume = 1200;
+                    break;
+                case 7:
+                    name = "shirt";
+                    description = "a shirt that has been tossed on the ground";
+                    detail = "it is filthy beyond belief.";
+                    mass = 101;
+                    volume = 64;
+                    break;
+                case 8:
+                    name = "vinyl record";
+                    description = "a record that contains music and can be played by a record player";
+                    detail = "it is a hard rock band with violent album art.";
+                    mass = 0;
+                    volume = 0;
+                    break;
+                case 9:
+                    name = "hairbrush";
+                    description = "a tool used for grooming one's hair";
+                    detail = "it has red, brown, and grey hairs in its teeth.";
+                    mass = 0;
+                    volume = 0;
+                    break;
+            }   
+            
             var substantive = new Substantive(Substantive.Types.Thing, name, 
                 description: description, mass: mass, volume: volume);
             substantive.AddDetail(detail);

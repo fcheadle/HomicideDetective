@@ -31,6 +31,8 @@ namespace HomicideDetective.Places.Generation
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
                 (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "house");
             var wallFloor = context.GetFirstOrNew(() => new ArrayView<bool>(context.Width, context.Height), "WallFloor");
+            var block = context.GetFirstOrNew(() => new List<Region>(), "houses");
+            
             int houseSize = (_horizontalRooms + 1) * _dimension; 
             for (int i = 0; i < 2; i++)
             {
@@ -38,8 +40,9 @@ namespace HomicideDetective.Places.Generation
                 {
                     SwitchColorTheme(i + j);
                     var bottomLeft = (i * houseSize + j * houseSize + 8, context.Height - _dimension - j * houseSize);
-                    foreach (Region plot in CreateParallelogramHouse(context, bottomLeft))
+                    foreach (Region plot in CreateParallelogramHouse(bottomLeft))
                     {
+                        block.Add(plot);
                         foreach (var region in plot.SubRegions)
                         {
                             DrawRegion(region, map, wallFloor);
@@ -60,7 +63,7 @@ namespace HomicideDetective.Places.Generation
             
         }
 
-        private IEnumerable<Region> CreateParallelogramHouse(GenerationContext context, Point bottomLeft)
+        private IEnumerable<Region> CreateParallelogramHouse(Point bottomLeft)
         {
             var house = new Region($"house {bottomLeft}", NorthWest(bottomLeft, _dimension * 3),
                 NorthEast(bottomLeft, _dimension * 3), SouthEast(bottomLeft, _dimension * 3),
@@ -88,8 +91,18 @@ namespace HomicideDetective.Places.Generation
             
             CreateCentralHallWay(house);
             CreateEatingSpaces(house);
+            CreateBathroom(house);
             TrimUnusedRooms(house);
             yield return house;
+        }
+
+        private void CreateBathroom(Region house)
+        {
+            var hall = house.SubRegions.First(r => r.Name == "hall");
+            var kitching = house.SubRegions.First(r => r.Name == "kitchen");
+            var dining = house.SubRegions.First(r => r.Name == "dining");
+            var bathroom = house.SubRegions.RandomItem(r => r.Name != "hall" && r.Name != "dining" && r.Name != "kitchen" && hall.OuterPoints.Count(r.Contains) > 3);
+            bathroom.Name = "bathroom";
         }
 
         private void TrimUnusedRooms(Region house)
@@ -212,10 +225,11 @@ namespace HomicideDetective.Places.Generation
         private void DrawRegion(Region region, ISettableGridView<RogueLikeCell> map, ArrayView<bool> wallFloor)
         {
             bool isEatingSpace = region.Name == "kitchen" || region.Name == "dining";
+            bool isBathroom = region.Name == "bathroom";
             //place floor tiles
             foreach (var point in region.InnerPoints.Where(map.Contains))
             {
-                map[point] = isEatingSpace ? KitchenFloor(point) : Floor(point);
+                map[point] = isEatingSpace ? KitchenFloor(point) : isBathroom ? BathroomFloor(point) : Floor(point);
                 wallFloor[point] = true;
             }
 
@@ -230,7 +244,6 @@ namespace HomicideDetective.Places.Generation
                 _connections.Add(point);
             
         }
-
         private void SwitchColorTheme(int index)
         {
             switch (index % 4)
@@ -279,10 +292,10 @@ namespace HomicideDetective.Places.Generation
             _floorSecondaryColor = Color.DarkGray;
         }
         private RogueLikeCell Wall(Point point) => new RogueLikeCell(point, _wallColor, _backgroundColor, _wallGlyph, 0, false, false);
-        private RogueLikeCell Floor(Point point) => new RogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, point.Y % 2 == 1 ? _floorPrimaryGlyph : _floorSecondaryGlyph, 0);
-        private RogueLikeCell KitchenFloor(Point point) => new RogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? Color.DarkGray : Color.LightGray, _backgroundColor, '+', 0);
+        private RogueLikeCell Floor(Point point) => new RogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, _floorPrimaryGlyph, 0);
+        private RogueLikeCell KitchenFloor(Point point) => new RogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, '+', 0);
         private RogueLikeCell Door(Point point) => new RogueLikeCell(point, _wallColor, _backgroundColor, _doorGlyph, 0);
-
+        private RogueLikeCell BathroomFloor(Point point) => new RogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, 4, 0);
         private Point NorthEast(Point bottomLeft, int lengthOfSide) => bottomLeft + (lengthOfSide * 2, -lengthOfSide); 
         private Point NorthWest(Point bottomLeft, int lengthOfSide) => bottomLeft + (lengthOfSide, -lengthOfSide); 
         private Point SouthEast(Point bottomLeft, int lengthOfSide) => bottomLeft + (lengthOfSide, 0);

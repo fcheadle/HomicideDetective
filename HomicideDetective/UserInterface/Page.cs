@@ -46,7 +46,9 @@ namespace HomicideDetective.UserInterface
                 FocusOnMouseClick = true,
                 Position = (1,1)
             };
-            
+            TextSurface.Surface.View = new Rectangle((0, 0), (Width - 2, Height - 2));
+            TextSurface.Surface.DefaultBackground = Color.Transparent;
+            TextSurface.Surface.DefaultForeground = Color.Blue;
             var cursor = new Cursor()
             {
                 IsVisible = false,
@@ -127,14 +129,17 @@ namespace HomicideDetective.UserInterface
         public static void UpOneLine()
         {
             var page = Program.Page;
-            page.TextSurface.Surface.View = page.TextSurface.Surface.View.WithY(page.TextSurface.Surface.View.Y + 1);
-            
+            page.TextSurface.Surface.ViewPosition -= (0, 1);
+            // page.TextSurface.Surface.View = page.TextSurface.Surface.View.WithPosition(page.TextSurface.Surface.ViewPosition - (0,1));
+            page.TextSurface.IsDirty = true;
         }
 
         public static void DownOneLine()
         {
             var page = Program.Page;
-            page.TextSurface.Surface.View = page.TextSurface.Surface.View.WithY(page.TextSurface.Surface.View.Y - 1);
+            // page.TextSurface.Surface.View = page.TextSurface.Surface.View.WithPosition(page.TextSurface.Surface.ViewPosition + (0,1));
+            page.TextSurface.Surface.ViewPosition += (0, 1);
+            page.TextSurface.IsDirty = true;
         }
 
         //temporary - for testing
