@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GoRogue;
 using HomicideDetective.People;
+using HomicideDetective.Things;
 using SadRogue.Integration;
 
 namespace HomicideDetective.Mysteries
@@ -61,7 +62,7 @@ namespace HomicideDetective.Mysteries
                 witness.AllComponents.Add(witnessInfo);
                 witness.AllComponents.Add(new Thoughts());
                 witness.AllComponents.Add(new Speech());
-                
+                witness.AllComponents.Add(GenerateMarkings());
                 //todo - memories, sayings, etc
 
                 yield return witness;
@@ -99,6 +100,61 @@ namespace HomicideDetective.Mysteries
                 37500, 24000);  
             
             return substantive;
+        }
+
+        public MarkingCollection GenerateMarkings()
+        {
+            MarkingCollection collection = new MarkingCollection();
+            string name, adjective, description, color;
+
+            name = "hair";
+            int chance = Random.Next(1, 101);
+            switch (chance % 7)
+            {
+                default:
+                case 0: adjective = "curly"; break;
+                case 1: adjective = "wavy"; break;
+                case 2: adjective = "frizzy"; break;
+                case 3: adjective = "flat"; break;
+                case 4: adjective = "straight"; break;
+                case 5: adjective = "springy"; break;
+                case 6: adjective = "poofy"; break;
+            }
+            chance = Random.Next(1, 101);
+            switch (chance % 12)
+            {
+                default:
+                case 0: color = "light brown"; break;
+                case 1: color = "brown"; break;
+                case 2: color = "dark brown"; break;
+                case 3: color = "black"; break;
+                case 4: color = "dark grey"; break;
+                case 5: color = "grey"; break;
+                case 6: color = "light grey"; break;
+                case 7: color = "white"; break;
+                case 8: color = "blonde"; break;
+                case 9: color = "dark blonde"; break;
+                case 10: color = "strawberry blonde"; break;
+                case 11: color = "dirty blonde"; break;
+            }
+            chance = Random.Next(1, 101);
+            switch (chance % 6)
+            {
+                default:
+                case 0: description = "waxy"; break;
+                case 1: description = "dry"; break;
+                case 2: description = "damp"; break;
+                case 3: description = "moist"; break;
+                case 4: description = "wet"; break;
+                case 5: description = "greasy"; break;
+            }
+
+            var hair = new Marking(name, color, description, adjective);
+            hair = new Marking(name, color, description, adjective, Substantive.Types.Person, new []{hair});
+            collection.AddUnlimitedMarkings(hair);
+            
+
+            return collection;
         }
     }
 }

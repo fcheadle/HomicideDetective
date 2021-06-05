@@ -3,6 +3,8 @@ using System.Linq;
 using GoRogue;
 using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
+using HomicideDetective.Places;
+using SadRogue.Integration;
 
 namespace HomicideDetective.Things
 {
@@ -14,13 +16,13 @@ namespace HomicideDetective.Things
         public IGameObject? Parent { get; set; }
         
         //the markings on the parent
-        public List<Marking> MarkingsOn => _markingsOn.ToList();
-        private List<Marking> _markingsOn; 
+        public List<Marking> MarkingsOn => _markingsOn;
+        private readonly List<Marking> _markingsOn; 
         
         //markings left by the parent
         public List<Marking> MarkingsLeftBy => _limitedMarkingsLeft.Concat(_unlimitedMarkingsLeft).ToList();
-        private List<Marking> _limitedMarkingsLeft;
-        private List<Marking> _unlimitedMarkingsLeft;
+        private readonly List<Marking> _limitedMarkingsLeft;
+        private readonly List<Marking> _unlimitedMarkingsLeft;
         
         public MarkingCollection()
         {
@@ -29,35 +31,43 @@ namespace HomicideDetective.Things
             _unlimitedMarkingsLeft = new List<Marking>();
         }
 
-        public Marking LeaveMark()
+        public Marking? LeaveMark()
         {
-            Marking leaving = MarkingsLeftBy.RandomItem();
-            
-            if (_limitedMarkingsLeft.Contains(leaving))
-                _limitedMarkingsLeft.Remove(leaving);
-            
-            return leaving;
+            if (MarkingsLeftBy.Any())
+            {
+                Marking leaving = MarkingsLeftBy.RandomItem();
+
+                if (_limitedMarkingsLeft.Contains(leaving))
+                    _limitedMarkingsLeft.Remove(leaving);
+
+                return leaving;
+            }
+            else return null;
         }
-        
+
+        public void LeaveMarkOn(Place place) => LeaveMarkOn(place.Markings, Substantive.Types.Place);
+        public void LeaveMarkOn(RogueLikeEntity entity) =>
+            LeaveMarkOn(entity.AllComponents.GetFirst<MarkingCollection>(), entity.AllComponents.GetFirst<Substantive>().Type);
+
+        private void LeaveMarkOn(MarkingCollection markings, Substantive.Types? type)
+        {
+            if (MarkingsLeftBy.Any(m => m.LeftOn == type))
+            {
+                Marking leaving = MarkingsLeftBy.RandomItem(m => m.LeftOn == type);
+
+                if (_limitedMarkingsLeft.Contains(leaving))
+                    _limitedMarkingsLeft.Remove(leaving);
+                
+                markings._markingsOn.Add(leaving);
+            }
+        }
+
         public void AddLimitedMarkings(Marking marking, int amount)
         {
             for (int i = 0; i < amount; i++)
-            {
                 _limitedMarkingsLeft.Add(marking);
-            }
         }
         
-        public void AddUnlimitedMarkings(Marking marking)
-            => _unlimitedMarkingsLeft.Add(marking);
-        
-
-        public void Mark(Marking marking, int amount = 1)
-        {
-            _markingsOn.Add(marking);
-            for (int i = 0; i < amount; i++)
-            {
-                _limitedMarkingsLeft.Add(marking);
-            }
-        }
+        public void AddUnlimitedMarkings(Marking marking) => _unlimitedMarkingsLeft.Add(marking);
     }
 }
