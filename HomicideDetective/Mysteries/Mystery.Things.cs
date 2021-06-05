@@ -1,104 +1,9 @@
+using SadRogue.Integration;
+
 namespace HomicideDetective.Mysteries
 {
     public partial class Mystery
     {
-        /// <summary>
-        /// Generates the descriptive information about the scene of the crime.
-        /// </summary>
-        /// <returns></returns>
-        public Substantive GenerateSceneOfMurderInfo()
-        {
-            string name, noun, pronoun, pronounPossessive, pronounPassive, height, width;
-            
-            name = $"{Victim.Info().Name}'s home";
-            pronoun = "it";
-            pronounPossessive = "its";
-            pronounPassive = "the";
-            switch (Random.Next(1, 101) % 8)
-            {
-                default:
-                case 0:
-                    height = "two-story";
-                    width = "slender";
-                    noun = "brownstone";
-                    break;
-                case 1: 
-                    height = "single-floor";
-                    width = "slender";
-                    noun = "flat";
-                    break;
-                case 2: 
-                    height = "single-floor";
-                    width = "wide";
-                    noun = "row home";
-                    break;
-                case 3: 
-                    height = "single-floor";
-                    width = "wide";
-                    noun = "brick home";
-                    break;
-                case 4: 
-                    height = "two-story";
-                    width = "ornate";
-                    noun = "victorian";
-                    break;
-                case 5: 
-                    height = "two-story";
-                    width = "'L'-shaped";
-                    noun = "brick home";
-                    break;
-                case 6: 
-                    height = "single-floor";
-                    width = "modest";
-                    noun = "prarie home";
-                    break;
-                case 7:
-                    height = "two-story";
-                    width = "decadent";
-                    noun = "tutor";
-                    break;
-            }
-
-            string description = $"{pronoun} is a {height}, {width} {noun}.";
-
-            var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: pronounPassive, pronoun: pronoun,
-                pronounPossessive: pronounPossessive, description: description, mass: 0, volume: 0);
-
-            return substantive;
-        }
-
-        /// <summary>
-        /// Generate the descriptive info for any random person.
-        /// </summary>
-        /// <param name="surname">The Surname of the individual to generate.</param>
-        /// <returns></returns>
-        public Substantive GeneratePersonalInfo(string surname)
-        {
-            bool isMale = Random.Next(0, 2) == 0;
-            bool isTall = Random.Next(0, 2) == 0;
-            bool isFat = Random.Next(0, 2) == 0;
-            bool isYoung = Random.Next(0, 3) <= 1; 
-
-            string noun = isMale ? "man" : "woman";
-            string pronoun = isMale ? "he" : "she";
-            string pronounPossessive = isMale ? "his" : "her";
-            string article = "";
-
-            string height = isTall ? "tall" : "short";
-            string heightDescription = isTall ? "slightly taller than average" : "rather short";
-            string width = isFat ? "full-figured" : "slender";
-            string widthDescription = isFat ? "moderately over-weight" : "rather slender";
-            string age = isYoung ? "young" : "middle-aged";
-
-            string description = $"{pronoun} is a {heightDescription}, {widthDescription} {age} {noun}. ";
-            string givenName = isMale ? _maleGivenNames[ Random.Next(0, _maleGivenNames.Length)] : _femaleGivenNames[ Random.Next(0, _femaleGivenNames.Length)];
-
-            var substantive = new Substantive(Substantive.Types.Person, $"{givenName} {surname}",
-                gender: isMale ? "male" : "female", article, pronoun, pronounPossessive, description,
-                37500, 24000);  
-            
-            return substantive;
-        }
 
         /// <summary>
         /// Generate the descriptive info for the murder weapon.
@@ -286,6 +191,33 @@ namespace HomicideDetective.Mysteries
                 description: description, mass: mass, volume: volume);
             substantive.AddDetail(detail);
             return substantive;
+        }
+        
+        /// <summary>
+        /// Generates the item which was used to kill someone
+        /// </summary>
+        /// <returns></returns>
+        public RogueLikeEntity GenerateMurderWeapon()
+        {
+            var itemInfo = GenerateMurderWeaponInfo();
+            var murderWeapon = new RogueLikeEntity((0,0), itemInfo.Name![0], true, true, 2);
+            murderWeapon.AllComponents.Add(itemInfo);
+            
+            //todo - add markings
+            
+            return murderWeapon;
+        }
+
+        /// <summary>
+        /// Creates a generic rle item
+        /// </summary>
+        /// <returns></returns>
+        public RogueLikeEntity GenerateMiscellaneousItem()
+        {
+            var item = GenerateMiscellaneousItemInfo();
+            var rle = new RogueLikeEntity((0,0), item.Name![0]);
+            rle.AllComponents.Add(item);
+            return rle;
         }
     }
 }

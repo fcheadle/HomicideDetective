@@ -48,7 +48,7 @@ namespace HomicideDetective
         public string GenerateDetailedDescription()
         {
             var description = $"This is {Article} {Name}. ";
-            description += $"{Description}. ";
+            description += $"{Description} ";
             if(Type != Types.Place)
             {
                 description += $"{Pronoun} weighs {Mass}g. ";
@@ -56,7 +56,7 @@ namespace HomicideDetective
             }
             foreach (var detail in _details)
             {
-                description += $"{detail}. ";
+                description += $"{detail} ";
             }
 
             return description;

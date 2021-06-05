@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GoRogue.GameFramework;
 using GoRogue.MapGeneration;
+using HomicideDetective.Places;
 using SadRogue.Integration;
 
 namespace HomicideDetective.Mysteries
@@ -24,8 +26,8 @@ namespace HomicideDetective.Mysteries
         public RogueLikeEntity Murderer { get; set; }
         public RogueLikeEntity MurderWeapon { get; set; }
         public Substantive SceneOfCrimeInfo { get; set; }
-        public Region SceneOfCrime { get; set; }
-        public List<Region> LocationsOfInterest { get; set; }
+        public Place SceneOfCrime { get; set; }
+        public List<Map> LocationsOfInterest { get; set; }
         public DateTime TimeOfDeath { get; set; }
         public List<RogueLikeEntity> Witnesses { get; set; }
         
@@ -45,10 +47,11 @@ namespace HomicideDetective.Mysteries
         
         public void Generate()
         {
-            Victim = GenerateVictim();
-            Murderer = GenerateMurderer();
+            LocationsOfInterest = new List<Map>();
+            Victim = GenerateVictimEntity();
+            Murderer = GenerateMurdererEntity();
             MurderWeapon = GenerateMurderWeapon();
-            Witnesses = GenerateWitnesses().ToList();
+            Witnesses = GenerateWitnessEntities().ToList();
             SceneOfCrimeInfo = GenerateSceneOfMurderInfo();
             GenerateTimeline();
         }

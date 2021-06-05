@@ -222,7 +222,7 @@ namespace HomicideDetective.Tests.Mysteries
             var mystery = new Mystery(seed, 0);
             mystery.Generate();
 
-            foreach (var witness in mystery.GenerateWitnesses())
+            foreach (var witness in mystery.GenerateWitnessEntities())
             {
                 var substantive = witness.AllComponents.GetFirst<Substantive>();
                 var speech = witness.AllComponents.GetFirst<Speech>();

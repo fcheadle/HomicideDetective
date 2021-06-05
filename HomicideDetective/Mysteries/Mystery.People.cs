@@ -15,7 +15,7 @@ namespace HomicideDetective.Mysteries
         /// Generates a RogueLikeEntity that is the victim in a murder investigation.
         /// </summary>
         /// <returns></returns>
-        public RogueLikeEntity GenerateVictim()
+        public RogueLikeEntity GenerateVictimEntity()
         {
             var victimInfo = GeneratePersonalInfo(_surnames.RandomItem());
             string descr = $"This is the body of {victimInfo.Name}. {victimInfo.Pronoun} was a";
@@ -35,7 +35,7 @@ namespace HomicideDetective.Mysteries
         /// Generates a RogueLikeEntity who is the murderer in a murder investigation.
         /// </summary>
         /// <returns></returns>
-        public RogueLikeEntity GenerateMurderer()
+        public RogueLikeEntity GenerateMurdererEntity()
         {
             var murdererInfo = GeneratePersonalInfo(_surnames.RandomItem());
             var murderer = new RogueLikeEntity((0,0), 1, false);
@@ -49,25 +49,10 @@ namespace HomicideDetective.Mysteries
         }
         
         /// <summary>
-        /// Generates the item which was used to kill someone
-        /// </summary>
-        /// <returns></returns>
-        public RogueLikeEntity GenerateMurderWeapon()
-        {
-            var itemInfo = GenerateMurderWeaponInfo();
-            var murderWeapon = new RogueLikeEntity((0,0), itemInfo.Name![0], true, true, 2);
-            murderWeapon.AllComponents.Add(itemInfo);
-            
-            //todo - add markings
-            
-            return murderWeapon;
-        }
-        
-        /// <summary>
         /// Generates everyone related to the case: family members, friends, coworkers, etc.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<RogueLikeEntity> GenerateWitnesses()
+        public IEnumerable<RogueLikeEntity> GenerateWitnessEntities()
         {
             for(int i = 0; i < 10; i++)
             {
@@ -82,17 +67,38 @@ namespace HomicideDetective.Mysteries
                 yield return witness;
             }
         }
-
+        
         /// <summary>
-        /// Creates a generic rle item
+        /// Generate the descriptive info for any random person.
         /// </summary>
+        /// <param name="surname">The Surname of the individual to generate.</param>
         /// <returns></returns>
-        public RogueLikeEntity GenerateMiscellaneousItem()
+        public Substantive GeneratePersonalInfo(string surname)
         {
-            var item = GenerateMiscellaneousItemInfo();
-            var rle = new RogueLikeEntity((0,0), item.Name![0]);
-            rle.AllComponents.Add(item);
-            return rle;
+            bool isMale = Random.Next(0, 2) == 0;
+            bool isTall = Random.Next(0, 2) == 0;
+            bool isFat = Random.Next(0, 2) == 0;
+            bool isYoung = Random.Next(0, 3) <= 1; 
+
+            string noun = isMale ? "man" : "woman";
+            string pronoun = isMale ? "he" : "she";
+            string pronounPossessive = isMale ? "his" : "her";
+            string article = "";
+
+            string height = isTall ? "tall" : "short";
+            string heightDescription = isTall ? "slightly taller than average" : "rather short";
+            string width = isFat ? "full-figured" : "slender";
+            string widthDescription = isFat ? "moderately over-weight" : "rather slender";
+            string age = isYoung ? "young" : "middle-aged";
+
+            string description = $"{pronoun} is a {heightDescription}, {widthDescription} {age} {noun}. ";
+            string givenName = isMale ? _maleGivenNames[ Random.Next(0, _maleGivenNames.Length)] : _femaleGivenNames[ Random.Next(0, _femaleGivenNames.Length)];
+
+            var substantive = new Substantive(Substantive.Types.Person, $"{givenName} {surname}",
+                gender: isMale ? "male" : "female", article, pronoun, pronounPossessive, description,
+                37500, 24000);  
+            
+            return substantive;
         }
     }
 }
