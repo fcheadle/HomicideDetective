@@ -2,12 +2,12 @@ using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using SadRogue.Integration;
 
-namespace HomicideDetective.UserInterface
+namespace HomicideDetective.Places
 {
     /// <summary>
     /// The blowing grass animation
     /// </summary>
-    public class AnimatingGlyph : IGameObjectComponent
+    public class BlowingInWindComponent : IGameObjectComponent
     {
         //AnimatedConsole animation;
         readonly int _ogGlyph;
@@ -16,7 +16,7 @@ namespace HomicideDetective.UserInterface
         public IGameObject Parent { get; set; }
         public bool Animating { get; private set; }
 
-        public AnimatingGlyph(int glyph, int[] animationSteps)
+        public BlowingInWindComponent(int glyph, int[] animationSteps)
         {
             _ogGlyph = glyph;
             _animationSteps = animationSteps;
