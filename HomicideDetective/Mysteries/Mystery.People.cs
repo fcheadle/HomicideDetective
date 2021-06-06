@@ -152,8 +152,7 @@ namespace HomicideDetective.Mysteries
             var hair = new Marking(name, color, description, adjective);
             hair = new Marking(name, color, description, adjective, Substantive.Types.Person, new []{hair});
             collection.AddUnlimitedMarkings(hair);
-            
-
+            collection.LeaveMarkOn(collection, Substantive.Types.Person);
             return collection;
         }
     }

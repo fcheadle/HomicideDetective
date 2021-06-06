@@ -49,7 +49,7 @@ namespace HomicideDetective.Things
         public void LeaveMarkOn(RogueLikeEntity entity) =>
             LeaveMarkOn(entity.AllComponents.GetFirst<MarkingCollection>(), entity.AllComponents.GetFirst<Substantive>().Type);
 
-        private void LeaveMarkOn(MarkingCollection markings, Substantive.Types? type)
+        public void LeaveMarkOn(MarkingCollection markings, Substantive.Types? type)
         {
             if (MarkingsLeftBy.Any(m => m.LeftOn == type))
             {

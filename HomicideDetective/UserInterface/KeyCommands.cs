@@ -85,7 +85,7 @@ namespace HomicideDetective.UserInterface
                                 string thought = "";
                                 thought += "On this entity is ";
                                 foreach (var marking in markings.MarkingsOn)
-                                    thought += $"{marking.Name}, ";
+                                    thought += $"{marking}, ";
                                 thoughts.Think(thought);
                             }
                         }
