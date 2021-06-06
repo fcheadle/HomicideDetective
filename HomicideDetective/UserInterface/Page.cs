@@ -116,28 +116,28 @@ namespace HomicideDetective.UserInterface
 
         public static void BackPage()
         {
-            var page = Program.Page;
+            var page = Program.CurrentGame.MessageWindow;
             if (page.PageNumber > 0)
                 page.PrintContents(--page.PageNumber);
         }
         
         public static void ForwardPage()
         {
-            var page = Program.Page;
+            var page = Program.CurrentGame.MessageWindow;
             if (page.PageNumber < page.Contents.Count - 1)
                 page.PrintContents(++page.PageNumber);
         }
 
         public static void UpOneLine()
         {
-            var page = Program.Page;
+            var page = Program.CurrentGame.MessageWindow;
             page.TextSurface.Surface.ViewPosition -= (0, 1);
             page.TextSurface.IsDirty = true;
         }
 
         public static void DownOneLine()
         {
-            var page = Program.Page;
+            var page = Program.CurrentGame.MessageWindow;
             page.TextSurface.Surface.ViewPosition += (0, 1);
             page.TextSurface.IsDirty = true;
         }
@@ -145,7 +145,7 @@ namespace HomicideDetective.UserInterface
         //temporary - for testing
         public static void WriteGarbage()
         {
-            var page = Program.Page;
+            var page = Program.CurrentGame.MessageWindow;
             page.Clear();
             string contents = "home ";
             for (int i = 0; i < 1000; i++)

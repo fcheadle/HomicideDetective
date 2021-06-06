@@ -37,7 +37,7 @@ namespace HomicideDetective.People
             _falseNarrative = new Timeline();
         }
 
-        public void Think(string thought) => Think(new Happening(Program.CurrentTime, thought, "", false));
+        public void Think(string thought) => Think(new Happening(Program.CurrentGame.CurrentTime, thought, "", false));
 
         public void Think(Happening thought)
         {
@@ -56,7 +56,7 @@ namespace HomicideDetective.People
                 Think(thought);
         }
 
-        public void ThinkFalseFact(string fact) => ThinkFalseFact(new Happening(Program.CurrentTime, fact, "", false));
+        public void ThinkFalseFact(string fact) => ThinkFalseFact(new Happening(DateTime.Now, fact, "", false));
 
         public void ThinkFalseFact(Happening fact)
         {
@@ -71,10 +71,10 @@ namespace HomicideDetective.People
 
         public Happening HappeningAtTime(DateTime time)
         {
-            if (time - Program.CurrentTime < TimeSpan.FromHours(1))
+            if (time - Program.CurrentGame.CurrentTime < TimeSpan.FromHours(1))
                 return _shortTermMemory.HappeningAtTime(time);
             
-            if (time - Program.CurrentTime < TimeSpan.FromHours(24))
+            if (time - Program.CurrentGame.CurrentTime < TimeSpan.FromHours(24))
                 return _midTermMemory.HappeningAtTime(time);
 
             return _longTermMemory.HappeningAtTime(time);

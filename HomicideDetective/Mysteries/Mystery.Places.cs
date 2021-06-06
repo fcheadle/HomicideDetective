@@ -12,6 +12,13 @@ namespace HomicideDetective.Mysteries
 {
     public partial class Mystery
     {
+        public void NextMap()
+        {
+            if (_currentMapIndex >= LocationsOfInterest.Count - 1)
+                _currentMapIndex = 0;
+            else
+                _currentMapIndex++;
+        }
         /// <summary>
         /// Creates the map for the crime scene
         /// </summary>
@@ -20,7 +27,7 @@ namespace HomicideDetective.Mysteries
         /// <param name="viewWidth"></param>
         /// <param name="viewHeight"></param>
         /// <returns></returns>
-        public RogueLikeMap GenerateMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
+        public RogueLikeMap GenerateNeighborhoodMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
         {
             //use GoRogue generator to combine the steps in Places/Generation and get the resulting three maps
             var generator = new Generator(mapWidth, mapHeight)
@@ -40,8 +47,17 @@ namespace HomicideDetective.Mysteries
             RogueLikeMap map = DrawMap(houseMap, streetMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
             
             //add additional components
-            //todo - unsafe?
-            Program.Weather = new Weather(map);
+            PlaceRegions(map, regionMap);
+
+            LocationsOfInterest.Add(map);
+            SceneOfCrime = RandomRoom(map);
+            PlacePeopleOnMap(map);
+
+            return map;
+        }
+
+        private void PlaceRegions(RogueLikeMap map, IEnumerable<Region> regionMap)
+        {
             var places = new PlaceCollection();
             foreach (var region in regionMap)
             {
@@ -51,13 +67,50 @@ namespace HomicideDetective.Mysteries
             }
             
             map.AllComponents.Add(places);
+        }
 
+        public RogueLikeMap GenerateParkMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
+        {
+            var generator = new Generator(mapWidth, mapHeight)
+                .ConfigAndGenerateSafe(gen =>
+                {
+                    gen.AddSteps(new Places.Generation.GrassStep());
+                    gen.AddSteps(new Places.Generation.StreetStep());
+                    gen.AddSteps(new Places.Generation.PondStep());
+                });
+            var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
+            var parkMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("park");
+            var pondMap = generator.Context.GetFirst<IEnumerable<BodyOfWater>>("pond").First();
+            var map = DrawMap(parkMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
+            
+            map.GoRogueComponents.Add(pondMap);
             LocationsOfInterest.Add(map);
-            SceneOfCrime = RandomRoom(map);
-            PlacePeopleOnMap(map);
-
             return map;
         }
+
+        public RogueLikeMap GenerateDownTownMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
+        {
+            var generator = new Generator(mapWidth, mapHeight)
+                .ConfigAndGenerateSafe(gen =>
+                {
+                    gen.AddSteps(new Places.Generation.GrassStep());
+                    gen.AddSteps(new Places.Generation.StreetStep());
+                    gen.AddSteps(new Places.Generation.DownTownStep());
+                });
+            var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
+            var streetMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("street");
+            var downTown = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("downtown");
+            var map = DrawMap(downTown, streetMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
+            LocationsOfInterest.Add(map);
+            
+            var regionMap = generator.Context.GetFirst<IEnumerable<Region>>("shops");
+            PlaceRegions(map, regionMap);
+            return map;
+        }
+
+        private RogueLikeMap DrawMap(ISettableGridView<RogueLikeCell> primaryMap,
+            ISettableGridView<RogueLikeCell> secondaryMap, int mapWidth, int mapHeight, int viewWidth, int viewHeight)
+            => DrawMap(primaryMap, secondaryMap, secondaryMap, mapWidth, mapHeight, viewWidth, viewHeight);
 
         private Substantive GeneratePlaceInfo(Region region)
         {

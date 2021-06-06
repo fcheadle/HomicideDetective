@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoRogue.GameFramework;
-using GoRogue.MapGeneration;
 using HomicideDetective.Places;
+using HomicideDetective.UserInterface;
 using SadRogue.Integration;
+using SadRogue.Integration.Maps;
 
 namespace HomicideDetective.Mysteries
 {
@@ -27,10 +27,11 @@ namespace HomicideDetective.Mysteries
         public RogueLikeEntity MurderWeapon { get; set; }
         public Substantive SceneOfCrimeInfo { get; set; }
         public Place SceneOfCrime { get; set; }
-        public List<Map> LocationsOfInterest { get; set; }
+        public RogueLikeMap CurrentLocation => LocationsOfInterest[_currentMapIndex];
+        public List<RogueLikeMap> LocationsOfInterest { get; set; }
         public DateTime TimeOfDeath { get; set; }
         public List<RogueLikeEntity> Witnesses { get; set; }
-        
+        private int _currentMapIndex = 0;
         public Random Random { get; set; }
 
         //todo - json names
@@ -47,13 +48,16 @@ namespace HomicideDetective.Mysteries
         
         public void Generate()
         {
-            LocationsOfInterest = new List<Map>();
+            LocationsOfInterest = new();
             Victim = GenerateVictimEntity();
             Murderer = GenerateMurdererEntity();
             MurderWeapon = GenerateMurderWeapon();
             Witnesses = GenerateWitnessEntities().ToList();
             SceneOfCrimeInfo = GenerateSceneOfMurderInfo();
             GenerateTimeline();
+            GenerateNeighborhoodMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height);
+            GenerateParkMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height);
+            GenerateDownTownMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height);
         }
     }
 }

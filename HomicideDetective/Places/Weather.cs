@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using GoRogue;
-using HomicideDetective.Mysteries;
-using HomicideDetective.UserInterface;
 using SadRogue.Integration;
 using SadRogue.Integration.Components;
 using SadRogue.Integration.Maps;
+
 // ReSharper disable PossibleLossOfFraction
 
 namespace HomicideDetective.Places
@@ -28,8 +27,8 @@ namespace HomicideDetective.Places
             (x,y,t) => Math.Tan(y*.625 + x*1.75 - t.TotalSeconds / 100) % 2.01,//natural
             (x,y,t) => -Math.Cos(x * 3.45 - t.TotalMilliseconds / 777) - Math.Sin(y*0.77 - t.TotalMilliseconds / 77), //east waves - beautiful
             (x,y,t) => Math.Sin(x - t.TotalMilliseconds / 650) + Math.Cos(y - t.TotalMilliseconds / 325), //bubbles going south-southeast - beautiful
-            // (x,y,t) => 2 * Math.Sin(x * (y / 8) + y * Math.Sin(y / (x+1)) + t.TotalSeconds),//bizarre and cool
         };
+        
         //F(x, y, t) // f of xyt
         private Func<int, int, TimeSpan, double> Fxyt;
 
@@ -43,6 +42,8 @@ namespace HomicideDetective.Places
         {
             Elapsed += TimeSpan.FromMilliseconds(100);
             BlowWind();
+            if(Elapsed.TotalMilliseconds % 1000 <= 100)
+                MakeWaves();
         }
 
         private void BlowWind()
@@ -52,9 +53,9 @@ namespace HomicideDetective.Places
             {
                 for (int y = 0; y < _map.Height; y++)
                 {
-                    //if the cell has an AnimatingGlyph component...
+                    //if the cell has a BlowsInWind component...
                     RogueLikeCell? terrain = _map.GetTerrainAt<RogueLikeCell>((x, y));
-                    var component = terrain?.GoRogueComponents.GetFirstOrDefault<AnimatingGlyph>();
+                    var component = terrain?.GoRogueComponents.GetFirstOrDefault<BlowsInWind>();
                     if (component != null)
                     {
                         //perform the function and blow wind on a subset of tiles
@@ -64,6 +65,22 @@ namespace HomicideDetective.Places
 
                         component.ProcessTimeUnit();
                     }
+                }
+            }
+        }
+        private void MakeWaves()
+        {
+            var pond = _map.GoRogueComponents.GetFirstOrDefault<BodyOfWater>();
+            if (pond is not null)
+            {
+                pond.DetermineNextStates();
+                foreach (var cell in pond.Cells)
+                {
+                    var position = cell.Position - pond.Body.Position;
+                    var waves = cell.GoRogueComponents.GetFirst<MovesInWaves>();
+                    waves.State = pond.NextState[position];
+                    waves.SetAppearance();
+                    pond.CurrentState[position] = pond.NextState[position];
                 }
             }
         }

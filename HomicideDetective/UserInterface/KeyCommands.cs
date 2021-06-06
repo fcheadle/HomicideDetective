@@ -1,6 +1,8 @@
 using HomicideDetective.People;
 using HomicideDetective.Things;
+using SadConsole;
 using SadRogue.Integration;
+using SadRogue.Integration.Maps;
 using SadRogue.Primitives.GridViews;
 
 namespace HomicideDetective.UserInterface
@@ -10,20 +12,23 @@ namespace HomicideDetective.UserInterface
     /// </summary>
     public static class KeyCommands
     {
+        private static RogueLikeEntity Player => Program.CurrentGame.PlayerCharacter;
+        private static RogueLikeMap Map => Program.CurrentGame.Map;
+        private static Page MessageWindow => Program.CurrentGame.MessageWindow;
         /// <summary>
         /// Talks to each entity in the squares surrounding the player
         /// </summary>
         public static void Talk()
         {
             //Program.CurrentTime.Minutes++;
-            var thoughts = Program.PlayerCharacter.AllComponents.GetFirst<Thoughts>();
-            for (int i = Program.PlayerCharacter.Position.X - 1; i < Program.PlayerCharacter.Position.X + 2; i++)
+            var thoughts = Player.AllComponents.GetFirst<Thoughts>();
+            for (int i = Player.Position.X - 1; i < Player.Position.X + 2; i++)
             {
-                for (int j = Program.PlayerCharacter.Position.Y - 1; j < Program.PlayerCharacter.Position.Y + 2; j++)
+                for (int j = Player.Position.Y - 1; j < Player.Position.Y + 2; j++)
                 {
-                    if (Program.Map.Contains((i, j)) && (i,j) != Program.PlayerCharacter.Position)
+                    if (Map.Contains((i, j)) && (i,j) != Player.Position)
                     {
-                        foreach (var entity in Program.Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
+                        foreach (var entity in Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
                         {
                             var speech = entity.AllComponents.GetFirstOrDefault<Speech>();
                             if (speech is not null)
@@ -35,7 +40,7 @@ namespace HomicideDetective.UserInterface
                 }
             }
 
-            Program.Page.Write(thoughts.CurrentThought.What);
+            MessageWindow.Write(thoughts.CurrentThought.What);
         }
 
         /// <summary>
@@ -44,14 +49,14 @@ namespace HomicideDetective.UserInterface
         public static void Look()
         {
             //Program.CurrentTime.Minutes++;
-            var thoughts = Program.PlayerCharacter.AllComponents.GetFirst<Thoughts>();
-            for (int i = Program.PlayerCharacter.Position.X - 1; i < Program.PlayerCharacter.Position.X + 2; i++)
+            var thoughts = Player.AllComponents.GetFirst<Thoughts>();
+            for (int i = Player.Position.X - 1; i < Player.Position.X + 2; i++)
             {
-                for (int j = Program.PlayerCharacter.Position.Y - 1; j < Program.PlayerCharacter.Position.Y + 2; j++)
+                for (int j = Player.Position.Y - 1; j < Player.Position.Y + 2; j++)
                 {
-                    if (Program.Map.Contains((i, j)) && Program.PlayerCharacter.Position != (i,j))
+                    if (Map.Contains((i, j)) && Player.Position != (i,j))
                     {
-                        foreach (var entity in Program.Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
+                        foreach (var entity in Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
                         {
                             var substantive = entity.AllComponents.GetFirstOrDefault<Substantive>();
                             if(substantive is not null)
@@ -61,7 +66,7 @@ namespace HomicideDetective.UserInterface
                 }
             }
 
-            Program.Page.Write(thoughts.CurrentThought.What);
+            MessageWindow.Write(thoughts.CurrentThought.What);
         }
         
         /// <summary>
@@ -70,14 +75,14 @@ namespace HomicideDetective.UserInterface
         public static void Inspect()
         {
             //Program.CurrentTime.Minutes++;
-            var thoughts = Program.PlayerCharacter.AllComponents.GetFirst<Thoughts>();
-            for (int i = Program.PlayerCharacter.Position.X - 1; i < Program.PlayerCharacter.Position.X + 2; i++)
+            var thoughts = Program.CurrentGame.PlayerCharacter.AllComponents.GetFirst<Thoughts>();
+            for (int i = Program.CurrentGame.PlayerCharacter.Position.X - 1; i < Program.CurrentGame.PlayerCharacter.Position.X + 2; i++)
             {
-                for (int j = Program.PlayerCharacter.Position.Y - 1; j < Program.PlayerCharacter.Position.Y + 2; j++)
+                for (int j = Program.CurrentGame.PlayerCharacter.Position.Y - 1; j < Program.CurrentGame.PlayerCharacter.Position.Y + 2; j++)
                 {
-                    if (Program.Map.Contains((i, j)) && Program.PlayerCharacter.Position != (i,j))
+                    if (Program.CurrentGame.Map.Contains((i, j)) && Program.CurrentGame.PlayerCharacter.Position != (i,j))
                     {
-                        foreach (var entity in Program.Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
+                        foreach (var entity in Program.CurrentGame.Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
                         {
                             var markings = entity.AllComponents.GetFirstOrDefault<MarkingCollection>();
                             if (markings is not null)
@@ -93,7 +98,12 @@ namespace HomicideDetective.UserInterface
                 }
             }
 
-            Program.Page.Write(thoughts.CurrentThought.What);
+            MessageWindow.Write(thoughts.CurrentThought.What);
+        }
+
+        public static void NextMap()
+        {
+            Program.CurrentGame.NextMap();
         }
     }
 }

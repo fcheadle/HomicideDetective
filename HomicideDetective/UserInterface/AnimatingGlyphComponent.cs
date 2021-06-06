@@ -2,21 +2,21 @@ using GoRogue.GameFramework;
 using GoRogue.GameFramework.Components;
 using SadRogue.Integration;
 
-namespace HomicideDetective.Places
+namespace HomicideDetective.UserInterface
 {
     /// <summary>
     /// The blowing grass animation
     /// </summary>
-    public class BlowingInWindComponent : IGameObjectComponent
+    public class AnimatingGlyphComponent : IGameObjectComponent
     {
         //AnimatedConsole animation;
-        readonly int _ogGlyph;
-        readonly int[] _animationSteps;
-        int _animationIndex;
+        protected readonly int _ogGlyph;
+        protected readonly int[] _animationSteps;
+        protected int _animationIndex;
         public IGameObject Parent { get; set; }
         public bool Animating { get; private set; }
 
-        public BlowingInWindComponent(int glyph, int[] animationSteps)
+        public AnimatingGlyphComponent(int glyph, int[] animationSteps)
         {
             _ogGlyph = glyph;
             _animationSteps = animationSteps;
@@ -35,7 +35,7 @@ namespace HomicideDetective.Places
             _animationIndex = 0;
         }
 
-        public void ProcessTimeUnit()
+        public virtual void ProcessTimeUnit()
         {
             if (Animating)
             {
@@ -44,10 +44,15 @@ namespace HomicideDetective.Places
                 
                 else
                 {
-                    ((RogueLikeCell)Parent).Appearance.Glyph = _animationSteps[_animationIndex];
+                    SetAppearance();
                     _animationIndex++;   
                 }
             }
+        }
+
+        public virtual void SetAppearance()
+        {
+            ((RogueLikeCell)Parent).Appearance.Glyph = _animationSteps[_animationIndex];
         }
     }
 }
