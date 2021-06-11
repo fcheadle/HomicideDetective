@@ -19,7 +19,7 @@ namespace HomicideDetective.People
         public IGameObject? Parent { get; set; }
         public string Description { get; private set; }
         private Substantive? _info => ((RogueLikeEntity) Parent!).Info();
-        private Thoughts? _thoughts => ((RogueLikeEntity) Parent!).ThoughtProcess();
+        private Memories? _thoughts => ((RogueLikeEntity) Parent!).ThoughtProcess();
 
         public Speech()
         {

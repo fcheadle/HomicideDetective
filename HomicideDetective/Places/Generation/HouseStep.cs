@@ -19,10 +19,10 @@ namespace HomicideDetective.Places.Generation
         private Color _floorPrimaryColor = Color.Red;
         private Color _floorSecondaryColor = Color.Red;
         private readonly Color _backgroundColor = Color.Black;
-        
+        private int _themeIndex = 0;
         private int _horizontalRooms = 3;
         private int _verticalRooms = 3;
-        private int _dimension = 7;
+        private int _sideLength = 7;
 
         private readonly List<Point> _connections = new List<Point>();
         
@@ -31,15 +31,15 @@ namespace HomicideDetective.Places.Generation
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
                 (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "house");
             var wallFloor = context.GetFirstOrNew(() => new ArrayView<bool>(context.Width, context.Height), "WallFloor");
-            var block = context.GetFirstOrNew(() => new List<Region>(), "houses");
+            var block = context.GetFirstOrNew(() => new List<Region>(), "regions");
             
-            int houseSize = (_horizontalRooms + 1) * _dimension; 
-            for (int i = 0; i < 2; i++)
+            int houseSize = (_horizontalRooms + 1) * _sideLength;
+            for (int j = map.Height - 5; j > houseSize / 2; j -= houseSize) 
             {
-                for (int j = 0; j < 2; j++)
+                for (int i = map.Height - j - 5; i < map.Width - houseSize * 1.25; i += houseSize)
                 {
-                    SwitchColorTheme(i + j);
-                    var bottomLeft = (i * houseSize + j * houseSize + 8, context.Height - _dimension - j * houseSize);
+                    SwitchColorTheme();
+                    var bottomLeft = (i,j);
                     foreach (Region plot in CreateParallelogramHouse(bottomLeft))
                     {
                         block.Add(plot);
@@ -52,6 +52,8 @@ namespace HomicideDetective.Places.Generation
                     foreach (var point in _connections)
                         if(map.Contains(point))
                             DrawDoor(point, map, wallFloor);
+                    
+                    _connections.Clear();
                 }
             }
         }
@@ -65,18 +67,18 @@ namespace HomicideDetective.Places.Generation
 
         private IEnumerable<Region> CreateParallelogramHouse(Point bottomLeft)
         {
-            var house = new Region($"house {bottomLeft}", NorthWest(bottomLeft, _dimension * 3),
-                NorthEast(bottomLeft, _dimension * 3), SouthEast(bottomLeft, _dimension * 3),
+            var house = new Region($"house {bottomLeft}", NorthWest(bottomLeft, _sideLength * 3),
+                NorthEast(bottomLeft, _sideLength * 3), SouthEast(bottomLeft, _sideLength * 3),
                 bottomLeft);
             for (int i = 0; i < _horizontalRooms; i++)
             {
                 for (int j = 0; j < _verticalRooms; j++)
                 {
-                    int x = bottomLeft.X + j * _dimension + i * _dimension;
-                    int y = bottomLeft.Y - j * _dimension;
+                    int x = bottomLeft.X + j * _sideLength + i * _sideLength;
+                    int y = bottomLeft.Y - j * _sideLength;
                     Point southWest = (x, y);
-                    var region = new Region($"room of house {southWest}", NorthWest(southWest, _dimension),
-                        NorthEast(southWest, _dimension), SouthEast(southWest, _dimension),
+                    var region = new Region($"room of house {southWest}", NorthWest(southWest, _sideLength),
+                        NorthEast(southWest, _sideLength), SouthEast(southWest, _sideLength),
                         southWest);
                     house.AddSubRegion(region);
 
@@ -158,7 +160,7 @@ namespace HomicideDetective.Places.Generation
             if (chance % 2 == 0)
             {
                 //vertically-oriented central hall
-                difference = (_dimension, 0);
+                difference = (_sideLength, 0);
                 chance = r.Next(1, 101);
                 switch (chance % 3)
                 {
@@ -187,7 +189,7 @@ namespace HomicideDetective.Places.Generation
             {
                 //horizontally-aligned central hall
                 chance = r.Next(1, 101);
-                difference = (-_dimension, _dimension);
+                difference = (-_sideLength, _sideLength);
                 switch (chance % 3)
                 {
                     default:
@@ -221,7 +223,6 @@ namespace HomicideDetective.Places.Generation
             
             ConnectAllSides(region);
         }
-
         private void DrawRegion(Region region, ISettableGridView<RogueLikeCell> map, ArrayView<bool> wallFloor)
         {
             bool isEatingSpace = region.Name == "kitchen" || region.Name == "dining";
@@ -244,23 +245,16 @@ namespace HomicideDetective.Places.Generation
                 _connections.Add(point);
             
         }
-        private void SwitchColorTheme(int index)
+        private void SwitchColorTheme()
         {
-            switch (index % 4)
+            _themeIndex++;
+            switch (_themeIndex % 4)
             {
                 default:
                 case 0: SetWhiteTheme(); break;
                 case 1: SetBrownTheme(); break;
                 case 2: SetRedTheme(); break;
-            }
-        }
-
-        private void SetDoor(ISettableGridView<RogueLikeCell> cellMap, ArrayView<bool> wallFloor, Point p)
-        {
-            if(cellMap.Contains(p))
-            {
-                cellMap[p] = Door(p);
-                wallFloor[p] = true;
+                case 3: SetYellowTheme(); break;
             }
         }
         private void ConnectAllSides(Region region)
@@ -270,9 +264,14 @@ namespace HomicideDetective.Places.Generation
             region.AddConnection(MiddlePoint(region.NorthBoundary));
             region.AddConnection(MiddlePoint(region.SouthBoundary));
         }
-
         private Point MiddlePoint(IReadOnlyArea area) => area[area.Count() / 2];
 
+        private void SetYellowTheme()
+        {
+            _wallColor = Color.Goldenrod;
+            _floorPrimaryColor = Color.DarkGoldenrod;
+            _floorSecondaryColor = Color.DarkKhaki;
+        }
         private void SetRedTheme()
         {
             _wallColor = Color.DarkRed;

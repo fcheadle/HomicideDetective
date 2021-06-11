@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using GoRogue;
 using GoRogue.MapGeneration;
-using HomicideDetective.UserInterface;
+using HomicideDetective.Places.Weather;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Integration;

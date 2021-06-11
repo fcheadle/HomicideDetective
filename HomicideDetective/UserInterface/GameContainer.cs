@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
 using HomicideDetective.Places;
+using HomicideDetective.Places.Weather;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;
@@ -26,7 +28,7 @@ namespace HomicideDetective.UserInterface
         //map properties
         public const int MapWidth = 100;
         public const int MapHeight = 60;
-        public Weather Weather = null!;
+        //public Weather Weather = null!;
 
         //ui and game properties
         public RogueLikeEntity PlayerCharacter;
@@ -39,8 +41,10 @@ namespace HomicideDetective.UserInterface
             Map = InitMap();
             PlayerCharacter = InitPlayerCharacter();
             MessageWindow = InitMessageWindow();
+            MessageWindow.Write(Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
             CurrentTime = DateTime.Now;//todo
-            Weather = new Weather(Mystery.CurrentLocation);
+            //Weather = new Weather(Mystery.CurrentLocation);
+            GameHost.Instance.FrameUpdate += (s, e) => Map.AllComponents.GetFirst<WeatherController>().ProcessTimeUnit();
         }
 
         private RogueLikeMap InitMap()
@@ -53,13 +57,13 @@ namespace HomicideDetective.UserInterface
         {
             //creation
             var position = Mystery.RandomFreeSpace(Map);
-            var player = new RogueLikeEntity(position, 1, true)//false)
+            var player = new RogueLikeEntity(position, 1, false)
             {
                 IsFocused = true,
             };
             
             //general personhood
-            var thoughts = new Thoughts();
+            var thoughts = new Memories();
             player.AllComponents.Add(thoughts);
             player.AllComponents.Add(new Speech());
             
@@ -72,8 +76,12 @@ namespace HomicideDetective.UserInterface
             Map.AllComponents.Add(new SurfaceComponentFollowTarget { Target = player });
 
             player.PositionChanged += ProcessUnitOfTime;
-            player.PositionChanged += (e, s) => MessageWindow.Write(Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
-
+            player.PositionChanged += (e, s) =>
+            {
+                MessageWindow.Clear();
+                MessageWindow.Write(Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
+            };
+            
             return player;
         }
         private PlayerControlsComponent InitKeyCommands()
@@ -99,7 +107,6 @@ namespace HomicideDetective.UserInterface
             page.BackgroundSurface.Position = (Width - page.TextSurface.Surface.Width - 1, 0);
             page.BackgroundSurface.IsVisible = true;
 
-            page.Write(Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
             Children.Add(page.BackgroundSurface);
             return page;
         }
@@ -114,10 +121,12 @@ namespace HomicideDetective.UserInterface
             Map.RemoveEntity(PlayerCharacter);
             Mystery.NextMap();
             Map = Mystery.CurrentLocation;
+            PlayerCharacter.Position = Mystery.RandomFreeSpace(Map);
             if(!Map.Entities.Contains(PlayerCharacter))
-            Map.AddEntity(PlayerCharacter);
+                Map.AddEntity(PlayerCharacter);
+            
             Map.AllComponents.Add(new SurfaceComponentFollowTarget { Target = PlayerCharacter });
-            Weather = new Weather(Map);
+            //Weather = new Weather(Map);
             Children.Add(Map);
         }
     }

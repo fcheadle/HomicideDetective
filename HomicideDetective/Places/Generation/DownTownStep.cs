@@ -32,7 +32,7 @@ namespace HomicideDetective.Places.Generation
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
                 (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "downtown");
             
-            var shops = context.GetFirstOrNew(() => new List<Region>(), "shops");
+            var shops = context.GetFirstOrNew(() => new List<Region>(), "regions");
 
             var blockWidth = map.Width / 2;
             var blockHeight = blockWidth / 2;

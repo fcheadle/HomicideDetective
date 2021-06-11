@@ -13,11 +13,11 @@ namespace HomicideDetective.Tests.People
             var rle = new RogueLikeEntity((0, 0), 1);
             var subs = new Substantive(Substantive.Types.Person, "Test", gender: "male",article: "",pronoun: "he", pronounPossessive: "his",
                 description: "a test substantive", mass: 36, volume: 64);
-            var thoughts = new Thoughts();
-            thoughts.Think(new Happening(new DateTime(1900,1,1), "Christ is born", "A manger in Bethleham", false));
-            thoughts.Think(new Happening(DateTime.Now - TimeSpan.FromMinutes(300), "I started working", "home office", false));
-            thoughts.Think(new Happening(DateTime.Now - TimeSpan.FromMinutes(30), "The Rapture began", "London, U.K.", false));
-            thoughts.Think(new Happening(DateTime.Now, "I've got to figure out how to survive!", "London, U.K.", false));
+            var thoughts = new Memories();
+            thoughts.Think(new Memory(new DateTime(1900,1,1), "Christ is born", "A manger in Bethleham", false));
+            thoughts.Think(new Memory(DateTime.Now - TimeSpan.FromMinutes(300), "I started working", "home office", false));
+            thoughts.Think(new Memory(DateTime.Now - TimeSpan.FromMinutes(30), "The Rapture began", "London, U.K.", false));
+            thoughts.Think(new Memory(DateTime.Now, "I've got to figure out how to survive!", "London, U.K.", false));
             
             var speech = new Speech();
             

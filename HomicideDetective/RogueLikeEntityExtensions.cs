@@ -8,7 +8,7 @@ namespace HomicideDetective
         public static Substantive? Info(this RogueLikeEntity self) =>
             self.AllComponents.GetFirstOrDefault<Substantive>();
         
-        public static Thoughts? ThoughtProcess(this RogueLikeEntity self) =>
-            self.AllComponents.GetFirstOrDefault<Thoughts>();
+        public static Memories? ThoughtProcess(this RogueLikeEntity self) =>
+            self.AllComponents.GetFirstOrDefault<Memories>();
     }
 }

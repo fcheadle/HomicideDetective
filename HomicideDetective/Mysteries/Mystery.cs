@@ -55,9 +55,9 @@ namespace HomicideDetective.Mysteries
             Witnesses = GenerateWitnessEntities().ToList();
             SceneOfCrimeInfo = GenerateSceneOfMurderInfo();
             GenerateTimeline();
-            GenerateNeighborhoodMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height);
-            GenerateParkMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height);
-            GenerateDownTownMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height);
+            LocationsOfInterest.Add(GenerateNeighborhoodMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height));
+            LocationsOfInterest.Add(GenerateParkMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height));
+            LocationsOfInterest.Add(GenerateDownTownMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height));
         }
     }
 }

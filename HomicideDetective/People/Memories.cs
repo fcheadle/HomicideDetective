@@ -7,44 +7,37 @@ using HomicideDetective.Happenings;
 
 namespace HomicideDetective.People
 {
-    /// <summary>
-    /// Currently a collection of strings used for printing to the message window.
-    /// </summary>
-    /// <remarks>
-    /// Cannot access other components.
-    /// Can be accessed by other components.
-    /// </remarks>
-    public class Thoughts : IGameObjectComponent
+    public class Memories : IGameObjectComponent
     {
         public IGameObject? Parent { get; set; }
-        private Happening _currentThought;
+        private Memory _currentThought;
         private readonly Timeline _shortTermMemory;
         private readonly Timeline _midTermMemory; 
         private readonly Timeline _longTermMemory;
         private readonly Timeline _falseNarrative;
-        public Happening CurrentThought => _currentThought;
+        public Memory CurrentThought => _currentThought;
         public Timeline ShortTermMemory => _shortTermMemory;
         public Timeline MidTermMemory => _midTermMemory;
         public Timeline LongTermMemory => _longTermMemory;
         public Timeline FalseNarrative => _falseNarrative;
         
-        public Thoughts()
+        public Memories()
         {
-            _currentThought = new Happening(new DateTime(1970, 07, 04, 0, 0, 0), "I fell asleep.", "home", false);
+            _currentThought = new Memory(new DateTime(1970, 07, 04, 0, 0, 0), "I fell asleep.", "home", false);
             _shortTermMemory = new Timeline();
             _midTermMemory = new Timeline();
             _longTermMemory = new Timeline();
             _falseNarrative = new Timeline();
         }
 
-        public void Think(string thought) => Think(new Happening(Program.CurrentGame.CurrentTime, thought, "", false));
+        public void Think(string thought) => Think(new Memory(Program.CurrentGame.CurrentTime, thought, "", false));
 
-        public void Think(Happening thought)
+        public void Think(Memory thought)
         {
             CommitToMemory();
             _currentThought = thought;
         }
-        public void Think(IEnumerable<Happening> thoughts)
+        public void Think(IEnumerable<Memory> thoughts)
         {
             foreach (var thought in thoughts)
                 Think(thought);
@@ -56,20 +49,20 @@ namespace HomicideDetective.People
                 Think(thought);
         }
 
-        public void ThinkFalseFact(string fact) => ThinkFalseFact(new Happening(DateTime.Now, fact, "", false));
+        public void ThinkFalseFact(string fact) => ThinkFalseFact(new Memory(DateTime.Now, fact, "", false));
 
-        public void ThinkFalseFact(Happening fact)
+        public void ThinkFalseFact(Memory fact)
         {
             if(!_falseNarrative.Contains(fact))
                 _falseNarrative.Add(fact);
         }
-        public void ThinkFalseNarrative(IEnumerable<Happening> narrative)
+        public void ThinkFalseNarrative(IEnumerable<Memory> narrative)
         {
             foreach (var falseHappening in narrative)
                 ThinkFalseFact(falseHappening);
         }
 
-        public Happening HappeningAtTime(DateTime time)
+        public Memory HappeningAtTime(DateTime time)
         {
             if (time - Program.CurrentGame.CurrentTime < TimeSpan.FromHours(1))
                 return _shortTermMemory.HappeningAtTime(time);

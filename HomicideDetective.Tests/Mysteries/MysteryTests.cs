@@ -23,7 +23,7 @@ namespace HomicideDetective.Tests.Mysteries
             Assert.NotNull(mystery.SceneOfCrimeInfo);
             Assert.NotNull(mystery.Murderer);
             Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Speech>());
-            Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Thoughts>());
+            Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Memories>());
             Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Substantive>());
             
             Assert.NotNull(mystery.MurderWeapon);
@@ -226,7 +226,7 @@ namespace HomicideDetective.Tests.Mysteries
             {
                 var substantive = witness.AllComponents.GetFirst<Substantive>();
                 var speech = witness.AllComponents.GetFirst<Speech>();
-                var thoughts = witness.AllComponents.GetFirst<Thoughts>();
+                var thoughts = witness.AllComponents.GetFirst<Memories>();
 
                 Assert.NotNull(substantive.Name);
                 Assert.NotEmpty(substantive.Name);

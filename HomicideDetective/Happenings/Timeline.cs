@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HomicideDetective.People;
 
 namespace HomicideDetective.Happenings
 {
     /// <summary>
     /// The Timeline of events over the course of a single day.
     /// </summary>
-    public class Timeline : List<Happening>
+    public class Timeline : List<Memory>
     {
         public string OccurrenceAtTime(DateTime time) => HappeningAtTime(time).What;
 
-        public Happening MostRecent() => this.OrderBy(h => h.When).First();
+        public Memory MostRecent() => this.OrderBy(h => h.When).First();
 
-        public Happening HappeningAtTime(DateTime time)
+        public Memory HappeningAtTime(DateTime time)
         {
             if (this.Any(h => h.When == time))
                 return this.First(h => h.When == time);

@@ -12,7 +12,7 @@ namespace HomicideDetective.Tests.People
         [Fact]
         public void NewThoughtsTest()
         {
-            var thoughts = new Thoughts();
+            var thoughts = new Memories();
             Assert.NotNull(thoughts.CurrentThought);
             Assert.NotNull(thoughts.ShortTermMemory);
             Assert.NotNull(thoughts.MidTermMemory);
@@ -23,7 +23,7 @@ namespace HomicideDetective.Tests.People
         [Fact]//think a single thought, passed in as string
         public void ThinkStringThoughtTest()
         {
-            var thoughts = new Thoughts();
+            var thoughts = new Memories();
             thoughts.Think("an original thought");
             Assert.Equal("an original thought", thoughts.CurrentThought.What);
         }
@@ -37,7 +37,7 @@ namespace HomicideDetective.Tests.People
                 "an unoriginal thought with my own twist"
             };
 
-            var thoughtComponent = new Thoughts();
+            var thoughtComponent = new Memories();
             
             thoughtComponent.Think(thoughts);
             Assert.Equal(thoughts[2], thoughtComponent.CurrentThought.What);
@@ -49,9 +49,9 @@ namespace HomicideDetective.Tests.People
         [Fact]//think a single thought, passed in as happening
         public void ThinkHappeningThoughtTest()
         {
-            var thoughts = new Thoughts();
+            var thoughts = new Memories();
             var date = DateTime.Now;
-            var happening = new Happening(date, "I saw a bird", "the park", false);
+            var happening = new Memory(date, "I saw a bird", "the park", false);
             
             thoughts.Think(happening);
             Assert.Equal(happening.When, thoughts.CurrentThought.When);
@@ -71,14 +71,14 @@ namespace HomicideDetective.Tests.People
                 "My friend Mark jogged by",
             };
             
-            var happenings = new List<Happening>()
+            var happenings = new List<Memory>()
             {
-                new Happening(DateTime.Now, occurences[0], "the park", false),
-                new Happening(DateTime.Now, occurences[1], "the park", false),
-                new Happening(DateTime.Now, occurences[2], "the park", false),
-                new Happening(DateTime.Now, occurences[3], "the park", false),
+                new Memory(DateTime.Now, occurences[0], "the park", false),
+                new Memory(DateTime.Now, occurences[1], "the park", false),
+                new Memory(DateTime.Now, occurences[2], "the park", false),
+                new Memory(DateTime.Now, occurences[3], "the park", false),
             };
-            var thoughtComponent = new Thoughts();
+            var thoughtComponent = new Memories();
             thoughtComponent.Think(happenings);
             
             Assert.Equal(occurences[3], thoughtComponent.CurrentThought.What);
@@ -91,9 +91,9 @@ namespace HomicideDetective.Tests.People
         [Fact]
         public void ThinkFalseFactTest()
         {            
-            var thoughts = new Thoughts();
+            var thoughts = new Memories();
             var date = DateTime.Now;
-            var happening = new Happening(date, "I saw a bird", "the park", false);
+            var happening = new Memory(date, "I saw a bird", "the park", false);
             
             thoughts.ThinkFalseFact(happening);
             Assert.Single(thoughts.FalseNarrative);
@@ -115,15 +115,15 @@ namespace HomicideDetective.Tests.People
                 "My friend Mark jogged by",
             };
             
-            var happenings = new List<Happening>()
+            var happenings = new List<Memory>()
             {
-                new Happening(DateTime.Now, occurences[0], "the park", false),
-                new Happening(DateTime.Now, occurences[1], "the park", false),
-                new Happening(DateTime.Now, occurences[2], "the park", false),
-                new Happening(DateTime.Now, occurences[3], "the park", false),
+                new Memory(DateTime.Now, occurences[0], "the park", false),
+                new Memory(DateTime.Now, occurences[1], "the park", false),
+                new Memory(DateTime.Now, occurences[2], "the park", false),
+                new Memory(DateTime.Now, occurences[3], "the park", false),
             };
             
-            var thoughtComponent = new Thoughts();
+            var thoughtComponent = new Memories();
             thoughtComponent.ThinkFalseNarrative(happenings);
             
             Assert.Equal(4, thoughtComponent.FalseNarrative.Count);
@@ -142,13 +142,13 @@ namespace HomicideDetective.Tests.People
             var sixtyMinutes = now + TimeSpan.FromMinutes(60);
             var sixtyPlusMinutes = now + TimeSpan.FromMinutes(70);
 
-            var happeningNow = new Happening(now, "test begins", "HomicideDetective", false);
-            var happeningInTenMinutes = new Happening(tenMinutes, "test plus ten minutes", "HomicideDetective", false);
-            var happeningInThirtyMinutes = new Happening(thirtyMinutes, "test plus thirty minutes", "HomicideDetective", false);
-            var happeningInOneHour = new Happening(sixtyMinutes, "test plus one hour", "HomicideDetective", false);
-            var happeningInOneHourPlus = new Happening(sixtyPlusMinutes, "test after more than one hour", "HomicideDetective", false);
+            var happeningNow = new Memory(now, "test begins", "HomicideDetective", false);
+            var happeningInTenMinutes = new Memory(tenMinutes, "test plus ten minutes", "HomicideDetective", false);
+            var happeningInThirtyMinutes = new Memory(thirtyMinutes, "test plus thirty minutes", "HomicideDetective", false);
+            var happeningInOneHour = new Memory(sixtyMinutes, "test plus one hour", "HomicideDetective", false);
+            var happeningInOneHourPlus = new Memory(sixtyPlusMinutes, "test after more than one hour", "HomicideDetective", false);
             
-            var thoughts = new Thoughts();
+            var thoughts = new Memories();
             
             thoughts.Think(happeningNow);
             thoughts.Think(happeningInTenMinutes);
@@ -185,13 +185,13 @@ namespace HomicideDetective.Tests.People
             var eighteenHours = now + TimeSpan.FromHours(18);
             var twentyFiveHours = now + TimeSpan.FromHours(25);
 
-            var happeningNow = new Happening(now, "test one", "HomicideDetective", false);
-            var happeningInSixHours = new Happening(sixHours, "test two", "HomicideDetective", false);
-            var happeningInTwelveHour = new Happening(twelveHours, "test three", "HomicideDetective", false);
-            var happeningInEighteenHours = new Happening(eighteenHours, "test four", "HomicideDetective", false);
-            var happeningInTwentyFiveHours = new Happening(twentyFiveHours, "test five", "HomicideDetective", false);
+            var happeningNow = new Memory(now, "test one", "HomicideDetective", false);
+            var happeningInSixHours = new Memory(sixHours, "test two", "HomicideDetective", false);
+            var happeningInTwelveHour = new Memory(twelveHours, "test three", "HomicideDetective", false);
+            var happeningInEighteenHours = new Memory(eighteenHours, "test four", "HomicideDetective", false);
+            var happeningInTwentyFiveHours = new Memory(twentyFiveHours, "test five", "HomicideDetective", false);
             
-            var thoughts = new Thoughts();
+            var thoughts = new Memories();
             
             thoughts.Think(happeningNow);
             thoughts.Think(happeningInSixHours);
@@ -213,13 +213,13 @@ namespace HomicideDetective.Tests.People
             var eighteenHours = now + TimeSpan.FromHours(18);
             var twentyFiveHours = now + TimeSpan.FromHours(25);
 
-            var happeningNow = new Happening(now, "test one", "HomicideDetective", false);
-            var happeningInSixHours = new Happening(sixHours, "test two", "HomicideDetective", false);
-            var happeningInTwelveHour = new Happening(twelveHours, "test three", "HomicideDetective", false);
-            var happeningInEighteenHours = new Happening(eighteenHours, "test four", "HomicideDetective", false);
-            var happeningInTwentyFiveHours = new Happening(twentyFiveHours, "test five", "HomicideDetective", false);
+            var happeningNow = new Memory(now, "test one", "HomicideDetective", false);
+            var happeningInSixHours = new Memory(sixHours, "test two", "HomicideDetective", false);
+            var happeningInTwelveHour = new Memory(twelveHours, "test three", "HomicideDetective", false);
+            var happeningInEighteenHours = new Memory(eighteenHours, "test four", "HomicideDetective", false);
+            var happeningInTwentyFiveHours = new Memory(twentyFiveHours, "test five", "HomicideDetective", false);
             
-            var thoughts = new Thoughts();
+            var thoughts = new Memories();
             
             thoughts.Think(happeningNow);
             thoughts.Think(happeningInSixHours);

@@ -3,6 +3,8 @@ using System.Linq;
 using GoRogue;
 using GoRogue.MapGeneration;
 using HomicideDetective.Places;
+using HomicideDetective.Places.Generation;
+using HomicideDetective.Places.Weather;
 using SadRogue.Integration;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
@@ -29,30 +31,15 @@ namespace HomicideDetective.Mysteries
         /// <returns></returns>
         public RogueLikeMap GenerateNeighborhoodMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
         {
-            //use GoRogue generator to combine the steps in Places/Generation and get the resulting three maps
-            var generator = new Generator(mapWidth, mapHeight)
-                .ConfigAndGenerateSafe(gen =>
-                {
-                    gen.AddSteps(new Places.Generation.GrassStep());
-                    gen.AddSteps(new Places.Generation.StreetStep());
-                    gen.AddSteps(new Places.Generation.HouseStep());
-                });
-
-            var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
-            var streetMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("street");
-            var houseMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("house");
-            var regionMap = generator.Context.GetFirst<IEnumerable<Region>>("houses");
-            
+            var generator = new NeighborhoodGenerator();
+        
             //combine the three smaller maps into one real map
-            RogueLikeMap map = DrawMap(houseMap, streetMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
-            
-            //add additional components
-            PlaceRegions(map, regionMap);
+            RogueLikeMap map = generator.Create(mapWidth, mapHeight, viewWidth, viewHeight);
 
-            LocationsOfInterest.Add(map);
+            //todo, change this
             SceneOfCrime = RandomRoom(map);
             PlacePeopleOnMap(map);
-
+        
             return map;
         }
 
@@ -71,41 +58,34 @@ namespace HomicideDetective.Mysteries
 
         public RogueLikeMap GenerateParkMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
         {
-            var generator = new Generator(mapWidth, mapHeight)
-                .ConfigAndGenerateSafe(gen =>
-                {
-                    gen.AddSteps(new Places.Generation.GrassStep());
-                    gen.AddSteps(new Places.Generation.StreetStep());
-                    gen.AddSteps(new Places.Generation.PondStep());
-                });
-            var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
-            var parkMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("park");
-            var pondMap = generator.Context.GetFirst<IEnumerable<BodyOfWater>>("pond").First();
-            var map = DrawMap(parkMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
-            
-            map.GoRogueComponents.Add(pondMap);
-            LocationsOfInterest.Add(map);
+            var generator = new ParkGenerator();
+            var map = generator.Create(mapWidth, mapHeight, viewWidth, viewHeight);
             return map;
         }
 
         public RogueLikeMap GenerateDownTownMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
         {
-            var generator = new Generator(mapWidth, mapHeight)
-                .ConfigAndGenerateSafe(gen =>
-                {
-                    gen.AddSteps(new Places.Generation.GrassStep());
-                    gen.AddSteps(new Places.Generation.StreetStep());
-                    gen.AddSteps(new Places.Generation.DownTownStep());
-                });
-            var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
-            var streetMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("street");
-            var downTown = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("downtown");
-            var map = DrawMap(downTown, streetMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
-            LocationsOfInterest.Add(map);
-            
-            var regionMap = generator.Context.GetFirst<IEnumerable<Region>>("shops");
-            PlaceRegions(map, regionMap);
+            var generator = new DownTownGenerator();
+            var map = generator.Create(mapWidth, mapHeight, viewWidth, viewHeight);
             return map;
+            // var generator = new Generator(mapWidth, mapHeight)
+            //     .ConfigAndGenerateSafe(gen =>
+            //     {
+            //         gen.AddSteps(new Places.Generation.GrassStep());
+            //         gen.AddSteps(new Places.Generation.StreetStep());
+            //         gen.AddSteps(new Places.Generation.DownTownStep());
+            //     });
+            // var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
+            // var streetMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("street");
+            // var downTown = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("downtown");
+            // var map = DrawMap(downTown, streetMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
+            // LocationsOfInterest.Add(map);
+            //
+            // var weather = new WeatherController(map);
+            // map.AllComponents.Add(weather);
+            // var regionMap = generator.Context.GetFirst<IEnumerable<Region>>("regions");
+            // PlaceRegions(map, regionMap);
+            // return map;
         }
 
         private RogueLikeMap DrawMap(ISettableGridView<RogueLikeCell> primaryMap,
@@ -114,45 +94,48 @@ namespace HomicideDetective.Mysteries
 
         private Substantive GeneratePlaceInfo(Region region)
         {
-            string name, description, detail, article;
+            string name = region.Name, description, detail, article = "a";
             if (region.Name.Contains("hall"))
             {
-                name = "hall";
-                description = "A central corridor connecting many rooms.";
+                description = "This central corridor connects many rooms.";
                 detail = "It is immaculately clean.";
-                article = "a";
             }
             else if(region.Name.Contains("kitchen"))
             {
-                name = "kitchen";
-                description = "A room used to prepare food.";
+                description = "This room is used to prepare food.";
                 detail = "It has a patterned floor and granite countertops.";
-                article = "a";
             }
             else if(region.Name.Contains("dining"))
             {
-                name = "dining";
-                description = "A room for eating meals.";
+                name = "dining room";
+                description = "This room is for eating meals.";
                 detail = "It is dominated by a large table and chairs in the center.";
-                article = "a";
             }
             else if(region.Name.Contains("bedroom"))
             {
-                name = "bedroom";
-                description = "A room in which to sleep.";
+                description = "This is a room in which to sleep.";
                 detail = "The floor is covered in clutter.";
-                article = "a";
             }
             else if(region.Name.Contains("house"))
             {
                 return GenerateSceneOfMurderInfo();
             }
+            else if(region.Name.Contains("Park"))
+            {
+                description = "This is the park near the victim's home.";
+                detail = "The victim was often spotted here, including on the day they were murdered.";
+                article = "";
+            }
+            else if(region.Name.Contains("Pond"))
+            {
+                description = "This pond is a popular spot for locals to gather and watch the waves go by.";
+                detail = "The victim was often spotted here, including on the day they were murdered.";
+                article = "";
+            }
             else 
             {
-                name = "unknown room type";
-                description = "God only knows what the purpose of this room is.";
-                detail = "Neither floor nor wall appear to be made of anything at all...";
-                article = "a";
+                description = "(description unclear)";
+                detail = "(???)";
             }
 
             var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: article, pronoun: "it",
@@ -310,7 +293,7 @@ namespace HomicideDetective.Mysteries
         public string CurrentPlaceInfo(Point position)
         {
             var answer = "";
-            foreach (var region in LocationsOfInterest.First().GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position))
+            foreach (var region in CurrentLocation.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position))
             {
                 answer += "\r\n";
                 answer += region.Info.GenerateDetailedDescription();

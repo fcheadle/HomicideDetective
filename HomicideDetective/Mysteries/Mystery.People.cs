@@ -41,7 +41,7 @@ namespace HomicideDetective.Mysteries
             var murdererInfo = GeneratePersonalInfo(_surnames.RandomItem());
             var murderer = new RogueLikeEntity((0,0), 1, false);
             murderer.AllComponents.Add(murdererInfo);
-            murderer.AllComponents.Add(new Thoughts());
+            murderer.AllComponents.Add(new Memories());
             murderer.AllComponents.Add(new Speech());
             
             //todo - memories, sayings, etc
@@ -60,7 +60,7 @@ namespace HomicideDetective.Mysteries
                 var witnessInfo = GeneratePersonalInfo(_surnames.RandomItem());
                 var witness = new RogueLikeEntity((0,0), 1, false);
                 witness.AllComponents.Add(witnessInfo);
-                witness.AllComponents.Add(new Thoughts());
+                witness.AllComponents.Add(new Memories());
                 witness.AllComponents.Add(new Speech());
                 witness.AllComponents.Add(GenerateMarkings());
                 //todo - memories, sayings, etc

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HomicideDetective.Happenings
+namespace HomicideDetective.People
 {
     /// <summary>
     /// A happening is a thing that happened at a time.
     /// </summary>
     /// <remarks>Use pretty sentences, please.</remarks>
-    public class Happening
+    public class Memory
     {
         public List<string> Who { get; set; }
         public string What { get; set; }
@@ -16,7 +16,7 @@ namespace HomicideDetective.Happenings
         public string Where { get; set; }
         public bool Private { get; set; }
 
-        public Happening(DateTime when, string what, string where, List<string> who, bool isPrivate)
+        public Memory(DateTime when, string what, string where, List<string> who, bool isPrivate)
         {
             What = what;
             Where = where;
@@ -25,7 +25,7 @@ namespace HomicideDetective.Happenings
             When = when;
         }
         
-        public Happening(DateTime when, string what, string where, bool isPrivate)
+        public Memory(DateTime when, string what, string where, bool isPrivate)
         {
             What = what;
             Where = where;

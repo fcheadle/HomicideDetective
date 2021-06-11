@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HomicideDetective.Happenings;
+using HomicideDetective.People;
 using SadConsole;
 using SadConsole.Components;
 using SadRogue.Integration.Components;
@@ -89,7 +90,7 @@ namespace HomicideDetective.UserInterface
             Write(content);
         }
 
-        public void Write(Happening happening)
+        public void Write(Memory happening)
         {
             List<string> contents = new();
             contents.Add(happening.When.ToString());
@@ -154,7 +155,7 @@ namespace HomicideDetective.UserInterface
             page.Write(contents);
         }
 
-        private void Clear()
+        public void Clear()
         {
             TextSurface.Surface.Clear();
         }

@@ -1,6 +1,6 @@
 using HomicideDetective.UserInterface;
 
-namespace HomicideDetective.Places
+namespace HomicideDetective.Places.Weather
 {
     public class BlowsInWind : AnimatingGlyphComponent
     {
