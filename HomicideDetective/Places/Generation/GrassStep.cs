@@ -27,7 +27,14 @@ namespace HomicideDetective.Places.Generation
             var f = TerrainGenerationFormulae.RandomItem();
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
                 (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "grass");
-
+            var plains = context.GetFirstOrNew(() => new List<WindyPlain>(), "plains");
+            
+            var windDirection = RandomDirection();
+            var rect = new Rectangle((5, 5), (map.Width - 5, map.Height - 5));
+            var plain = new WindyPlain(rect, windDirection);
+            plain.SeedStartingPattern();
+            plains.Add(plain);
+            
             //iterate the whole map
             for (int i = 0; i < map.Width; i++)
             {
@@ -42,11 +49,28 @@ namespace HomicideDetective.Places.Generation
                     map[i, j] = cell;
                     
                     //set up weather
-                    cell.GoRogueComponents.Add(new BlowsInWind('"', new int[]{ '\\', '|', '/', '-', '\\', '|', '/'}));
+                    if(plain.Body.Contains((i,j)))
+                    {
+                        cell.GoRogueComponents.Add(new BlowsInWind(windDirection));
+                        plain.Cells.Add(cell);
+                    }
                 }
             }
 
             yield return null;
+        }
+
+        private Direction RandomDirection()
+        {
+            var dirs = new[]
+            {
+                Direction.Left,
+                Direction.Right,
+                Direction.Down,
+                Direction.Up
+            };
+
+            return dirs.RandomItem();
         }
     }
 }

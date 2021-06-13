@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
 using SadRogue.Integration;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -11,35 +9,12 @@ namespace HomicideDetective.Places.Weather
 {
     public class BodyOfWater : CellularAutomataArea
     {
-        public IGameObject? Parent { get; set; }
-        public Rectangle Body;
-        public ArrayView<MovesInWaves.States> CurrentState;
-        public ArrayView<MovesInWaves.States> NextState;
-        public List<RogueLikeCell> Cells;
-        
         public BodyOfWater(Rectangle body) : base(body)
         {
             Body = body;
             CurrentState = new ArrayView<MovesInWaves.States>(Body.Width, Body.Height);
             NextState = new ArrayView<MovesInWaves.States>(Body.Width, Body.Height);
             Cells = new List<RogueLikeCell>();
-        }
-
-        public override void SeedStartingPattern()
-        {
-            for (int i = 0; i < Body.Area / 10; i++)
-                CurrentState[CurrentState.RandomPosition()] = MovesInWaves.States.On;
-        }
-
-        public override void DetermineNextStates()
-        {
-            for (int i = 0; i < CurrentState.Width; i++)
-            {
-                for (int j = 0; j < CurrentState.Height; j++)
-                {
-                    NextState[i, j] = DetermineNextState(i, j);
-                }
-            }
         }
 
         public override MovesInWaves.States DetermineNextState(int i, int j)

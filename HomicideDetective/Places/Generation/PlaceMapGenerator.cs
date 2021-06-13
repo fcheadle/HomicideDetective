@@ -27,6 +27,8 @@ namespace HomicideDetective.Places.Generation
             
             var weather = new WeatherController(map);
             map.AllComponents.Add(weather);
+            var plainMap = generator.Context.GetFirst<IEnumerable<WindyPlain>>("plains").First();
+            map.GoRogueComponents.Add(plainMap);
             var regionMap = generator.Context.GetFirst<IEnumerable<Region>>("regions");
             PlaceRegions(map, regionMap);
             return map;
@@ -44,11 +46,13 @@ namespace HomicideDetective.Places.Generation
             var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
             var parkMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("park");
             var pondMap = generator.Context.GetFirst<IEnumerable<BodyOfWater>>("pond").First();
+            var plainMap = generator.Context.GetFirst<IEnumerable<WindyPlain>>("plains").First();
             var map = DrawMap(parkMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
             
             var weather = new WeatherController(map);
             map.AllComponents.Add(weather);
             map.GoRogueComponents.Add(pondMap);
+            map.GoRogueComponents.Add(plainMap);
             
             
             var regionMap = generator.Context.GetFirst<IEnumerable<Region>>("regions");
@@ -76,6 +80,8 @@ namespace HomicideDetective.Places.Generation
             PlaceRegions(map, regions);
             var weather = new WeatherController(map);
             map.AllComponents.Add(weather);
+            var plainMap = generator.Context.GetFirst<IEnumerable<WindyPlain>>("plains").First();
+            map.GoRogueComponents.Add(plainMap);
             return map;
         }
         
