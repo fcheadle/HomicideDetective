@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HomicideDetective.Places;
+using HomicideDetective.Places.Generation;
 using HomicideDetective.UserInterface;
 using SadRogue.Integration;
 using SadRogue.Integration.Maps;
@@ -55,9 +56,10 @@ namespace HomicideDetective.Mysteries
             Witnesses = GenerateWitnessEntities().ToList();
             SceneOfCrimeInfo = GenerateSceneOfMurderInfo();
             GenerateTimeline();
-            LocationsOfInterest.Add(GenerateNeighborhoodMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height));
-            LocationsOfInterest.Add(GenerateParkMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height));
-            LocationsOfInterest.Add(GenerateDownTownMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height));
+            LocationsOfInterest.Add(PlaceMapGenerator.CreateNeighborhoodMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height));
+            LocationsOfInterest.Add(PlaceMapGenerator.CreateParkMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height));
+            LocationsOfInterest.Add(PlaceMapGenerator.CreateDownTownMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1, Program.Height));
+            PlacePeopleOnMaps();
         }
     }
 }

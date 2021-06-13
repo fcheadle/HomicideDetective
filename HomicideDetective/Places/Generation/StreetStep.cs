@@ -10,6 +10,13 @@ namespace HomicideDetective.Places.Generation
 {
     public class StreetStep : GenerationStep
     {
+        private bool _streetInMiddle;
+
+        public StreetStep(bool streetInMiddle = false)
+        {
+            _streetInMiddle = streetInMiddle;
+        }
+
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
@@ -19,34 +26,11 @@ namespace HomicideDetective.Places.Generation
             int horizontalNameIndex = random.Next(Enum.GetNames(typeof(RoadNames)).Length - 2);
             int verticalNameIndex = random.Next(Enum.GetNames(typeof(RoadNumbers)).Length - 2);
             
-            //generate roads
-            Point nw = (-3, -3);
-            Point sw = (-3, 3);
-            Point ne = (map.Width + 3, -3);
-            Point se = (map.Width + 3, 3);
-            roads.Add(new Region($"{Enum.GetNames(typeof(RoadNames))[horizontalNameIndex]} street", nw, ne, se, sw));
+            if(_streetInMiddle)
+                roads.AddRange(CreateStreet(map.Width, map.Height, horizontalNameIndex, verticalNameIndex));
+            else
+                roads.AddRange(CreateBlock(map.Width, map.Height, horizontalNameIndex, verticalNameIndex));
             
-            nw = (-3, map.Height - 3);
-            sw = (-3, map.Height + 3);
-            ne = (map.Width + 3, map.Height - 3);
-            se = (map.Width + 3, map.Height + 3);
-
-            roads.Add(new Region($"{Enum.GetNames(typeof(RoadNames))[horizontalNameIndex + 1]} street", nw, ne, se, sw));
-            
-            nw = (13, -10);
-            sw = (13, map.Height + 10);
-            ne = (19, -10);
-            se = (19, map.Height + 10);
-
-            roads.Add(new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex]} street", nw, ne, se, sw).Rotate(45));
-            
-            nw = (map.Width - 10, -10);
-            sw = (map.Width - 10, map.Height + 10);
-            ne = (map.Width - 4 , -10);
-            se = (map.Width - 4 , map.Height + 10);
-
-            roads.Add(new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex + 1]} street", nw, ne, se, sw).Rotate(45));
-
             foreach (var road in roads)
             {
                 foreach (var point in road.Points.Where(p => map.Contains(p)))
@@ -59,6 +43,61 @@ namespace HomicideDetective.Places.Generation
             
             roads.Add(new Region($"{horizontalNameIndex}00 block {verticalNameIndex} street", 
                 (0, 0), (map.Width, 0), (map.Width, map.Height), (0, map.Height)));
+        }
+
+        private IEnumerable<Region> CreateStreet(int width, int height, int horizontalNameIndex, int verticalNameIndex)
+        {
+            var equator = height / 2;
+            Point nw = (-3, equator - 3);
+            Point sw = (-3, equator + 3);
+            Point ne = (width + 3, equator - 3);
+            Point se = (width + 3, equator + 3);
+            yield return new Region($"{Enum.GetNames(typeof(RoadNames))[horizontalNameIndex]} street", nw, ne, se, sw);
+            
+            nw = (13, -10);
+            sw = (13, height + 10);
+            ne = (19, -10);
+            se = (19, height + 10);
+
+            yield return new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex]} street", nw, ne, se, sw).Rotate(45);
+            
+            nw = (width - 10, -10);
+            sw = (width - 10, height + 10);
+            ne = (width - 4 , -10);
+            se = (width - 4 , height + 10);
+
+            yield return new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex + 1]} street", nw, ne, se, sw).Rotate(45);
+        }
+
+        private IEnumerable<Region> CreateBlock(int width, int height, int horizontalNameIndex, int verticalNameIndex)
+        {
+            //generate roads
+            Point nw = (-3, -3);
+            Point sw = (-3, 3);
+            Point ne = (width + 3, -3);
+            Point se = (width + 3, 3);
+            yield return new Region($"{Enum.GetNames(typeof(RoadNames))[horizontalNameIndex]} street", nw, ne, se, sw);
+            
+            nw = (-3, height - 3);
+            sw = (-3, height + 3);
+            ne = (width + 3, height - 3);
+            se = (width + 3, height + 3);
+
+            yield return new Region($"{Enum.GetNames(typeof(RoadNames))[horizontalNameIndex + 1]} street", nw, ne, se, sw);
+            
+            nw = (13, -10);
+            sw = (13, height + 10);
+            ne = (19, -10);
+            se = (19, height + 10);
+
+            yield return new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex]} street", nw, ne, se, sw).Rotate(45);
+            
+            nw = (width - 10, -10);
+            sw = (width - 10, height + 10);
+            ne = (width - 4 , -10);
+            se = (width - 4 , height + 10);
+
+            yield return new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex + 1]} street", nw, ne, se, sw).Rotate(45);
         }
     }
     public enum RoadNames

@@ -7,9 +7,9 @@ using SadRogue.Integration;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
-namespace HomicideDetective.Places
+namespace HomicideDetective.Places.Weather
 {
-    public class BodyOfWater : IGameObjectComponent
+    public class BodyOfWater : CellularAutomataArea
     {
         public IGameObject? Parent { get; set; }
         public Rectangle Body;
@@ -17,7 +17,7 @@ namespace HomicideDetective.Places
         public ArrayView<MovesInWaves.States> NextState;
         public List<RogueLikeCell> Cells;
         
-        public BodyOfWater(Rectangle body)
+        public BodyOfWater(Rectangle body) : base(body)
         {
             Body = body;
             CurrentState = new ArrayView<MovesInWaves.States>(Body.Width, Body.Height);
@@ -25,13 +25,13 @@ namespace HomicideDetective.Places
             Cells = new List<RogueLikeCell>();
         }
 
-        public void SeedStartingPattern()
+        public override void SeedStartingPattern()
         {
             for (int i = 0; i < Body.Area / 10; i++)
                 CurrentState[CurrentState.RandomPosition()] = MovesInWaves.States.On;
         }
 
-        public void DetermineNextStates()
+        public override void DetermineNextStates()
         {
             for (int i = 0; i < CurrentState.Width; i++)
             {
@@ -42,7 +42,7 @@ namespace HomicideDetective.Places
             }
         }
 
-        private MovesInWaves.States DetermineNextState(int i, int j)
+        public override MovesInWaves.States DetermineNextState(int i, int j)
         {
             if (CurrentState[i, j] == MovesInWaves.States.Off)
             {
@@ -56,7 +56,7 @@ namespace HomicideDetective.Places
                 return MovesInWaves.States.Off;
         }
 
-        private IEnumerable<MovesInWaves.States> GetNeighboringStates(Point point)
+        public override IEnumerable<MovesInWaves.States> GetNeighboringStates(Point point)
         {
             for (int i = -1; i <= 1; i++)
             {

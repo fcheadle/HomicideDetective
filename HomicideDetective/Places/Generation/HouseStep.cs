@@ -13,7 +13,6 @@ namespace HomicideDetective.Places.Generation
     {
         private int _wallGlyph = 176;
         private int _floorPrimaryGlyph = 46;
-        private int _floorSecondaryGlyph = 46;
         private int _doorGlyph = 254;
         private Color _wallColor = Color.Red;
         private Color _floorPrimaryColor = Color.Red;
@@ -30,41 +29,39 @@ namespace HomicideDetective.Places.Generation
         {
             var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
                 (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "house");
-            var wallFloor = context.GetFirstOrNew(() => new ArrayView<bool>(context.Width, context.Height), "WallFloor");
             var block = context.GetFirstOrNew(() => new List<Region>(), "regions");
             
             int houseSize = (_horizontalRooms + 1) * _sideLength;
+            var start = (5, map.Height - 5);
+            var side = map.Width / 2;
+            var overallPlot = new Region("total house area", NorthWest(start, side), NorthEast(start, side), SouthEast(start, side), start);
             for (int j = map.Height - 5; j > houseSize / 2; j -= houseSize) 
             {
-                for (int i = map.Height - j - 5; i < map.Width - houseSize * 1.25; i += houseSize)
+                for (int i = map.Height - j; i < map.Width - houseSize * 1.25; i += houseSize)
                 {
-                    SwitchColorTheme();
-                    var bottomLeft = (i,j);
-                    foreach (Region plot in CreateParallelogramHouse(bottomLeft))
+                    if(overallPlot.Contains((i,j)))
                     {
-                        block.Add(plot);
-                        foreach (var region in plot.SubRegions)
+                        SwitchColorTheme();
+                        var bottomLeft = (i, j);
+                        foreach (Region plot in CreateParallelogramHouse(bottomLeft))
                         {
-                            DrawRegion(region, map, wallFloor);
-                            yield return null;
+                            block.Add(plot);
+                            foreach (var region in plot.SubRegions)
+                            {
+                                DrawRegion(region, map);
+                                yield return null;
+                            }
                         }
+
+                        foreach (var point in _connections)
+                            if (map.Contains(point))
+                                map[point] = Door(point);
+
+                        _connections.Clear();
                     }
-                    foreach (var point in _connections)
-                        if(map.Contains(point))
-                            DrawDoor(point, map, wallFloor);
-                    
-                    _connections.Clear();
                 }
             }
         }
-
-        private void DrawDoor(Point point, ISettableGridView<RogueLikeCell> map, ArrayView<bool> wallFloor)
-        {
-            map[point] = Door(point);
-            wallFloor[point] = true;
-            
-        }
-
         private IEnumerable<Region> CreateParallelogramHouse(Point bottomLeft)
         {
             var house = new Region($"house {bottomLeft}", NorthWest(bottomLeft, _sideLength * 3),
@@ -223,27 +220,19 @@ namespace HomicideDetective.Places.Generation
             
             ConnectAllSides(region);
         }
-        private void DrawRegion(Region region, ISettableGridView<RogueLikeCell> map, ArrayView<bool> wallFloor)
+        private void DrawRegion(Region region, ISettableGridView<RogueLikeCell> map)
         {
             bool isEatingSpace = region.Name == "kitchen" || region.Name == "dining";
             bool isBathroom = region.Name == "bathroom";
-            //place floor tiles
+            
             foreach (var point in region.InnerPoints.Where(map.Contains))
-            {
                 map[point] = isEatingSpace ? KitchenFloor(point) : isBathroom ? BathroomFloor(point) : Floor(point);
-                wallFloor[point] = true;
-            }
-
-            //place walls on the outer points
+            
             foreach (var point in region.OuterPoints.Where(map.Contains))
-            {
                 map[point] = Wall(point);
-                wallFloor[point] = false;
-            }
 
             foreach (var point in region.Connections)
                 _connections.Add(point);
-            
         }
         private void SwitchColorTheme()
         {
