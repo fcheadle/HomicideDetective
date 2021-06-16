@@ -19,19 +19,16 @@ namespace HomicideDetective.Places.Weather
         public WeatherController(RogueLikeMap place) : base(true, false, false, false)
         {
             _map = place;
-            _windSpeed = new Random().Next(75, 250);
+            _windSpeed = new Random().Next(75, 150);
         }
 
         public void ProcessTimeUnit()
         {
             Elapsed += TimeSpan.FromMilliseconds(100);
-            if (Elapsed.TotalMilliseconds >= _windSpeed)
-            {
-                Elapsed -= TimeSpan.FromMilliseconds(_windSpeed);
-                BlowWind();
-            }
             if(Elapsed.TotalMilliseconds % 1000 <= 100)
                 MakeWaves();
+            if (Elapsed.TotalMilliseconds % 1000 <= _windSpeed)
+                BlowWind();
         }
 
         private void BlowWind()
