@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
+using GoRogue.Components.ParentAware;
 using HomicideDetective.Happenings;
+using SadRogue.Integration;
 
 namespace HomicideDetective.People
 {
-    public class Memories : IGameObjectComponent
+    public class Memories : ParentAwareComponentBase<RogueLikeEntity>
     {
-        public IGameObject? Parent { get; set; }
+        public RogueLikeEntity Parent { get; set; }
         private Memory _currentThought;
         private readonly Timeline _shortTermMemory;
         private readonly Timeline _midTermMemory; 

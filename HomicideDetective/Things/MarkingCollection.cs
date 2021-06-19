@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
 using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
 using HomicideDetective.Places;
 using SadRogue.Integration;
 
@@ -11,9 +10,8 @@ namespace HomicideDetective.Things
     /// <summary>
     /// A collection markings, used for both receiving and leaving markings.
     /// </summary>
-    public class MarkingCollection : IGameObjectComponent
+    public class MarkingCollection
     {
-        public IGameObject? Parent { get; set; }
         
         //the markings on the parent
         public List<Marking> MarkingsOn => _markingsOn;

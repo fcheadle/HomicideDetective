@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
-using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
+using GoRogue.Components.ParentAware;
 using SadRogue.Integration;
 
 namespace HomicideDetective.People
@@ -14,12 +13,12 @@ namespace HomicideDetective.People
     /// <remarks>
     /// Requires a RogueLikeEntity Parent who has a Substantive and Thoughts components
     /// </remarks>
-    public class Speech : IGameObjectComponent
+    public class Speech : ParentAwareComponentBase<RogueLikeEntity>
     {
-        public IGameObject? Parent { get; set; }
+        public RogueLikeEntity Parent { get; set; }
         public string Description { get; private set; }
-        private Substantive? _info => ((RogueLikeEntity) Parent!).Info();
-        private Memories? _thoughts => ((RogueLikeEntity) Parent!).ThoughtProcess();
+        private Substantive? _info => Parent!.Info();
+        private Memories? _thoughts => Parent!.ThoughtProcess();
 
         public Speech()
         {

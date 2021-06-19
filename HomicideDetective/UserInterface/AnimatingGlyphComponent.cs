@@ -1,5 +1,4 @@
-using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
+using GoRogue.Components.ParentAware;
 using SadRogue.Integration;
 
 namespace HomicideDetective.UserInterface
@@ -7,13 +6,12 @@ namespace HomicideDetective.UserInterface
     /// <summary>
     /// The blowing grass animation
     /// </summary>
-    public class AnimatingGlyphComponent : IGameObjectComponent
+    public class AnimatingGlyphComponent : ParentAwareComponentBase<RogueLikeCell>
     {
         //AnimatedConsole animation;
         protected readonly int _ogGlyph;
         protected readonly int[] _animationSteps;
         protected int _animationIndex;
-        public IGameObject Parent { get; set; }
         public bool Animating { get; private set; }
 
         public AnimatingGlyphComponent(int glyph, int[] animationSteps)
@@ -30,8 +28,7 @@ namespace HomicideDetective.UserInterface
         public void Stop()
         {
             Animating = false;
-            var parent = (RogueLikeCell)Parent;
-            parent.Appearance.Glyph = _ogGlyph;
+            Parent.Appearance.Glyph = _ogGlyph;
             _animationIndex = 0;
         }
 
@@ -52,7 +49,7 @@ namespace HomicideDetective.UserInterface
 
         public virtual void SetAppearance()
         {
-            ((RogueLikeCell)Parent).Appearance.Glyph = _animationSteps[_animationIndex];
+            Parent.Appearance.Glyph = _animationSteps[_animationIndex];
         }
     }
 }

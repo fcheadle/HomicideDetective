@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
 using SadRogue.Integration;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
 namespace HomicideDetective.Places.Weather
 {
-    public abstract class CellularAutomataArea : IGameObjectComponent
+    public abstract class CellularAutomataArea
     {
         public IGameObject? Parent { get; set; }
         public Rectangle Body;

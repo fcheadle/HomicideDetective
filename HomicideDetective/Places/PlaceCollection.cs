@@ -1,15 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
 using SadRogue.Primitives;
 
 namespace HomicideDetective.Places
 {
-    public class PlaceCollection : List<Place>, IGameObjectComponent
-    { 
-        public IGameObject? Parent { get; set; }
-        
+    public class PlaceCollection : List<Place>
+    {
         public IEnumerable<Place> GetPlacesContaining(Point point) 
             => this.Where(place => place.Area.Points.Contains(point));
 

@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
-using HomicideDetective.Mysteries;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
@@ -15,10 +11,8 @@ namespace HomicideDetective.Things
     /// <remarks>
     /// The pattern is represented in a 64x64 ArrayView of bool for easy memory/rending.
     /// </remarks>
-    public class Fingerprint : Marking, IGameObjectComponent//, IDetailed
+    public class Fingerprint : Marking
     {
-        public IGameObject? Parent { get; set; }
-        
         private int _seed;
         
         public ArrayView<bool> Pattern { get; }

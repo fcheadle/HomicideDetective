@@ -26,7 +26,9 @@ namespace HomicideDetective.Places.Weather
                 case MovesInWaves.States.Off: _animationIndex = 0; break;
                 case MovesInWaves.States.On: _animationIndex = 1; break;
             }
-            
+
+            var myParent = Parent;
+            var baseParent = base.Parent;
             base.SetAppearance();
         }
     }

@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using GoRogue.GameFramework;
-using GoRogue.GameFramework.Components;
 
 namespace HomicideDetective
 {
@@ -12,13 +10,12 @@ namespace HomicideDetective
     /// Substantive should not have any knowledge of any other components.
     /// It exists purely to be a collection of strings to describe something.
     /// </remarks>
-    public class Substantive : IGameObjectComponent
+    public class Substantive
     {
         public int Mass { get; set; } //in grams
         public int Volume { get; set; } //in ml
         public enum Types {Person, Place, Thing}
         public Types? Type { get; set; } 
-        public IGameObject? Parent { get; set; }
         public string? Name { get; set; } 
         public string? Article { get; set; }
         public string? Pronoun { get; set; }

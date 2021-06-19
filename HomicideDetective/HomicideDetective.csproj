@@ -8,9 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="GoRogue" Version="3.0.0-alpha02-debug" />
-      <PackageReference Include="SadConsole.Host.SFML" Version="9.0.0-beta4" />
-      <PackageReference Include="TheSadRogue.Integration" Version="1.0.0-alpha01-debug" />
+      <PackageReference Include="SadConsole.Host.SFML" Version="9.0.1" />
+      <PackageReference Include="TheSadRogue.Integration" Version="1.0.0-alpha07-debug" />
     </ItemGroup>
 
 </Project>

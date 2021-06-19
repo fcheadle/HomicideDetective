@@ -1,8 +1,6 @@
 using System;
-using System.Linq;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
-using HomicideDetective.Places;
 using HomicideDetective.Places.Weather;
 using SadConsole;
 using SadConsole.Components;
@@ -11,7 +9,6 @@ using SadRogue.Integration;
 using SadRogue.Integration.Components;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
-using SadRogue.Primitives.GridViews;
 
 namespace HomicideDetective.UserInterface
 {
