@@ -18,7 +18,7 @@ namespace HomicideDetective.Tests.People
             thoughts.Think(new Memory(DateTime.Now - TimeSpan.FromMinutes(30), "The Rapture began", "London, U.K.", false));
             thoughts.Think(new Memory(DateTime.Now, "I've got to figure out how to survive!", "London, U.K.", false));
             
-            var speech = new Speech();
+            var speech = new Voice();
             
             // speech.AddTruth("true-saying");
             // speech.AddLie("lie-saying");
@@ -45,7 +45,7 @@ namespace HomicideDetective.Tests.People
         [Fact]
         public void NewSpeechComponentTest()
         {
-            var speech = new Speech();
+            var speech = new Voice();
             Assert.Contains("Their voice is ", speech.Description);
         }
 
@@ -55,14 +55,14 @@ namespace HomicideDetective.Tests.People
             var entity = SetUpEntity();
 
             for (int i = 0; i < 15; i++)
-                Assert.DoesNotContain("lie", entity.AllComponents.GetFirst<Speech>().SpeakTo(false));
+                Assert.DoesNotContain("lie", entity.AllComponents.GetFirst<Voice>().SpeakTo(false));
         }
 
         [Fact]
         public void GreetTest()
         {
             var entity = SetUpEntity();
-            var greeting = entity.AllComponents.GetFirst<Speech>().Greet();
+            var greeting = entity.AllComponents.GetFirst<Voice>().Greet();
             Assert.True(greeting.Contains("Hello") || greeting.Contains("Hi") || 
                         greeting.Contains("hello") || greeting.Contains("hi"));
         }
@@ -71,35 +71,35 @@ namespace HomicideDetective.Tests.People
         public void IntroduceTest()
         {
             var entity = SetUpEntity();
-            var introduction = entity.AllComponents.GetFirst<Speech>().Introduce();
+            var introduction = entity.AllComponents.GetFirst<Voice>().Introduce();
             Assert.Contains("My name is", introduction);
         }
         [Fact]
         public void InquireAboutSelfTest()
         {
             var entity = SetUpEntity();
-            var introduction = entity.AllComponents.GetFirst<Speech>().InquireAboutSelf();
+            var introduction = entity.AllComponents.GetFirst<Voice>().InquireAboutSelf();
             Assert.Contains(entity.Info().Description, introduction);
         }
         [Fact]
         public void InquireWhereaboutsTest()
         {
             var entity = SetUpEntity();
-            var inquiry = entity.AllComponents.GetFirst<Speech>().InquireWhereabouts(DateTime.Now);
+            var inquiry = entity.AllComponents.GetFirst<Voice>().InquireWhereabouts(DateTime.Now);
             Assert.Contains("I was at home", inquiry);
         }
         [Fact]
         public void InquireAboutCompanyTest()
         {
             var entity = SetUpEntity();
-            var inquiry = entity.AllComponents.GetFirst<Speech>().InquireAboutCompany(DateTime.Now);
+            var inquiry = entity.AllComponents.GetFirst<Voice>().InquireAboutCompany(DateTime.Now);
             Assert.Contains("I was with no one", inquiry);
         }
         [Fact]
         public void InquireAboutHappeningTest()
         {
             var entity = SetUpEntity();
-            var inquiry = entity.AllComponents.GetFirst<Speech>().InquireAboutHappening(DateTime.Now);
+            var inquiry = entity.AllComponents.GetFirst<Voice>().InquireAboutHappening(DateTime.Now);
             Assert.Contains("At", inquiry);        
             Assert.Contains("I fell asleep", inquiry);        
         }

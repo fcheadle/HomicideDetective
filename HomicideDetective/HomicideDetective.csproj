@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="SadConsole.Host.SFML" Version="9.0.1" />
-      <PackageReference Include="TheSadRogue.Integration" Version="1.0.0-alpha07-debug" />
+      <PackageReference Include="TheSadRogue.Integration" Version="1.0.0-alpha02-debug" />
     </ItemGroup>
 
 </Project>

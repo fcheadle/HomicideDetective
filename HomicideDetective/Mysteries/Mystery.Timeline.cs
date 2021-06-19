@@ -34,11 +34,8 @@ namespace HomicideDetective.Mysteries
 
         private void AddTimeline(RogueLikeEntity witness, List<Memory> events)
         {
-            var thoughts = witness.AllComponents.GetFirst<Memories>();
-            var speech = witness.AllComponents.GetFirst<Speech>();
+            var thoughts = witness.AllComponents.GetFirst<Personhood>().Memories;
             thoughts.Think(events);
-            foreach(var ev in events)
-                speech.TruthSayings.Add(ev.What);
         }
 
         private List<Memory> GenerateSchoolDay()

@@ -62,7 +62,7 @@ namespace HomicideDetective.UserInterface
             //general personhood
             var thoughts = new Memories();
             player.AllComponents.Add(thoughts);
-            player.AllComponents.Add(new Speech());
+            player.AllComponents.Add(new Voice());
             
             //player controls
             var motionControl = InitKeyCommands();
