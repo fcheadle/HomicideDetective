@@ -77,8 +77,8 @@ namespace HomicideDetective.UserInterface
             {
                 MessageWindow.Clear();
                 MessageWindow.Write(Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
+                Mystery.CurrentLocation.PlayerFOV.Calculate(PlayerCharacter.Position, 12, Mystery.CurrentLocation.DistanceMeasurement);
             };
-            
             return player;
         }
         private PlayerControlsComponent InitKeyCommands()

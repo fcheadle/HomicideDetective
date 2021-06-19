@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GoRogue.MapGeneration;
 using HomicideDetective.Places.Weather;
-using SadRogue.Integration;
+using SadRogue.Integration.FieldOfView.Memory;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -11,6 +11,71 @@ namespace HomicideDetective.Places.Generation
 {
     public static class PlaceMapGenerator
     {
+        private static readonly int _layers = 16;
+        private static readonly Distance _distance = Distance.Euclidean;
+        private static readonly float _dimmingEffect = 0.5f;
+        
+        #region private-static
+        private static WindyPlain GetPlains(GenerationContext context) 
+            => context.GetFirst<IEnumerable<WindyPlain>>("plains").First();
+
+        private static BodyOfWater GetPond(GenerationContext context)
+            => context.GetFirst<BodyOfWater>("pond");
+        private static IEnumerable<Region> GetRegions(GenerationContext context)
+            => context.GetFirst<IEnumerable<Region>>("regions");
+
+        private static ISettableGridView<MemoryAwareRogueLikeCell> GetMapSource(GenerationContext context, string name)
+            => context.GetFirst<ISettableGridView<MemoryAwareRogueLikeCell>>(name);
+        
+        private static RogueLikeMap DrawMap(ISettableGridView<MemoryAwareRogueLikeCell> primaryMap,
+            ISettableGridView<MemoryAwareRogueLikeCell> secondaryMap,
+            ISettableGridView<MemoryAwareRogueLikeCell> backgroundMap,
+            int mapWidth, int mapHeight, int viewWidth, int viewHeight)
+            => DrawMap(new RogueLikeMap(mapWidth, mapHeight, 4, _distance, viewSize: (viewWidth, viewHeight)),
+                primaryMap, secondaryMap, backgroundMap);
+
+        private static RogueLikeMap DrawMap(ISettableGridView<MemoryAwareRogueLikeCell> primaryMap,
+            ISettableGridView<MemoryAwareRogueLikeCell> secondaryMap, int mapWidth, int mapHeight, int viewWidth, int viewHeight) 
+                => DrawMap(primaryMap, secondaryMap, secondaryMap, mapWidth, mapHeight, viewWidth, viewHeight);
+
+        private static RogueLikeMap DrawMap(RogueLikeMap map, ISettableGridView<MemoryAwareRogueLikeCell> primarySource,
+            ISettableGridView<MemoryAwareRogueLikeCell> secondarySource)
+            => DrawMap(map, primarySource, secondarySource, secondarySource);
+
+        private static RogueLikeMap DrawMap(RogueLikeMap map, ISettableGridView<MemoryAwareRogueLikeCell> primarySource, 
+            ISettableGridView<MemoryAwareRogueLikeCell> secondarySource, ISettableGridView<MemoryAwareRogueLikeCell> tertiarySource)
+        {
+            map.AllComponents.Add(new DimmingMemoryFieldOfViewHandler(_dimmingEffect));
+            map.AllComponents.Add(new WeatherController());
+            
+            foreach (var location in map.Positions())
+            {
+                if (primarySource[location] != null)
+                {
+                    primarySource[location].Position = location;
+                    map.SetTerrain(primarySource[location]);
+                }
+
+                else if (secondarySource[location] != null)
+                {
+                    secondarySource[location].Position = location;
+                    map.SetTerrain(secondarySource[location]);
+                }
+
+                else
+                {
+                    tertiarySource[location].Position = location;
+                    map.SetTerrain(tertiarySource[location]);
+                }
+            }
+            
+            return map;
+        }
+
+        
+        #endregion
+        
+        #region create-maps
         public static RogueLikeMap CreateDownTownMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
         {
             var generator = new Generator(mapWidth, mapHeight)
@@ -20,17 +85,12 @@ namespace HomicideDetective.Places.Generation
                     gen.AddSteps(new StreetStep(true));
                     gen.AddSteps(new DownTownStep());
                 });
-            var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
-            var streetMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("street");
-            var downTown = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("downtown");
+            var grassMap = GetMapSource(generator.Context, "grass");
+            var streetMap = GetMapSource(generator.Context,"street");
+            var downTown = GetMapSource(generator.Context,"downtown");
             var map = DrawMap(downTown, streetMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
-            
-            var weather = new WeatherController();
-            map.AllComponents.Add(weather);
-            var plainMap = generator.Context.GetFirst<IEnumerable<WindyPlain>>("plains").First();
-            map.GoRogueComponents.Add(plainMap);
-            var regionMap = generator.Context.GetFirst<IEnumerable<Region>>("regions");
-            PlaceRegions(map, regionMap);
+            map.GoRogueComponents.Add(GetPlains(generator.Context));
+            PlaceRegions(map, GetRegions(generator.Context));
             return map;
         }
         
@@ -43,20 +103,12 @@ namespace HomicideDetective.Places.Generation
                     gen.AddSteps(new GrassStep());
                     gen.AddSteps(new ParkFeaturesStep());
                 });
-            var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
-            var parkMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("park");
-            var pondMap = generator.Context.GetFirst<IEnumerable<BodyOfWater>>("pond").First();
-            var plainMap = generator.Context.GetFirst<IEnumerable<WindyPlain>>("plains").First();
+            var grassMap = GetMapSource(generator.Context, "grass");
+            var parkMap = GetMapSource(generator.Context, "park");
             var map = DrawMap(parkMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
-            
-            var weather = new WeatherController();
-            map.AllComponents.Add(weather);
-            map.GoRogueComponents.Add(pondMap);
-            map.GoRogueComponents.Add(plainMap);
-            
-            
-            var regionMap = generator.Context.GetFirst<IEnumerable<Region>>("regions");
-            PlaceRegions(map, regionMap);
+            map.GoRogueComponents.Add(GetPond(generator.Context));
+            map.GoRogueComponents.Add(GetPlains(generator.Context));
+            PlaceRegions(map, GetRegions(generator.Context));
             return map;
         }
         
@@ -70,55 +122,16 @@ namespace HomicideDetective.Places.Generation
                     gen.AddSteps(new HouseStep());
                 });
 
-            var grassMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("grass");
-            var streetMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("street");
-            var houseMap = generator.Context.GetFirst<ISettableGridView<RogueLikeCell>>("house");
-            var regions = generator.Context.GetFirst<List<Region>>("regions");
+            var grassMap = GetMapSource(generator.Context, "grass");
+            var streetMap = GetMapSource(generator.Context, "street");
+            var houseMap = GetMapSource(generator.Context, "house");
 
-            var map = new RogueLikeMap(mapWidth, mapHeight, 4, Distance.Euclidean, viewSize:(viewWidth, viewHeight));
-            map = DrawMap(houseMap, streetMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
-            PlaceRegions(map, regions);
-            var weather = new WeatherController();
-            map.AllComponents.Add(weather);
-            var plainMap = generator.Context.GetFirst<IEnumerable<WindyPlain>>("plains").First();
-            map.GoRogueComponents.Add(plainMap);
+            var map = DrawMap(houseMap, streetMap, grassMap, mapWidth, mapHeight, viewWidth, viewHeight);
+            map.GoRogueComponents.Add(GetPlains(generator.Context));
+            PlaceRegions(map, GetRegions(generator.Context));
             return map;
         }
-        
-        private static RogueLikeMap DrawMap(ISettableGridView<RogueLikeCell> primaryMap,
-            ISettableGridView<RogueLikeCell> secondaryMap, ISettableGridView<RogueLikeCell> backgroundMap, 
-            int mapWidth, int mapHeight, int viewWidth, int viewHeight)
-        {
-            RogueLikeMap map = new RogueLikeMap(mapWidth, mapHeight, 4, Distance.Euclidean,
-                viewSize: (viewWidth, viewHeight));
-
-            foreach (var location in map.Positions())
-            {
-                if (primaryMap[location] != null)
-                {
-                    primaryMap[location].Position = location;
-                    map.SetTerrain(primaryMap[location]);
-                }
-
-                else if (secondaryMap[location] != null)
-                {
-                    secondaryMap[location].Position = location;
-                    map.SetTerrain(secondaryMap[location]);
-                }
-
-                else
-                {
-                    backgroundMap[location].Position = location;
-                    map.SetTerrain(backgroundMap[location]);
-                }
-            }
-            
-            return map;
-        }
-
-        private static RogueLikeMap DrawMap(ISettableGridView<RogueLikeCell> primaryMap,
-            ISettableGridView<RogueLikeCell> secondaryMap, int mapWidth, int mapHeight, int viewWidth, int viewHeight) 
-                => DrawMap(primaryMap, secondaryMap, secondaryMap, mapWidth, mapHeight, viewWidth, viewHeight);
+        #endregion
         
         private static void PlaceRegions(RogueLikeMap map, IEnumerable<Region> regionMap)
         {
@@ -133,7 +146,7 @@ namespace HomicideDetective.Places.Generation
             map.AllComponents.Add(places);
         }
 
-
+        //todo - delete (move to mystery)
         private static Substantive GeneratePlaceInfo(Region region)
         {
             string name = region.Name, description, detail, article = "a";

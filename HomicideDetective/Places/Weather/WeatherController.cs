@@ -18,7 +18,7 @@ namespace HomicideDetective.Places.Weather
 
         public WeatherController()
         {
-            _windSpeed = new Random().Next(75, 150);
+            _windSpeed = new Random().Next(50, 125);
         }
 
         public void ProcessTimeUnit()

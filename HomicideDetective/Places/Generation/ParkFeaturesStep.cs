@@ -5,6 +5,7 @@ using GoRogue;
 using GoRogue.MapGeneration;
 using HomicideDetective.Places.Weather;
 using SadRogue.Integration;
+using SadRogue.Integration.FieldOfView.Memory;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
@@ -26,7 +27,6 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = PlantFlowers(context);
-            var bodiesOfWater = context.GetFirstOrNew(() => new List<BodyOfWater>(), "pond");
             var regions = context.GetFirstOrNew(() => new List<Region>(), "regions");
 
             _deepest = map.RandomPosition();
@@ -65,18 +65,14 @@ namespace HomicideDetective.Places.Generation
                         if (distance > _pondRadius + 4)
                             map[i, j] = PathCell(i, j);
                     }
-                    // else if (fx == j-1 || fx == j || fx == j + 1)
-                    //     map[i, j] = PathCell(i, j);
                     
                     yield return null;
                 }
             }
 
-            var bodyOfWater = new Rectangle((_left, _top), (_right, _bottom));
-            var pond = new BodyOfWater(bodyOfWater);
-            pond.SeedStartingPattern();
-            pond.Cells.AddRange(_cells);
-            bodiesOfWater.Add(pond);
+            var bodyOfWater = context.GetFirstOrNew(() => new BodyOfWater(new Rectangle((_left, _top), (_right, _bottom))), "pond");
+            bodyOfWater.SeedStartingPattern();
+            bodyOfWater.Cells.AddRange(_cells);
 
             var region = new Region("Butterfly Park", (0, 0), (context.Width, 0), (context.Width, context.Height), (0, context.Height));
             regions.Add(region);
@@ -84,9 +80,9 @@ namespace HomicideDetective.Places.Generation
             regions.Add(region);
         }
 
-        private ArrayView<RogueLikeCell> PlantFlowers(GenerationContext context)
+        private ArrayView<MemoryAwareRogueLikeCell> PlantFlowers(GenerationContext context)
         {
-            var flowerMap = context.GetFirstOrNew(() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "park");
+            var flowerMap = context.GetFirstOrNew(() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "park");
             FlowerPatch(flowerMap, 8, Color.Goldenrod, 15);
             FlowerPatch(flowerMap, 6, Color.DarkGoldenrod, 15);
             FlowerPatch(flowerMap, 6, Color.LightGoldenrodYellow, 15);
@@ -105,7 +101,7 @@ namespace HomicideDetective.Places.Generation
             return flowerMap;
         }
 
-        private static void FlowerPatch(ArrayView<RogueLikeCell> map, int flowersCount, Color color, int glyph)
+        private static void FlowerPatch(ArrayView<MemoryAwareRogueLikeCell> map, int flowersCount, Color color, int glyph)
         {
             var center = map.RandomPosition();
             for (int i = 0; i < flowersCount; i++)
@@ -114,12 +110,12 @@ namespace HomicideDetective.Places.Generation
                 while (DistanceBetween(center, pos) > flowersCount)
                     pos = map.RandomPosition();
                 
-                map[pos] = new RogueLikeCell(pos, color, Color.Black, glyph, 0);
+                map[pos] = new MemoryAwareRogueLikeCell(pos, color, Color.Black, glyph, 0);
             }
         }
 
-        private RogueLikeCell PathCell(int x, int y) =>
-            new RogueLikeCell((x, y), Color.SandyBrown, Color.Black, '.', 0);
+        private MemoryAwareRogueLikeCell PathCell(int x, int y) =>
+            new MemoryAwareRogueLikeCell((x, y), Color.SandyBrown, Color.Black, '.', 0);
 
         private Color FigureColorFromDepth(int i, int j)
         {
@@ -134,7 +130,7 @@ namespace HomicideDetective.Places.Generation
             return color;
         }
 
-        private RogueLikeCell WaveCell(int x, int y, MovesInWaves.States initialState)
+        private MemoryAwareRogueLikeCell WaveCell(int x, int y, MovesInWaves.States initialState)
         {
             var color = FigureColorFromDepth(x, y);
             if (x < _left)
@@ -145,7 +141,7 @@ namespace HomicideDetective.Places.Generation
                 _bottom = y;
             if (y < _top)
                 _top = y;
-            var cell =  new RogueLikeCell((x, y), color, Color.Black, '-', 0, false);
+            var cell =  new MemoryAwareRogueLikeCell((x, y), color, Color.Black, '-', 0, false);
             var waves = new MovesInWaves();
             waves.State = initialState;
             cell.GoRogueComponents.Add(waves);

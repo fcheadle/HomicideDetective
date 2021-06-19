@@ -5,7 +5,7 @@ using GoRogue.MapGeneration;
 using HomicideDetective.Places.Weather;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
-using SadRogue.Integration;
+using SadRogue.Integration.FieldOfView.Memory;
 
 namespace HomicideDetective.Places.Generation
 {
@@ -25,8 +25,8 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var f = TerrainGenerationFormulae.RandomItem();
-            var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
-                (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "grass");
+            var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "grass");
             var plains = context.GetFirstOrNew(() => new List<WindyPlain>(), "plains");
             
             var windDirection = RandomDirection();
@@ -45,7 +45,7 @@ namespace HomicideDetective.Places.Generation
                     Color color = new Color(0, green, 0);
 
                     //create grass
-                    var cell =  new RogueLikeCell((i, j), color, Color.Black, '"', 0);
+                    var cell =  new MemoryAwareRogueLikeCell((i, j), color, Color.Black, '"', 0);
                     map[i, j] = cell;
                     
                     //set up weather

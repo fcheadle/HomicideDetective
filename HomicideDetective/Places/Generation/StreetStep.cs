@@ -4,7 +4,7 @@ using System.Linq;
 using GoRogue.MapGeneration;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
-using SadRogue.Integration;
+using SadRogue.Integration.FieldOfView.Memory;
 
 namespace HomicideDetective.Places.Generation
 {
@@ -19,8 +19,8 @@ namespace HomicideDetective.Places.Generation
 
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
-            var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
-                (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "street");
+            var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "street");
             var roads = context.GetFirstOrNew(() => new List<Region>(), "regions");
             var random = new Random();
             int horizontalNameIndex = random.Next(Enum.GetNames(typeof(RoadNames)).Length - 2);
@@ -35,7 +35,7 @@ namespace HomicideDetective.Places.Generation
             {
                 foreach (var point in road.Points.Where(p => map.Contains(p)))
                 {
-                    map[point] = new RogueLikeCell(point, Color.DarkGray, Color.Black, '.', 0);
+                    map[point] = new MemoryAwareRogueLikeCell(point, Color.DarkGray, Color.Black, '.', 0);
                 }
 
                 yield return null;

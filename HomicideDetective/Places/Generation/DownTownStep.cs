@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue.MapGeneration;
-using SadRogue.Integration;
+using SadRogue.Integration.FieldOfView.Memory;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
@@ -24,8 +24,8 @@ namespace HomicideDetective.Places.Generation
         private readonly List<Point> _connections = new List<Point>();
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
-            var map = context.GetFirstOrNew<ISettableGridView<RogueLikeCell>>
-                (() => new ArrayView<RogueLikeCell>(context.Width, context.Height), "downtown");
+            var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "downtown");
             
             var shops = context.GetFirstOrNew(() => new List<Region>(), "regions");
             var colCount = map.Width / 2 / _shortLength;
@@ -99,7 +99,7 @@ namespace HomicideDetective.Places.Generation
         private Point MiddlePoint(IReadOnlyArea area) 
             => area[area.Count() / 2];
         
-        private void DrawRegion(Region region, ISettableGridView<RogueLikeCell> map)
+        private void DrawRegion(Region region, ISettableGridView<MemoryAwareRogueLikeCell> map)
         {
             bool isBathroom = region.Name == "bathroom";
             foreach (var point in region.InnerPoints.Where(map.Contains))
@@ -158,9 +158,9 @@ namespace HomicideDetective.Places.Generation
             _floorPrimaryColor = Color.Beige;
             _floorSecondaryColor = Color.DarkKhaki;
         }
-        private RogueLikeCell Wall(Point point) => new RogueLikeCell(point, _wallColor, _backgroundColor, _wallGlyph, 0, false, false);
-        private RogueLikeCell Floor(Point point) => new RogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, _floorGlyph, 0);
-        private RogueLikeCell Door(Point point) => new RogueLikeCell(point, _wallColor, _backgroundColor, _doorGlyph, 0);
-        private RogueLikeCell BathroomFloor(Point point) => new RogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, 4, 0);
+        private MemoryAwareRogueLikeCell Wall(Point point) => new MemoryAwareRogueLikeCell(point, _wallColor, _backgroundColor, _wallGlyph, 0, false, false);
+        private MemoryAwareRogueLikeCell Floor(Point point) => new MemoryAwareRogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, _floorGlyph, 0);
+        private MemoryAwareRogueLikeCell Door(Point point) => new MemoryAwareRogueLikeCell(point, _wallColor, _backgroundColor, _doorGlyph, 0, true, false);
+        private MemoryAwareRogueLikeCell BathroomFloor(Point point) => new MemoryAwareRogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, 4, 0);
     }
 }
