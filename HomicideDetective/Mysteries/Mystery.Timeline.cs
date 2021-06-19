@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using HomicideDetective.Happenings;
 using HomicideDetective.People;
 using SadRogue.Integration;
 
@@ -32,18 +32,18 @@ namespace HomicideDetective.Mysteries
             }
         }
 
-        private void AddTimeline(RogueLikeEntity witness, Timeline events)
+        private void AddTimeline(RogueLikeEntity witness, List<Memory> events)
         {
             var thoughts = witness.AllComponents.GetFirst<Memories>();
             var speech = witness.AllComponents.GetFirst<Speech>();
             thoughts.Think(events);
-            
-            speech.TruthSayings.AddRange(events.Occurences);
+            foreach(var ev in events)
+                speech.TruthSayings.Add(ev.What);
         }
 
-        private Timeline GenerateSchoolDay()
+        private List<Memory> GenerateSchoolDay()
         {
-            Timeline schoolDay = new Timeline();
+            var schoolDay = new List<Memory>();
             schoolDay.Add(new Memory(new DateTime(1970, 07,4, 08,30, 0), "I left for school. ", "office", false));
             schoolDay.Add(new Memory(new DateTime(1970, 07,4, 08,47, 0), "I arrived at school. ", "office", false));
             schoolDay.Add(new Memory(new DateTime(1970, 07,4, 08,55, 0), "My first class started. ", "office", false));
@@ -56,9 +56,9 @@ namespace HomicideDetective.Mysteries
             return schoolDay;
         }
 
-        private Timeline GenerateOfficeWorkDay()
+        private List<Memory> GenerateOfficeWorkDay()
         {
-            Timeline workDay = new Timeline();
+            var workDay = new List<Memory>();
             workDay.Add(new Memory(new DateTime(1970, 07,4, 06,45,0), "I left home to go to work. ", "office", false));
             workDay.Add(new Memory(new DateTime(1970, 07,4, 07,21,0), "I arrived at the office and started working. ","office", false));
             workDay.Add(new Memory(new DateTime(1970, 07,4, 09,00,0), "I went to a corporate meeting in the big conference room. ","office", false));
@@ -75,9 +75,9 @@ namespace HomicideDetective.Mysteries
             return workDay;
         }
 
-        private Timeline GenerateRetailWorkDay()
+        private List<Memory> GenerateRetailWorkDay()
         {
-            Timeline workDay = new Timeline();
+            var workDay = new List<Memory>();
             workDay.Add(new Memory(new DateTime(1970, 07,4, 16,10, 0), "I left home to go to work. ","office", false));
             workDay.Add(new Memory(new DateTime(1970, 07,4, 16,27, 0), "I arrived at the shop and started my shift. ","office", false));
             workDay.Add(new Memory(new DateTime(1970, 07,4, 16,59, 0), "I flirted with an attractive customer. ","office", false));
@@ -90,9 +90,9 @@ namespace HomicideDetective.Mysteries
             return workDay;
         }
 
-        private Timeline GenerateActiveDayOff()
+        private List<Memory> GenerateActiveDayOff()
         {
-            Timeline dayOff = new Timeline();
+            var dayOff = new List<Memory>();
             dayOff.Add(new Memory(new DateTime(1970, 07,4, 08,10, 0), "I got up and left for the hiking trails. ","office", false));
             dayOff.Add(new Memory(new DateTime(1970, 07,4, 09,30, 0), "I arrived at the trailhead and began hiking. ","office", false));
             dayOff.Add(new Memory(new DateTime(1970, 07,4, 10,04, 0), "I passed another hiker and said hello. ","office", false));
@@ -106,9 +106,9 @@ namespace HomicideDetective.Mysteries
             return dayOff;
         }
         
-        private Timeline GenerateLazyDayOff()
+        private List<Memory> GenerateLazyDayOff()
         {
-            Timeline dayOff = new Timeline();
+            var dayOff = new List<Memory>();
             dayOff.Add(new Memory(new DateTime(1970, 07,4, 01,10, 0), "I woke up. ", "office", false));
             dayOff.Add(new Memory(new DateTime(1970, 07,4, 02,27, 0), "I ate a big breakfast. ", "office", false));
             dayOff.Add(new Memory(new DateTime(1970, 07,4, 03,27, 0), "I got lost in a book. ", "office", false));

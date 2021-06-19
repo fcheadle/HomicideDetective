@@ -1,5 +1,4 @@
 using System;
-using HomicideDetective.Happenings;
 using HomicideDetective.People;
 using SadRogue.Integration;
 using Xunit;

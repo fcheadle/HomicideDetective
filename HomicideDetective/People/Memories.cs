@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue.Components.ParentAware;
-using HomicideDetective.Happenings;
 using SadRogue.Integration;
 
 namespace HomicideDetective.People
@@ -11,23 +10,23 @@ namespace HomicideDetective.People
     {
         public RogueLikeEntity Parent { get; set; }
         private Memory _currentThought;
-        private readonly Timeline _shortTermMemory;
-        private readonly Timeline _midTermMemory; 
-        private readonly Timeline _longTermMemory;
-        private readonly Timeline _falseNarrative;
+        private readonly List<Memory> _shortTermMemory;
+        private readonly List<Memory> _midTermMemory; 
+        private readonly List<Memory> _longTermMemory;
+        private readonly List<Memory> _falseNarrative;
         public Memory CurrentThought => _currentThought;
-        public Timeline ShortTermMemory => _shortTermMemory;
-        public Timeline MidTermMemory => _midTermMemory;
-        public Timeline LongTermMemory => _longTermMemory;
-        public Timeline FalseNarrative => _falseNarrative;
+        public List<Memory> ShortTermMemory => _shortTermMemory;
+        public List<Memory> MidTermMemory => _midTermMemory;
+        public List<Memory> LongTermMemory => _longTermMemory;
+        public List<Memory> FalseNarrative => _falseNarrative;
         
         public Memories()
         {
             _currentThought = new Memory(new DateTime(1970, 07, 04, 0, 0, 0), "I fell asleep.", "home", false);
-            _shortTermMemory = new Timeline();
-            _midTermMemory = new Timeline();
-            _longTermMemory = new Timeline();
-            _falseNarrative = new Timeline();
+            _shortTermMemory = new ();
+            _midTermMemory = new ();
+            _longTermMemory = new ();
+            _falseNarrative = new ();
         }
 
         public void Think(string thought) => Think(new Memory(Program.CurrentGame.CurrentTime, thought, "", false));
@@ -65,12 +64,12 @@ namespace HomicideDetective.People
         public Memory HappeningAtTime(DateTime time)
         {
             if (time - Program.CurrentGame.CurrentTime < TimeSpan.FromHours(1))
-                return _shortTermMemory.HappeningAtTime(time);
+                return HappeningAtTime(_shortTermMemory, time);
             
             if (time - Program.CurrentGame.CurrentTime < TimeSpan.FromHours(24))
-                return _midTermMemory.HappeningAtTime(time);
+                return HappeningAtTime(_midTermMemory, time);
 
-            return _longTermMemory.HappeningAtTime(time);
+            return HappeningAtTime(_longTermMemory, time);
         }
         private void CommitToMemory()
         {
@@ -90,6 +89,15 @@ namespace HomicideDetective.People
                 _midTermMemory.Remove(memory);
                 _longTermMemory.Add(memory);
             }
+        }
+        
+        
+        public static Memory HappeningAtTime(List<Memory> self, DateTime time)
+        {
+            if (self.Any(h => h.When == time))
+                return self.First(h => h.When == time);
+            
+            return self.Where(x => x.When < time).OrderBy(x => x.When).Last();
         }
     }
 }
