@@ -35,10 +35,12 @@ namespace HomicideDetective.People
                 return Introduce();
             else if (!_hasToldAboutSelf)
                 return InquireAboutSelf();
-            else if (lying)
+
+            var randomMemory = Memories.All.RandomItem();
+            if (randomMemory.Private)
                 return Memories.FalseNarrative.RandomItem().What;
             else
-                return Memories.LongTermMemory.RandomItem().What;
+                return randomMemory.What;
         }
         
         public string Greet()
@@ -53,7 +55,7 @@ namespace HomicideDetective.People
         }
         public string InquireAboutSelf()
         {
-            //todo
+            _hasToldAboutSelf = true;
             return $"{Info.Description}.";
         }
         public string InquireWhereabouts(DateTime atTime)

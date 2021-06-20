@@ -19,7 +19,7 @@ namespace HomicideDetective.People
         public List<Memory> MidTermMemory => _midTermMemory;
         public List<Memory> LongTermMemory => _longTermMemory;
         public List<Memory> FalseNarrative => _falseNarrative;
-        public IEnumerable<Memory> All => _shortTermMemory.Concat(_midTermMemory).Concat(_longTermMemory);
+        public List<Memory> All => _shortTermMemory.Concat(_midTermMemory).Concat(_longTermMemory).ToList();
         
         public Memories()
         {
