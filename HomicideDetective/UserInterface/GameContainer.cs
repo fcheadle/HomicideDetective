@@ -15,7 +15,7 @@ namespace HomicideDetective.UserInterface
     public class GameContainer : ScreenObject
     {
         public RogueLikeMap Map { get; set; }
-        public Page MessageWindow { get; set; }
+        public MessageWindow MessageWindow { get; set; }
         public DateTime CurrentTime { get; set; }
 
         //game window properties
@@ -70,7 +70,7 @@ namespace HomicideDetective.UserInterface
             
             //add to map and make view center on player
             Map.AddEntity(player);
-            Map.AllComponents.Add(new SurfaceComponentFollowTarget { Target = player });
+            Map.DefaultRenderer?.SadComponents.Add(new SurfaceComponentFollowTarget { Target = player });
 
             player.PositionChanged += ProcessUnitOfTime;
             player.PositionChanged += (e, s) =>
@@ -88,17 +88,17 @@ namespace HomicideDetective.UserInterface
             motionControl.AddKeyCommand(Keys.L, KeyCommands.Look);
             motionControl.AddKeyCommand(Keys.I, KeyCommands.Inspect);
             motionControl.AddKeyCommand(Keys.M, KeyCommands.NextMap);
-            motionControl.AddKeyCommand(Keys.PageUp, Page.BackPage);
-            motionControl.AddKeyCommand(Keys.PageDown, Page.ForwardPage);
-            motionControl.AddKeyCommand(Keys.Insert, Page.WriteGarbage); //for testing purposes
-            motionControl.AddKeyCommand(Keys.Home, Page.UpOneLine);
-            motionControl.AddKeyCommand(Keys.End, Page.DownOneLine);
+            motionControl.AddKeyCommand(Keys.PageUp, MessageWindow.BackPage);
+            motionControl.AddKeyCommand(Keys.PageDown, MessageWindow.ForwardPage);
+            motionControl.AddKeyCommand(Keys.Insert, MessageWindow.WriteGarbage); //for testing purposes
+            motionControl.AddKeyCommand(Keys.Home, MessageWindow.UpOneLine);
+            motionControl.AddKeyCommand(Keys.End, MessageWindow.DownOneLine);
             return motionControl;
         }
-        private Page InitMessageWindow()
+        private MessageWindow InitMessageWindow()
         {
             //create the component and feed it the player's current thoughts
-            var page = new Page(Width / 3 + 1, Height);
+            var page = new MessageWindow(Width / 3 + 1, Height);
             
             //size the background surface to perfection
             page.BackgroundSurface.Position = (Width - page.TextSurface.Surface.Width - 1, 0);
@@ -122,7 +122,7 @@ namespace HomicideDetective.UserInterface
             if(!Map.Entities.Contains(PlayerCharacter))
                 Map.AddEntity(PlayerCharacter);
             
-            Map.AllComponents.Add(new SurfaceComponentFollowTarget { Target = PlayerCharacter });
+            Map.DefaultRenderer?.SadComponents.Add(new SurfaceComponentFollowTarget { Target = PlayerCharacter });
             //Weather = new Weather(Map);
             Children.Add(Map);
         }

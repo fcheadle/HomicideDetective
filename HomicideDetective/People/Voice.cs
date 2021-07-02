@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
 using GoRogue.Components.ParentAware;
+using HomicideDetective.UserInterface;
 using SadRogue.Integration;
 
 namespace HomicideDetective.People
@@ -13,10 +14,12 @@ namespace HomicideDetective.People
     /// <remarks>
     /// Requires a RogueLikeEntity Parent who has a Substantive and Thoughts components
     /// </remarks>
-    public class Voice : ParentAwareComponentBase<RogueLikeEntity>
+    public class Voice : ParentAwareComponentBase<RogueLikeEntity>, IPrintable
     {
         public string Description { get; private set; }
-
+        public string CurrentToneOfVoice { get; private set; } = "";
+        public string CurrentSpokenText { get; set; }
+        
         public Voice()
         {
             Description = GenerateVoiceDescription();
@@ -50,6 +53,7 @@ namespace HomicideDetective.People
             "Their voice carries a tinge of sincerity."
         };
 
+        public string GetPrintableString() => Description;
         private string GenerateToneOfVoice(bool lying = false)
         {
             int chance = new Random().Next(100);
@@ -74,6 +78,13 @@ namespace HomicideDetective.People
                 "coloratura soprano", "mezzo-soprano", "contralto"
             };
             return $"Their voice is {timbres.RandomItem()} {tones.RandomItem()}.";
+        }
+
+        public string TalkAbout(Memory randomMemory)
+        {
+            CurrentSpokenText = randomMemory.GetPrintableString();
+            CurrentToneOfVoice = GenerateToneOfVoice(randomMemory.Private);
+            return CurrentSpokenText;
         }
     }
 }

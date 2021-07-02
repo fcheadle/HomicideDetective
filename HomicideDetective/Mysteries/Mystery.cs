@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HomicideDetective.Places;
-using HomicideDetective.Places.Generation;
-using HomicideDetective.UserInterface;
 using SadRogue.Integration;
 using SadRogue.Integration.Maps;
 

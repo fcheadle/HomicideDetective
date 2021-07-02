@@ -31,7 +31,7 @@ namespace HomicideDetective.Places.Generation
             ISettableGridView<MemoryAwareRogueLikeCell> secondaryMap,
             ISettableGridView<MemoryAwareRogueLikeCell> backgroundMap,
             int mapWidth, int mapHeight, int viewWidth, int viewHeight)
-            => DrawMap(new RogueLikeMap(mapWidth, mapHeight, 4, _distance, viewSize: (viewWidth, viewHeight)),
+            => DrawMap(new RogueLikeMap(mapWidth, mapHeight, new DefaultRendererParams((viewWidth, viewHeight)), 4, _distance),
                 primaryMap, secondaryMap, backgroundMap);
 
         private static RogueLikeMap DrawMap(ISettableGridView<MemoryAwareRogueLikeCell> primaryMap,

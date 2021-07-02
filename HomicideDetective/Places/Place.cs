@@ -1,11 +1,12 @@
 using GoRogue.MapGeneration;
 using HomicideDetective.Things;
+using HomicideDetective.UserInterface;
 using SadRogue.Integration;
 using SadRogue.Primitives;
 
 namespace HomicideDetective.Places
 {
-    public class Place
+    public class Place : IPrintable
     {
         public Region Area { get; set; }
         public Substantive Info { get; set; }
@@ -19,6 +20,7 @@ namespace HomicideDetective.Places
             InitEntity();
         }
 
+        public string GetPrintableString() => Info.GetPrintableString();
         public Place(Region area, Substantive info)
         {
             Area = area;

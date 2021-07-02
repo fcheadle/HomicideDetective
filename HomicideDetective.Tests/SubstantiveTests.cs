@@ -45,7 +45,7 @@ namespace HomicideDetective.Tests
         {
             var substantive = new Substantive(type, "Test", gender: "male",article: "a ",pronoun: "he", pronounPossessive: "his",
                 description: "a test substantive", mass: 36, volume: 64);
-            var answer = substantive.GenerateDetailedDescription();
+            var answer = substantive.GetPrintableString();
             Assert.True(answer.Contains("This is a  Test.") || answer.Contains("This is Test."));
         }
     }

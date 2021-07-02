@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HomicideDetective.UserInterface;
 
 namespace HomicideDetective.People
 {
@@ -8,7 +9,7 @@ namespace HomicideDetective.People
     /// A happening is a thing that happened at a time.
     /// </summary>
     /// <remarks>Use pretty sentences, please.</remarks>
-    public class Memory
+    public class Memory : IPrintable
     {
         public List<string> Who { get; set; }
         public string What { get; set; }
@@ -34,9 +35,9 @@ namespace HomicideDetective.People
             When = when;
         }
 
-        public override string ToString()
+        public string GetPrintableString()
         {
-            string answer = $"At {When.ToString()}, {What}. ";
+            string answer = $"At {When}, {What}. ";
             if (Who.Any())
             {
                 foreach (var person in Who)

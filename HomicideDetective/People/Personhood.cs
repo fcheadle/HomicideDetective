@@ -11,9 +11,9 @@ namespace HomicideDetective.People
     /// </summary>
     public class Personhood : ParentAwareComponentBase<RogueLikeEntity>
     {
-        public Substantive Info => Parent.AllComponents.GetFirst<Substantive>();
+        public Substantive Info => Parent!.AllComponents.GetFirst<Substantive>();
         public Memories Memories { get; set; }
-        public Voice Speech { get; set; }
+        public Voice Voice { get; set; }
         public BodyLanguage BodyLanguage { get; set; }
 
         private bool _hasIntroduced = false;
@@ -23,24 +23,37 @@ namespace HomicideDetective.People
         public Personhood()
         {
             Memories = new Memories();
-            Speech = new Voice();
+            Voice = new Voice();
             BodyLanguage = new BodyLanguage();
         }
         
-        public string SpeakTo(bool lying = false)
+        public string SpeakTo()
         {
+            BodyLanguage.ApplyPronouns(Info.Pronoun, Info.PronounPossessive);
+            string answer = "";
+            
             if (!_hasGreeted)
-                return Greet();
+                answer = $"\"{Greet()},\" says {Info.Name}";
             else if (!_hasIntroduced)
-                return Introduce();
+                answer = $"\"{Introduce()},\" {Info.Pronoun} says";
             else if (!_hasToldAboutSelf)
-                return InquireAboutSelf();
-
-            var randomMemory = Memories.All.RandomItem();
-            if (randomMemory.Private)
-                return Memories.FalseNarrative.RandomItem().What;
+                answer = $"\"{InquireAboutSelf()},\" says {Info.Name}";
             else
-                return randomMemory.What;
+            {
+                var randomMemory = Memories.All.RandomItem();
+                BodyLanguage.NextBodyLanguage(randomMemory.Private);
+                
+                if (randomMemory.Private)
+                {
+                    randomMemory = Memories.FalseNarrative.RandomItem();
+                }
+                
+                Voice.TalkAbout(randomMemory);
+                answer = $"\"{Voice.CurrentSpokenText},\" {Info.Pronoun} says. {Voice.CurrentToneOfVoice}. ";
+                answer += BodyLanguage.GetPrintableString();
+            }
+
+            return answer;
         }
         
         public string Greet()

@@ -9,7 +9,13 @@
 
     <ItemGroup>
       <PackageReference Include="SadConsole.Host.SFML" Version="9.0.1" />
-      <PackageReference Include="TheSadRogue.Integration" Version="1.0.0-alpha02-debug" />
+      <PackageReference Include="TheSadRogue.Integration" Version="1.0.0-alpha03-debug" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Assets\paper.colors">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

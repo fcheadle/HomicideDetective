@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using HomicideDetective.People;
 using SadConsole;
 using SadConsole.Components;
 using SadRogue.Integration.Components;
@@ -11,7 +10,7 @@ namespace HomicideDetective.UserInterface
     /// <summary>
     /// The Message Window and it's background that looks like notepad paper
     /// </summary>
-    public class Page : RogueLikeComponentBase
+    public class MessageWindow : RogueLikeComponentBase
     {
         //SadConsole Controls
         public ScreenSurface TextSurface { get; private set; }
@@ -23,7 +22,7 @@ namespace HomicideDetective.UserInterface
         public List<string> Contents { get; private set; }= new List<string>();
         public int PageNumber { get; private set; } = 0;
         
-        public Page(int width, int height) : base(true, false, true, true)
+        public MessageWindow(int width, int height) : base(true, false, true, true)
         {
             Width = width;
             Height = height;
@@ -89,30 +88,7 @@ namespace HomicideDetective.UserInterface
             Write(content);
         }
 
-        public void Write(Memory happening)
-        {
-            List<string> contents = new();
-            contents.Add(happening.When.ToString());
-            contents.Add($"Location: ${happening.Where}");
-
-            //var things = "Things involved: ";
-            //foreach(var thing in happening.What)
-            //    things += $"{thing}, "; 
-            var people = "People Involved: ";
-            foreach (var person in happening.Who)
-                people += $"{person}, ";
-            contents.Add($"Occurence: ${happening.What}");
-        }
-
-        public void Write(Substantive substantive)
-        {
-            List<string> contents = new();
-            contents.Add(substantive.Name!);
-            // contents.Add(substantive.Description!);
-            contents.Add(substantive.GenerateDetailedDescription());
-            contents.AddRange(substantive.Details);
-            Write(contents);
-        }
+        public void Write(IPrintable printable) => Write(printable.GetPrintableString());
 
         public static void BackPage()
         {

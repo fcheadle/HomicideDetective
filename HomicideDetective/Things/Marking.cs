@@ -25,6 +25,6 @@ namespace HomicideDetective.Things
             LeavesFurtherMarkings = leavesFurtherMarkings ?? new List<Marking>();
         }
 
-        public override string ToString() => $"a {Description} {Adjective} {Color} {Name}";
+        public string GetPrintableString() => $"{Description} {Adjective} {Color} {Name}";
     }
 }

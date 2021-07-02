@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HomicideDetective.UserInterface;
 
 namespace HomicideDetective
 {
@@ -10,7 +11,7 @@ namespace HomicideDetective
     /// Substantive should not have any knowledge of any other components.
     /// It exists purely to be a collection of strings to describe something.
     /// </remarks>
-    public class Substantive
+    public class Substantive : IPrintable
     {
         public int Mass { get; set; } //in grams
         public int Volume { get; set; } //in ml
@@ -42,7 +43,7 @@ namespace HomicideDetective
         }
         
         public void AddDetail(string detail) => _details.Add(detail);
-        public string GenerateDetailedDescription()
+        public string GetPrintableString()
         {
             var description = $"This is {Article} {Name}. ";
             description += $"{Description} ";

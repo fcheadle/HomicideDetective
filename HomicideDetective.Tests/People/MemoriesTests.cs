@@ -6,10 +6,10 @@ using Xunit;
 
 namespace HomicideDetective.Tests.People
 {
-    public class ThoughtTests
+    public class MemoriesTests
     {
         [Fact]
-        public void NewThoughtsTest()
+        public void MemoriesConstructorTest()
         {
             var thoughts = new Memories();
             Assert.NotNull(thoughts.CurrentThought);
@@ -17,6 +17,11 @@ namespace HomicideDetective.Tests.People
             Assert.NotNull(thoughts.MidTermMemory);
             Assert.NotNull(thoughts.LongTermMemory);
             Assert.NotNull(thoughts.FalseNarrative);
+            
+            Assert.Empty(thoughts.ShortTermMemory);
+            Assert.Empty(thoughts.MidTermMemory);
+            Assert.Empty(thoughts.LongTermMemory);
+            Assert.Empty(thoughts.FalseNarrative);
         }
 
         [Fact]//think a single thought, passed in as string
@@ -41,8 +46,6 @@ namespace HomicideDetective.Tests.People
             thoughtComponent.Think(thoughts);
             Assert.Equal(thoughts[2], thoughtComponent.CurrentThought.What);
             Assert.Equal(3, thoughtComponent.ShortTermMemory.Count);
-            // Assert.Contains(thoughts[0], thoughtComponent.ShortTermMemory);
-            // Assert.Contains(thoughts[1], thoughtComponent.ShortTermMemory);
         }
         
         [Fact]//think a single thought, passed in as happening

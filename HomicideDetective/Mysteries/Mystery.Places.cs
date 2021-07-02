@@ -161,7 +161,7 @@ namespace HomicideDetective.Mysteries
             foreach (var region in CurrentLocation.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position))
             {
                 answer += "\r\n";
-                answer += region.Info.GenerateDetailedDescription();
+                answer += region.Info.GetPrintableString();
             }
 
             return answer;

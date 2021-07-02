@@ -14,7 +14,7 @@ namespace HomicideDetective.UserInterface
     {
         private static RogueLikeEntity Player => Program.CurrentGame.PlayerCharacter;
         private static RogueLikeMap Map => Program.CurrentGame.Map;
-        private static Page MessageWindow => Program.CurrentGame.MessageWindow;
+        private static MessageWindow MessageWindow => Program.CurrentGame.MessageWindow;
         /// <summary>
         /// Talks to each entity in the squares surrounding the player
         /// </summary>
@@ -60,7 +60,7 @@ namespace HomicideDetective.UserInterface
                         {
                             var substantive = entity.AllComponents.GetFirstOrDefault<Substantive>();
                             if(substantive is not null)
-                                thoughts.Think(substantive.GenerateDetailedDescription());
+                                thoughts.Think(substantive.GetPrintableString());
                         }
                     }
                 }
