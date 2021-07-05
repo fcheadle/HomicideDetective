@@ -20,7 +20,7 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
-                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "street");
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "WallFloor");
             var roads = context.GetFirstOrNew(() => new List<Region>(), "regions");
             var random = new Random();
             int horizontalNameIndex = random.Next(Enum.GetNames(typeof(RoadNames)).Length - 2);

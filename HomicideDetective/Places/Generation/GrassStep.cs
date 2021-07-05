@@ -26,9 +26,10 @@ namespace HomicideDetective.Places.Generation
         {
             var f = TerrainGenerationFormulae.RandomItem();
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
-                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "grass");
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "WallFloor");
             var plains = context.GetFirstOrNew(() => new List<WindyPlain>(), "plains");
-            
+            var regions = context.GetFirstOrNew(() => new List<Region>(), "regions");
+
             var windDirection = RandomDirection();
             var rect = new Rectangle((5, 5), (map.Width - 5, map.Height - 5));
             var plain = new WindyPlain(rect, windDirection);

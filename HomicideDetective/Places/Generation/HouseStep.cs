@@ -29,7 +29,7 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
-                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "house");
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "WallFloor");
             var block = context.GetFirstOrNew(() => new List<Region>(), "regions");
             
             int houseSize = (_horizontalRooms + 1) * _sideLength;

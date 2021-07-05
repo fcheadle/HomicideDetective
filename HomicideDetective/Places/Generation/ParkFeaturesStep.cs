@@ -82,7 +82,7 @@ namespace HomicideDetective.Places.Generation
 
         private ArrayView<MemoryAwareRogueLikeCell> PlantFlowers(GenerationContext context)
         {
-            var flowerMap = context.GetFirstOrNew(() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "park");
+            var flowerMap = context.GetFirstOrNew(() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "WallFloor");
             FlowerPatch(flowerMap, 8, Color.Goldenrod, 15);
             FlowerPatch(flowerMap, 6, Color.DarkGoldenrod, 15);
             FlowerPatch(flowerMap, 6, Color.LightGoldenrodYellow, 15);

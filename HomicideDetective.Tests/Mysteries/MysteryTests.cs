@@ -7,6 +7,8 @@ namespace HomicideDetective.Tests.Mysteries
 {
     public class MysteryTests
     {
+        private TestHost _host = new TestHost();
+        
         public static readonly IEnumerable<object[]> IntData = new List<object[]>()
         {
             new object[] {79},
@@ -28,9 +30,8 @@ namespace HomicideDetective.Tests.Mysteries
             Assert.NotNull(mystery.Victim.AllComponents.GetFirstOrDefault<Substantive>());
             Assert.NotNull(mystery.SceneOfCrimeInfo);
             Assert.NotNull(mystery.Murderer);
-            Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Speech>());
-            Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Memories>());
-            Assert.NotNull(mystery.Murderer.AllComponents.GetFirstOrDefault<Substantive>());
+            Assert.NotNull(mystery.Murderer.Speech);
+            Assert.NotNull(mystery.Murderer.Memories);
             
             Assert.NotNull(mystery.MurderWeapon);
             Assert.NotNull(mystery.MurderWeapon.AllComponents.GetFirst<Substantive>());
@@ -125,31 +126,19 @@ namespace HomicideDetective.Tests.Mysteries
             firstMystery.Generate(100, 100, 50, 50);
             secondMystery.Generate(100, 100, 50, 50);
             var firstAnswer = firstMystery.Murderer;
-            var firstSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
-            var firstSpeech = firstAnswer.AllComponents.GetFirst<Substantive>();
-            var firstThoughts = firstAnswer.AllComponents.GetFirst<Substantive>();
+            var secondAnswer = secondMystery.Murderer;
             
-            var secondAnswer = secondMystery.Victim;
-            var secondSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
-            var secondSpeech = firstAnswer.AllComponents.GetFirst<Substantive>();
-            var secondThoughts = firstAnswer.AllComponents.GetFirst<Substantive>();
-            
-            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
-            Assert.NotNull(firstSubstantive.Name);
-            Assert.NotEmpty(firstSubstantive.Name);
-            Assert.NotNull(secondSubstantive.Name);
-            Assert.NotEmpty(secondSubstantive.Name);
-            Assert.Equal(firstSubstantive.Details, secondSubstantive.Details);
-            Assert.Equal(firstSubstantive.Description, secondSubstantive.Description);
-            Assert.NotNull(firstSubstantive.Description);
-            Assert.NotEmpty(firstSubstantive.Description);
-            Assert.NotNull(secondSubstantive.Description);
-            Assert.NotEmpty(secondSubstantive.Description);
-
-            Assert.NotNull(firstSpeech);
-            Assert.NotNull(firstThoughts);
-            Assert.NotNull(secondSpeech);
-            Assert.NotNull(secondThoughts);
+            Assert.NotEqual(firstAnswer.Name, secondAnswer.Name);
+            Assert.NotNull(firstAnswer.Name);
+            Assert.NotEmpty(firstAnswer.Name);
+            Assert.NotNull(secondAnswer.Name);
+            Assert.NotEmpty(secondAnswer.Name);
+            Assert.Equal(firstAnswer.Details, secondAnswer.Details);
+            Assert.Equal(firstAnswer.Description, secondAnswer.Description);
+            Assert.NotNull(firstAnswer.Description);
+            Assert.NotEmpty(firstAnswer.Description);
+            Assert.NotNull(secondAnswer.Description);
+            Assert.NotEmpty(secondAnswer.Description);
         }
 
         [Theory]
@@ -188,19 +177,14 @@ namespace HomicideDetective.Tests.Mysteries
 
             foreach (var witness in mystery.GenerateWitnessEntities())
             {
-                var substantive = witness.AllComponents.GetFirst<Substantive>();
-                var speech = witness.AllComponents.GetFirst<Speech>();
-                var thoughts = witness.AllComponents.GetFirst<Memories>();
 
-                Assert.NotNull(substantive.Name);
-                Assert.NotEmpty(substantive.Name);
-                Assert.NotNull(substantive.Name);
-                Assert.NotEmpty(substantive.Name);
-                Assert.NotNull(substantive.Description);
-                Assert.NotEmpty(substantive.Description);
+                Assert.NotNull(witness.Name);
+                Assert.NotEmpty(witness.Name);
+                Assert.NotNull(witness.Description);
+                Assert.NotEmpty(witness.Description);
                 
-                Assert.NotNull(speech);
-                Assert.NotNull(thoughts);
+                Assert.NotNull(witness.Speech);
+                Assert.NotNull(witness.Memories);
             }
         }
     }
