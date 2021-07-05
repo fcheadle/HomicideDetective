@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
 using GoRogue.Components.ParentAware;
@@ -9,9 +10,15 @@ namespace HomicideDetective.People
     /// <summary>
     /// Contains all of the components that are common to all people
     /// </summary>
-    public class Personhood : ParentAwareComponentBase<RogueLikeEntity>
+    public class Personhood : ParentAwareComponentBase<RogueLikeEntity>, ISubstantive
     {
-        public Substantive Info => Parent!.AllComponents.GetFirst<Substantive>();
+        public string Name { get; }
+        public string Description { get; }
+        public string Noun { get; }
+        public string Pronoun { get; }
+        public string PronounPossessive { get; }
+        public List<string> Details { get; }
+        public ISubstantive.Types Type => ISubstantive.Types.Person;
         public Memories Memories { get; set; }
         public Voice Voice { get; set; }
         public BodyLanguage BodyLanguage { get; set; }
@@ -20,8 +27,15 @@ namespace HomicideDetective.People
         private bool _hasGreeted = false;
         private bool _hasToldAboutSelf = false;
 
-        public Personhood()
+        
+        public Personhood(string name, string description, string noun, string pronoun, string pronounPossessive)
         {
+            Name = name;
+            Description = description;
+            Noun = noun;
+            Pronoun = pronoun;
+            PronounPossessive = pronounPossessive;
+            Details = new List<string>();
             Memories = new Memories();
             Voice = new Voice();
             BodyLanguage = new BodyLanguage();
@@ -29,15 +43,15 @@ namespace HomicideDetective.People
         
         public string SpeakTo()
         {
-            BodyLanguage.ApplyPronouns(Info.Pronoun, Info.PronounPossessive);
-            string answer = "";
+            BodyLanguage.ApplyPronouns(Pronoun, PronounPossessive);
+            string answer;
             
             if (!_hasGreeted)
-                answer = $"\"{Greet()},\" says {Info.Name}";
+                answer = $"\"{Greet()},\" says {Name}";
             else if (!_hasIntroduced)
-                answer = $"\"{Introduce()},\" {Info.Pronoun} says";
+                answer = $"\"{Introduce()},\" {Pronoun} says";
             else if (!_hasToldAboutSelf)
-                answer = $"\"{InquireAboutSelf()},\" says {Info.Name}";
+                answer = $"\"{InquireAboutSelf()},\" says {Name}";
             else
             {
                 var randomMemory = Memories.All.RandomItem();
@@ -49,7 +63,7 @@ namespace HomicideDetective.People
                 }
                 
                 Voice.TalkAbout(randomMemory);
-                answer = $"\"{Voice.CurrentSpokenText},\" {Info.Pronoun} says. {Voice.CurrentToneOfVoice}. ";
+                answer = $"\"{Voice.CurrentSpokenText},\" {Pronoun} says. {Voice.CurrentToneOfVoice}. ";
                 answer += BodyLanguage.GetPrintableString();
             }
 
@@ -64,12 +78,12 @@ namespace HomicideDetective.People
         public string Introduce()
         {
             _hasIntroduced = true;
-            return $"My name is {Info.Name}.";
+            return $"My name is {Name}.";
         }
         public string InquireAboutSelf()
         {
             _hasToldAboutSelf = true;
-            return $"{Info.Description}.";
+            return $"{Description}.";
         }
         public string InquireWhereabouts(DateTime atTime)
         {
@@ -104,5 +118,7 @@ namespace HomicideDetective.People
         {
             throw new NotImplementedException();
         }
+
+        public string GetPrintableString() => $"This is " + (_hasIntroduced ? "a " + Noun : Name);
     }
 }
