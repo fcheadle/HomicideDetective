@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HomicideDetective.People;
 using HomicideDetective.Places;
 using SadRogue.Integration;
 using SadRogue.Integration.Maps;
@@ -22,16 +23,21 @@ namespace HomicideDetective.Mysteries
         public int Seed { get; set; }
         public int CaseNumber { get; set; }
         public RogueLikeEntity Victim { get; set; }
-        public RogueLikeEntity Murderer { get; set; }
+        public Person Murderer { get; set; }
         public RogueLikeEntity MurderWeapon { get; set; }
         public Substantive SceneOfCrimeInfo { get; set; }
         public Place SceneOfCrime { get; set; }
         public RogueLikeMap CurrentLocation => LocationsOfInterest[_currentMapIndex];
         public List<RogueLikeMap> LocationsOfInterest { get; set; }
         public DateTime TimeOfDeath { get; set; }
-        public List<RogueLikeEntity> Witnesses { get; set; }
+        public List<Person> Witnesses { get; set; }
         private int _currentMapIndex = 0;
         public Random Random { get; set; }
+
+        private int _mapWidth;
+        private int _mapHeight;
+        private int _viewWidth;
+        private int _viewHeight;
 
         //todo - json names
         string[] _maleGivenNames = { "Nate", "Tom", "Dick", "Harry", "Bob", "Matthew", "Mark", "Luke", "John", "Josh" };
@@ -45,8 +51,9 @@ namespace HomicideDetective.Mysteries
             Random = new Random(Seed + CaseNumber);
         }
         
-        public void Generate()
+        public void Generate(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
         {
+            SetDimensions(mapWidth, mapHeight, viewWidth, viewHeight);
             LocationsOfInterest = new();
             Victim = GenerateVictimEntity();
             Murderer = GenerateMurdererEntity();
@@ -56,6 +63,14 @@ namespace HomicideDetective.Mysteries
             GenerateTimeline();
             GenerateLocationsOfInterest();
             PlacePeopleOnMaps();
+        }
+
+        private void SetDimensions(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
+        {
+            _mapWidth = mapWidth;
+            _mapHeight = mapHeight;
+            _viewWidth = viewWidth;
+            _viewHeight = viewHeight;
         }
     }
 }

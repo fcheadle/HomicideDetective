@@ -34,7 +34,7 @@ namespace HomicideDetective.UserInterface
         public GameContainer()
         {
             Mystery = new Mystery(1, 1);
-            Mystery.Generate();
+            Mystery.Generate(MapWidth, MapHeight, Width * 2 / 3, Height);
             Map = InitMap();
             PlayerCharacter = InitPlayerCharacter();
             MessageWindow = InitMessageWindow();
@@ -62,7 +62,7 @@ namespace HomicideDetective.UserInterface
             //general personhood
             var thoughts = new Memories();
             player.AllComponents.Add(thoughts);
-            player.AllComponents.Add(new Voice());
+            player.AllComponents.Add(new Speech());
             
             //player controls
             var motionControl = InitKeyCommands();

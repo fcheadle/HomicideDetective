@@ -3,7 +3,6 @@ using GoRogue.Components.ParentAware;
 using SadRogue.Integration.Components;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives.GridViews;
-
 // ReSharper disable PossibleLossOfFraction
 
 namespace HomicideDetective.Places.Weather

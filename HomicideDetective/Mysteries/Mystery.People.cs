@@ -36,31 +36,24 @@ namespace HomicideDetective.Mysteries
         /// Generates a RogueLikeEntity who is the murderer in a murder investigation.
         /// </summary>
         /// <returns></returns>
-        public RogueLikeEntity GenerateMurdererEntity()
+        public Person GenerateMurdererEntity()
         {
             var murdererInfo = GeneratePersonalInfo(_surnames.RandomItem());
-            var murderer = new RogueLikeEntity((0,0), 1, false);
-            murderer.AllComponents.Add(murdererInfo);
-            murderer.AllComponents.Add(new Person(murdererInfo.Name, murdererInfo.Description, murdererInfo.Noun, murdererInfo.Pronoun, murdererInfo.PronounPossessive));
-            return murderer;
+            return new Person(murdererInfo.Name, murdererInfo.Description, murdererInfo.Noun, murdererInfo.Pronoun,
+                murdererInfo.PronounPossessive);
         }
         
         /// <summary>
         /// Generates everyone related to the case: family members, friends, coworkers, etc.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<RogueLikeEntity> GenerateWitnessEntities()
+        public IEnumerable<Person> GenerateWitnessEntities()
         {
             for(int i = 0; i < 10; i++)
             {
                 var witnessInfo = GeneratePersonalInfo(_surnames.RandomItem());
-                var witness = new RogueLikeEntity((0,0), 1, false);
-                witness.AllComponents.Add(witnessInfo);
-                witness.AllComponents.Add(new Person(witnessInfo.Name, witnessInfo.Description, witnessInfo.Noun, witnessInfo.Pronoun, witnessInfo.PronounPossessive));
-                witness.AllComponents.Add(GenerateMarkings());
-                //todo - memories, sayings, etc
-
-                yield return witness;
+                yield return new Person(witnessInfo.Name, witnessInfo.Description, witnessInfo.Noun,
+                    witnessInfo.Pronoun, witnessInfo.PronounPossessive);
             }
         }
         
@@ -92,7 +85,7 @@ namespace HomicideDetective.Mysteries
 
             var substantive = new Substantive(ISubstantive.Types.Person, $"{givenName} {surname}",
                 gender: isMale ? "male" : "female", article, pronoun, pronounPossessive, description,
-                37500, 24000);  
+                37500, 24000, noun);  
             
             return substantive;
         }

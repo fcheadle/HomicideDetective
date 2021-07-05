@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoRogue.Components.ParentAware;
-using SadRogue.Integration;
 
 namespace HomicideDetective.People
 {
-    public class Memories : ParentAwareComponentBase<RogueLikeEntity>
+    /// <summary>
+    /// A collection of memories, including long-term, mid-term, and
+    /// short-term memories, and the memory currently being formed.
+    /// </summary>
+    public class Memories
     {
-        public RogueLikeEntity Parent { get; set; }
         private Memory _currentThought;
         private readonly List<Memory> _shortTermMemory;
         private readonly List<Memory> _midTermMemory; 
@@ -23,15 +24,15 @@ namespace HomicideDetective.People
         
         public Memories()
         {
-            _currentThought = new Memory(new DateTime(1970, 07, 04, 0, 0, 0), "I fell asleep.", "home", false);
+            _currentThought = new Memory(new DateTime(1970, 07, 04, 0, 0, 0), 
+                "I fell asleep.", "home", null, null, false);
             _shortTermMemory = new ();
             _midTermMemory = new ();
             _longTermMemory = new ();
             _falseNarrative = new ();
         }
 
-        public void Think(string thought) => Think(new Memory(Program.CurrentGame.CurrentTime, thought, "", false));
-
+        
         public void Think(Memory thought)
         {
             CommitToMemory();
@@ -42,14 +43,6 @@ namespace HomicideDetective.People
             foreach (var thought in thoughts)
                 Think(thought);
         }
-        
-        public void Think(IEnumerable<string> thoughts)
-        {
-            foreach (string thought in thoughts)
-                Think(thought);
-        }
-
-        public void ThinkFalseFact(string fact) => ThinkFalseFact(new Memory(DateTime.Now, fact, "", false));
 
         public void ThinkFalseFact(Memory fact)
         {
@@ -91,7 +84,6 @@ namespace HomicideDetective.People
                 _longTermMemory.Add(memory);
             }
         }
-        
         
         public static Memory HappeningAtTime(List<Memory> self, DateTime time)
         {

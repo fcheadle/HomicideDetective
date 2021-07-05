@@ -4,7 +4,6 @@ using GoRogue;
 using GoRogue.MapGeneration;
 using HomicideDetective.Places;
 using HomicideDetective.Places.Generation;
-using HomicideDetective.UserInterface;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -20,24 +19,21 @@ namespace HomicideDetective.Mysteries
             LocationsOfInterest.Add(DownTownMap());
         }
 
-        private static RogueLikeMap NeighborhoodMap()
+        private RogueLikeMap NeighborhoodMap()
         {
-            var map = PlaceMapGenerator.CreateNeighborhoodMap(GameContainer.MapWidth, GameContainer.MapHeight,
-                Program.Width * 2 / 3 + 1, Program.Height);
+            var map = PlaceMapGenerator.CreateNeighborhoodMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
             return PlaceRegions(map);
         }
         
         private RogueLikeMap ParkMap()
         {
-            var map = PlaceMapGenerator.CreateParkMap(GameContainer.MapWidth, GameContainer.MapHeight, Program.Width * 2 / 3 + 1,
-                Program.Height);
+            var map = PlaceMapGenerator.CreateParkMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
             return PlaceRegions(map);
         }
 
         private RogueLikeMap DownTownMap()
         {
-            var map = PlaceMapGenerator.CreateDownTownMap(GameContainer.MapWidth, GameContainer.MapHeight,
-                Program.Width * 2 / 3 + 1, Program.Height);
+            var map = PlaceMapGenerator.CreateDownTownMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
             return PlaceRegions(map);
         }
         
@@ -98,7 +94,7 @@ namespace HomicideDetective.Mysteries
         {
             string name, noun, pronoun, height, width;
             
-            name = $"{Victim.Info().Name}'s home";
+            name = $"Scene of the Crime";
             pronoun = "it";
             string pronounPossessive = "its";
             string pronounPassive = "the";

@@ -31,7 +31,7 @@ namespace HomicideDetective
         public List<string> Details => _details;
 
         public Substantive(ISubstantive.Types type, string name, string? gender = null, string? article = null, string? pronoun = null, 
-            string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0)
+            string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0, string? noun = null)
         {
             Type = type;
             Name = name;
@@ -41,6 +41,7 @@ namespace HomicideDetective
             Gender = gender;
             Mass = mass;
             Volume = volume;
+            Noun = noun;
             Description = description;
             _details = new List<string>();
             Markings = new MarkingCollection();

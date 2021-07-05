@@ -20,27 +20,19 @@ namespace HomicideDetective.UserInterface
         /// </summary>
         public static void Talk()
         {
-            //Program.CurrentTime.Minutes++;
-            var thoughts = Player.AllComponents.GetFirst<Memories>();
             for (int i = Player.Position.X - 1; i < Player.Position.X + 2; i++)
             {
                 for (int j = Player.Position.Y - 1; j < Player.Position.Y + 2; j++)
                 {
                     if (Map.Contains((i, j)) && (i,j) != Player.Position)
                     {
-                        foreach (var entity in Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
+                        foreach (var entity in Map.GetEntitiesAt<Person>((i,j)))
                         {
-                            var speech = entity.AllComponents.GetFirstOrDefault<Person>();
-                            if (speech is not null)
-                            {
-                                thoughts.Think(speech.SpeakTo());
-                            }
+                            MessageWindow.Write(entity.SpeakTo());
                         }
                     }
                 }
             }
-
-            MessageWindow.Write(thoughts.CurrentThought.What);
         }
 
         /// <summary>
@@ -48,25 +40,19 @@ namespace HomicideDetective.UserInterface
         /// </summary>
         public static void Look()
         {
-            //Program.CurrentTime.Minutes++;
-            var thoughts = Player.AllComponents.GetFirst<Memories>();
             for (int i = Player.Position.X - 1; i < Player.Position.X + 2; i++)
             {
                 for (int j = Player.Position.Y - 1; j < Player.Position.Y + 2; j++)
                 {
                     if (Map.Contains((i, j)) && Player.Position != (i,j))
                     {
-                        foreach (var entity in Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
+                        foreach (var person in Map.GetEntitiesAt<Person>((i,j)))
                         {
-                            var substantive = entity.AllComponents.GetFirstOrDefault<Substantive>();
-                            if(substantive is not null)
-                                thoughts.Think(substantive.GetPrintableString());
+                            MessageWindow.Write(person.GetPrintableString());
                         }
                     }
                 }
             }
-
-            MessageWindow.Write(thoughts.CurrentThought.What);
         }
         
         /// <summary>
@@ -89,16 +75,16 @@ namespace HomicideDetective.UserInterface
                             {
                                 string thought = "";
                                 thought += "On this entity is ";
+                                
                                 foreach (var marking in markings.MarkingsOn)
                                     thought += $"{marking}, ";
-                                thoughts.Think(thought);
+                                
+                                MessageWindow.Write(thought);
                             }
                         }
                     }
                 }
             }
-
-            MessageWindow.Write(thoughts.CurrentThought.What);
         }
 
         public static void NextMap()

@@ -1,38 +1,101 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using GoRogue;
+using GoRogue.Components.ParentAware;
 using HomicideDetective.UserInterface;
+using SadRogue.Integration;
 
 namespace HomicideDetective.People
 {
-    public class BodyLanguage : IPrintable
+    /// <summary>
+    /// The speech component given to RogueLikeEntities who can speak.
+    /// </summary>
+    /// <remarks>
+    /// Requires a RogueLikeEntity Parent who has a Substantive and Thoughts components
+    /// </remarks>
+    public class Speech : ParentAwareComponentBase<RogueLikeEntity>, IPrintable
     {
+        private string _pronoun { get; set; }
+        private string _pronounPossessive { get; set; }
+        public string VoiceDescription { get; }
+        public string CurrentToneOfVoice { get; private set; } = "";
+        public string CurrentSpokenText { get; private set; } = "";
         public string CurrentStance { get; private set; } = "";
         public string CurrentPosture { get; private set; } = "";
         public string CurrentArmPosition { get; private set; } = "";
         public string CurrentEyeMovements { get; private set; } = "";
-
-        private string _pronoun { get; set; }
-        private string _pronounPossessive { get; set; }
-        public BodyLanguage(string pronoun = "they", string pronounPossessive = "their")
+        
+        public Speech(string pronoun = "they", string pronounPossessive = "their")
         {
+            VoiceDescription = GenerateVoiceDescription();
             _pronoun = pronoun;
             _pronounPossessive = pronounPossessive;
         }
 
+        public void SpeakText(string text)
+        {
+            CurrentSpokenText = text;
+        }
+
+        public void SpeakText(string text, bool shifty)
+        {
+            GetNextSpeech(shifty);
+            CurrentSpokenText = text;
+        }
+        public void SpeakAbout(Memory memory)
+        {
+            CurrentSpokenText = memory.GetPrintableString();
+        }
         public void ApplyPronouns(string pronoun, string possessive)
         {
             _pronoun = pronoun;
             _pronounPossessive = possessive;
         }
-        public string GetPrintableString()
-            => $"{CurrentStance}. {CurrentPosture}. {CurrentArmPosition}. {CurrentEyeMovements}. ";
-        
-        public void NextBodyLanguage(bool shifty)
+
+        public string GetPrintableString() =>
+            $"\"{CurrentSpokenText},\" {_pronoun} says in a {CurrentToneOfVoice}. {CurrentStance}. {CurrentPosture}. {CurrentArmPosition}. {CurrentEyeMovements}. {VoiceDescription}";
+
+        public void GetNextSpeech(bool shifty)
         {
+            GetNewToneOfVoice(shifty);
             GetNewStance(shifty);
             GetNewPosture(shifty);
             GetNewArmPosition(shifty);
             GetNewEyeMovements(shifty);
+        }
+        
+        private void GetNewToneOfVoice(bool shifty)
+        {
+            var tones = new List<string>()
+            {
+                $"{_pronounPossessive} voice remains a steady volume throughout.",
+                $"{_pronoun} pause slightly before speaking.",
+                $"{_pronoun} say, after a slight pause.",
+                $"{_pronounPossessive} words come out with no hesitation.",
+                $"{_pronoun} speak in a hushed tone.",
+                $"{_pronoun} say in a flat monotone",
+                $"{_pronoun} say with little vocal inflection",
+                $"{_pronoun} blurt out, somewhat loudly"
+            };
+
+            if (shifty)
+            {
+                tones.Add($"{_pronounPossessive} voice pitches slightly higher.");
+                tones.Add($"{_pronoun} say as {_pronounPossessive} voice cracks.");
+                tones.Add($"{_pronoun} say after a considerable pause.");
+                tones.Add($"{_pronoun} say in a measured monotone.");
+                tones.Add($"{_pronoun} say, voice carrying a tinge of sincerity.");
+            }
+            else
+            {
+                tones.Add($"{_pronoun} raise {_pronounPossessive} voice and {_pronounPossessive} tone becomes pointed.");
+                tones.Add($"{_pronoun} gasps the words out hurriedly.");
+                tones.Add($"{_pronoun} speaks in a very low tone.");
+                tones.Add($"{_pronoun} sound annoyed.");
+                tones.Add($"{_pronounPossessive} voice carries a tinge of sincerity.");
+                
+            }
         }
 
         private void GetNewArmPosition(bool shifty)
@@ -92,7 +155,7 @@ namespace HomicideDetective.People
         {
             var stances = new List<string>();
             stances.Add($"{_pronoun} stands with {_pronounPossessive} feet shoulder width apart");
-            stances.Add($"{_pronoun} stands with {_pronounPossessive} feet squared to their shoulders");
+            stances.Add($"{_pronoun} stands with {_pronounPossessive} feet squared to {_pronounPossessive} shoulders");
             stances.Add($"{_pronoun} carries {_pronounPossessive} weight on {_pronounPossessive} left leg with {_pronounPossessive} right leg cocked out");
             stances.Add($"{_pronoun} carries {_pronounPossessive} weight on {_pronounPossessive} left leg with {_pronounPossessive} right leg at an angle");
             stances.Add($"{_pronoun} carries {_pronounPossessive} weight on {_pronounPossessive} right leg with {_pronounPossessive} left leg cocked out");
@@ -102,7 +165,7 @@ namespace HomicideDetective.People
 
             if (shifty)
             {
-                stances.Add($"{_pronoun} hyperextends {_pronounPossessive} knees");
+                stances.Add($"{_pronoun} hyper-extends {_pronounPossessive} knees");
                 stances.Add($"{_pronoun} shifts weight from {_pronounPossessive} left to {_pronounPossessive} right leg");
                 stances.Add($"{_pronoun} shifts weight from {_pronounPossessive} right to {_pronounPossessive} left leg");
                 stances.Add($"{_pronoun} shifts weight from one leg to another");
@@ -122,7 +185,7 @@ namespace HomicideDetective.People
             var stances = new List<string>();
             stances.Add($"{_pronoun} hunches {_pronounPossessive} shoulders slightly");
             stances.Add($"{_pronoun} has the slightest hunch");
-            stances.Add($"{_pronoun} slouches {_pronounPossessive} their head");
+            stances.Add($"{_pronoun} slouches {_pronounPossessive} head");
             stances.Add($"{_pronoun} raises {_pronounPossessive} head as {_pronoun} speaks");
             stances.Add($"{_pronoun} lowers {_pronounPossessive} head as {_pronoun} speaks");
             stances.Add($"{_pronoun} untilts {_pronounPossessive} head");
@@ -144,6 +207,23 @@ namespace HomicideDetective.People
             }
 
             CurrentPosture = stances.RandomItem();
+        }
+
+        private string GenerateVoiceDescription()
+        {
+            List<string> timbres = new List<string>()
+            {
+                "a rumbly", "a raspy", "a smooth", "a shrill", "a soft", "a hard", "a light", "a gruff", "a clear", "a crystal-clear",
+                "a grating", "a muddy", "an aged", "a youthly", "a mature", "a sagely", "a rolling", "a wisened", "a bubbly", "an enchanting",
+                "a bewitching", "a lovely", "a magnetic", "an irritating", "a poetic", "an artistic", "a flavorful", "a repulsive", 
+                "a repugnant",
+            };
+            List<string> tones = new List<string>()
+            {
+                "ultra-bass", "bass", "baritone", "alto", "tenor", "countertenor", "soprano", "falsetto",
+                "coloratura soprano", "mezzo-soprano", "contralto"
+            };
+            return $"Their voice is {timbres.RandomItem()} {tones.RandomItem()}.";
         }
     }
 }
