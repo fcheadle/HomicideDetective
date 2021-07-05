@@ -41,7 +41,7 @@ namespace HomicideDetective.Mysteries
             var murdererInfo = GeneratePersonalInfo(_surnames.RandomItem());
             var murderer = new RogueLikeEntity((0,0), 1, false);
             murderer.AllComponents.Add(murdererInfo);
-            murderer.AllComponents.Add(new Personhood());
+            murderer.AllComponents.Add(new Person(murdererInfo.Name, murdererInfo.Description, murdererInfo.Noun, murdererInfo.Pronoun, murdererInfo.PronounPossessive));
             return murderer;
         }
         
@@ -56,7 +56,7 @@ namespace HomicideDetective.Mysteries
                 var witnessInfo = GeneratePersonalInfo(_surnames.RandomItem());
                 var witness = new RogueLikeEntity((0,0), 1, false);
                 witness.AllComponents.Add(witnessInfo);
-                witness.AllComponents.Add(new Personhood());
+                witness.AllComponents.Add(new Person(witnessInfo.Name, witnessInfo.Description, witnessInfo.Noun, witnessInfo.Pronoun, witnessInfo.PronounPossessive));
                 witness.AllComponents.Add(GenerateMarkings());
                 //todo - memories, sayings, etc
 
@@ -90,7 +90,7 @@ namespace HomicideDetective.Mysteries
             string description = $"{pronoun} is a {heightDescription}, {widthDescription} {age} {noun}. ";
             string givenName = isMale ? _maleGivenNames[ Random.Next(0, _maleGivenNames.Length)] : _femaleGivenNames[ Random.Next(0, _femaleGivenNames.Length)];
 
-            var substantive = new Substantive(Substantive.Types.Person, $"{givenName} {surname}",
+            var substantive = new Substantive(ISubstantive.Types.Person, $"{givenName} {surname}",
                 gender: isMale ? "male" : "female", article, pronoun, pronounPossessive, description,
                 37500, 24000);  
             
@@ -145,9 +145,9 @@ namespace HomicideDetective.Mysteries
             }
 
             var hair = new Marking(name, color, description, adjective);
-            hair = new Marking(name, color, description, adjective, Substantive.Types.Person, new []{hair});
+            hair = new Marking(name, color, description, adjective, ISubstantive.Types.Person, new []{hair});
             collection.AddUnlimitedMarkings(hair);
-            collection.LeaveMarkOn(collection, Substantive.Types.Person);
+            collection.LeaveMarkOn(collection, ISubstantive.Types.Person);
             return collection;
         }
     }

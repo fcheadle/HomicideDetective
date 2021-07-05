@@ -98,7 +98,7 @@ namespace HomicideDetective.Mysteries
                     break;
             }
 
-            var substantive = new Substantive(Substantive.Types.Thing, name, article: article, pronoun: "it",
+            var substantive = new Substantive(ISubstantive.Types.Thing, name, article: article, pronoun: "it",
                 description: description, mass: mass, volume: volume);
             substantive.AddDetail(detail);
             return substantive;
@@ -187,7 +187,7 @@ namespace HomicideDetective.Mysteries
                     break;
             }   
             
-            var substantive = new Substantive(Substantive.Types.Thing, name, article: "a", pronoun: "it",
+            var substantive = new Substantive(ISubstantive.Types.Thing, name, article: "a", pronoun: "it",
                 description: description, mass: mass, volume: volume);
             substantive.AddDetail(detail);
             return substantive;

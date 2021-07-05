@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HomicideDetective.Things;
 using HomicideDetective.UserInterface;
 
 namespace HomicideDetective
@@ -11,23 +12,25 @@ namespace HomicideDetective
     /// Substantive should not have any knowledge of any other components.
     /// It exists purely to be a collection of strings to describe something.
     /// </remarks>
-    public class Substantive : IPrintable
+    public class Substantive : ISubstantive
     {
         public int Mass { get; set; } //in grams
         public int Volume { get; set; } //in ml
-        public enum Types {Person, Place, Thing}
-        public Types? Type { get; set; } 
-        public string? Name { get; set; } 
-        public string? Article { get; set; }
-        public string? Pronoun { get; set; }
-        public string? PronounPossessive { get; set; }
+        public ISubstantive.Types Type { get; set; } 
+        public string Name { get; set; } 
+        public string Article { get; set; }
+        public string Noun { get; set; }
+        public string Pronoun { get; set; }
+        public string PronounPossessive { get; set; }
         public string? Gender { get; set; }
         public string? Description { get; set; }
+        
+        public MarkingCollection? Markings { get; set; }
 
         private List<string> _details;
         public List<string> Details => _details;
 
-        public Substantive(Types type, string name, string? gender = null, string? article = null, string? pronoun = null, 
+        public Substantive(ISubstantive.Types type, string name, string? gender = null, string? article = null, string? pronoun = null, 
             string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0)
         {
             Type = type;
@@ -40,6 +43,7 @@ namespace HomicideDetective
             Volume = volume;
             Description = description;
             _details = new List<string>();
+            Markings = new MarkingCollection();
         }
         
         public void AddDetail(string detail) => _details.Add(detail);
@@ -47,7 +51,7 @@ namespace HomicideDetective
         {
             var description = $"This is {Article} {Name}. ";
             description += $"{Description} ";
-            if(Type != Types.Place)
+            if(Type != ISubstantive.Types.Place)
             {
                 description += $"{Pronoun} weighs {Mass}g. ";
                 description += $"{Pronoun} is {Volume}ml in size. ";

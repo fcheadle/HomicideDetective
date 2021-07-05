@@ -149,7 +149,7 @@ namespace HomicideDetective.Mysteries
 
             string description = $"{pronoun} is a {height}, {width} {noun}.";
 
-            var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: pronounPassive, pronoun: pronoun,
+            var substantive = new Substantive(ISubstantive.Types.Place, name, gender: "", article: pronounPassive, pronoun: pronoun,
                 pronounPossessive: pronounPossessive, description: description, mass: 0, volume: 0);
 
             return substantive;
@@ -258,7 +258,7 @@ namespace HomicideDetective.Mysteries
                 detail = "(???)";
             }
 
-            var substantive = new Substantive(Substantive.Types.Place, name, gender: "", article: article,
+            var substantive = new Substantive(ISubstantive.Types.Place, name, gender: "", article: article,
                 pronoun: "it", pronounPossessive: "its", description: description, mass: 0, volume: 0);
 
             substantive.AddDetail(detail);

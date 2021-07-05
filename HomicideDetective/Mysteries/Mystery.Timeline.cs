@@ -34,7 +34,7 @@ namespace HomicideDetective.Mysteries
 
         private void AddTimeline(RogueLikeEntity witness, List<Memory> events)
         {
-            var thoughts = witness.AllComponents.GetFirst<Personhood>().Memories;
+            var thoughts = witness.AllComponents.GetFirst<Person>().Memories;
             thoughts.Think(events);
         }
 

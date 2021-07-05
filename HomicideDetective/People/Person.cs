@@ -10,7 +10,7 @@ namespace HomicideDetective.People
     /// <summary>
     /// Contains all of the components that are common to all people
     /// </summary>
-    public class Personhood : ParentAwareComponentBase<RogueLikeEntity>, ISubstantive
+    public class Person : ParentAwareComponentBase<RogueLikeEntity>, ISubstantive
     {
         public string Name { get; }
         public string Description { get; }
@@ -28,7 +28,7 @@ namespace HomicideDetective.People
         private bool _hasToldAboutSelf = false;
 
         
-        public Personhood(string name, string description, string noun, string pronoun, string pronounPossessive)
+        public Person(string name, string description, string noun, string pronoun, string pronounPossessive)
         {
             Name = name;
             Description = description;

@@ -30,7 +30,7 @@ namespace HomicideDetective.UserInterface
                     {
                         foreach (var entity in Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
                         {
-                            var speech = entity.AllComponents.GetFirstOrDefault<Personhood>();
+                            var speech = entity.AllComponents.GetFirstOrDefault<Person>();
                             if (speech is not null)
                             {
                                 thoughts.Think(speech.SpeakTo());
