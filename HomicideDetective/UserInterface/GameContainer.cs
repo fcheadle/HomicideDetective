@@ -41,7 +41,7 @@ namespace HomicideDetective.UserInterface
             MessageWindow.Write(Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
             CurrentTime = DateTime.Now;//todo
             //Weather = new Weather(Mystery.CurrentLocation);
-            GameHost.Instance.FrameUpdate += (s, e) => Map.AllComponents.GetFirst<WeatherController>().ProcessTimeUnit();
+            GameHost.Instance.FrameUpdate += (s, e) => Map.AllComponents.GetFirst<WeatherController>().Animate();
         }
 
         private RogueLikeMap InitMap()

@@ -20,7 +20,7 @@ namespace HomicideDetective.Places.Weather
             _windSpeed = new Random().Next(50, 125);
         }
 
-        public void ProcessTimeUnit()
+        public void Animate()
         {
             Elapsed += TimeSpan.FromMilliseconds(100);
             if(Elapsed.TotalMilliseconds % 1000 <= 100)

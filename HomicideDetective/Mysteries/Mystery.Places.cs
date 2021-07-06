@@ -157,7 +157,7 @@ namespace HomicideDetective.Mysteries
             foreach (var region in CurrentLocation.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position))
             {
                 answer += "\r\n";
-                answer += region.Info.GetPrintableString();
+                answer += region.GetPrintableString();
             }
 
             return answer;
@@ -169,9 +169,13 @@ namespace HomicideDetective.Mysteries
             var places = new PlaceCollection();
             foreach (var region in regionMap)
             {
-                places.Add(new Place(region, GeneratePlaceInfo(region)));
+                var info = GeneratePlaceInfo(region);
+                places.Add(new Place(region, info.Name, info.Description, info.Noun));
                 foreach (var subRegion in region.SubRegions)
-                    places.Add(new Place(subRegion, GeneratePlaceInfo(subRegion)));
+                {
+                    info = GeneratePlaceInfo(subRegion);
+                    places.Add(new Place(subRegion,  info.Name, info.Description, info.Noun));
+                }
             }
 
             map.AllComponents.Add(places);

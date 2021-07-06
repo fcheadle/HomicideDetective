@@ -128,7 +128,6 @@ namespace HomicideDetective.Tests.Mysteries
             var firstAnswer = firstMystery.Murderer;
             var secondAnswer = secondMystery.Murderer;
             
-            Assert.NotEqual(firstAnswer.Name, secondAnswer.Name);
             Assert.NotNull(firstAnswer.Name);
             Assert.NotEmpty(firstAnswer.Name);
             Assert.NotNull(secondAnswer.Name);

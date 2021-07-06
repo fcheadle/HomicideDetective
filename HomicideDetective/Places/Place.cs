@@ -1,39 +1,32 @@
+using System.Collections.Generic;
 using GoRogue.MapGeneration;
 using HomicideDetective.Things;
-using HomicideDetective.UserInterface;
-using SadRogue.Integration;
-using SadRogue.Primitives;
 
 namespace HomicideDetective.Places
 {
-    public class Place : IPrintable
+    public class Place : ISubstantive
     {
-        public Region Area { get; set; }
-        public Substantive Info { get; set; }
-        public MarkingCollection Markings { get; set; }
-        private RogueLikeEntity _entity;
-        public Place(Region area, Substantive info, MarkingCollection markings)
+        public ISubstantive.Types Type => ISubstantive.Types.Place;
+        public string Name { get; }
+        public string Description { get; }
+        public string Noun { get; }
+        public string Pronoun { get; }
+        public string PronounPossessive { get; }
+        public List<string> Details { get; }
+        public Region Area { get; }
+        public MarkingCollection Markings { get; }
+        public Place(Region area, string name, string description, string noun)
         {
             Area = area;
-            Info = info;
-            Markings = markings;
-            InitEntity();
+            Name = name;
+            Description = description;
+            Noun = noun;
+            Pronoun = "it";
+            PronounPossessive = "it's";
+            Details = new List<string>();
+            Markings = new MarkingCollection();
         }
 
-        public string GetPrintableString() => Info.GetPrintableString();
-        public Place(Region area, Substantive info)
-        {
-            Area = area;
-            Info = info;
-            Markings = new MarkingCollection();
-            InitEntity();
-        }
-        
-        private void InitEntity()
-        {
-            _entity = new RogueLikeEntity(Area.NorthWestCorner, Color.Transparent, Color.Transparent, 0);
-            _entity.AllComponents.Add(Info);
-            _entity.AllComponents.Add(Markings);
-        }
+        public string GetPrintableString() => $"I am in {Name}. {Description}";
     }
 }

@@ -9,7 +9,6 @@ namespace HomicideDetective.Places.Weather
 {
     public abstract class CellularAutomataArea
     {
-        public IGameObject? Parent { get; set; }
         public Rectangle Body;
         public ArrayView<MovesInWaves.States> CurrentState;
         public ArrayView<MovesInWaves.States> NextState;
@@ -25,8 +24,16 @@ namespace HomicideDetective.Places.Weather
 
         public virtual void SeedStartingPattern()
         {
+            foreach (var pos in CurrentState.Positions())
+            {
+                CurrentState[pos] = MovesInWaves.States.Off;
+            }
+            
             for (int i = 0; i < Body.Area / 10; i++)
                 CurrentState[CurrentState.RandomPosition()] = MovesInWaves.States.On;
+            
+            for (int i = 0; i < 10; i++)
+                CurrentState[CurrentState.RandomPosition()] = MovesInWaves.States.Dying;
         }
         
         public virtual void DetermineNextStates()

@@ -26,7 +26,7 @@ namespace HomicideDetective.Tests.Places
         {
             var region = CreateRegion(sw);
             var subs = CreateSubstantive();
-            return new Place(region, subs);
+            return new Place(region, subs.Name, subs.Description, subs.Noun);
         }
         private Region CreateRegion(Point sw)
             => new Region($"room {sw}", sw + (0, -15), sw + (15, -15), sw + (15, 0), sw);

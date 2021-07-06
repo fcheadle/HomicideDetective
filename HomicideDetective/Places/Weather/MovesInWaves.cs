@@ -1,10 +1,11 @@
+using HomicideDetective.Places.Weather;
 using HomicideDetective.UserInterface;
 using SadRogue.Integration;
 using SadRogue.Primitives;
 
 namespace HomicideDetective.Places
 {
-    public class MovesInWaves : AnimatingGlyphComponent
+    public class MovesInWaves : ReactsToWeatherComponent
     {
         public enum States {On, Dying, Off}
         public States State;

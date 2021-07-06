@@ -3,7 +3,7 @@ using SadRogue.Primitives;
 
 namespace HomicideDetective.Places.Weather
 {
-    public class BlowsInWind : AnimatingGlyphComponent
+    public class BlowsInWind : ReactsToWeatherComponent
     {
         private static readonly int[] _eastGlyphs = new int[] {'"', 174, 27};
         private static readonly int[] _westGlyphs = new int[] {'"', 175, 26};

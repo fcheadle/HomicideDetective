@@ -1,12 +1,12 @@
 using GoRogue.Components.ParentAware;
 using SadRogue.Integration;
 
-namespace HomicideDetective.UserInterface
+namespace HomicideDetective.Places.Weather
 {
     /// <summary>
     /// The blowing grass animation
     /// </summary>
-    public class AnimatingGlyphComponent : ParentAwareComponentBase<RogueLikeCell>
+    public class ReactsToWeatherComponent : ParentAwareComponentBase<RogueLikeCell>
     {
         //AnimatedConsole animation;
         protected readonly int _ogGlyph;
@@ -14,7 +14,7 @@ namespace HomicideDetective.UserInterface
         protected int _animationIndex;
         public bool Animating { get; private set; }
 
-        public AnimatingGlyphComponent(int glyph, int[] animationSteps)
+        public ReactsToWeatherComponent(int glyph, int[] animationSteps)
         {
             _ogGlyph = glyph;
             _animationSteps = animationSteps;
@@ -32,7 +32,7 @@ namespace HomicideDetective.UserInterface
             _animationIndex = 0;
         }
 
-        public virtual void ProcessTimeUnit()
+        public virtual void DoOneAnimationStep()
         {
             if (Animating)
             {
