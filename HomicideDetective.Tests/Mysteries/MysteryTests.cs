@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using HomicideDetective.Mysteries;
-using HomicideDetective.People;
 using Xunit;
+// ReSharper disable ObjectCreationAsStatement
 
 namespace HomicideDetective.Tests.Mysteries
 {
     public class MysteryTests
     {
-        private TestHost _host = new TestHost();
         
         public static readonly IEnumerable<object[]> IntData = new List<object[]>()
         {
@@ -24,6 +23,7 @@ namespace HomicideDetective.Tests.Mysteries
         [MemberData(nameof(IntData))]
         public void GenerateMysteryTest(int seed)
         {
+            new TestHost();
             var mystery = new Mystery(seed, 0);
             mystery.Generate(100, 100, 50, 50);
             Assert.NotNull(mystery.Victim);
@@ -95,6 +95,7 @@ namespace HomicideDetective.Tests.Mysteries
         [MemberData(nameof(IntData))]
         public void GenerateVictimTest(int seed)
         {
+            new TestHost();
             var firstMystery = new Mystery(seed, 0);
             var secondMystery = new Mystery(seed, 0);
             firstMystery.Generate(100, 100, 50, 50);
@@ -121,6 +122,7 @@ namespace HomicideDetective.Tests.Mysteries
         [MemberData(nameof(IntData))]
         public void GenerateMurdererTest(int seed)
         {
+            new TestHost();
             var firstMystery = new Mystery(seed, 0);
             var secondMystery = new Mystery(seed, 0);
             firstMystery.Generate(100, 100, 50, 50);
@@ -144,6 +146,7 @@ namespace HomicideDetective.Tests.Mysteries
         [MemberData(nameof(IntData))]
         public void GenerateMurderWeaponTest(int seed)
         {
+            new TestHost();
             var firstMystery = new Mystery(seed, 0);
             var secondMystery = new Mystery(seed, 0);
             firstMystery.Generate(100, 100, 50, 50);
@@ -171,6 +174,7 @@ namespace HomicideDetective.Tests.Mysteries
         [MemberData(nameof(IntData))]
         public void GenerateWitnessesTest(int seed)
         {
+            new TestHost();
             var mystery = new Mystery(seed, 0);
             mystery.Generate(100, 100, 50, 50);
 

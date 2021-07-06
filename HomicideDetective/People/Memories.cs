@@ -25,7 +25,7 @@ namespace HomicideDetective.People
         public Memories()
         {
             _currentThought = new Memory(new DateTime(1970, 07, 04, 0, 0, 0), 
-                "I fell asleep.", "home", null, null, false);
+                "I fell asleep.", "home");
             _shortTermMemory = new ();
             _midTermMemory = new ();
             _longTermMemory = new ();

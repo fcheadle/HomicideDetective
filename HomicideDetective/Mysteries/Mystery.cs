@@ -5,6 +5,7 @@ using HomicideDetective.People;
 using HomicideDetective.Places;
 using SadRogue.Integration;
 using SadRogue.Integration.Maps;
+#pragma warning disable 8618
 
 namespace HomicideDetective.Mysteries
 {
@@ -31,7 +32,7 @@ namespace HomicideDetective.Mysteries
         public List<RogueLikeMap> LocationsOfInterest { get; set; }
         public DateTime TimeOfDeath { get; set; }
         public List<Person> Witnesses { get; set; }
-        private int _currentMapIndex = 0;
+        private int _currentMapIndex;
         public Random Random { get; set; }
 
         private int _mapWidth;

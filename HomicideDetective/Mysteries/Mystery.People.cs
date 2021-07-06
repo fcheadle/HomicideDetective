@@ -74,9 +74,7 @@ namespace HomicideDetective.Mysteries
             string pronounPossessive = isMale ? "his" : "her";
             string article = "";
 
-            string height = isTall ? "tall" : "short";
             string heightDescription = isTall ? "slightly taller than average" : "rather short";
-            string width = isFat ? "full-figured" : "slender";
             string widthDescription = isFat ? "moderately over-weight" : "rather slender";
             string age = isYoung ? "young" : "middle-aged";
 
@@ -99,8 +97,7 @@ namespace HomicideDetective.Mysteries
             int chance = Random.Next(1, 101);
             switch (chance % 7)
             {
-                default:
-                case 0: adjective = "curly"; break;
+                default: adjective = "curly"; break;
                 case 1: adjective = "wavy"; break;
                 case 2: adjective = "frizzy"; break;
                 case 3: adjective = "flat"; break;
@@ -111,8 +108,7 @@ namespace HomicideDetective.Mysteries
             chance = Random.Next(1, 101);
             switch (chance % 12)
             {
-                default:
-                case 0: color = "light brown"; break;
+                default: color = "light brown"; break;
                 case 1: color = "brown"; break;
                 case 2: color = "dark brown"; break;
                 case 3: color = "black"; break;
@@ -128,8 +124,7 @@ namespace HomicideDetective.Mysteries
             chance = Random.Next(1, 101);
             switch (chance % 6)
             {
-                default:
-                case 0: description = "waxy"; break;
+                default: description = "waxy"; break;
                 case 1: description = "dry"; break;
                 case 2: description = "damp"; break;
                 case 3: description = "moist"; break;

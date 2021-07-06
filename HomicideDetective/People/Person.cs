@@ -21,9 +21,9 @@ namespace HomicideDetective.People
         public Memories Memories { get; set; }
         public Speech Speech { get; set; }
 
-        private bool _hasIntroduced = false;
-        private bool _hasGreeted = false;
-        private bool _hasToldAboutSelf = false;
+        private bool _hasIntroduced;
+        private bool _hasGreeted;
+        private bool _hasToldAboutSelf;
 
         
         public Person(string name, string description, string noun, string pronoun, string pronounPossessive) : 

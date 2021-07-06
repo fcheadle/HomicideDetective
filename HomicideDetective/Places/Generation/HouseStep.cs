@@ -5,7 +5,6 @@ using GoRogue;
 using GoRogue.MapGeneration;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
-using SadRogue.Integration;
 using SadRogue.Integration.FieldOfView.Memory;
 
 namespace HomicideDetective.Places.Generation
@@ -19,7 +18,7 @@ namespace HomicideDetective.Places.Generation
         private Color _floorPrimaryColor = Color.Red;
         private Color _floorSecondaryColor = Color.Red;
         private readonly Color _backgroundColor = Color.Black;
-        private int _themeIndex = 0;
+        private int _themeIndex;
         private int _horizontalRooms = 3;
         private int _verticalRooms = 3;
         private int _sideLength = 7;
@@ -99,8 +98,6 @@ namespace HomicideDetective.Places.Generation
         private void CreateBathroom(Region house)
         {
             var hall = house.SubRegions.First(r => r.Name == "hall");
-            var kitching = house.SubRegions.First(r => r.Name == "kitchen");
-            var dining = house.SubRegions.First(r => r.Name == "dining");
             var bathroom = house.SubRegions.RandomItem(r => r.Name != "hall" && r.Name != "dining" && r.Name != "kitchen" && hall.OuterPoints.Count(r.Contains) > 3);
             bathroom.Name = "bathroom";
         }
@@ -131,7 +128,7 @@ namespace HomicideDetective.Places.Generation
         {
             var overlapping = one.OuterPoints.Where(p =>
                 other.OuterPoints.Contains(p) && !IsCorner(other, p) &&
-                !IsCorner(one, p));
+                !IsCorner(one, p)).ToList();
 
             if(overlapping.Any())
             {
@@ -163,7 +160,6 @@ namespace HomicideDetective.Places.Generation
                 switch (chance % 3)
                 {
                     default:
-                    case 0:
                         southEast = house.SouthEastCorner;
                         southwest = house.SouthEastCorner - difference;
                         northEast = house.NorthEastCorner;
@@ -191,7 +187,6 @@ namespace HomicideDetective.Places.Generation
                 switch (chance % 3)
                 {
                     default:
-                    case 0:
                         southEast = house.SouthEastCorner;
                         southwest = house.SouthWestCorner;
                         northEast = house.SouthEastCorner - difference;
@@ -240,8 +235,7 @@ namespace HomicideDetective.Places.Generation
             _themeIndex++;
             switch (_themeIndex % 4)
             {
-                default:
-                case 0: SetWhiteTheme(); break;
+                default: SetWhiteTheme(); break;
                 case 1: SetBrownTheme(); break;
                 case 2: SetRedTheme(); break;
                 case 3: SetYellowTheme(); break;

@@ -4,6 +4,7 @@ using SadConsole;
 using SadConsole.Components;
 using SadRogue.Integration.Components;
 using SadRogue.Primitives;
+#pragma warning disable 8618
 
 namespace HomicideDetective.UserInterface
 {
@@ -20,7 +21,7 @@ namespace HomicideDetective.UserInterface
         
         //the contents printed by the cursor
         public List<string> Contents { get; private set; }= new List<string>();
-        public int PageNumber { get; private set; } = 0;
+        public int PageNumber { get; private set; }
         
         public MessageWindow(int width, int height) : base(true, false, true, true)
         {

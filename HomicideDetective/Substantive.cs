@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using HomicideDetective.Things;
-using HomicideDetective.UserInterface;
+#pragma warning disable 8618
 
 namespace HomicideDetective
 {
@@ -23,7 +23,7 @@ namespace HomicideDetective
         public string Pronoun { get; set; }
         public string PronounPossessive { get; set; }
         public string? Gender { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; }
         
         public MarkingCollection? Markings { get; set; }
 

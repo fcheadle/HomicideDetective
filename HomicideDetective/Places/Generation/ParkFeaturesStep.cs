@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoRogue;
 using GoRogue.MapGeneration;
 using HomicideDetective.Places.Weather;
 using SadRogue.Integration;
 using SadRogue.Integration.FieldOfView.Memory;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
+// ReSharper disable PossibleLossOfFraction
 
 namespace HomicideDetective.Places.Generation
 {

@@ -1,5 +1,5 @@
-using HomicideDetective.UserInterface;
 using SadRogue.Primitives;
+// ReSharper disable InconsistentNaming
 
 namespace HomicideDetective.Places.Weather
 {
@@ -22,13 +22,10 @@ namespace HomicideDetective.Places.Weather
         {
             switch (State)
             {
-                case MovesInWaves.States.Dying: _animationIndex = 2; break;
-                case MovesInWaves.States.Off: _animationIndex = 0; break;
-                case MovesInWaves.States.On: _animationIndex = 1; break;
+                case MovesInWaves.States.Dying: AnimationIndex = 2; break;
+                case MovesInWaves.States.Off: AnimationIndex = 0; break;
+                case MovesInWaves.States.On: AnimationIndex = 1; break;
             }
-
-            var myParent = Parent;
-            var baseParent = base.Parent;
             base.SetAppearance();
         }
     }

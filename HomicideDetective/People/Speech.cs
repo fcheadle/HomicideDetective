@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using GoRogue;
 using GoRogue.Components.ParentAware;
 using HomicideDetective.UserInterface;
@@ -16,8 +14,8 @@ namespace HomicideDetective.People
     /// </remarks>
     public class Speech : ParentAwareComponentBase<RogueLikeEntity>, IPrintable
     {
-        private string _pronoun { get; set; }
-        private string _pronounPossessive { get; set; }
+        private string _pronoun;
+        private string _pronounPossessive;
         public string VoiceDescription { get; }
         public string CurrentToneOfVoice { get; private set; } = "";
         public string CurrentSpokenText { get; private set; } = "";
@@ -94,8 +92,9 @@ namespace HomicideDetective.People
                 tones.Add($"{_pronoun} speaks in a very low tone.");
                 tones.Add($"{_pronoun} sound annoyed.");
                 tones.Add($"{_pronounPossessive} voice carries a tinge of sincerity.");
-                
             }
+
+            CurrentToneOfVoice = tones.RandomItem();
         }
 
         private void GetNewArmPosition(bool shifty)

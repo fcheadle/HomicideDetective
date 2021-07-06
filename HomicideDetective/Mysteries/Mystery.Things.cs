@@ -15,8 +15,7 @@ namespace HomicideDetective.Mysteries
             int mass, volume;
             switch (Random.Next(0,10))
             {
-                default:
-                case 0: 
+                default: 
                     name = "hammer";
                     description = "A small tool, normally used for carpentry";
                     article = "a";
@@ -115,7 +114,6 @@ namespace HomicideDetective.Mysteries
             switch (Random.Next(1, 101) % 10)
             {
                 default:
-                case 0:
                     name = "coffee mug";
                     description = "a small ceramic cup used for hot liquids";
                     detail = "it has brown stains on the interior.";

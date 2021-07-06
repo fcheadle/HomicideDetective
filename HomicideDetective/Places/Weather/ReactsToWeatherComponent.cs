@@ -9,15 +9,15 @@ namespace HomicideDetective.Places.Weather
     public class ReactsToWeatherComponent : ParentAwareComponentBase<RogueLikeCell>
     {
         //AnimatedConsole animation;
-        protected readonly int _ogGlyph;
-        protected readonly int[] _animationSteps;
-        protected int _animationIndex;
+        protected readonly int OgGlyph;
+        protected readonly int[] AnimationSteps;
+        protected int AnimationIndex;
         public bool Animating { get; private set; }
 
         public ReactsToWeatherComponent(int glyph, int[] animationSteps)
         {
-            _ogGlyph = glyph;
-            _animationSteps = animationSteps;
+            OgGlyph = glyph;
+            AnimationSteps = animationSteps;
         }
 
         public void Start()
@@ -28,28 +28,28 @@ namespace HomicideDetective.Places.Weather
         public void Stop()
         {
             Animating = false;
-            Parent.Appearance.Glyph = _ogGlyph;
-            _animationIndex = 0;
+            Parent!.Appearance.Glyph = OgGlyph;
+            AnimationIndex = 0;
         }
 
         public virtual void DoOneAnimationStep()
         {
             if (Animating)
             {
-                if (_animationIndex >= _animationSteps.Length)
+                if (AnimationIndex >= AnimationSteps.Length)
                     Stop();
                 
                 else
                 {
                     SetAppearance();
-                    _animationIndex++;   
+                    AnimationIndex++;   
                 }
             }
         }
 
         public virtual void SetAppearance()
         {
-            Parent.Appearance.Glyph = _animationSteps[_animationIndex];
+            Parent!.Appearance.Glyph = AnimationSteps[AnimationIndex];
         }
     }
 }

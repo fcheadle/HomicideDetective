@@ -101,7 +101,6 @@ namespace HomicideDetective.Mysteries
             switch (Random.Next(1, 101) % 8)
             {
                 default:
-                case 0:
                     height = "two-story";
                     width = "slender";
                     noun = "brownstone";

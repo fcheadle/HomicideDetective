@@ -73,7 +73,7 @@ namespace HomicideDetective.UserInterface
             Map.DefaultRenderer?.SadComponents.Add(new SurfaceComponentFollowTarget { Target = player });
 
             player.PositionChanged += ProcessUnitOfTime;
-            player.PositionChanged += (e, s) =>
+            player.PositionChanged += (s,e) =>
             {
                 MessageWindow.Clear();
                 MessageWindow.Write(Mystery.CurrentPlaceInfo(PlayerCharacter.Position));

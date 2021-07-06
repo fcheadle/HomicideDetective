@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using GoRogue.GameFramework;
 using SadRogue.Integration;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;

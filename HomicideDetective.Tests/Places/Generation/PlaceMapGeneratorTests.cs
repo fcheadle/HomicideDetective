@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using GoRogue.MapGeneration;
-using HomicideDetective.Places;
 using HomicideDetective.Places.Generation;
 using HomicideDetective.Places.Weather;
 using SadRogue.Integration.Maps;
 using Xunit;
+// ReSharper disable UnusedMember.Local
 
 namespace HomicideDetective.Tests.Places.Generation
 {

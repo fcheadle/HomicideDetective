@@ -1,6 +1,5 @@
 using HomicideDetective.People;
 using HomicideDetective.Things;
-using SadConsole;
 using SadRogue.Integration;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives.GridViews;
@@ -60,8 +59,6 @@ namespace HomicideDetective.UserInterface
         /// </summary>
         public static void Inspect()
         {
-            //Program.CurrentTime.Minutes++;
-            var thoughts = Program.CurrentGame.PlayerCharacter.AllComponents.GetFirst<Memories>();
             for (int i = Program.CurrentGame.PlayerCharacter.Position.X - 1; i < Program.CurrentGame.PlayerCharacter.Position.X + 2; i++)
             {
                 for (int j = Program.CurrentGame.PlayerCharacter.Position.Y - 1; j < Program.CurrentGame.PlayerCharacter.Position.Y + 2; j++)

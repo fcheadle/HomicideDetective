@@ -6,7 +6,6 @@ namespace HomicideDetective.Tests.Places
 {
     public class PlaceTests
     {
-        private readonly ISubstantive.Types _type = ISubstantive.Types.Place;
         private readonly string _name = "montana";
         private readonly string _description = "montana";
         private readonly string _noun = "state";
@@ -17,7 +16,6 @@ namespace HomicideDetective.Tests.Places
         [Fact]
         public void NewPlaceTest()
         {
-            var substantive = new Substantive(_type, _name, description: _description);
             var place = new Place(TestRegion(), _name, _description, _noun);
             Assert.NotNull(place.Markings);
             Assert.Empty(place.Markings.MarkingsOn);

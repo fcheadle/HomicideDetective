@@ -12,7 +12,7 @@ namespace HomicideDetective.Places.Generation
     public static class PlaceMapGenerator
     {
         private static readonly int _layers = 16;
-        private static readonly Distance _distance = Distance.Euclidean;
+        private static Distance _distance = Distance.Euclidean;
         private static readonly float _dimmingEffect = 0.5f;
         
         #region private-static

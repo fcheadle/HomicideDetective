@@ -1,6 +1,5 @@
 ﻿using System;
 using GoRogue.Components.ParentAware;
-using SadRogue.Integration.Components;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives.GridViews;
 // ReSharper disable PossibleLossOfFraction
@@ -13,7 +12,7 @@ namespace HomicideDetective.Places.Weather
     public class WeatherController : ParentAwareComponentBase<RogueLikeMap>
     {
         public TimeSpan Elapsed { get; private set; } = TimeSpan.Zero;
-        private int _windSpeed = 0;
+        private int _windSpeed;
 
         public WeatherController()
         {
@@ -31,7 +30,7 @@ namespace HomicideDetective.Places.Weather
 
         private void BlowWind()
         {
-            var plains = Parent.GoRogueComponents.GetFirstOrDefault<WindyPlain>();
+            var plains = Parent!.GoRogueComponents.GetFirstOrDefault<WindyPlain>();
             if (plains is not null)
             {
                 plains.DetermineNextStates();
@@ -50,7 +49,7 @@ namespace HomicideDetective.Places.Weather
         }
         private void MakeWaves()
         {
-            var pond = Parent.GoRogueComponents.GetFirstOrDefault<BodyOfWater>();
+            var pond = Parent!.GoRogueComponents.GetFirstOrDefault<BodyOfWater>();
             if (pond is not null)
             {
                 pond.DetermineNextStates();

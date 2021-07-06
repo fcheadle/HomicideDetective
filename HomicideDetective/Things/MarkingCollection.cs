@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
-using GoRogue.GameFramework;
 using HomicideDetective.Places;
 using SadRogue.Integration;
 

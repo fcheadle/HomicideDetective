@@ -19,7 +19,7 @@ namespace HomicideDetective.Places.Generation
 
         private int _shortLength = 8;
         private int _longLength = 10;
-        private int _themeIndex = 0;
+        private int _themeIndex;
         
         private readonly List<Point> _connections = new List<Point>();
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
@@ -126,8 +126,7 @@ namespace HomicideDetective.Places.Generation
             _themeIndex++;
             switch (_themeIndex % 4)
             {
-                default:
-                case 0: SetWhiteTheme(); break;
+                default: SetWhiteTheme(); break;
                 case 1: SetBrownTheme(); break;
                 case 2: SetRedTheme(); break;
                 case 3: SetYellowTheme(); break;

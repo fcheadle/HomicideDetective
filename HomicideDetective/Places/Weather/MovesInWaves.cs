@@ -1,9 +1,4 @@
-using HomicideDetective.Places.Weather;
-using HomicideDetective.UserInterface;
-using SadRogue.Integration;
-using SadRogue.Primitives;
-
-namespace HomicideDetective.Places
+namespace HomicideDetective.Places.Weather
 {
     public class MovesInWaves : ReactsToWeatherComponent
     {
@@ -17,9 +12,9 @@ namespace HomicideDetective.Places
         {
             switch (State)
             {
-                case States.Dying: _animationIndex = 0; break;
-                case States.Off: _animationIndex = 1; break;
-                case States.On: _animationIndex = 2; break;
+                case States.Dying: AnimationIndex = 0; break;
+                case States.Off: AnimationIndex = 1; break;
+                case States.On: AnimationIndex = 2; break;
             }
             
             base.SetAppearance();

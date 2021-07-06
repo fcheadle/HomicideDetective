@@ -60,7 +60,7 @@ namespace HomicideDetective.Tests
         public TestHost()
         {
             Instance = this;
-            base.LoadDefaultFonts("");
+            LoadDefaultFonts("");
         }
 
         public override IKeyboardState GetKeyboardState()

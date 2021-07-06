@@ -66,13 +66,12 @@ namespace HomicideDetective.Tests.People
         
         private void CreateTestTimeline(Person person)
         {
-            var startDate = DateTime.Now - TimeSpan.FromMinutes(300);
             for (int i = 300; i > 0; i--)
             {
                 var now = DateTime.Now - TimeSpan.FromMinutes(i);
                 var index = i % PeopleNames.Count();
                 var whoWith = PeopleNames.ToList()[index][0].ToString();
-                var memory = new Memory(now, $"'i' is {i}", _testLab, new string[]{whoWith}, null, false);
+                var memory = new Memory(now, $"'i' is {i}", _testLab, new []{whoWith});
                 person.Memories.Think(memory);
             }
         }

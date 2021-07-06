@@ -28,7 +28,9 @@ namespace HomicideDetective.Places.Generation
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
                 (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "WallFloor");
             var plains = context.GetFirstOrNew(() => new List<WindyPlain>(), "plains");
-            var regions = context.GetFirstOrNew(() => new List<Region>(), "regions");
+            
+            //just make a blank collection of regions for further use
+            context.GetFirstOrNew(() => new List<Region>(), "regions");
 
             var windDirection = RandomDirection();
             var rect = new Rectangle((5, 5), (map.Width - 5, map.Height - 5));
