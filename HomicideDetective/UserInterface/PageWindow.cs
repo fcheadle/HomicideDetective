@@ -11,7 +11,7 @@ namespace HomicideDetective.UserInterface
     /// <summary>
     /// The Message Window and it's background that looks like notepad paper
     /// </summary>
-    public class MessageWindow : RogueLikeComponentBase
+    public class PageWindow : RogueLikeComponentBase
     {
         //SadConsole Controls
         public ScreenSurface TextSurface { get; private set; }
@@ -20,10 +20,10 @@ namespace HomicideDetective.UserInterface
         public int Height { get; }
         
         //the contents printed by the cursor
-        public List<string> Contents { get; private set; }= new List<string>();
+        public List<PageContentSource> Contents { get; private set; }= new ();
         public int PageNumber { get; private set; }
         
-        public MessageWindow(int width, int height) : base(true, false, true, true)
+        public PageWindow(int width, int height) : base(true, false, true, true)
         {
             Width = width;
             Height = height;
@@ -64,32 +64,42 @@ namespace HomicideDetective.UserInterface
             var cursor = TextSurface.GetSadComponent<Cursor>();
             Clear();
             cursor.Position = (0, 0);
-            cursor.Print(new ColoredString($"{Contents[index]}", Color.Blue, Color.Transparent));
+            cursor.Print(new ColoredString($"{Contents[index].GetPrintableString()}", Color.Blue, Color.Transparent));
         }
 
-        private void PrintContents() => PrintContents(PageNumber);
-        
-        public void Write(string contents)
-        {
-            Clear();
-            if(!Contents.Any() || !Contents[PageNumber].Contains(contents))
-                Contents.Add(contents);
+        public void Write(string title, string contents) => Write(new PageContentSource(title, contents));
 
-            PageNumber = Contents.Count - 1;
-            PrintContents();
-        }
-
-        public void Write(IEnumerable<string> contents)
+        public void Write(PageContentSource contents)
         {
-            Clear();
-            var content = "";
-            foreach (var thing in contents)
-                content += $"{thing}\r\n";
+            if (!Contents.Any())
+            {
+                AddNewContents(contents);
+                return;
+            }
+
+            var targetContent = Contents.FirstOrDefault(c => c.Title == contents.Title);
+            if(targetContent != null)
+            {
+                foreach (var content in contents.Content.Split(new[]{'\r', '\n'}))
+                {
+                    if (!targetContent.Content.Contains(content))
+                        targetContent.Content += $"\r\n{contents.Content}";
+                }
+                PageNumber = Contents.IndexOf(targetContent);
+            }
+            else
+            {
+                AddNewContents(contents);
+            }
             
-            Write(content);
+            PrintContents(PageNumber);
         }
 
-        public void Write(IPrintable printable) => Write(printable.GetPrintableString());
+        private void AddNewContents(PageContentSource contents)
+        {
+            Contents.Add(contents);
+            PageNumber = Contents.Count - 1;
+        }
 
         public static void BackPage()
         {
@@ -127,8 +137,8 @@ namespace HomicideDetective.UserInterface
             string contents = "home ";
             for (int i = 0; i < 1000; i++)
                 contents += $"{(char)(i % 256)} ";
-            
-            page.Write(contents);
+            var pcs = new PageContentSource("garbage", contents);
+            page.Write(pcs);
         }
 
         public void Clear()

@@ -25,7 +25,7 @@ namespace HomicideDetective
         public string? Gender { get; set; }
         public string Description { get; set; }
         
-        public MarkingCollection? Markings { get; set; }
+        public MarkingCollection Markings { get; set; }
 
         private List<string> _details;
         public List<string> Details => _details;

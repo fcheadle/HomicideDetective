@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
+using HomicideDetective.Things;
 using SadRogue.Integration;
 using SadRogue.Primitives;
 
@@ -20,6 +21,7 @@ namespace HomicideDetective.People
         public ISubstantive.Types Type => ISubstantive.Types.Person;
         public Memories Memories { get; set; }
         public Speech Speech { get; set; }
+        public MarkingCollection Markings { get; }
 
         private bool _hasIntroduced;
         private bool _hasGreeted;
@@ -38,6 +40,7 @@ namespace HomicideDetective.People
             Memories = new Memories();
             Speech = new Speech();
             Speech.GetNextSpeech(false);
+            Markings = new MarkingCollection();
         }
         
         #region speech

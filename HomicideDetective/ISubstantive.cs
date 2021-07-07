@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HomicideDetective.Things;
 using HomicideDetective.UserInterface;
 
 namespace HomicideDetective
@@ -14,5 +15,6 @@ namespace HomicideDetective
         string Pronoun { get; }
         string PronounPossessive { get; }
         List<string> Details { get; }
+        MarkingCollection Markings { get; }
     }
 }

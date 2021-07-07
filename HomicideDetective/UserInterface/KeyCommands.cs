@@ -13,12 +13,13 @@ namespace HomicideDetective.UserInterface
     {
         private static RogueLikeEntity Player => Program.CurrentGame.PlayerCharacter;
         private static RogueLikeMap Map => Program.CurrentGame.Map;
-        private static MessageWindow MessageWindow => Program.CurrentGame.MessageWindow;
+        private static PageWindow MessageWindow => Program.CurrentGame.MessageWindow;
         /// <summary>
         /// Talks to each entity in the squares surrounding the player
         /// </summary>
         public static void Talk()
         {
+            var title = $"Conversation with ";
             for (int i = Player.Position.X - 1; i < Player.Position.X + 2; i++)
             {
                 for (int j = Player.Position.Y - 1; j < Player.Position.Y + 2; j++)
@@ -27,7 +28,9 @@ namespace HomicideDetective.UserInterface
                     {
                         foreach (var entity in Map.GetEntitiesAt<Person>((i,j)))
                         {
-                            MessageWindow.Write(entity.SpeakTo());
+                            title += entity.Name;
+                            var contents = entity.SpeakTo();
+                            MessageWindow.Write(title, contents);
                         }
                     }
                 }
@@ -39,6 +42,8 @@ namespace HomicideDetective.UserInterface
         /// </summary>
         public static void Look()
         {
+            var title = $"From {Player.Position}, I can see";
+            var contents = "";
             for (int i = Player.Position.X - 1; i < Player.Position.X + 2; i++)
             {
                 for (int j = Player.Position.Y - 1; j < Player.Position.Y + 2; j++)
@@ -47,11 +52,13 @@ namespace HomicideDetective.UserInterface
                     {
                         foreach (var person in Map.GetEntitiesAt<Person>((i,j)))
                         {
-                            MessageWindow.Write(person.GetPrintableString());
+                            contents += $"{person.GetPrintableString()}, ";
                         }
                     }
                 }
             }
+            
+            MessageWindow.Write(title, contents);
         }
         
         /// <summary>
@@ -67,16 +74,15 @@ namespace HomicideDetective.UserInterface
                     {
                         foreach (var entity in Program.CurrentGame.Map.GetEntitiesAt<RogueLikeEntity>((i,j)))
                         {
-                            var markings = entity.AllComponents.GetFirstOrDefault<MarkingCollection>();
-                            if (markings is not null)
+                            if(entity is Person person)
                             {
                                 string thought = "";
                                 thought += "On this entity is ";
                                 
-                                foreach (var marking in markings.MarkingsOn)
+                                foreach (var marking in person.Markings.MarkingsOn)
                                     thought += $"{marking}, ";
-                                
-                                MessageWindow.Write(thought);
+                                var pageContents = new PageContentSource($"Markings on {entity.Name}", thought);
+                                MessageWindow.Write(pageContents);
                             }
                         }
                     }
