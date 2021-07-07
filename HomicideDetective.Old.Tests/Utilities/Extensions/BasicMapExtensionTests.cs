@@ -1,0 +1,403 @@
+using HomicideDetective.Old.Scenes.Terrain;
+using HomicideDetective.Old.Utilities.Extensions;
+using GoRogue;
+using NUnit.Framework;
+using SadConsole;
+using System;
+using System.Collections.Generic;
+using Color = Microsoft.Xna.Framework.Color;
+// ReSharper disable InconsistentNaming
+// ReSharper disable PossibleLossOfFraction
+// ReSharper disable CollectionNeverQueried.Local
+
+namespace HomicideDetective.Old.Tests.Utilities.Extensions
+{
+    class BasicMapExtensionTests : TestBase
+    {
+        BasicMap _map;
+        DefaultTerrainFactory _factory = new DefaultTerrainFactory();
+
+        [SetUp]
+        public void Setup()
+        {
+            _map = new BasicMap(8, 8, 2, Distance.MANHATTAN);
+            for (int i = 0; i < _map.Width; i++)
+            {
+                for (int j = 0; j < _map.Height; j++)
+                {
+                    Coord c = new Coord(i, j);
+                    _map.SetTerrain(_factory.Generic(c, i + j));
+                }
+            }
+        }
+
+        [Test]
+        public void SubsectionTest()
+        {
+            Coord start = new Coord(4, 3);
+            Coord stop = new Coord(6, 7);
+            BasicMap miniMap = _map.Subsection(start, stop);
+
+            for (int i = 0; i < miniMap.Width; i++)
+            {
+                for (int j = 0; j < miniMap.Height; j++)
+                {
+                    Assert.AreEqual(miniMap.GetTerrain<BasicTerrain>(i, j).Glyph, _map.GetTerrain<BasicTerrain>(start.X + i, start.Y + j).Glyph);
+                }
+            }
+        }
+        [Test]
+        public void ContainsTest()
+        {
+            Assert.IsTrue(_map.Contains(new Coord(0, 0)));
+            Assert.IsTrue(_map.Contains(new Coord(1, 1)));
+            Assert.IsTrue(_map.Contains(new Coord(7, 0)));
+            Assert.IsTrue(_map.Contains(new Coord(0, 7)));
+            Assert.IsTrue(_map.Contains(new Coord(7, 7)));
+            Assert.IsTrue(_map.Contains(new Coord(5, 5)));
+
+            Assert.IsFalse(_map.Contains(new Coord(8, 8)));
+            Assert.IsFalse(_map.Contains(new Coord(-1, 5)));
+            Assert.IsFalse(_map.Contains(new Coord(5, 19)));
+            Assert.IsFalse(_map.Contains(new Coord(9, 4)));
+        }
+        [Test]
+        public void ReverseHorizontalTest()
+        {
+            BasicMap reversed = _map.ReverseHorizontal();
+
+            for (int i = 0; i < reversed.Width; i++)
+            {
+                for (int j = 0; j < reversed.Height; j++)
+                {
+                    Coord rev = new Coord(i, j);
+                    Coord orig = new Coord(_map.Width - i - 1, j);
+                    BasicTerrain r = reversed.GetTerrain<BasicTerrain>(rev);
+                    BasicTerrain o = _map.GetTerrain<BasicTerrain>(orig);
+                    Assert.AreEqual(r.Glyph, o.Glyph, "ReverseHorizontal() did not edit x/y values correctly at Coord(" + i.ToString() + ", " + j.ToString() + ").");
+                }
+            }
+        }
+        [Test]
+        public void ReverseVerticalTest()
+        {
+            BasicMap reversed = _map.ReverseVertical();
+
+            for (int i = 0; i < reversed.Width; i++)
+            {
+                for (int j = 0; j < reversed.Height; j++)
+                {
+                    Coord rev = new Coord(i, j);
+                    Coord orig = new Coord(i, _map.Height - 1 - j);
+                    BasicTerrain r = reversed.GetTerrain<BasicTerrain>(rev);
+                    BasicTerrain o = _map.GetTerrain<BasicTerrain>(orig);
+                    Assert.AreEqual(r.Glyph, o.Glyph, "ReverseVertical() did not edit x/y values correctly at Coord(" + i.ToString() + ", " + j.ToString() + ").");
+                }
+            }
+        }
+        [Test]
+        public void SwapXYTest()
+        {
+            BasicMap reversed = _map.SwapXy();
+
+            for (int i = 0; i < reversed.Width; i++)
+            {
+                for (int j = 0; j < reversed.Height; j++)
+                {
+                    Coord rev = new Coord(i, j);
+                    Coord orig = new Coord(j, i);
+                    BasicTerrain r = reversed.GetTerrain<BasicTerrain>(rev);
+                    BasicTerrain o = _map.GetTerrain<BasicTerrain>(orig);
+                    Assert.AreEqual(r.Glyph, o.Glyph, "SwapXY() did not swap the x/y values correctly at Coord(" + i.ToString() + ", " + j.ToString() + ").");
+                }
+            }
+        }
+        [Test]
+        public void RotateDiscreetTest()
+        {
+            BasicMap rotated = _map.RotateDiscreet(90);
+            //Top left corner becomes top right corner
+            Coord a = new Coord(0, 0);
+            Coord b = new Coord(_map.Width - 1, 0);
+            BasicTerrain t1 = rotated.GetTerrain<BasicTerrain>(a);
+            BasicTerrain t2 = _map.GetTerrain<BasicTerrain>(b);
+            Assert.AreEqual(t1.Glyph, t2.Glyph, "Top left corner wasn't moved to the top right corner.");
+
+            //top right corner becomes bottom right corner
+            a = b;
+            b = new Coord(_map.Width - 1, _map.Height - 1);
+            t1 = rotated.GetTerrain<BasicTerrain>(a);
+            t2 = _map.GetTerrain<BasicTerrain>(b);
+            Assert.AreEqual(t1.Glyph, t2.Glyph, "Top right quadrant didn't move to the bottom right quadrant.");
+
+            //bottom right corner become bottom left corner
+            a = b;
+            b = new Coord(0, _map.Height - 1);
+            t1 = rotated.GetTerrain<BasicTerrain>(a);
+            t2 = _map.GetTerrain<BasicTerrain>(b);
+            Assert.AreEqual(t1.Glyph, t2.Glyph, "Bottom right Quadrant didn't move to the bottom left.");
+
+            //bottom left corner becomes top left corner
+            a = b;
+            b = new Coord(0, 0);
+            t1 = rotated.GetTerrain<BasicTerrain>(a);
+            t2 = _map.GetTerrain<BasicTerrain>(b);
+            Assert.AreEqual(t1.Glyph, t2.Glyph, "Bottom left quadrant didn't move to the top left.");
+        }
+
+        [Test]
+        public void RotateTest()
+        {
+            BasicMap map = new BasicMap(42, 42, 1, Distance.EUCLIDEAN);
+            int radius = 20;
+            for (int i = 0; i < map.Width; i++)
+            {
+                for (int j = 0; j < map.Height; j++)
+                {
+                    BasicTerrain t = new BasicTerrain(Color.White, Color.Black, (i * j + j) % 256, new Coord(i, j), true, true);
+                    map.SetTerrain(t);
+                }
+            }
+
+            Coord origin = new Coord(21, 21);
+            BasicMap rotated = map.Rotate(origin, radius, 45);
+            List<Coord> nullTerrain = new List<Coord>();
+            Assert.AreNotEqual(map, rotated, "map.Rotate() did not transform the map in any way.");
+            for (int x = 0; x < map.Width; x++)
+            {
+                for (int y = 0; y < map.Height; y++)
+                {
+                    Coord here = new Coord(x, y);
+                    Coord delta = origin - here;
+                    if (radius > Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y))
+                    {
+                        if (rotated.GetTerrain<BasicTerrain>(x, y) == null)
+                        {
+                            nullTerrain.Add(new Coord(x, y));
+                        }
+                        else
+                        {
+                            //Assert.AreNotEqual(Math.Abs(x * y + y) % 256, rotated.GetTerrain<BasicTerrain>(x, y).Glyph);
+                        }
+                        Assert.AreEqual(Math.Abs(x * y + y) % 256, map.GetTerrain<BasicTerrain>(x, y).Glyph);
+                    }
+                    else
+                    {
+                        Assert.IsNull(rotated.GetTerrain<BasicTerrain>(x, y));
+                        Assert.AreEqual(Math.Abs(x * y + y) % 256, map.GetTerrain<BasicTerrain>(x, y).Glyph);
+                    }
+                }
+            }
+        }
+        [Test]
+        public void ForXTest()
+        {
+
+            int width = 33;
+            int height = 80;
+            BasicMap map = new BasicMap(width, height, 1, Distance.EUCLIDEAN);
+            List<Coord> pointsSet = new List<Coord>();
+            int counter = 0;
+            map.ForX((x) =>
+            {
+                double y = 14.75 * Math.Sin(x / 30.0) + width / 2;
+                Coord fx = new Coord(x, (int)y);
+                pointsSet.Add(fx);
+                map.SetTerrain(_factory.Generic(fx, counter));
+                counter++;
+            });
+
+            counter = 0;
+            for (int x = 0; x < width; x++)
+            {
+                double y = 14.75 * Math.Sin(x / 30.0) + width / 2;
+                Coord fx = new Coord(x, (int)y);
+                BasicTerrain terrain = map.GetTerrain<BasicTerrain>(fx);
+                Assert.NotNull(terrain);
+                Assert.AreEqual(counter, terrain.Glyph);
+                counter++;
+            }
+        }
+        [Test]
+        public void ForYTest()
+        {
+            int width = 33;
+            int height = 80;
+            BasicMap map = new BasicMap(width, height, 1, Distance.EUCLIDEAN);
+            List<Coord> pointsSet = new List<Coord>();
+            int counter = 0;
+            map.ForY((y) =>
+            {
+                double x = 14.75 * Math.Sin(y / 30.0) + width / 2;
+                Coord fy = new Coord((int)x, y);
+                pointsSet.Add(fy);
+                map.SetTerrain(_factory.Generic(fy, counter));
+                counter++;
+            });
+
+            counter = 0;
+            for (int y = 0; y < height; y++)
+            {
+                double x = 14.75 * Math.Sin(y / 30.0) + width / 2;
+                BasicTerrain terrain = map.GetTerrain<BasicTerrain>(new Coord((int)x, y));
+                Assert.NotNull(terrain);
+                Assert.AreEqual(counter, terrain.Glyph);
+                counter++;
+            }
+        }
+        [Test]
+        public void ForXForYTest()
+        {
+            BasicMap map = new BasicMap(25, 25, 1, Distance.EUCLIDEAN);
+            int counter = 0;
+            map.ForXForY((point) =>
+            {
+                map.SetTerrain(_factory.Generic(point, counter));
+                counter++;
+            });
+            counter = 0;
+            for (int i = 0; i < map.Width; i++)
+            {
+                for (int j = 0; j < map.Height; j++)
+                {
+                    BasicTerrain t = map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    Assert.AreEqual(counter, t.Glyph);
+                    counter++;
+                }
+            }
+        }
+
+        [Test]
+        public void AddTest()
+        {
+            BasicMap largeMap = new BasicMap(18, 18, 1, Distance.MANHATTAN);
+            largeMap.Add(_map);
+            for (int i = 0; i < _map.Width; i++)
+            {
+                for (int j = 0; j < _map.Height; j++)
+                {
+                    BasicTerrain t1 = _map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t2 = largeMap.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    Assert.AreEqual(t1.Glyph, t2.Glyph);
+                }
+            }
+            BasicMap map = new BasicMap(8, 8, 2, Distance.MANHATTAN);
+            map.Add(_map);
+            for (int i = 0; i < _map.Width; i++)
+            {
+                for (int j = 0; j < _map.Height; j++)
+                {
+                    BasicTerrain t1 = _map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t2 = map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    Assert.AreEqual(t1.Glyph, t2.Glyph);
+                }
+            }
+
+            for (int i = 0; i < map.Width; i++)
+            {
+                for (int j = 0; j < map.Height; j++)
+                {
+                    BasicTerrain t1 = _map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t2 = map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    Assert.AreEqual(t1.Glyph, t2.Glyph);
+                }
+            }
+        }
+        [Test]
+        public void AddToLocationTest()
+        {
+            BasicMap largeMap = new BasicMap(18, 18, 1, Distance.MANHATTAN);
+            largeMap.Add(_map, new Coord(_map.Width, _map.Height));
+            for (int i = 0; i < _map.Width; i++)
+            {
+                for (int j = 0; j < _map.Height; j++)
+                {
+                    BasicTerrain t1 = _map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t2 = largeMap.GetTerrain<BasicTerrain>(new Coord(i + _map.Width, j + _map.Height));
+                    Assert.AreEqual(t1.Glyph, t2.Glyph);
+                }
+            }
+        }
+        [Test]
+        public void AddDoesntOverWriteTest()
+        {
+            BasicMap newMap = new BasicMap(8, 8, 1, Distance.MANHATTAN);
+
+            for (int i = 0; i < 8; i++)
+            {
+                newMap.SetTerrain(_factory.Generic(new Coord(i, i), '#'));
+            }
+
+            newMap.Add(_map);
+
+            for (int i = 0; i < _map.Width; i++)
+            {
+                for (int j = 0; j < _map.Height; j++)
+                {
+                    BasicTerrain t1 = _map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t2 = newMap.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    if (i == j)
+                    {
+                        Assert.AreEqual('#', t2.Glyph);
+                    }
+                    else
+                    {
+                        Assert.AreEqual(t1.Glyph, t2.Glyph);
+                    }
+                }
+            }
+        }
+        [Test]
+        public void ReplaceTilesTest()
+        {
+            BasicMap newMap = new BasicMap(8, 8, 1, Distance.MANHATTAN);
+
+            for (int i = 0; i < 8; i++)
+            {
+                newMap.SetTerrain(_factory.Generic(new Coord(i, i), i));
+            }
+
+            newMap.ReplaceTiles(_map, new Coord(0, 0));
+
+            for (int i = 0; i < _map.Width; i++)
+            {
+                for (int j = 0; j < _map.Height; j++)
+                {
+                    BasicTerrain t1 = _map.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    BasicTerrain t2 = newMap.GetTerrain<BasicTerrain>(new Coord(i, j));
+                    Assert.AreEqual(t1.Glyph, t2.Glyph);
+                }
+            }
+        }
+        [Test]
+        public void IsClearOfObstructionsTest()
+        {
+            Assert.IsTrue(_map.IsClearOfObstructions(new Coord(0, 0), 8));
+
+            _map.SetTerrain(_factory.Wall(new Coord(0, 0)));
+
+            Assert.IsFalse(_map.IsClearOfObstructions(new Coord(0, 0), 8));
+
+            Assert.IsTrue(_map.IsClearOfObstructions(new Coord(1, 1), 8));
+        }
+
+        [Test]
+        public void CropToContentTest()
+        {
+            BasicMap map = new BasicMap(8, 8, 2, Distance.MANHATTAN);
+            for (int i = 1; i < map.Width - 1; i++)
+            {
+                for (int j = 1; j < map.Height - 1; j++)
+                {
+                    Coord c = new Coord(i, j);
+                    map.SetTerrain(_factory.Generic(c, i + j));
+                }
+            }
+
+            map = map.CropToContent();
+            Assert.AreEqual(_map.Width - 2, map.Width);
+            Assert.AreEqual(_map.Height - 2, map.Height);
+            Assert.AreEqual(2, map.GetTerrain<BasicTerrain>(0, 0).Glyph);
+        }
+    }
+}

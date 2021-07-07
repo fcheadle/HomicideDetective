@@ -1,0 +1,149 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using SadConsole;
+using SadConsole.Components;
+using SadRogue.Integration.Components;
+using SadRogue.Primitives;
+#pragma warning disable 8618
+
+namespace HomicideDetective.UserInterface
+{
+    /// <summary>
+    /// The Message Window and it's background that looks like notepad paper
+    /// </summary>
+    public class PageWindow : RogueLikeComponentBase
+    {
+        //SadConsole Controls
+        public ScreenSurface TextSurface { get; private set; }
+        public ScreenSurface BackgroundSurface { get; private set; }
+        public int Width { get; }
+        public int Height { get; }
+        
+        //the contents printed by the cursor
+        public List<PageContentSource> Contents { get; private set; }= new ();
+        public int PageNumber { get; private set; }
+        
+        public PageWindow(int width, int height) : base(true, false, true, true)
+        {
+            Width = width;
+            Height = height;
+            InitWindow();
+        }
+
+        private void InitWindow()
+        {
+            BackgroundSurface = new ScreenSurface(Width, Height)
+            {
+                IsVisible = true,
+                IsFocused = false,
+                FocusOnMouseClick = true,
+            };
+            BackgroundSurface.Surface.Fill(Color.Blue, Color.Tan, '_');
+            
+            TextSurface = new ScreenSurface(Width - 3, Height * 3)
+            {
+                IsVisible = true,
+                IsFocused = false,
+                FocusOnMouseClick = true,
+                Position = (1,1)
+            };
+            TextSurface.Surface.View = new Rectangle((0, 0), (Width - 2, Height - 2));
+            TextSurface.Surface.DefaultBackground = Color.Transparent;
+            TextSurface.Surface.DefaultForeground = Color.Blue;
+            var cursor = new Cursor()
+            {
+                IsVisible = false,
+                UsePrintEffect = true,
+            };
+            TextSurface.SadComponents.Add(cursor);
+            BackgroundSurface.Children.Add(TextSurface);
+        }
+        
+        private void PrintContents(int index)
+        {
+            var cursor = TextSurface.GetSadComponent<Cursor>();
+            Clear();
+            cursor.Position = (0, 0);
+            cursor.Print(new ColoredString($"{Contents[index].GetPrintableString()}", Color.Blue, Color.Transparent));
+        }
+
+        public void Write(string title, string contents) => Write(new PageContentSource(title, contents));
+
+        public void Write(PageContentSource contents)
+        {
+            if (!Contents.Any())
+            {
+                AddNewContents(contents);
+                return;
+            }
+
+            var targetContent = Contents.FirstOrDefault(c => c.Title == contents.Title);
+            if(targetContent != null)
+            {
+                foreach (var content in contents.Content.Split(new[]{'\r', '\n'}))
+                {
+                    if (!targetContent.Content.Contains(content))
+                        targetContent.Content += $"\r\n{contents.Content}";
+                }
+                PageNumber = Contents.IndexOf(targetContent);
+            }
+            else
+            {
+                AddNewContents(contents);
+            }
+            
+            PrintContents(PageNumber);
+        }
+
+        private void AddNewContents(PageContentSource contents)
+        {
+            Contents.Add(contents);
+            PageNumber = Contents.Count - 1;
+        }
+
+        public static void BackPage()
+        {
+            var page = Program.CurrentGame.MessageWindow;
+            if (page.PageNumber > 0)
+                page.PrintContents(--page.PageNumber);
+        }
+        
+        public static void ForwardPage()
+        {
+            var page = Program.CurrentGame.MessageWindow;
+            if (page.PageNumber < page.Contents.Count - 1)
+                page.PrintContents(++page.PageNumber);
+        }
+
+        public static void UpOneLine()
+        {
+            var page = Program.CurrentGame.MessageWindow;
+            page.TextSurface.Surface.ViewPosition -= (0, 1);
+            page.TextSurface.IsDirty = true;
+        }
+
+        public static void DownOneLine()
+        {
+            var page = Program.CurrentGame.MessageWindow;
+            page.TextSurface.Surface.ViewPosition += (0, 1);
+            page.TextSurface.IsDirty = true;
+        }
+
+        //temporary - for testing
+        public static void WriteGarbage()
+        {
+            var page = Program.CurrentGame.MessageWindow;
+            page.Clear();
+            string contents = "home ";
+            for (int i = 0; i < 1000; i++)
+                contents += $"{(char)(i % 256)} ";
+            var pcs = new PageContentSource("garbage", contents);
+            page.Write(pcs);
+        }
+
+        public void Clear()
+        {
+            TextSurface.Surface.Clear();
+        }
+    }
+}
