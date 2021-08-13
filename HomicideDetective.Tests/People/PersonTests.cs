@@ -62,9 +62,9 @@ namespace HomicideDetective.Tests.People
             new object[] { "candlestick" },
         };
         
-        private Person CreateTestEntity() => new (_name, _description, _noun, _pronoun, _pronounPossessive);
+        private Personhood CreateTestEntity() => new (_name, _description, _noun, _pronoun, _pronounPossessive);
         
-        private void CreateTestTimeline(Person person)
+        private void CreateTestTimeline(Personhood person)
         {
             for (int i = 300; i > 0; i--)
             {

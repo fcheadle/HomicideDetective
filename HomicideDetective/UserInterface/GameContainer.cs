@@ -7,6 +7,7 @@ using SadConsole.Components;
 using SadConsole.Input;
 using SadRogue.Integration;
 using SadRogue.Integration.Components;
+using SadRogue.Integration.Components.Keybindings;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
 
@@ -34,7 +35,6 @@ namespace HomicideDetective.UserInterface
         //map properties
         public const int MapWidth = 100;
         public const int MapHeight = 60;
-        //public Weather Weather = null!;
 
         //ui and game properties
         public RogueLikeEntity PlayerCharacter;
@@ -47,7 +47,7 @@ namespace HomicideDetective.UserInterface
             Map = InitMap();
             PlayerCharacter = InitPlayerCharacter();
             MessageWindow = InitMessageWindow();
-            MessageWindow.Write($"{PlayerCharacter.Position}", Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
+            // MessageWindow.Write($"{PlayerCharacter.Position}", Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
 
             _currentDay = 5;
             _currentHour = 18;
@@ -55,8 +55,7 @@ namespace HomicideDetective.UserInterface
             _currentMonth = 7;
             _currentYear = 1970;
             
-            //Weather = new Weather(Mystery.CurrentLocation);
-            GameHost.Instance.FrameUpdate += (s, e) => Map.AllComponents.GetFirst<WeatherController>().Animate();
+            // GameHost.Instance.FrameUpdate += (s, e) => Map.AllComponents.GetFirst<WeatherController>().Animate();
         }
 
         private RogueLikeMap InitMap()
@@ -90,24 +89,25 @@ namespace HomicideDetective.UserInterface
             player.PositionChanged += ProcessUnitOfTime;
             player.PositionChanged += (s,e) =>
             {
-                MessageWindow.Clear();
-                MessageWindow.Write($"{PlayerCharacter.Position}", Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
+                // MessageWindow.Clear();
+                // MessageWindow.Write($"{PlayerCharacter.Position}", Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
                 Mystery.CurrentLocation.PlayerFOV.Calculate(PlayerCharacter.Position, 12, Mystery.CurrentLocation.DistanceMeasurement);
             };
+
             return player;
         }
-        private PlayerControlsComponent InitKeyCommands()
+        private PlayerKeybindingsComponent InitKeyCommands()
         {
-            var motionControl = new PlayerControlsComponent();
-            motionControl.AddKeyCommand(Keys.T, KeyCommands.Talk);
-            motionControl.AddKeyCommand(Keys.L, KeyCommands.Look);
-            motionControl.AddKeyCommand(Keys.I, KeyCommands.Inspect);
-            motionControl.AddKeyCommand(Keys.M, KeyCommands.NextMap);
-            motionControl.AddKeyCommand(Keys.PageUp, PageWindow.BackPage);
-            motionControl.AddKeyCommand(Keys.PageDown, PageWindow.ForwardPage);
-            motionControl.AddKeyCommand(Keys.Insert, PageWindow.WriteGarbage); //for testing purposes
-            motionControl.AddKeyCommand(Keys.Home, PageWindow.UpOneLine);
-            motionControl.AddKeyCommand(Keys.End, PageWindow.DownOneLine);
+            var motionControl = new PlayerKeybindingsComponent();
+            motionControl.AddAction(Keys.T, KeyCommands.Talk);
+            motionControl.AddAction(Keys.L, KeyCommands.Look);
+            motionControl.AddAction(Keys.I, KeyCommands.Inspect);
+            motionControl.AddAction(Keys.M, KeyCommands.NextMap);
+            motionControl.AddAction(Keys.PageUp, PageWindow.BackPage);
+            motionControl.AddAction(Keys.PageDown, PageWindow.ForwardPage);
+            motionControl.AddAction(Keys.Insert, PageWindow.WriteGarbage); //for testing purposes
+            motionControl.AddAction(Keys.Home, PageWindow.UpOneLine);
+            motionControl.AddAction(Keys.End, PageWindow.DownOneLine);
             return motionControl;
         }
         private PageWindow InitMessageWindow()

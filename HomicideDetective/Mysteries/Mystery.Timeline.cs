@@ -17,20 +17,24 @@ namespace HomicideDetective.Mysteries
             var shiftWork = GenerateRetailWorkDay();
             var activeDayOff = GenerateActiveDayOff();
             var lazyDayOff = GenerateLazyDayOff();
-            foreach (var witness in Witnesses)
+
+            var witnesses = Witnesses;
+            witnesses.Add(Murderer);
+            foreach (var witness in witnesses)
             {
+                var personhood = witness.AllComponents.GetFirst<Personhood>();
                 switch (Random.Next(1, 6))
                 {
-                    default: AddTimeline(witness, schoolDay); break;
-                    case 2: AddTimeline(witness, workDay); break;
-                    case 3: AddTimeline(witness, shiftWork); break;
-                    case 4: AddTimeline(witness, activeDayOff); break;
-                    case 5: AddTimeline(witness, lazyDayOff); break;
+                    default: AddTimeline(personhood, schoolDay); break;
+                    case 2: AddTimeline(personhood, workDay); break;
+                    case 3: AddTimeline(personhood, shiftWork); break;
+                    case 4: AddTimeline(personhood, activeDayOff); break;
+                    case 5: AddTimeline(personhood, lazyDayOff); break;
                 }
             }
         }
 
-        private void AddTimeline(Person witness, List<Memory> events)
+        private void AddTimeline(Personhood witness, List<Memory> events)
         {
             var thoughts = witness.Memories;
             thoughts.Think(events);

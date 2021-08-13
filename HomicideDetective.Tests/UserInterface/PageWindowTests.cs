@@ -65,9 +65,9 @@ namespace HomicideDetective.Tests.UserInterface
             Assert.Equal(0, page.PageNumber);
             page.Write(pcs3);
             Assert.Equal(0, page.PageNumber);
-            Assert.Contains(pcs1.Content, page.Contents[0].Content);
-            Assert.Contains(pcs2.Content, page.Contents[0].Content);
-            Assert.Contains(pcs3.Content, page.Contents[0].Content);
+            Assert.Contains(pcs1.Contents[0], page.Contents[0].Contents);
+            Assert.Contains(pcs2.Contents[0], page.Contents[0].Contents);
+            Assert.Contains(pcs3.Contents[0], page.Contents[0].Contents);
         }
     }
 }

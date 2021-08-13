@@ -29,7 +29,7 @@ namespace HomicideDetective.Places.Generation
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
                 (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "WallFloor");
-            var block = context.GetFirstOrNew(() => new List<Region>(), "regions");
+            var block = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), "regions");
             
             int houseSize = (_horizontalRooms + 1) * _sideLength;
             var start = (5, map.Height - 5);
@@ -45,7 +45,7 @@ namespace HomicideDetective.Places.Generation
                         var bottomLeft = (i, j);
                         foreach (Region plot in CreateParallelogramHouse(bottomLeft))
                         {
-                            block.Add(plot);
+                            block.AddSubRegion(plot);
                             foreach (var region in plot.SubRegions)
                             {
                                 DrawRegion(region, map);
@@ -61,6 +61,8 @@ namespace HomicideDetective.Places.Generation
                     }
                 }
             }
+            
+            MapGen.Finalize(map);
         }
         private IEnumerable<Region> CreateParallelogramHouse(Point bottomLeft)
         {
@@ -80,11 +82,11 @@ namespace HomicideDetective.Places.Generation
                     house.AddSubRegion(region);
 
                     if (j == 0)
-                        region.AddConnection(MiddlePoint(region.NorthBoundary));
+                        region.AddConnection(MapGen.MiddlePoint(region.NorthBoundary));
                     else if (j == 2)
-                        region.AddConnection(MiddlePoint(region.SouthBoundary));
+                        region.AddConnection(MapGen.MiddlePoint(region.SouthBoundary));
                     else if (j == 1 && i == 1)
-                        ConnectAllSides(region);
+                        MapGen.ConnectAllSides(region);
                 }
             }
             
@@ -132,7 +134,7 @@ namespace HomicideDetective.Places.Generation
 
             if(overlapping.Any())
             {
-                var connectingPoint = MiddlePoint(new Area(overlapping));
+                var connectingPoint = MapGen.MiddlePoint(new Area(overlapping));
                 one.AddConnection(connectingPoint);
                 other.AddConnection(connectingPoint);
             }
@@ -214,7 +216,7 @@ namespace HomicideDetective.Places.Generation
             foreach(var reg in regionsToLose)
                 house.RemoveSubRegion(reg.Name);
             
-            ConnectAllSides(region);
+            MapGen.ConnectAllSides(region);
         }
         private void DrawRegion(Region region, ISettableGridView<MemoryAwareRogueLikeCell> map)
         {
@@ -230,6 +232,7 @@ namespace HomicideDetective.Places.Generation
             foreach (var point in region.Connections)
                 _connections.Add(point);
         }
+        
         private void SwitchColorTheme()
         {
             _themeIndex++;
@@ -241,15 +244,6 @@ namespace HomicideDetective.Places.Generation
                 case 3: SetYellowTheme(); break;
             }
         }
-        private void ConnectAllSides(Region region)
-        {
-            region.AddConnection(MiddlePoint(region.WestBoundary));
-            region.AddConnection(MiddlePoint(region.EastBoundary));
-            region.AddConnection(MiddlePoint(region.NorthBoundary));
-            region.AddConnection(MiddlePoint(region.SouthBoundary));
-        }
-        private Point MiddlePoint(IReadOnlyArea area) => area[area.Count() / 2];
-
         private void SetYellowTheme()
         {
             _wallColor = Color.Goldenrod;

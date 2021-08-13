@@ -49,7 +49,7 @@ namespace HomicideDetective.Tests.Places.Generation
         [Fact]
         public void TestStreetStep()
         {
-            var step = Generate<DownTownStep>();
+            var step = Generate<StreetStep>();
             AssertGeneratedMapHasRequiredComponents(step);
         }
     }

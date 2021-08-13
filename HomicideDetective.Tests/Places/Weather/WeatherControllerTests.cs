@@ -10,7 +10,7 @@ namespace HomicideDetective.Tests.Places.Weather
         public void NewWeatherControllerTest()
         {
             var weather = new WeatherController();
-            Assert.Equal(TimeSpan.Zero, weather.Elapsed);
+            Assert.Equal(0, weather.Elapsed);
         }
     }
 }

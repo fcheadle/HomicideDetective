@@ -30,7 +30,8 @@ namespace HomicideDetective.Places.Generation
             var plains = context.GetFirstOrNew(() => new List<WindyPlain>(), "plains");
             
             //just make a blank collection of regions for further use
-            context.GetFirstOrNew(() => new List<Region>(), "regions");
+            // context.GetFirstOrNew(() => new Region("city block", (0,0), (w,0), (w,h), (0,h)), "regions");
+            context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), "regions");
 
             var windDirection = RandomDirection();
             var rect = new Rectangle((5, 5), (map.Width - 5, map.Height - 5));

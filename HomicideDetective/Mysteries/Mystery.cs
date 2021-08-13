@@ -24,14 +24,14 @@ namespace HomicideDetective.Mysteries
         public int Seed { get; set; }
         public int CaseNumber { get; set; }
         public RogueLikeEntity Victim { get; set; }
-        public Person Murderer { get; set; }
+        public RogueLikeEntity Murderer { get; set; }
         public RogueLikeEntity MurderWeapon { get; set; }
         public Substantive SceneOfCrimeInfo { get; set; }
         public Place SceneOfCrime { get; set; }
         public RogueLikeMap CurrentLocation => LocationsOfInterest[_currentMapIndex];
         public List<RogueLikeMap> LocationsOfInterest { get; set; }
         public DateTime TimeOfDeath { get; set; }
-        public List<Person> Witnesses { get; set; }
+        public List<RogueLikeEntity> Witnesses { get; set; }
         private int _currentMapIndex;
         public Random Random { get; set; }
 

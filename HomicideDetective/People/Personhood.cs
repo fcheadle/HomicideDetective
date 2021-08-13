@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
+using GoRogue.Components.ParentAware;
 using HomicideDetective.Things;
 using SadRogue.Integration;
 using SadRogue.Primitives;
@@ -11,8 +12,9 @@ namespace HomicideDetective.People
     /// <summary>
     /// Contains all of the components that are common to all people
     /// </summary>
-    public class Person : RogueLikeEntity, ISubstantive
+    public class Personhood : ParentAwareComponentBase<RogueLikeEntity>, ISubstantive
     {
+        public string Name { get; set; }
         public string Description { get; }
         public string Noun { get; }
         public string Pronoun { get; }
@@ -28,8 +30,7 @@ namespace HomicideDetective.People
         private bool _hasToldAboutSelf;
 
         
-        public Person(string name, string description, string noun, string pronoun, string pronounPossessive) : 
-            base(Point.None, Color.LightGray, Color.Black, 1, false)
+        public Personhood(string name, string description, string noun, string pronoun, string pronounPossessive)
         {
             Name = name;
             Description = description;
@@ -39,7 +40,8 @@ namespace HomicideDetective.People
             Details = new List<string>();
             Memories = new Memories();
             Speech = new Speech();
-            Speech.GetNextSpeech(false);
+            Speech.ApplyPronouns(Pronoun, PronounPossessive);
+            //Speech.GetNextSpeech(false);
             Markings = new MarkingCollection();
         }
         
@@ -123,9 +125,8 @@ namespace HomicideDetective.People
 
         public string GetPrintableString()
         {
-            var answer = "This is ";
-            answer += (!_hasIntroduced ? "a " + Noun : Name);
-            answer += $". {Speech.CurrentStance}. {Speech.CurrentPosture}. {Speech.CurrentArmPosition}";
+            var noun = !_hasIntroduced ? "a " + Noun : Name;
+            var answer = $"This is {noun}. {Speech.BodyLanguage()}";
             return answer;
         }
     }

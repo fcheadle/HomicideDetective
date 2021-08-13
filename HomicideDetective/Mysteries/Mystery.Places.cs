@@ -21,19 +21,19 @@ namespace HomicideDetective.Mysteries
 
         private RogueLikeMap NeighborhoodMap()
         {
-            var map = PlaceMapGenerator.CreateNeighborhoodMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
+            var map = MapGen.CreateNeighborhoodMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
             return PlaceRegions(map);
         }
         
         private RogueLikeMap ParkMap()
         {
-            var map = PlaceMapGenerator.CreateParkMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
+            var map = MapGen.CreateParkMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
             return PlaceRegions(map);
         }
 
         private RogueLikeMap DownTownMap()
         {
-            var map = PlaceMapGenerator.CreateDownTownMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
+            var map = MapGen.CreateDownTownMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
             return PlaceRegions(map);
         }
         
@@ -59,10 +59,10 @@ namespace HomicideDetective.Mysteries
             map.AddEntity(murderWeapon);
 
             //put the murderer on the map
-            room = RandomRoom(map);
-            var murderer = Murderer;
-            murderer.Position = RandomFreeSpace(map, room.Area);
-            map.AddEntity(murderer);
+            // room = RandomRoom(map);
+            // var murderer = Murderer;
+            // murderer.Position = RandomFreeSpace(map, room.Area);
+            // map.AddEntity(murderer);
 
             //add victim's corpse to the map
             room = SceneOfCrime;
@@ -150,23 +150,18 @@ namespace HomicideDetective.Mysteries
             return substantive;
         }
         
-        public string CurrentPlaceInfo(Point position)
+        public Place CurrentPlaceInfo(Point position)
         {
-            var answer = "";
-            foreach (var region in CurrentLocation.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position))
-            {
-                answer += "\r\n";
-                answer += region.GetPrintableString();
-            }
+            return CurrentLocation.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position).Last();
 
-            return answer;
         }
         
         private static RogueLikeMap PlaceRegions(RogueLikeMap map)
         {
-            var regionMap = map.AllComponents.GetFirst<IEnumerable<Region>>();
+            var regionMap = map.AllComponents.GetFirst<Region>();
+            regionMap.DistinguishSubRegions();//todo - test
             var places = new PlaceCollection();
-            foreach (var region in regionMap)
+            foreach (var region in regionMap.SubRegions)
             {
                 var info = GeneratePlaceInfo(region);
                 places.Add(new Place(region, info.Name, info.Description, info.Noun));

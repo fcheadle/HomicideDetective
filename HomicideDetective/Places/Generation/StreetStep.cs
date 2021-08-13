@@ -12,7 +12,11 @@ namespace HomicideDetective.Places.Generation
     {
         private bool _streetInMiddle;
 
-        public StreetStep(bool streetInMiddle = false)
+        public StreetStep()
+        {
+            _streetInMiddle = false;
+        }
+        public StreetStep(bool streetInMiddle)
         {
             _streetInMiddle = streetInMiddle;
         }
@@ -21,27 +25,30 @@ namespace HomicideDetective.Places.Generation
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
                 (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "WallFloor");
-            var roads = context.GetFirstOrNew(() => new List<Region>(), "regions");
+            var roads = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), "regions");
             var random = new Random();
             int horizontalNameIndex = random.Next(Enum.GetNames(typeof(RoadNames)).Length - 2);
             int verticalNameIndex = random.Next(Enum.GetNames(typeof(RoadNumbers)).Length - 2);
             
             if(_streetInMiddle)
-                roads.AddRange(CreateStreet(map.Width, map.Height, horizontalNameIndex, verticalNameIndex));
+                foreach(var region in CreateStreet(map.Width, map.Height, horizontalNameIndex, verticalNameIndex))
+                    roads.AddSubRegion(region);
             else
-                roads.AddRange(CreateBlock(map.Width, map.Height, horizontalNameIndex, verticalNameIndex));
+                foreach(var road in CreateBlock(map.Width, map.Height, horizontalNameIndex, verticalNameIndex)) 
+                    roads.AddSubRegion(road);
             
-            foreach (var road in roads)
+            foreach(var road in roads.SubRegions)
             {
                 foreach (var point in road.Points.Where(p => map.Contains(p)))
                 {
                     map[point] = new MemoryAwareRogueLikeCell(point, Color.DarkGray, Color.Black, '.', 0);
                 }
-
-                yield return null;
             }
+
+            yield return null;
             
-            roads.Add(new Region($"{horizontalNameIndex}00 block {verticalNameIndex} street", 
+            
+            roads.AddSubRegion(new Region($"{horizontalNameIndex}00 block {verticalNameIndex} street", 
                 (0, 0), (map.Width, 0), (map.Width, map.Height), (0, map.Height)));
         }
 

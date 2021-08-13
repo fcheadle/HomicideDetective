@@ -8,7 +8,7 @@ using Xunit;
 
 namespace HomicideDetective.Tests.Places.Generation
 {
-    public class PlaceMapGeneratorTests
+    public class MapGenTests
     {
         private int _width = 200;
         private int _height = 100;
@@ -27,21 +27,21 @@ namespace HomicideDetective.Tests.Places.Generation
         [Fact]
         public void GenerateDownTownMapTest()
         {
-            var map = PlaceMapGenerator.CreateDownTownMap(_width, _height, _viewWidth, _viewHeight);
+            var map = MapGen.CreateDownTownMap(_width, _height, _viewWidth, _viewHeight);
             AssertMapHasRequiredComponents(map);
         }
         
         [Fact]
         public void GenerateHouseMapTest()
         {
-            var map = PlaceMapGenerator.CreateDownTownMap(_width, _height, _viewWidth, _viewHeight);
+            var map = MapGen.CreateDownTownMap(_width, _height, _viewWidth, _viewHeight);
             AssertMapHasRequiredComponents(map);
         }
         
         [Fact]
         public void GenerateParkMap()
         {
-            var map = PlaceMapGenerator.CreateDownTownMap(_width, _height, _viewWidth, _viewHeight);
+            var map = MapGen.CreateDownTownMap(_width, _height, _viewWidth, _viewHeight);
             AssertMapHasRequiredComponents(map);
         }
     }

@@ -9,7 +9,7 @@ using SadRogue.Primitives.GridViews;
 
 namespace HomicideDetective.Places.Generation
 {
-    public static class PlaceMapGenerator
+    public static class MapGen
     {
         private static readonly int _layers = 16;
         private static Distance _distance = Distance.Euclidean;
@@ -21,16 +21,15 @@ namespace HomicideDetective.Places.Generation
 
         private static BodyOfWater GetPond(GenerationContext context)
             => context.GetFirst<BodyOfWater>("pond");
-        private static IEnumerable<Region> GetRegions(GenerationContext context)
-            => context.GetFirst<IEnumerable<Region>>("regions");
+        private static Region GetRegions(GenerationContext context)
+            => context.GetFirst<Region>("regions");
 
         private static ISettableGridView<MemoryAwareRogueLikeCell> GetMapSource(GenerationContext context, string name)
             => context.GetFirst<ISettableGridView<MemoryAwareRogueLikeCell>>(name);
         
         private static RogueLikeMap DrawMap(ISettableGridView<MemoryAwareRogueLikeCell> source, int viewWidth, int viewHeight)
         {
-            var map = new RogueLikeMap(source.Width, source.Height, new DefaultRendererParams((viewWidth, viewHeight)),
-                _layers, _distance);
+            var map = new RogueLikeMap(source.Width, source.Height, new DefaultRendererParams((viewWidth, viewHeight)), _layers, _distance);
             
             map.AllComponents.Add(new DimmingMemoryFieldOfViewHandler(_dimmingEffect));
             map.AllComponents.Add(new WeatherController());
@@ -100,5 +99,64 @@ namespace HomicideDetective.Places.Generation
             return map;
         }
         #endregion
+        
+        #region static methods for steps to use
+        public static Region Parallelogram(int left, int bottom, int width, int height)
+        {
+            Point nw = (left + height, bottom - height);
+            Point ne = (left + height + width, bottom - height);
+            Point se = (left + width, bottom);
+            Point sw = (left, bottom);
+            return new Region("parallelogram", nw, ne, se, sw);
+        }
+        
+        public static void ConnectAllSides(Region region)
+        {
+            region.AddConnection(MiddlePoint(region.WestBoundary));
+            region.AddConnection(MiddlePoint(region.EastBoundary));
+            region.AddConnection(MiddlePoint(region.NorthBoundary));
+            region.AddConnection(MiddlePoint(region.SouthBoundary));
+        }
+        public static Point MiddlePoint(IReadOnlyArea area) => area[area.Count() / 2];
+
+        
+        public static void Finalize(ISettableGridView<MemoryAwareRogueLikeCell> map)
+        {
+            foreach (var point in map.Positions())
+            {
+                var here = map[point];
+                if (map.Contains(point + Direction.Right) && here?.IsTransparent == true && here?.IsWalkable == true)
+                {
+                    var right = map[point + Direction.Right];
+                    if (right?.IsTransparent == false)
+                    {
+                        map[point] = new MemoryAwareRogueLikeCell(point, right.Appearance.Foreground,
+                            right.Appearance.Background, right.Appearance.Glyph, right.Layer, right.IsWalkable, false);
+                    }
+
+                }
+            }
+        }
+        
+        
+        public static void ConnectOnLeftSide(Region plot)
+            => plot.AddConnection(MiddlePoint(plot.WestBoundary));
+        
+
+        public static void ConnectOnRightSide(Region plot)
+            => plot.AddConnection(MiddlePoint(plot.EastBoundary));
+
+        public static void ConnectOnTopSide(Region plot)
+            => plot.AddConnection(MiddlePoint(plot.NorthBoundary));
+
+        public static void ConnectOnBottomSide(Region plot)
+            => plot.AddConnection(MiddlePoint(plot.SouthBoundary));
+
+        public static Region BaseRegion(string name, int width, int height)
+            => new Region(name, (0, 0), (width, 0), (width, height), (0, height));
+
+        #endregion
+
+
     }
 }

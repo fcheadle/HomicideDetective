@@ -12,7 +12,7 @@ namespace HomicideDetective.Tests.People
         private string _pronoun = "he";
         private string _pronounPossessive = "his";
         
-        private Person CreateTestEntity() => new Person(_name, _description, _noun, _pronoun, _pronounPossessive);
+        private Personhood CreateTestEntity() => new Personhood(_name, _description, _noun, _pronoun, _pronounPossessive);
         
         [Fact]
         public void NewSpeechComponentTest()
@@ -39,66 +39,29 @@ namespace HomicideDetective.Tests.People
 
         private void AssertBodyLanguageHasPronouns(Speech bl, string pronoun, string pronounPossessive)
         {
-            Assert.True(bl.CurrentPosture.Contains(pronoun) || bl.CurrentPosture.Contains(pronounPossessive));
-            Assert.True(bl.CurrentStance.Contains(pronoun) || bl.CurrentStance.Contains(pronounPossessive));
-            Assert.True(bl.CurrentArmPosition.Contains(pronoun) || bl.CurrentArmPosition.Contains(pronounPossessive));
-            Assert.True(bl.CurrentEyeMovements.Contains(pronoun) || bl.CurrentEyeMovements.Contains(pronounPossessive));
+            Assert.True(bl.Posture.Current.Contains(pronoun) || bl.Posture.Current.Contains(pronounPossessive));
+            Assert.True(bl.Stance.Current.Contains(pronoun) || bl.Stance.Current.Contains(pronounPossessive));
+            Assert.True(bl.ArmPositions.Current.Contains(pronoun) || bl.ArmPositions.Current.Contains(pronounPossessive));
+            Assert.True(bl.EyePosition.Current.Contains(pronoun) || bl.EyePosition.Current.Contains(pronounPossessive));
         }
         
 
         private void AssertBodyLanguageDoesNotHavePronouns(Speech bl, string pronoun, string pronounPossessive)
         {
-            Assert.False(bl.CurrentPosture.Contains(pronoun) || bl.CurrentPosture.Contains(pronounPossessive));
-            Assert.False(bl.CurrentStance.Contains(pronoun) || bl.CurrentStance.Contains(pronounPossessive));
-            Assert.False(bl.CurrentArmPosition.Contains(pronoun) || bl.CurrentArmPosition.Contains(pronounPossessive));
-            Assert.False(bl.CurrentEyeMovements.Contains(pronoun) || bl.CurrentEyeMovements.Contains(pronounPossessive));
+            Assert.False(bl.Posture.Current.Contains(pronoun) || bl.Posture.Current.Contains(pronounPossessive));
+            Assert.False(bl.Stance.Current.Contains(pronoun) || bl.Stance.Current.Contains(pronounPossessive));
+            Assert.False(bl.ArmPositions.Current.Contains(pronoun) || bl.ArmPositions.Current.Contains(pronounPossessive));
+            Assert.False(bl.EyePosition.Current.Contains(pronoun) || bl.EyePosition.Current.Contains(pronounPossessive));
         }
         
         [Fact]
         public void DefaultBodyLanguageTest()
         {
-            var bl = new Speech();
-            Assert.Equal("", bl.CurrentPosture);
-            Assert.Equal("", bl.CurrentStance);
-            Assert.Equal("", bl.CurrentArmPosition);
-            Assert.Equal("", bl.CurrentEyeMovements);
-            
-            bl.GetNextSpeech(true);
-            AssertBodyLanguageHasPronouns(bl, "they", "their");
-            
-            bl.GetNextSpeech(false);
-            AssertBodyLanguageHasPronouns(bl, "they", "their");
-        }
-
-        [Theory]
-        [MemberData(nameof(Pronouns))]
-        public void ApplyPronounsTest(string pronoun, string pronounPossessive)
-        {
-            var bl = new Speech();
-            bl.ApplyPronouns(pronoun, pronounPossessive);
-            
-            bl.GetNextSpeech(true);
-            AssertBodyLanguageDoesNotHavePronouns(bl, "they", "their");
-            AssertBodyLanguageHasPronouns(bl, pronoun, pronounPossessive);
-            
-            bl.GetNextSpeech(false);
-            AssertBodyLanguageDoesNotHavePronouns(bl, "they", "their");
-            AssertBodyLanguageHasPronouns(bl, pronoun, pronounPossessive);
-        }
-
-        [Theory]
-        [MemberData(nameof(Pronouns))]
-        public void WithPronounsTest(string pronoun, string pronounPossessive)
-        {
-            var bl = new Speech(pronoun, pronounPossessive);
-            
-            bl.GetNextSpeech(true);
-            AssertBodyLanguageDoesNotHavePronouns(bl, "they", "their");
-            AssertBodyLanguageHasPronouns(bl, pronoun, pronounPossessive);
-            
-            bl.GetNextSpeech(false);
-            AssertBodyLanguageDoesNotHavePronouns(bl, "they", "their");
-            AssertBodyLanguageHasPronouns(bl, pronoun, pronounPossessive);
+            var bl = CreateTestEntity();
+            Assert.Equal("", bl.Speech.Posture.Current);
+            Assert.Equal("", bl.Speech.Stance.Current);
+            Assert.Equal("", bl.Speech.ArmPositions.Current);
+            Assert.Equal("", bl.Speech.EyePosition.Current);
         }
     }
 }

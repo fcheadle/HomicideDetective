@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue.MapGeneration;
+using SadRogue.Integration;
 using SadRogue.Integration.FieldOfView.Memory;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -21,13 +22,13 @@ namespace HomicideDetective.Places.Generation
         private int _longLength = 10;
         private int _themeIndex;
         
-        private readonly List<Point> _connections = new List<Point>();
+        private readonly List<Point> _connections = new ();
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
                 (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "WallFloor");
             
-            var shops = context.GetFirstOrNew(() => new List<Region>(), "regions");
+            var shops = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), "regions");
             var colCount = map.Width / 2 / _shortLength;
             var rowCount = (map.Height - 5) / (_longLength + 1);
 
@@ -53,7 +54,7 @@ namespace HomicideDetective.Places.Generation
                         int x = map.Height - y + i * _shortLength;
                         var shopArea = ParallelogramShop(x, y, _shortLength, _longLength);
                         DrawRegion(shopArea, map);
-                        shops.Add(shopArea);
+                        shops.AddSubRegion(shopArea);
                         
                         foreach (var connection in _connections)
                             if(map.Contains(connection))
@@ -66,38 +67,16 @@ namespace HomicideDetective.Places.Generation
                 }
                 SwitchColorTheme();
             }
+
+            MapGen.Finalize(map);
         }
 
         private Region ParallelogramShop(int x, int y, int width, int height)
         {
-            var plot = Parallelogram(x, y, width, height);
-            ConnectOnAllSides(plot);
+            var plot = MapGen.Parallelogram(x, y, width, height);
+            MapGen.ConnectAllSides(plot);
             return plot;
         }
-
-        private void ConnectOnAllSides(Region plot)
-        {
-            ConnectOnLeftSide(plot);
-            ConnectOnRightSide(plot);
-            ConnectOnTopSide(plot);
-            ConnectOnBottomSide(plot);
-        }
-
-        private void ConnectOnLeftSide(Region plot)
-            => plot.AddConnection(MiddlePoint(plot.WestBoundary));
-        
-
-        private void ConnectOnRightSide(Region plot)
-            => plot.AddConnection(MiddlePoint(plot.EastBoundary));
-
-        private void ConnectOnTopSide(Region plot)
-            => plot.AddConnection(MiddlePoint(plot.NorthBoundary));
-
-        private void ConnectOnBottomSide(Region plot)
-            => plot.AddConnection(MiddlePoint(plot.SouthBoundary));
-
-        private Point MiddlePoint(IReadOnlyArea area) 
-            => area[area.Count() / 2];
         
         private void DrawRegion(Region region, ISettableGridView<MemoryAwareRogueLikeCell> map)
         {
@@ -110,15 +89,6 @@ namespace HomicideDetective.Places.Generation
 
             foreach (var point in region.Connections)
                 _connections.Add(point);
-        }
-        
-        private Region Parallelogram(int left, int bottom, int width, int height)
-        {
-            Point nw = (left + height, bottom - height);
-            Point ne = (left + height + width, bottom - height);
-            Point se = (left + width, bottom);
-            Point sw = (left, bottom);
-            return new Region("parallelogram", nw, ne, se, sw);
         }
 
         private void SwitchColorTheme()

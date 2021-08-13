@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using HomicideDetective.Mysteries;
+using HomicideDetective.People;
 using Xunit;
 // ReSharper disable ObjectCreationAsStatement
 
@@ -30,8 +31,9 @@ namespace HomicideDetective.Tests.Mysteries
             Assert.NotNull(mystery.Victim.AllComponents.GetFirstOrDefault<Substantive>());
             Assert.NotNull(mystery.SceneOfCrimeInfo);
             Assert.NotNull(mystery.Murderer);
-            Assert.NotNull(mystery.Murderer.Speech);
-            Assert.NotNull(mystery.Murderer.Memories);
+            var murdererPersonhood = mystery.Murderer.AllComponents.GetFirst<Personhood>();
+            Assert.NotNull(murdererPersonhood.Speech);
+            Assert.NotNull(murdererPersonhood.Memories);
             
             Assert.NotNull(mystery.MurderWeapon);
             Assert.NotNull(mystery.MurderWeapon.AllComponents.GetFirst<Substantive>());
@@ -127,8 +129,8 @@ namespace HomicideDetective.Tests.Mysteries
             var secondMystery = new Mystery(seed, 0);
             firstMystery.Generate(100, 100, 50, 50);
             secondMystery.Generate(100, 100, 50, 50);
-            var firstAnswer = firstMystery.Murderer;
-            var secondAnswer = secondMystery.Murderer;
+            var firstAnswer = firstMystery.Murderer.AllComponents.GetFirst<Personhood>();
+            var secondAnswer = secondMystery.Murderer.AllComponents.GetFirst<Personhood>();
             
             Assert.NotNull(firstAnswer.Name);
             Assert.NotEmpty(firstAnswer.Name);
@@ -178,9 +180,9 @@ namespace HomicideDetective.Tests.Mysteries
             var mystery = new Mystery(seed, 0);
             mystery.Generate(100, 100, 50, 50);
 
-            foreach (var witness in mystery.GenerateWitnessEntities())
+            foreach (var entity in mystery.GenerateWitnessEntities())
             {
-
+                var witness = entity.AllComponents.GetFirst<Personhood>();
                 Assert.NotNull(witness.Name);
                 Assert.NotEmpty(witness.Name);
                 Assert.NotNull(witness.Description);

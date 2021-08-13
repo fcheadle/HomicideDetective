@@ -27,7 +27,8 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = PlantFlowers(context);
-            var regions = context.GetFirstOrNew(() => new List<Region>(), "regions");
+            var regions = context.GetFirstOrNew(() => new Region("park", (0, 0), (context.Width, 0),
+                (context.Width, context.Height), (0, context.Height)), "regions");
 
             _deepest = map.RandomPosition();
             _secondDeepest = map.RandomPosition();
@@ -74,10 +75,10 @@ namespace HomicideDetective.Places.Generation
             bodyOfWater.SeedStartingPattern();
             bodyOfWater.Cells.AddRange(_cells);
 
-            var region = new Region("Butterfly Park", (0, 0), (context.Width, 0), (context.Width, context.Height), (0, context.Height));
-            regions.Add(region);
+            var region = MapGen.BaseRegion("Butterfly Park", context.Width, context.Height);
+            regions.AddSubRegion(region);
             region = new Region("Clark's Pond", (_left, _top), (_right, _top), (_right, _bottom), (_left, _bottom));
-            regions.Add(region);
+            regions.AddSubRegion(region);
         }
 
         private ArrayView<MemoryAwareRogueLikeCell> PlantFlowers(GenerationContext context)

@@ -1,7 +1,8 @@
 ﻿using System;
-using GoRogue.Components.ParentAware;
+using SadConsole;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives.GridViews;
+
 // ReSharper disable PossibleLossOfFraction
 
 namespace HomicideDetective.Places.Weather
@@ -9,22 +10,31 @@ namespace HomicideDetective.Places.Weather
     /// <summary>
     /// The weather component added to
     /// </summary>
-    public class WeatherController : ParentAwareComponentBase<RogueLikeMap>
+    public class WeatherController : SadConsole.Components.UpdateComponent//ParentAwareComponentBase<RogueLikeMap>
     {
-        public TimeSpan Elapsed { get; private set; } = TimeSpan.Zero;
+        private RogueLikeMap Parent;
+        public int Elapsed { get; private set; }
         private int _windSpeed;
 
         public WeatherController()
         {
-            _windSpeed = new Random().Next(50, 125);
+            _windSpeed = new Random().Next(1, 5);
         }
 
-        public void Animate()
+        public override void OnAdded(IScreenObject host)
         {
-            Elapsed += TimeSpan.FromMilliseconds(100);
-            if(Elapsed.TotalMilliseconds % 1000 <= 100)
+            if (host is RogueLikeMap map)
+                Parent = map;
+            else
+                throw new ArgumentException($"Weather Controller must be added to a parent of type {typeof(RogueLikeMap)}");
+        }
+
+        public override void Update(IScreenObject host, TimeSpan delta)
+        {
+            Elapsed++;
+            if(Elapsed % 10 == 0)
                 MakeWaves();
-            if (Elapsed.TotalMilliseconds % 1000 <= _windSpeed)
+            if (Elapsed % 15 <= _windSpeed)
                 BlowWind();
         }
 

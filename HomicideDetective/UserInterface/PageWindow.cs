@@ -80,10 +80,10 @@ namespace HomicideDetective.UserInterface
             var targetContent = Contents.FirstOrDefault(c => c.Title == contents.Title);
             if(targetContent != null)
             {
-                foreach (var content in contents.Content.Split(new[]{'\r', '\n'}))
+                foreach (var content in contents.Contents)
                 {
-                    if (!targetContent.Content.Contains(content))
-                        targetContent.Content += $"\r\n{contents.Content}";
+                    if (!targetContent.Contents.Contains(content))
+                        targetContent.Contents.Add(content);
                 }
                 PageNumber = Contents.IndexOf(targetContent);
             }

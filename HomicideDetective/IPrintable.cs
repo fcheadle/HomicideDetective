@@ -1,4 +1,4 @@
-namespace HomicideDetective.UserInterface
+namespace HomicideDetective
 {
     public interface IPrintable
     {
