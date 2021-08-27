@@ -17,12 +17,12 @@ namespace HomicideDetective.Places.Generation
         
         #region private-static
         private static WindyPlain GetPlains(GenerationContext context) 
-            => context.GetFirst<IEnumerable<WindyPlain>>("plains").First();
+            => context.GetFirst<IEnumerable<WindyPlain>>(Constants.WindyPlainsTag).First();
 
         private static BodyOfWater GetPond(GenerationContext context)
-            => context.GetFirst<BodyOfWater>("pond");
+            => context.GetFirst<BodyOfWater>(Constants.BodyOfWaterTag);
         private static Region GetRegions(GenerationContext context)
-            => context.GetFirst<Region>("regions");
+            => context.GetFirst<Region>(Constants.RegionCollectionTag);
 
         private static ISettableGridView<MemoryAwareRogueLikeCell> GetMapSource(GenerationContext context, string name)
             => context.GetFirst<ISettableGridView<MemoryAwareRogueLikeCell>>(name);
@@ -57,7 +57,7 @@ namespace HomicideDetective.Places.Generation
                     gen.AddSteps(new DownTownStep());
                 });
             
-            var backingMap = GetMapSource(generator.Context, "WallFloor");
+            var backingMap = GetMapSource(generator.Context, Constants.GridViewTag);
             var map = DrawMap(backingMap, viewWidth, viewHeight);
             map.GoRogueComponents.Add(GetPlains(generator.Context));
             map.GoRogueComponents.Add(GetRegions(generator.Context));
@@ -74,7 +74,7 @@ namespace HomicideDetective.Places.Generation
                     gen.AddSteps(new ParkFeaturesStep());
                 });
             
-            var backingMap = GetMapSource(generator.Context, "WallFloor");
+            var backingMap = GetMapSource(generator.Context, Constants.GridViewTag);
             var map = DrawMap(backingMap, viewWidth, viewHeight);
             map.GoRogueComponents.Add(GetPond(generator.Context));
             map.GoRogueComponents.Add(GetPlains(generator.Context));
@@ -92,7 +92,7 @@ namespace HomicideDetective.Places.Generation
                     gen.AddSteps(new HouseStep());
                 });
             
-            var backingMap = GetMapSource(generator.Context, "WallFloor");
+            var backingMap = GetMapSource(generator.Context, Constants.GridViewTag);
             var map = DrawMap(backingMap, viewWidth, viewHeight);
             map.GoRogueComponents.Add(GetPlains(generator.Context));
             map.GoRogueComponents.Add(GetRegions(generator.Context));
@@ -101,7 +101,7 @@ namespace HomicideDetective.Places.Generation
         #endregion
         
         #region static methods for steps to use
-        public static Region Parallelogram(int left, int bottom, int width, int height)
+        internal static Region Parallelogram(int left, int bottom, int width, int height)
         {
             Point nw = (left + height, bottom - height);
             Point ne = (left + height + width, bottom - height);
@@ -110,15 +110,14 @@ namespace HomicideDetective.Places.Generation
             return new Region("parallelogram", nw, ne, se, sw);
         }
         
-        public static void ConnectAllSides(Region region)
+        internal static void ConnectAllSides(Region region)
         {
             region.AddConnection(MiddlePoint(region.WestBoundary));
             region.AddConnection(MiddlePoint(region.EastBoundary));
             region.AddConnection(MiddlePoint(region.NorthBoundary));
             region.AddConnection(MiddlePoint(region.SouthBoundary));
         }
-        public static Point MiddlePoint(IReadOnlyArea area) => area[area.Count() / 2];
-
+        internal static Point MiddlePoint(IReadOnlyArea area) => area[area.Count() / 2];
         
         public static void Finalize(ISettableGridView<MemoryAwareRogueLikeCell> map)
         {
@@ -142,7 +141,6 @@ namespace HomicideDetective.Places.Generation
         public static void ConnectOnLeftSide(Region plot)
             => plot.AddConnection(MiddlePoint(plot.WestBoundary));
         
-
         public static void ConnectOnRightSide(Region plot)
             => plot.AddConnection(MiddlePoint(plot.EastBoundary));
 

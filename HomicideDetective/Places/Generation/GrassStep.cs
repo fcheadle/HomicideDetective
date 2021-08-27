@@ -26,12 +26,12 @@ namespace HomicideDetective.Places.Generation
         {
             var f = TerrainGenerationFormulae.RandomItem();
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
-                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), "WallFloor");
-            var plains = context.GetFirstOrNew(() => new List<WindyPlain>(), "plains");
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Constants.GridViewTag);
+            var plains = context.GetFirstOrNew(() => new List<WindyPlain>(), Constants.WindyPlainsTag);
             
             //just make a blank collection of regions for further use
             // context.GetFirstOrNew(() => new Region("city block", (0,0), (w,0), (w,h), (0,h)), "regions");
-            context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), "regions");
+            context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), Constants.RegionCollectionTag);
 
             var windDirection = RandomDirection();
             var rect = new Rectangle((5, 5), (map.Width - 5, map.Height - 5));

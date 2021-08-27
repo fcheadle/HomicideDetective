@@ -20,7 +20,7 @@ namespace HomicideDetective.Tests.Places.Generation
         {
             var weather = map.GoRogueComponents.GetFirstOrDefault<WeatherController>();
             Assert.NotNull(weather);
-            var places = map.GoRogueComponents.GetFirstOrDefault<IEnumerable<Region>>();
+            var places = map.GoRogueComponents.GetFirstOrDefault<Region>();
             Assert.NotNull(places);    
         }
         

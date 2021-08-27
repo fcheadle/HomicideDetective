@@ -15,10 +15,10 @@ namespace HomicideDetective.Tests.Places.Generation
         private void AssertGeneratedMapHasRequiredComponents(GenerationContext context)
         {
             //required components:
-            var regions = context.GetFirst<List<Region>>("regions");
+            var regions = context.GetFirst<Region>(Constants.RegionCollectionTag);
             Assert.NotNull(regions);
 
-            var wallFloor = context.GetFirst<ISettableGridView<MemoryAwareRogueLikeCell>>("WallFloor");
+            var wallFloor = context.GetFirst<ISettableGridView<MemoryAwareRogueLikeCell>>(Constants.GridViewTag);
             Assert.NotNull(wallFloor);
         }
         
