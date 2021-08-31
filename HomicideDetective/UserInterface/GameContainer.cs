@@ -1,12 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using GoRogue;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
-using HomicideDetective.Places.Weather;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;
 using SadRogue.Integration;
-using SadRogue.Integration.Components;
 using SadRogue.Integration.Components.Keybindings;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
@@ -27,6 +28,8 @@ namespace HomicideDetective.UserInterface
         private int _currentMonth;
         private int _currentYear;
         
+        public ReadOnlyDictionary<Keys, string> ActionNames => _actionNames.AsReadOnly();
+        private readonly Dictionary<Keys, string> _actionNames = new();
         
         //game window properties
         public const int Width = 80;
@@ -99,15 +102,16 @@ namespace HomicideDetective.UserInterface
         private PlayerKeybindingsComponent InitKeyCommands()
         {
             var motionControl = new PlayerKeybindingsComponent();
-            motionControl.AddAction(Keys.T, KeyCommands.Talk);
-            motionControl.AddAction(Keys.L, KeyCommands.Look);
-            motionControl.AddAction(Keys.I, KeyCommands.Inspect);
-            motionControl.AddAction(Keys.M, KeyCommands.NextMap);
-            motionControl.AddAction(Keys.PageUp, PageWindow.BackPage);
-            motionControl.AddAction(Keys.PageDown, PageWindow.ForwardPage);
-            motionControl.AddAction(Keys.Insert, PageWindow.WriteGarbage); //for testing purposes
-            motionControl.AddAction(Keys.Home, PageWindow.UpOneLine);
-            motionControl.AddAction(Keys.End, PageWindow.DownOneLine);
+            AddNamedAction(motionControl, Keys.T, KeyCommands.Talk, "Talk");
+            AddNamedAction(motionControl, Keys.L, KeyCommands.LookAround, "Look Around");
+            AddNamedAction(motionControl, Keys.I, KeyCommands.Inspect, "Inspect");
+            AddNamedAction(motionControl, Keys.M, KeyCommands.NextMap, "Fast Travel");
+            AddNamedAction(motionControl, Keys.OemQuestion, KeyCommands.PrintCommands, "Print This");
+            AddNamedAction(motionControl, Keys.PageUp, PageWindow.BackPage, "Back Page");
+            AddNamedAction(motionControl, Keys.PageDown, PageWindow.ForwardPage, "Forward Page");
+            AddNamedAction(motionControl, Keys.Insert, PageWindow.WriteGarbage, "Think Garbage"); //for testing purposes
+            AddNamedAction(motionControl, Keys.Home, PageWindow.UpOneLine, "Scroll Up");
+            AddNamedAction(motionControl, Keys.End, PageWindow.DownOneLine, "Scroll Down");
             return motionControl;
         }
         private PageWindow InitMessageWindow()
@@ -147,6 +151,13 @@ namespace HomicideDetective.UserInterface
             Map.DefaultRenderer?.SadComponents.Add(new SurfaceComponentFollowTarget { Target = PlayerCharacter });
             //Weather = new Weather(Map);
             Children.Add(Map);
+        }
+        
+        
+        public void AddNamedAction(PlayerKeybindingsComponent component, Keys key, Action action, string name)
+        {
+            _actionNames.Add(key, name);
+            component.AddAction(key, action);
         }
     }
 }

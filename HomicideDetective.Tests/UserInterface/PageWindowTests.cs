@@ -36,38 +36,38 @@ namespace HomicideDetective.Tests.UserInterface
             Assert.Equal(0, page.PageNumber);
         }
 
-        [Fact]
-        public void NewContentTitleTriggersNewPageTest()
-        {
-            var page = new PageWindow(_width, _height);
-            var pcs1 = new PageContentSource("title1", "content1");
-            var pcs2 = new PageContentSource("title2", "content2");
-            var pcs3 = new PageContentSource("title3", "content3");
-            Assert.Equal(0, page.PageNumber);
-            page.Write(pcs1);
-            Assert.Equal(0, page.PageNumber);
-            page.Write(pcs2);
-            Assert.Equal(1, page.PageNumber);
-            page.Write(pcs3);
-            Assert.Equal(2, page.PageNumber);
-        }
-
-        [Fact]
-        public void RepeatTitleAddsToSamePageTest()
-        {
-            var page = new PageWindow(_width, _height);
-            var pcs1 = new PageContentSource("title1", "content1");
-            var pcs2 = new PageContentSource("title1", "content2");
-            var pcs3 = new PageContentSource("title1", "content3");
-            page.Write(pcs1);
-            Assert.Equal(0, page.PageNumber);
-            page.Write(pcs2);
-            Assert.Equal(0, page.PageNumber);
-            page.Write(pcs3);
-            Assert.Equal(0, page.PageNumber);
-            Assert.Contains(pcs1.Contents[0], page.Contents[0].Contents);
-            Assert.Contains(pcs2.Contents[0], page.Contents[0].Contents);
-            Assert.Contains(pcs3.Contents[0], page.Contents[0].Contents);
-        }
+        // [Fact]
+        // public void NewContentTitleTriggersNewPageTest()
+        // {
+        //     var page = new PageWindow(_width, _height);
+        //     var pcs1 = new PageContentSource("title1", "content1");
+        //     var pcs2 = new PageContentSource("title2", "content2");
+        //     var pcs3 = new PageContentSource("title3", "content3");
+        //     Assert.Equal(0, page.PageNumber);
+        //     page.Write(pcs1);
+        //     Assert.Equal(0, page.PageNumber);
+        //     page.Write(pcs2);
+        //     Assert.Equal(1, page.PageNumber);
+        //     page.Write(pcs3);
+        //     Assert.Equal(2, page.PageNumber);
+        // }
+        //
+        // [Fact]
+        // public void RepeatTitleAddsToSamePageTest()
+        // {
+        //     var page = new PageWindow(_width, _height);
+        //     var pcs1 = new PageContentSource("title1", "content1");
+        //     var pcs2 = new PageContentSource("title1", "content2");
+        //     var pcs3 = new PageContentSource("title1", "content3");
+        //     page.Write(pcs1);
+        //     Assert.Equal(0, page.PageNumber);
+        //     page.Write(pcs2);
+        //     Assert.Equal(0, page.PageNumber);
+        //     page.Write(pcs3);
+        //     Assert.Equal(0, page.PageNumber);
+        //     Assert.Contains(pcs1.Contents[0], page.Contents[0].Contents);
+        //     Assert.Contains(pcs2.Contents[0], page.Contents[0].Contents);
+        //     Assert.Contains(pcs3.Contents[0], page.Contents[0].Contents);
+        // }
     }
 }

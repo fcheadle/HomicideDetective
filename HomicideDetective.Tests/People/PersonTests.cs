@@ -61,8 +61,9 @@ namespace HomicideDetective.Tests.People
             new object[] { "rope" },
             new object[] { "candlestick" },
         };
-        
-        private Personhood CreateTestEntity() => new (_name, _description, _noun, _pronoun, _pronounPossessive);
+
+        private Personhood CreateTestEntity() =>
+            new(_name, _description, _noun, _pronoun, _pronounPossessive, Occupations.Academic, 64, 128);
         
         private void CreateTestTimeline(Personhood person)
         {
@@ -115,8 +116,9 @@ namespace HomicideDetective.Tests.People
             var expectedGreeted = "Hello Detective";
             var expectedIntro = "My name is Testboy";
             var person = CreateTestEntity();
-            Assert.Contains(expectedGreeted, person.SpeakTo());
-            Assert.Contains(expectedIntro, person.SpeakTo());
+            var answer = person.SpeakTo();
+            Assert.Contains(expectedGreeted, answer);
+            Assert.Contains(expectedIntro, answer);
         }
 
         [Fact]
@@ -139,7 +141,7 @@ namespace HomicideDetective.Tests.People
             Assert.Contains(expected, person.Introduce());
         }
 
-        [Fact]
+        [Fact(Skip = "Not Implemented")]
         public void InquireAboutSelfTest()
         {
             var person = CreateTestEntity();

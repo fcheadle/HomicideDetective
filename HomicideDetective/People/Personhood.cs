@@ -19,30 +19,30 @@ namespace HomicideDetective.People
         public string Noun { get; }
         public string Pronoun { get; }
         public string PronounPossessive { get; }
+        public Fingerprint Fingerprint { get; }
         public List<string> Details { get; }
         public ISubstantive.Types Type => ISubstantive.Types.Person;
         public Memories Memories { get; set; }
         public Speech Speech { get; set; }
         public MarkingCollection Markings { get; }
-
+        public Occupations Occupation { get; }
         private bool _hasIntroduced;
-        private bool _hasGreeted;
         private bool _hasToldAboutSelf;
-
         
-        public Personhood(string name, string description, string noun, string pronoun, string pronounPossessive)
+        public Personhood(string name, string description, string noun, string pronoun, string pronounPossessive, Occupations occupation, int mass, int volume)
         {
             Name = name;
             Description = description;
             Noun = noun;
             Pronoun = pronoun;
             PronounPossessive = pronounPossessive;
+            Occupation = occupation;
             Details = new List<string>();
             Memories = new Memories();
-            Speech = new Speech();
+            Speech = new Speech(pronoun, pronounPossessive);
             Speech.ApplyPronouns(Pronoun, PronounPossessive);
-            //Speech.GetNextSpeech(false);
             Markings = new MarkingCollection();
+            Fingerprint = new Fingerprint(mass + volume);
         }
         
         #region speech
@@ -51,10 +51,8 @@ namespace HomicideDetective.People
             Speech.ApplyPronouns(Pronoun, PronounPossessive);
             string answer;
             
-            if (!_hasGreeted)
-                answer = $"\"{Greet()},\" says {Name}";
-            else if (!_hasIntroduced)
-                answer = $"\"{Introduce()},\" {Pronoun} says";
+            if (!_hasIntroduced)
+                answer = $"\"{Greet()},\" {Pronoun} says, \"{Introduce()}\"";
             else if (!_hasToldAboutSelf)
                 answer = $"\"{InquireAboutSelf()},\" says {Name}";
             else
@@ -75,7 +73,7 @@ namespace HomicideDetective.People
         
         public string Greet()
         {
-            _hasGreeted = true;
+            _hasIntroduced = true;
             return "Hello Detective";
         }
         public string Introduce()
@@ -86,7 +84,8 @@ namespace HomicideDetective.People
         public string InquireAboutSelf()
         {
             _hasToldAboutSelf = true;
-            return $"{Description}";
+            var answer = $"I am a {Enum.GetName(Occupation)}. (info about self?) (info about relationship to victim?)";
+            return answer;
         }
         public string InquireWhereabouts(DateTime atTime)
         {
@@ -111,15 +110,42 @@ namespace HomicideDetective.People
         }
         public string InquireAboutPerson(string name)
         {
-            throw new NotImplementedException();
+            var memoriesWithPerson = Memories.All.Where(mem => mem.Who.Contains(name));
+            var withPerson = memoriesWithPerson as Memory[] ?? memoriesWithPerson.ToArray();
+            if (!withPerson.Any())
+                return "I've never met that person";
+            
+            var privateMemoriesWithPerson = withPerson.Where(mem => mem.Private);
+            if (privateMemoriesWithPerson.Count() > withPerson.Count())
+                return "I don't know them";
+            else
+                return "Oh yeah, I know them";
         }
         public string InquireAboutPlace(string name)
         {
-            throw new NotImplementedException();
+            var memoriesAtPlace = Memories.All.Where(mem => mem.Where.Contains(name));
+            var atPlace = memoriesAtPlace as Memory[] ?? memoriesAtPlace.ToArray();
+            if (!atPlace.Any())
+                return "I've never been there";
+            
+            var privateMemoriesAtPlace = memoriesAtPlace.Where(mem => mem.Private);
+            if (privateMemoriesAtPlace.Count() > atPlace.Count())
+                return "Never heard of it";
+            else
+                return "I've been there lots of times";
         }
         public string InquireAboutThing(string name)
         {
-            throw new NotImplementedException();
+            var memories = Memories.All.Where(mem => mem.What.Contains(name));
+            var memoriesOfItem = memories as Memory[] ?? memories.ToArray();
+            if (!memoriesOfItem.Any())
+                return "I don't know what you're talking about";
+            
+            var privateMemoriesAtPlace = memories.Where(mem => mem.Private);
+            if (privateMemoriesAtPlace.Count() > memoriesOfItem.Count())
+                return "No, I don't believe I know what you mean";
+            else
+                return "I am aware of that item, yes";
         }
         #endregion
 

@@ -40,11 +40,6 @@ namespace HomicideDetective.Mysteries
         private int _viewWidth;
         private int _viewHeight;
 
-        //todo - json names
-        string[] _maleGivenNames = { "Nate", "Tom", "Dick", "Harry", "Bob", "Matthew", "Mark", "Luke", "John", "Josh" };
-        string[] _femaleGivenNames = { "Alice", "Betty", "Jesse", "Sarah", "Angela", "Christine",  "Mary", "Liz", "Joan", "Jen" };
-        string[] _surnames = {"Smith", "Johnson", "Michaels", "Douglas", "Andrews", "MacDonald", "Jenkins", "Peterson"};
-
         public Mystery(int seed, int caseNumber)
         {
             Seed = seed;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using HomicideDetective.UserInterface;
 
 namespace HomicideDetective.People
 {
@@ -52,21 +51,33 @@ namespace HomicideDetective.People
 
         public string GetPrintableString()
         {
-            string answer = $"At {When}, {Occurrence}. ";
-            if (Who.Any())
+            string answer = $"At {When.Hour}:{When.Minute}, {Occurrence}";
+            if (Who.Count() == 2)
             {
-                foreach (var person in Who)
-                    answer += $"{person}, ";
+                answer += $". {Who.First()} and {Who.Last()} ";
+                
+                answer += "were there";
+            }
 
-                answer += "were there.";
+            if (Who.Count() > 2)
+            {
+                answer += ". ";
+                var list = Who.ToList();
+                for (int i = 0; i < list.Count - 2; i++)
+                {
+                    answer += $"{list[i]}, ";
+                }
+
+                answer += $"and {list.Last()} were there";
             }
             
             if (What.Any())
             {
+                answer += ". ";
                 foreach (var thing in What)
                     answer += $"{thing}, ";
 
-                answer += "were involved.";
+                answer += "were involved";
             }
 
             return answer;

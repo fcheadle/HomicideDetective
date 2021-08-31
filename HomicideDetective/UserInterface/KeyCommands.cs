@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using HomicideDetective.People;
-using HomicideDetective.Places;
-using HomicideDetective.Things;
 using SadRogue.Integration;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives.GridViews;
@@ -22,7 +20,6 @@ namespace HomicideDetective.UserInterface
         /// </summary>
         public static void Talk()
         {
-            var title = $"Conversation with ";
             for (int i = Player.Position.X - 1; i < Player.Position.X + 2; i++)
             {
                 for (int j = Player.Position.Y - 1; j < Player.Position.Y + 2; j++)
@@ -34,9 +31,8 @@ namespace HomicideDetective.UserInterface
                             var component = entity.AllComponents.GetFirstOrDefault<Personhood>();
                             if (component is not null)
                             {
-                                title += entity.Name;
                                 var contents = component.SpeakTo();
-                                MessageWindow.Write(title, contents);
+                                MessageWindow.Write(contents);
                             }
                         }
                     }
@@ -47,12 +43,14 @@ namespace HomicideDetective.UserInterface
         /// <summary>
         /// looks at each entity in the squares surrounding the player
         /// </summary>
-        public static void Look()
+        public static void LookAround()
         {
             var mystery = Program.CurrentGame.Mystery;
             var place = mystery.CurrentPlaceInfo(Player.Position);
-            var title = place.Name;
-            var contents = place.Description;
+            var contents = place.Name;
+            contents += "\r\n";
+            contents += place.Description;
+            contents += "\r\n";
             var entitiesVisible = new List<RogueLikeEntity>();
             foreach (var point in mystery.CurrentLocation.PlayerFOV.CurrentFOV)
             {
@@ -64,13 +62,12 @@ namespace HomicideDetective.UserInterface
             
             if(entitiesVisible.Any())
             {
-                contents += " I see";
                 foreach(var entity in entitiesVisible)
                 {
+                    contents += " I see";
                     var subs = entity.AllComponents.GetFirstOrDefault<ISubstantive>(); 
                     if (subs != null)
-                        contents += " " + subs.Name + ",";
-                    
+                        contents += $" {subs.Name}\r\n {subs.Description}.\r\n";
                 }
             }
 
@@ -93,7 +90,7 @@ namespace HomicideDetective.UserInterface
             //     }
             // }
             
-            MessageWindow.Write(title, contents);
+            MessageWindow.Write(contents);
         }
         
         /// <summary>
@@ -118,8 +115,8 @@ namespace HomicideDetective.UserInterface
                                 foreach (var marking in component.Markings.MarkingsOn)
                                     thought += $"{marking}, ";
                                 
-                                var pageContents = new PageContentSource($"Markings on {entity.Name}", thought);
-                                MessageWindow.Write(pageContents);
+                                //var pageContents = new PageContentSource($"Markings on {entity.Name}", thought);
+                                MessageWindow.Write(thought);
                             }
                         }
                     }
@@ -130,6 +127,25 @@ namespace HomicideDetective.UserInterface
         public static void NextMap()
         {
             Program.CurrentGame.NextMap();
+        }
+
+        public static void PrintCommands()
+        {
+            var game = Program.CurrentGame;
+            var surface = game.MessageWindow;
+            var keybindings = game.ActionNames;
+            surface.Clear();
+            
+            string help = "";
+            foreach (var command in keybindings)
+            {
+                var keyString = command.Key.ToString();
+                if (keyString.Contains("OemQuestion"))
+                    keyString = "?";
+                help += $"{keyString}: {command.Value}\r\n";
+            }
+
+            surface.Write(help);
         }
     }
 }

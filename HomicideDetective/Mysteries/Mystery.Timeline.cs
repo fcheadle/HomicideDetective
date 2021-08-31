@@ -12,113 +12,281 @@ namespace HomicideDetective.Mysteries
             if (Victim == null || Murderer == null || !Witnesses.Any())
                 throw new Exception("Attempted to generate a timeline before we have a murderer, victim, or witnesses.");
 
-            var schoolDay = GenerateSchoolDay();
-            var workDay = GenerateOfficeWorkDay();
-            var shiftWork = GenerateRetailWorkDay();
-            var activeDayOff = GenerateActiveDayOff();
-            var lazyDayOff = GenerateLazyDayOff();
-
-            var witnesses = Witnesses;
-            witnesses.Add(Murderer);
-            foreach (var witness in witnesses)
+            var children = new List<Personhood>();
+            var highSchool = new List<Personhood>();
+            var college = new List<Personhood>();
+            var foodService = new List<Personhood>();
+            var serviceWorkers = new List<Personhood>();
+            var officeWorkers = new List<Personhood>();
+            var retailWorkers = new List<Personhood>();
+            var laborers = new List<Personhood>();
+            var legal = new List<Personhood>();
+            var emergency = new List<Personhood>();
+            var spiritual = new List<Personhood>();
+            
+            foreach (var entity in Witnesses)
             {
-                var personhood = witness.AllComponents.GetFirst<Personhood>();
-                switch (Random.Next(1, 6))
-                {
-                    default: AddTimeline(personhood, schoolDay); break;
-                    case 2: AddTimeline(personhood, workDay); break;
-                    case 3: AddTimeline(personhood, shiftWork); break;
-                    case 4: AddTimeline(personhood, activeDayOff); break;
-                    case 5: AddTimeline(personhood, lazyDayOff); break;
-                }
+                var witness = entity.GoRogueComponents.GetFirst<Personhood>();
+                
+                //children / caretakers
+                if(witness.Occupation is < Occupations.Teenager or >= Occupations.ChildCaretaker and <= Occupations.SchoolTeacher)
+                    children.Add(witness);
+                
+                //high school and high school teachers
+                else if(witness.Occupation is >= Occupations.Teenager and <= Occupations.HighSchoolSenior or Occupations.HighSchoolTeacher)
+                    highSchool.Add(witness);
+                
+                //college
+                else if(witness.Occupation is >= Occupations.CollegeStudent and <= Occupations.Professor)
+                    college.Add(witness);
+                
+                //food
+                else if(witness.Occupation is >= Occupations.FastFoodWorker and <= Occupations.Janitor)
+                    foodService.Add(witness);
+                
+                // service
+                else if(witness.Occupation is >= Occupations.Mechanic and <= Occupations.SecurityWorker)
+                     serviceWorkers.Add(witness);
+                
+                //retail and sales
+                else if(witness.Occupation is >= Occupations.RetailWorker and <= Occupations.SnakeOilSalesman)
+                    retailWorkers.Add(witness);
+                
+                //office
+                else if(witness.Occupation is >= Occupations.OfficeWorker and <= Occupations.ChemicalEngineer)
+                    officeWorkers.Add(witness);
+                
+                //emergency services
+                else if(witness.Occupation is >= Occupations.Nurse and <= Occupations.HospiceWorker)
+                    emergency.Add(witness);
+                
+                //legal
+                else if(witness.Occupation is >= Occupations.ImmigrationLawyer and <= Occupations.SmallClaimsAttorney)
+                    legal.Add(witness);
+                
+                //laborers
+                else if (witness.Occupation is >= Occupations.FactoryLaborer and <= Occupations.Driver)
+                    laborers.Add(witness);
+
+                //unemployed
+                else
+                    spiritual.Add(witness);
             }
+
+            int year = 1970, month = 07, day = 02;
+            GenerateDay(year, month, day, 8, 30, 360, children, ChildsDayQueue(), "school");
+            GenerateDay(year, month, day, 8, 30, 360, highSchool, HighSchoolQueue(), "high school");
+            GenerateDay(year, month, day, 8, 30, 360, college, CollegeQueue(), "college");
+            GenerateDay(year, month, day, 8, 30, 360, foodService, FoodServiceQueue(), "the restaurant");
+            GenerateDay(year, month, day, 8, 30, 360, serviceWorkers, ServiceWorkersQueue(), "at work");
+            GenerateDay(year, month, day, 8, 30, 360, emergency, EmergencyServicesQueue(), "all over this town");
+            GenerateDay(year, month, day, 8, 30, 360, legal, LegalQueue(), "law firm");
+            GenerateDay(year, month, day, 8, 30, 360, laborers, LaborQueue(), "the factory");
+            GenerateDay(year, month, day, 8, 30, 360, spiritual, SpiritualQueue(), "at my office");
+            GenerateDay(year, month, day, 8, 30, 360, officeWorkers, OfficeWorkQueue(), "the office");
+            GenerateDay(year, month, day, 8, 30, 360, retailWorkers, RetailWorkerQueue(), "the store");
+            // GenerateActiveDayOff();
+            // GenerateLazyDay
+        }
+
+        private Queue<string> HighSchoolQueue()
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I got up and caught the bus");
+            queue.Enqueue("I listened to the marching band practice for a few minutes before class");
+            queue.Enqueue("First class started. The teacher has a boring voice");
+            queue.Enqueue("Second class. I always hated this subject");
+            queue.Enqueue("Third period is always the slowest because it's right before lunch");
+            queue.Enqueue("At lunchtime, they tried to serve us soggy pizza");
+            queue.Enqueue("Afternoon labs are very hit-or-miss. Today's lab was uninteresting");
+            queue.Enqueue("The bell rang to let us out of school and I walked to my friend's house");
+            queue.Enqueue("I came home shortly after school let out");
+            return queue;
+        }
+
+        private Queue<string> CollegeQueue()
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I woke up late to my first class so I decided not to go");
+            queue.Enqueue("My second class was weird, I just kept thinking about how hungover I was");
+            queue.Enqueue("I have a long period between classes around lunchtime so I had a beer");
+            queue.Enqueue("The girl who sits in front of me in biology takes the best notes, so I always copy her");
+            queue.Enqueue("Advanced Maths in the afternoon is absolutely brutal");
+            queue.Enqueue("My final class of the day is literature, which I find super easy");
+            queue.Enqueue("After my last class got out, I went to my friend's dorm to get high");
+            queue.Enqueue("I spent a few hours listening to music with my friend");
+            queue.Enqueue("When the sun started to set, my friend and I went out to the bars");
+            queue.Enqueue("My friend made out with a stranger at the bar");
+            queue.Enqueue("I must have drank too much because I don't remember leaving the bar");
+            return queue;
+        }
+
+        private Queue<string> FoodServiceQueue()
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I left home to catch my shift");
+            queue.Enqueue("The shift before left a very disorderly kitchen");
+            queue.Enqueue("After scrubbing the kitchen thoroughly, I discovered we are out of lettuce");
+            queue.Enqueue("It was a very quiet morning after the breakfast rush died down");
+            queue.Enqueue("A customer spilled soda all over me, so I changed clothes at work");
+            queue.Enqueue("A friend of the owner came in and was incredibly rude");
+            queue.Enqueue("A table of twelve people came in. Three of them were small children");
+            queue.Enqueue("I saw two young couples on a double date. They don't seem like they're having fun");
+            queue.Enqueue("A man in a dark baseball cap came in alone and ordered hash browns. I found it odd");
+            queue.Enqueue("Ew, I am completely covered in fryer exhaust");
+            queue.Enqueue("At ten minutes til close, we stopped taking new orders");
+            queue.Enqueue("Someone came and knocked on the door after we locked it. I didn't get a good look at their face");
+            queue.Enqueue("A black sedan sped out of the parking lot when I finally got off shift");
+            queue.Enqueue("I spent a good five minutes washing off in the bathroom before heading home");
+            return queue;
+        }
+
+        private Queue<string> ServiceWorkersQueue()
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I got up at the crack of dawn to go to work");
+            //todo
+            return queue;
+        }
+
+        private Queue<string> EmergencyServicesQueue()
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I got up at the crack of dawn to go to work");
+            //todo
+            return queue;
+        }
+
+        private Queue<string> LegalQueue()
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I got up at the crack of dawn to go to work");
+            //todo
+            return queue;
+        }
+
+        private Queue<string> LaborQueue()
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I got up at the crack of dawn to go to work");
+            queue.Enqueue("I arrived at work, thankful for the nice weather");
+            queue.Enqueue("The factory takes no time at all to smell like sweat, steel, and sawdust");
+            queue.Enqueue("It was a normal and uneventful day at the factory");
+            queue.Enqueue("Some Big-Wigs walked through at 11, and the bossman wanted us working extra hard while they did");
+            queue.Enqueue("We broke for union mandated lunch");
+            queue.Enqueue("Some of the boys and I snuck off to have a beer over lunch");
+            queue.Enqueue("After lunch, someone hit some merchandise with a forklift");
+            queue.Enqueue("We had to clear the factory floor to deal with a spill");
+            queue.Enqueue("The last several hours of the day, I worked my ass off so I could come home on time");
+            queue.Enqueue("Finally, the steam whistle let us all off the clock");
+            return queue;
+        }
+
+        private Queue<string> SpiritualQueue()
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I woke up and thanked the creator for giving me this day");
+            queue.Enqueue("I left home to arrive at my chapel");
+            queue.Enqueue("An old friend stopped by to pray");
+            queue.Enqueue("I thought for a long time about how to be a better believer");
+            queue.Enqueue("I could feel the spirit guiding me, but to what, I cannot say");
+            queue.Enqueue("I caught a graffiti artist, and told them the lord is merciful");
+            queue.Enqueue("I prayed with a stranger");
+            queue.Enqueue("I heard about the victim - most tragic");
+            return queue;
+        }
+
+        private Queue<string> OfficeWorkQueue()
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I left home to go to work");
+            queue.Enqueue("I arrived at the office and started working");
+            queue.Enqueue("I got the last cup of coffee");
+            queue.Enqueue("I went to a corporate meeting in the big conference room");
+            queue.Enqueue("I resumed working after the meeting finished");
+            queue.Enqueue("Some work friends and I got lunch nearby");
+            queue.Enqueue("Someone made a feaux pas");
+            queue.Enqueue("I arrived back at the office from lunch");
+            queue.Enqueue("I went to a team meeting in the little conference room");
+            queue.Enqueue("After the meeting finished, I read the newspaper for a bit");
+            queue.Enqueue("I focused on the problem before me");
+            queue.Enqueue("I put my nose back on the grindstone");
+            queue.Enqueue("I got on a conference call with headquarters");
+            queue.Enqueue("I am basically not getting anything else done today");
+            queue.Enqueue("The boss just put a huge pile of work on my desk");
+            queue.Enqueue("I am finally off work");
+            return queue;
+        }
+
+        private Queue<string> RetailWorkerQueue() 
+        {
+            var queue = new Queue<string>();
+            queue.Enqueue("I left home to go to work");
+            queue.Enqueue("I arrived at the shop and started my shift");
+            queue.Enqueue("The register stopped working so I made change by hand");
+            queue.Enqueue("I flirted with an attractive customer");
+            queue.Enqueue("An unattended child knocked over a display");
+            queue.Enqueue("Someone made a feaux pas");
+            queue.Enqueue("I can't believe how good this sale is, I'm saving some merchandise for myself");
+            queue.Enqueue("Hello! How can I help you today? Hello! How can I help you today? Hello! How can I help you today");
+            queue.Enqueue("Haha, a very old customer bought clothing in the young folk's style");
+            queue.Enqueue("Someone trashed the men's bathroom");
+            queue.Enqueue("I was annoyed with how slow the last little bit of work was going");
+            queue.Enqueue("One customer is milling about several minutes after we closed");
+            queue.Enqueue("Finally, we locked the doors and turned off the 'open' sign");
+            queue.Enqueue("I finished cleaning the shop and went home");
+            return queue;
+        }
+
+        private Queue<string> ChildsDayQueue()
+        {
+            var courseOfEvents = new Queue<string>();
+            courseOfEvents.Enqueue("I left home to go to school");
+            courseOfEvents.Enqueue("I arrived at school");
+            courseOfEvents.Enqueue("Someone made a feaux pas");
+            courseOfEvents.Enqueue("The teacher made me laugh");
+            courseOfEvents.Enqueue("A schoolmate made me laugh");
+            courseOfEvents.Enqueue("We learned about butterflies");
+            courseOfEvents.Enqueue("We learned how to divide");
+            courseOfEvents.Enqueue("We learned how to tie our shoes");
+            courseOfEvents.Enqueue("I ran myself to the point of exhaustion at recess");
+            courseOfEvents.Enqueue("We broke for lunch. It wasn't very good");
+            courseOfEvents.Enqueue("The teacher read us a story about dinosaurs");
+            courseOfEvents.Enqueue("The bell rang and I got on the bus");
+            courseOfEvents.Enqueue("I got off the bus at home");
+            courseOfEvents.Enqueue("Schools out! I rode the bike with my friends");
+            return courseOfEvents;
+        }
+        private void GenerateDay(int year, int month, int day, int startingHour, int startingMinute, int durationMinutes, List<Personhood> thosePresent, Queue<string> courseOfEvents, string location)
+        {
+            int minutesElapsed = 0;
+            var startDate = new DateTime(year, month, day, startingHour, startingMinute, 0, 0);
+            var memories = new List<Memory>();
+
+            var who = new List<string>();
+            foreach(var witness in thosePresent)
+                who.Add(witness.Name);
+            
+            
+            while (courseOfEvents.Any())
+            {
+                if (Random.Next() % 7 == 0)
+                {
+                    var happening = courseOfEvents.Dequeue();
+                    memories.Add(new Memory(startDate + TimeSpan.FromMinutes(minutesElapsed),happening, location, who));
+                } 
+                
+                minutesElapsed += 6;
+            }
+            
+            foreach(var witness in thosePresent)
+                AddTimeline(witness, memories);
         }
 
         private void AddTimeline(Personhood witness, List<Memory> events)
         {
             var thoughts = witness.Memories;
             thoughts.Think(events);
-        }
-
-        private List<Memory> GenerateSchoolDay()
-        {
-            var schoolDay = new List<Memory>();
-            schoolDay.Add(new Memory(new DateTime(1970, 07,4, 08,30, 0), "I left for school. ", "office"));
-            schoolDay.Add(new Memory(new DateTime(1970, 07,4, 08,47, 0), "I arrived at school. ", "office"));
-            schoolDay.Add(new Memory(new DateTime(1970, 07,4, 08,55, 0), "My first class started. ", "office"));
-            schoolDay.Add(new Memory(new DateTime(1970, 07,4, 09,20, 0), "My second class started. ", "office"));
-            schoolDay.Add(new Memory(new DateTime(1970, 07,4, 10,45, 0), "My third class started. ", "office"));
-            schoolDay.Add(new Memory(new DateTime(1970, 07,4, 12,30, 0), "We broke for lunch. Soggy Pizza and chocolate milk. Again. ", "office"));
-            schoolDay.Add(new Memory(new DateTime(1970, 07,4, 12,55, 0), "My fourth class started. ", "office"));
-            schoolDay.Add(new Memory(new DateTime(1970, 07,4, 14,20, 0), "My last class of the day started. ", "office"));
-            schoolDay.Add(new Memory(new DateTime(1970, 07,4, 15,45, 0), "School's out! I'm riding bikes with my friends. ", "office"));
-            return schoolDay;
-        }
-
-        private List<Memory> GenerateOfficeWorkDay()
-        {
-            var workDay = new List<Memory>();
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 06,45,0), "I left home to go to work. ", "office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 07,21,0), "I arrived at the office and started working. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 09,00,0), "I went to a corporate meeting in the big conference room. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 10,30,0), "I resumed working after the meeting finished. ", "office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 11,45,0), "Some work friends and I got lunch nearby. ", "office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 12,29,0), "We arrived back at the office from lunch. ", "office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 12,55,0), "I went to a team meeting in the little conference room. ", "office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 14,01,0), "After the meeting finished, I read the newspaper for a bit before I got back to work. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 14,13,0), "I put my nose back on the grindstone. ", "office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 15,50,0), "I got on a conference call with headquarters. ", "office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 16,37,0), "I am basically not getting anything else done today. ", "office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 16,54,0), "The boss just put a huge pile of work on my desk! ", "office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 18,04,0), "I am finally off work. ", "office"));
-            return workDay;
-        }
-
-        private List<Memory> GenerateRetailWorkDay()
-        {
-            var workDay = new List<Memory>();
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 16,10, 0), "I left home to go to work. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 16,27, 0), "I arrived at the shop and started my shift. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 16,59, 0), "I flirted with an attractive customer. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 18,12, 0), "An unattended child knocked over a display. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 18,46, 0), "Haha, a very old customer bought clothing in the young folk's style. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 19,09, 0), "Someone trashed the men's bathroom. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 19,25, 0), "I was annoyed with how slow the last 30 minutes of work were going. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 19,55, 0), "Finally, we locked the doors and turned off the 'open' sign. ","office"));
-            workDay.Add(new Memory(new DateTime(1970, 07,4, 20,22, 0), "I finished cleaning the shop and went home. ","office"));
-            return workDay;
-        }
-
-        private List<Memory> GenerateActiveDayOff()
-        {
-            var dayOff = new List<Memory>();
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 08,10, 0), "I got up and left for the hiking trails. ","office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 09,30, 0), "I arrived at the trailhead and began hiking. ","office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 10,04, 0), "I passed another hiker and said hello. ","office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 10,49, 0), "I found a place just off the trail and took a leek. ","office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 11,13, 0), "I found a particularly exquisite view. ","office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 11,38, 0), "Oh! I just saw an owl! ","office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 12,41, 0), "I arrived back and the trailhead and came home. ","office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 13,02, 0), "I took a shower and then left to meet a friend for lunch. ","office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 09,27, 0), "I had lunch with a friend. That was fun! ","office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 10,27, 0), "I went to a poker game. ","office"));
-            return dayOff;
-        }
-        
-        private List<Memory> GenerateLazyDayOff()
-        {
-            var dayOff = new List<Memory>();
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 01,10, 0), "I woke up. ", "office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 02,27, 0), "I ate a big breakfast. ", "office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 03,27, 0), "I got lost in a book. ", "office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 04,27, 0), "I made myself lunch. ", "office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 05,27, 0), "I got lost in a book again. ", "office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 06,27, 0), "I heard a commotion outside, so I went outside to check it out. ", "office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 07,27, 0), "I took a long, hot bath. ", "office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 08,27, 0), "I finished a novel and started another. ", "office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 09,27, 0), "I watched game shows on the telly. ", "office"));
-            dayOff.Add(new Memory(new DateTime(1970, 07,4, 10,27, 0), "I fell asleep watching T.V. ", "office"));
-            return dayOff;
         }
     }
 }

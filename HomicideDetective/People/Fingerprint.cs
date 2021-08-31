@@ -29,7 +29,7 @@ namespace HomicideDetective.People
             Pattern = Generate();
         }
 
-        public ArrayView<FingerPrintCAState>? Generate()
+        public ArrayView<FingerPrintCAState> Generate()
         {
             var random = new Random(_seed);
             var pattern = SeedStartingPattern(random);
@@ -50,7 +50,11 @@ namespace HomicideDetective.People
             {
                 for (int j = 0; j < pattern.Height; j++)
                 {
-                    if (pattern[i, j] == FingerPrintCAState.RidgeUndefined)
+                    if (DistanceBetween((i, j), (_width / 2, _height / 2)) > _width/2)
+                    {
+                        pattern[i, j] = FingerPrintCAState.Groove;
+                    }
+                    else if (pattern[i, j] == FingerPrintCAState.RidgeUndefined)
                     {
                         pattern[i,j] = DistinguishRidgeFromNeighbors(pattern, (i, j));
                     }
@@ -85,17 +89,6 @@ namespace HomicideDetective.People
                 {
                     var chance = random.Next(1, 101);
                     pattern[point] = chance % 100 <= 20 ? FingerPrintCAState.RidgeUndefined : FingerPrintCAState.Groove;
-                }
-            }
-
-            for (int i = 0; i < _width; i++)
-            {
-                for (int j = 0; j < _height; j++)
-                {
-                    if (DistanceBetween((i, j), (_width / 2, _height / 2)) > 32)
-                    {
-                        pattern[i, j] = FingerPrintCAState.Groove;
-                    }
                 }
             }
             return pattern;
@@ -254,7 +247,7 @@ namespace HomicideDetective.People
             var neighbors = GetCardinalNeighboringStates(pattern, pos);
             if(neighbors.Contains(FingerPrintCAState.Groove))
                 return FingerPrintCAState.RidgeUndefined;
-            else
+            else if(neighbors.Any(s => Ridge(s)))
             {
                 if (Ridge(pattern, pos + (1, 0)))
                     return FingerPrintCAState.Groove;
@@ -268,6 +261,9 @@ namespace HomicideDetective.People
 
             return FingerPrintCAState.Undefined;
         }
+
+        private bool Ridge(FingerPrintCAState pattern) => pattern >= FingerPrintCAState.RidgeUndefined;
+
         public virtual IEnumerable<FingerPrintCAState> GetCardinalNeighboringStates(ArrayView<FingerPrintCAState> pattern, Point point)
         {
             //cardinals

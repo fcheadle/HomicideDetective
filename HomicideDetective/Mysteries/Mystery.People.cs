@@ -18,7 +18,7 @@ namespace HomicideDetective.Mysteries
         /// <returns></returns>
         public RogueLikeEntity GenerateVictimEntity()
         {
-            var victimInfo = GeneratePersonalInfo(_surnames.RandomItem());
+            var victimInfo = GeneratePersonalInfo(Constants.FamilyNames.RandomItem());
             var substantive = new Substantive(ISubstantive.Types.Person, victimInfo.Name, pronoun: victimInfo.Pronoun,
                 pronounPossessive: victimInfo.PronounPossessive);
             string descr = $"This is the body of {victimInfo.Name}. {victimInfo.Pronoun} was a";
@@ -40,10 +40,9 @@ namespace HomicideDetective.Mysteries
         /// <returns></returns>
         public RogueLikeEntity GenerateMurdererEntity()
         {
-            var murdererInfo = GeneratePersonalInfo(_surnames.RandomItem());
+            var murdererInfo = GeneratePersonalInfo(Constants.FamilyNames.RandomItem());
             var entity = new RogueLikeEntity(default, 1, false);
-            entity.AllComponents.Add(new Personhood(murdererInfo.Name, murdererInfo.Description, murdererInfo.Noun,
-                murdererInfo.Pronoun, murdererInfo.PronounPossessive));
+            entity.AllComponents.Add(murdererInfo);
             return entity;
         }
         
@@ -56,7 +55,7 @@ namespace HomicideDetective.Mysteries
             for(int i = 0; i < 10; i++)
             {
                 var entity = new RogueLikeEntity(default, 1, false);
-                entity.AllComponents.Add(GeneratePersonalInfo(_surnames.RandomItem()));
+                entity.AllComponents.Add(GeneratePersonalInfo(Constants.FamilyNames.RandomItem()));
                 yield return entity;
             }
         }
@@ -73,21 +72,59 @@ namespace HomicideDetective.Mysteries
             bool isFat = Random.Next(0, 2) == 0;
             bool isYoung = Random.Next(0, 3) <= 1; 
 
-            string noun = isMale ? "man" : "woman";
-            string pronoun = isMale ? "he" : "she";
-            string pronounPossessive = isMale ? "his" : "her";
-            string article = "";
-
+            string noun = isMale ? Constants.MaleGenderName : Constants.FemaleGenderName;
+            string pronoun = isMale ? Constants.MalePronoun : Constants.FemalePronoun;
+            string pronounPossessive = isMale ? Constants.MalePronounPossessive : Constants.FemalePronounPossessive;
+            string article = isMale ? Constants.MalePronounPassive : Constants.FemalePronounPassive;
+            
             string heightDescription = isTall ? "slightly taller than average" : "rather short";
             string widthDescription = isFat ? "moderately over-weight" : "rather slender";
             string age = isYoung ? "young" : "middle-aged";
 
+            var occupation = Enum.GetValues<Occupations>().RandomItem();
+            var mass = DetermineMass(occupation);
+            var volume = DetermineVolume(occupation);
             string description = $"{pronoun} is a {heightDescription}, {widthDescription} {age} {noun}. ";
-            string givenName = isMale ? _maleGivenNames[ Random.Next(0, _maleGivenNames.Length)] : _femaleGivenNames[ Random.Next(0, _femaleGivenNames.Length)];
+            description += $"{pronoun} weighs {mass} grams and is {volume} cm^3 in volume.";
+            string givenName = isMale ? Constants.MaleGivenNames.RandomItem(): Constants.FemaleGivenNames.RandomItem();
 
-            var person = new Personhood($"{givenName} {surname}", description, noun, pronoun, pronounPossessive);
+            var person = new Personhood($"{givenName} {surname}", description, noun, pronoun, pronounPossessive, occupation, mass, volume);
             InitSpeech(person);
             return person;
+        }
+
+        private int DetermineMass(Occupations occupation)
+        {
+            switch (occupation)
+            {
+                case Occupations.Baby: return Random.Next(2200, 4500);
+                case Occupations.Infant: return Random.Next(8000, 13000);
+                case Occupations.Toddler: return Random.Next(11000, 18000);
+                case Occupations.Child: return Random.Next(17000, 25000);
+                case Occupations.PreTeen: return Random.Next(25000, 55000);
+                case Occupations.Teenager: return Random.Next(38000, 80000);
+                case Occupations.HighSchoolFreshmen: return Random.Next(40000, 90000);
+                case Occupations.HighSchoolSophomore: return Random.Next(50000, 100000);
+                case Occupations.HighSchoolJunior: return Random.Next(60000, 110000);
+                default: return Random.Next(70000, 120000);
+            }
+        }
+        //currently, just heights cubed
+        private int DetermineVolume(Occupations occupation)
+        {
+            switch (occupation)
+            {
+                case Occupations.Baby: return Random.Next(91125, 166375);
+                case Occupations.Infant: return Random.Next(125000, 216000);
+                case Occupations.Toddler: return Random.Next(166375, 274625);
+                case Occupations.Child: return Random.Next(216000, 343000);
+                case Occupations.PreTeen: return Random.Next(274625, 421875);
+                case Occupations.Teenager: return Random.Next(343000, 512000);
+                case Occupations.HighSchoolFreshmen: return Random.Next(421875, 614125);
+                case Occupations.HighSchoolSophomore: return Random.Next(512000, 729000);
+                case Occupations.HighSchoolJunior: return Random.Next(614125, 857375);
+                default: return Random.Next(729000, 1000000);
+            }
         }
 
         private void InitSpeech(Personhood person)

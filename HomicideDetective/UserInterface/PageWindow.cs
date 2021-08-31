@@ -20,7 +20,8 @@ namespace HomicideDetective.UserInterface
         public int Height { get; }
         
         //the contents printed by the cursor
-        public List<PageContentSource> Contents { get; private set; }= new ();
+        // public List<PageContentSource> Contents { get; private set; }= new ();
+        public List<string> Contents { get; private set; } = new();
         public int PageNumber { get; private set; }
         
         public PageWindow(int width, int height) : base(true, false, true, true)
@@ -40,7 +41,7 @@ namespace HomicideDetective.UserInterface
             };
             BackgroundSurface.Surface.Fill(Color.Blue, Color.Tan, '_');
             
-            TextSurface = new ScreenSurface(Width - 3, Height * 3)
+            TextSurface = new ScreenSurface(Width - 3, Height * 2)
             {
                 IsVisible = true,
                 IsFocused = false,
@@ -64,38 +65,16 @@ namespace HomicideDetective.UserInterface
             var cursor = TextSurface.GetSadComponent<Cursor>();
             Clear();
             cursor.Position = (0, 0);
-            cursor.Print(new ColoredString($"{Contents[index].GetPrintableString()}", Color.Blue, Color.Transparent));
+            cursor.Print(new ColoredString($"{Contents[index]}", Color.Blue, Color.Transparent));
         }
 
-        public void Write(string title, string contents) => Write(new PageContentSource(title, contents));
-
-        public void Write(PageContentSource contents)
+        public void Write(string contents)
         {
-            if (!Contents.Any())
-            {
-                AddNewContents(contents);
-                return;
-            }
-
-            var targetContent = Contents.FirstOrDefault(c => c.Title == contents.Title);
-            if(targetContent != null)
-            {
-                foreach (var content in contents.Contents)
-                {
-                    if (!targetContent.Contents.Contains(content))
-                        targetContent.Contents.Add(content);
-                }
-                PageNumber = Contents.IndexOf(targetContent);
-            }
-            else
-            {
-                AddNewContents(contents);
-            }
-            
+            AddNewContents(contents);
             PrintContents(PageNumber);
         }
 
-        private void AddNewContents(PageContentSource contents)
+        private void AddNewContents(string contents)
         {
             Contents.Add(contents);
             PageNumber = Contents.Count - 1;
@@ -135,10 +114,11 @@ namespace HomicideDetective.UserInterface
             var page = Program.CurrentGame.MessageWindow;
             page.Clear();
             string contents = "home ";
+            
             for (int i = 0; i < 1000; i++)
                 contents += $"{(char)(i % 256)} ";
-            var pcs = new PageContentSource("garbage", contents);
-            page.Write(pcs);
+            
+            page.Write(contents);
         }
 
         public void Clear()
