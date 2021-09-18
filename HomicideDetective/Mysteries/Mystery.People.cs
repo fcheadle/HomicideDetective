@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GoRogue;
 using HomicideDetective.People;
 using HomicideDetective.Things;
@@ -70,59 +71,73 @@ namespace HomicideDetective.Mysteries
             bool isMale = Random.Next(0, 2) == 0;
             bool isTall = Random.Next(0, 2) == 0;
             bool isFat = Random.Next(0, 2) == 0;
-            bool isYoung = Random.Next(0, 3) <= 1; 
 
             string noun = isMale ? Constants.MaleGenderName : Constants.FemaleGenderName;
             string pronoun = isMale ? Constants.MalePronoun : Constants.FemalePronoun;
             string pronounPossessive = isMale ? Constants.MalePronounPossessive : Constants.FemalePronounPossessive;
-            string article = isMale ? Constants.MalePronounPassive : Constants.FemalePronounPassive;
             
             string heightDescription = isTall ? "slightly taller than average" : "rather short";
             string widthDescription = isFat ? "moderately over-weight" : "rather slender";
-            string age = isYoung ? "young" : "middle-aged";
 
-            var occupation = Enum.GetValues<Occupations>().RandomItem();
-            var mass = DetermineMass(occupation);
-            var volume = DetermineVolume(occupation);
+            int age = Random.Next(0, 99);
+            var ageCategory = CategoryFromAge(age);
+            Occupations occupation;
+            if (ageCategory < AgeCategory.PreTeen)
+                occupation = Occupations.Child;
+            else if (ageCategory < AgeCategory.YoungAdult)
+                occupation = Occupations.Student;
+            else
+                occupation = Enum.GetValues<Occupations>().RandomItem();
+            
+            var mass = DetermineMass(ageCategory);
+            var volume = DetermineVolume(ageCategory);
+            
             string description = $"{pronoun} is a {heightDescription}, {widthDescription} {age} {noun}. ";
             description += $"{pronoun} weighs {mass} grams and is {volume} cm^3 in volume.";
             string givenName = isMale ? Constants.MaleGivenNames.RandomItem(): Constants.FemaleGivenNames.RandomItem();
 
-            var person = new Personhood($"{givenName} {surname}", description, noun, pronoun, pronounPossessive, occupation, mass, volume);
+            var person = new Personhood($"{givenName} {surname}", description, noun, pronoun, pronounPossessive, age, occupation, mass, volume);
             InitSpeech(person);
             return person;
         }
 
-        private int DetermineMass(Occupations occupation)
+        private AgeCategory CategoryFromAge(int age)
         {
-            switch (occupation)
+            return (AgeCategory) age;
+            //return Enum.GetValues<AgeCategory>().Where(ac => ac <= age)
+        }
+
+        private int DetermineMass(AgeCategory age)
+        {
+            switch (age)
             {
-                case Occupations.Baby: return Random.Next(2200, 4500);
-                case Occupations.Infant: return Random.Next(8000, 13000);
-                case Occupations.Toddler: return Random.Next(11000, 18000);
-                case Occupations.Child: return Random.Next(17000, 25000);
-                case Occupations.PreTeen: return Random.Next(25000, 55000);
-                case Occupations.Teenager: return Random.Next(38000, 80000);
-                case Occupations.HighSchoolFreshmen: return Random.Next(40000, 90000);
-                case Occupations.HighSchoolSophomore: return Random.Next(50000, 100000);
-                case Occupations.HighSchoolJunior: return Random.Next(60000, 110000);
+                case AgeCategory.Baby: return Random.Next(2200, 4500);
+                case AgeCategory.Infant: return Random.Next(8000, 13000);
+                case AgeCategory.Toddler: return Random.Next(11000, 18000);
+                case AgeCategory.Child: return Random.Next(17000, 25000);
+                case AgeCategory.PreTeen: return Random.Next(25000, 55000);
+                case AgeCategory.Teenager: return Random.Next(38000, 80000);
+                case AgeCategory.HighSchoolFreshmen: return Random.Next(40000, 90000);
+                case AgeCategory.HighSchoolSophomore: return Random.Next(50000, 100000);
+                case AgeCategory.HighSchoolJunior: return Random.Next(60000, 110000);
                 default: return Random.Next(70000, 120000);
             }
         }
+        
         //currently, just heights cubed
-        private int DetermineVolume(Occupations occupation)
+        private int DetermineVolume(AgeCategory age)
         {
-            switch (occupation)
+            switch (age)
             {
-                case Occupations.Baby: return Random.Next(91125, 166375);
-                case Occupations.Infant: return Random.Next(125000, 216000);
-                case Occupations.Toddler: return Random.Next(166375, 274625);
-                case Occupations.Child: return Random.Next(216000, 343000);
-                case Occupations.PreTeen: return Random.Next(274625, 421875);
-                case Occupations.Teenager: return Random.Next(343000, 512000);
-                case Occupations.HighSchoolFreshmen: return Random.Next(421875, 614125);
-                case Occupations.HighSchoolSophomore: return Random.Next(512000, 729000);
-                case Occupations.HighSchoolJunior: return Random.Next(614125, 857375);
+                case AgeCategory.Baby: return Random.Next(91125, 166375);
+                case AgeCategory.Infant: return Random.Next(125000, 216000);
+                case AgeCategory.Toddler: return Random.Next(166375, 274625);
+                case AgeCategory.Child: return Random.Next(216000, 343000);
+                case AgeCategory.PreTeen: return Random.Next(274625, 421875);
+                case AgeCategory.Teenager: return Random.Next(343000, 512000);
+                case AgeCategory.HighSchoolFreshmen: return Random.Next(421875, 614125);
+                case AgeCategory.HighSchoolSophomore: return Random.Next(512000, 729000);
+                case AgeCategory.HighSchoolJunior: return Random.Next(614125, 857375);
                 default: return Random.Next(729000, 1000000);
             }
         }

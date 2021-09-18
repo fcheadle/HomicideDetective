@@ -2,55 +2,39 @@ namespace HomicideDetective.People
 {
     public enum Occupations
     {
-        //Childhood - sequential
-        Baby, Infant, Toddler, Child, PreTeen, 
-            
-        //Teen-dom - sequential
-        Teenager, HighSchoolFreshmen, HighSchoolSophomore, HighSchoolJunior, HighSchoolSenior,
-            
-        /*
-         * Adult Occupations - non-sequential
-         */
+        //Childhood
+        Child, Student, 
         
         //Childcare
-        ChildCaretaker, BabySitter, SchoolTeacher, HighSchoolTeacher, 
+        ChildCaretaker, Teacher,
         
         //college and related
-        CollegeStudent, Academic, Lecturer, Zoologist, Botanist, Chemist, Astrologer, Astronomer, Scientist, 
-        SportTeamCoach, StudentAthlete, PresidentOfACollegeClub, Dean, DepartmentHead, Researcher, Professor,   
+        CollegeStudent, Professor,   
         
         //Food and related
-        FastFoodWorker, BeanFarmer, WheatFarmer, CornFarmer, Farmer, DairyFarmer, FryCook, HeadChef, LineChef, Waiter, 
-        Server, ShiftSupervisor, StoreManager, Janitor, 
+        FoodWorker,
+        
+        Janitor, 
         
         //Services
-        Mechanic, Plumber, Electrician, Carpenter, PostalWorker, Mailman, PostMaster, DeliveryDriver, TaxiCabDriver, 
-        EventCoordinator, WeddingPlanner,BikeMessenger, BicycleRepairman, LargeApplianceRepairman, 
-        SmallApplianceRepairman, SecurityWorker, 
+        Mechanic, 
         
         //retail/sales
-        RetailWorker, UsedCarSalesman, ShopKeep, SmallBusinessOwner, SmallBusinessEmployee, InsuranceSalesman, 
-        DoorToDoorSalesman, SnakeOilSalesman, 
+        RetailWorker, Salesman, 
         
         //office and business
-        OfficeWorker, OfficeManager, OfficeSupervisor, OfficeDirector, Architect, StockBroker, Secretary, 
-        ExecutiveAssistant, NumberCruncher, Computer, MechanicalEngineer, CivilEngineer, ElectricalEngineer, 
-        Banker, BankTeller, InvestmentBanker,PresidentOfACompany, VicePresidentOfACompany, LeadEngineer, 
-        ChemicalEngineer,
+        OfficeWorker, ChemicalEngineer,
         
         //Emergency And Medical
-        Nurse, FirstResponder, EmergencyMedicalTechnician, BailBondsman, Firefighter, ArmyReserve, RetiredVeteran, HospiceWorker, 
+        Nurse, Doctor, 
         
         //labor
-        FactoryLaborer, Lumberjack, MillWorker, TextileWorker, LatheOperator, AssemblyLineWorker, AssemblyLineManager,
-        FactoryFloorManager, AssemblyManufacturer, SteelMillWorker, PowerPlantEmployee, CoalMiner, OreMiner, SilverMinor,
-        IronMiner, GoldMiner, GoldPanner, TruckDriver, SemiTruckDriver, ConvoyDriver, Oiler, Driver,  
+        FactoryLaborer,  
         
         //legal
-        ImmigrationLawyer, MalpracticeLawyer, CriminalDefenseAttorney, PublicDefender, DistrictAttorney, Prosecutor, 
-        Paralegal, SmallClaimsAttorney,  
+        Lawyer,   
         
         //Spiritual Leader
-        Priest, Rabbi, Nun, Bishop, FortuneTeller, Psychic, TarotReader,
+        //Priest, Rabbi, Nun, Bishop, FortuneTeller, Psychic, TarotReader,
     }
 }

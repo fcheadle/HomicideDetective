@@ -25,12 +25,16 @@ namespace HomicideDetective.People
         public Memories Memories { get; set; }
         public Speech Speech { get; set; }
         public MarkingCollection Markings { get; }
+        public int Age { get; }
+        public AgeCategory AgeCategory { get; }
         public Occupations Occupation { get; }
         private bool _hasIntroduced;
         private bool _hasToldAboutSelf;
         
-        public Personhood(string name, string description, string noun, string pronoun, string pronounPossessive, Occupations occupation, int mass, int volume)
+        public Personhood(string name, string description, string noun, string pronoun, string pronounPossessive, int age, Occupations occupation, int mass, int volume)
         {
+            Age = age;
+            AgeCategory = (AgeCategory) Age;
             Name = name;
             Description = description;
             Noun = noun;

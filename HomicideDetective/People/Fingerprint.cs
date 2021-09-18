@@ -247,7 +247,7 @@ namespace HomicideDetective.People
             var neighbors = GetCardinalNeighboringStates(pattern, pos);
             if(neighbors.Contains(FingerPrintCAState.Groove))
                 return FingerPrintCAState.RidgeUndefined;
-            else if(neighbors.Any(s => Ridge(s)))
+            else if(neighbors.Any(Ridge))
             {
                 if (Ridge(pattern, pos + (1, 0)))
                     return FingerPrintCAState.Groove;

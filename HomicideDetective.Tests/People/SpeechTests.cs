@@ -13,7 +13,7 @@ namespace HomicideDetective.Tests.People
         private string _pronounPossessive = "his";
 
         private Personhood CreateTestEntity() => new Personhood(_name, _description, _noun, _pronoun,
-            _pronounPossessive, Occupations.Academic, 64, 128);
+            _pronounPossessive, 26, Occupations.Professor, 64, 128);
         
         [Fact]
         public void NewSpeechComponentTest()

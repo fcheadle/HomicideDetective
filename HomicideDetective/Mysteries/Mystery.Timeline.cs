@@ -29,11 +29,11 @@ namespace HomicideDetective.Mysteries
                 var witness = entity.GoRogueComponents.GetFirst<Personhood>();
                 
                 //children / caretakers
-                if(witness.Occupation is < Occupations.Teenager or >= Occupations.ChildCaretaker and <= Occupations.SchoolTeacher)
+                if(witness.AgeCategory < AgeCategory.HighSchoolFreshmen || witness.Occupation == Occupations.ChildCaretaker)
                     children.Add(witness);
                 
                 //high school and high school teachers
-                else if(witness.Occupation is >= Occupations.Teenager and <= Occupations.HighSchoolSenior or Occupations.HighSchoolTeacher)
+                else if(witness.AgeCategory < AgeCategory.YoungAdult || witness.Occupation == Occupations.Teacher)
                     highSchool.Add(witness);
                 
                 //college
@@ -41,31 +41,31 @@ namespace HomicideDetective.Mysteries
                     college.Add(witness);
                 
                 //food
-                else if(witness.Occupation is >= Occupations.FastFoodWorker and <= Occupations.Janitor)
+                else if(witness.Occupation is >= Occupations.FoodWorker and <= Occupations.Janitor)
                     foodService.Add(witness);
                 
                 // service
-                else if(witness.Occupation is >= Occupations.Mechanic and <= Occupations.SecurityWorker)
+                else if(witness.Occupation == Occupations.Mechanic)
                      serviceWorkers.Add(witness);
                 
                 //retail and sales
-                else if(witness.Occupation is >= Occupations.RetailWorker and <= Occupations.SnakeOilSalesman)
+                else if(witness.Occupation is >= Occupations.RetailWorker and <= Occupations.Salesman)
                     retailWorkers.Add(witness);
                 
                 //office
-                else if(witness.Occupation is >= Occupations.OfficeWorker and <= Occupations.ChemicalEngineer)
+                else if(witness.Occupation == Occupations.OfficeWorker)
                     officeWorkers.Add(witness);
                 
                 //emergency services
-                else if(witness.Occupation is >= Occupations.Nurse and <= Occupations.HospiceWorker)
+                else if(witness.Occupation is >= Occupations.Nurse and <= Occupations.Doctor)
                     emergency.Add(witness);
                 
                 //legal
-                else if(witness.Occupation is >= Occupations.ImmigrationLawyer and <= Occupations.SmallClaimsAttorney)
+                else if(witness.Occupation == Occupations.Lawyer)
                     legal.Add(witness);
                 
                 //laborers
-                else if (witness.Occupation is >= Occupations.FactoryLaborer and <= Occupations.Driver)
+                else if (witness.Occupation == Occupations.FactoryLaborer)
                     laborers.Add(witness);
 
                 //unemployed

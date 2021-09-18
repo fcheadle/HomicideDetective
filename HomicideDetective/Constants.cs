@@ -1,55 +1,52 @@
 namespace HomicideDetective
 {
-    public class Constants
+    public static class Constants
     {
         #region generation strings
-        public const string RegionCollectionTag = "regions";
-        public const string GridViewTag = "map";
-        public const string WindyPlainsTag = "plains";
-        public const string BodyOfWaterTag = "pond";
+        public static readonly string RegionCollectionTag = "regions";
+        public static readonly string GridViewTag = "map";
+        public static readonly string WindyPlainsTag = "plains";
+        public static readonly string BodyOfWaterTag = "pond";
         #endregion
         
-        #region substantive strings
-        public const string MaleGenderName = "male";
-        public const string MalePronoun = "he";
-        public const string MalePronounPossessive = "his";
-        public const string MalePronounPassive = "him";
-        public const string MaleAdultNoun = "man";
-        public const string MaleChildNoun = "boy";
+        #region people strings
+        public static readonly string MaleGenderName = "male";
+        public static readonly string MalePronoun = "he";
+        public static readonly string MalePronounPossessive = "his";
+        public static readonly string MalePronounPassive = "him";
+        public static readonly string MaleAdultNoun = "man";
+        public static readonly string MaleChildNoun = "boy";
 
-        public const string FemaleGenderName = "female";
-        public const string FemalePronoun = "she";
-        public const string FemalePronounPossessive = "her";
-        public const string FemalePronounPassive = "her";
-        public const string FemaleAdultNoun = "woman";
-        public const string FemaleChildNoun = "girl";
+        public static readonly string FemaleGenderName = "female";
+        public static readonly string FemalePronoun = "she";
+        public static readonly string FemalePronounPossessive = "her";
+        public static readonly string FemalePronounPassive = "her";
+        public static readonly string FemaleAdultNoun = "woman";
+        public static readonly string FemaleChildNoun = "girl";
 
-        public const string NonBinaryGenderName = "intersex";
-        public const string NonBinaryPronoun = "they";
-        public const string NonBinaryPronounPossessive = "their";
-        public const string NonBinaryPronounPassive = "them";
-        public const string NonBinaryAdultNoun = "person";
-        public const string NonBinaryChildNoun = "child";  
+        public static readonly string NonBinaryGenderName = "intersex";
+        public static readonly string NonBinaryPronoun = "they";
+        public static readonly string NonBinaryPronounPossessive = "their";
+        public static readonly string NonBinaryPronounPassive = "them";
+        public static readonly string NonBinaryAdultNoun = "person";
+        public static readonly string NonBinaryChildNoun = "child";  
         
-        public const string NonGenderedPronoun = "it";
-        public const string NonGenderedPronounPossessive = "it's";
-        public const string NonGenderedPronounPassive = "that";
+        public static readonly string NonGenderedPronoun = "it";
+        public static readonly string NonGenderedPronounPossessive = "it's";
+        public static readonly string NonGenderedPronounPassive = "that";
 
         public static readonly string[] FemaleGivenNames = new[]
         {
             "Alice", "Angela", "Ashley", "Angelika", "Amber", "Autumn", "Amelia", "Annabelle", "Anna", "Anne",
             "Anastasia", "Alexa", "Alexandria", "Audrey", "Aria", "Artemis", "Amy", "Abigail", "Abby", "Adrian",
             "Ariel", "Alicia", "Alma", "Ada", "August", "Alissa", "Ali",
-            
             "Betty", "Beatrice", "Bernadette", "Blair", "Bonnie", "Bianca", "Blanca", "Bridget", "Brianna", "Bella", 
-            "Brook", "Bethany", "Bri", "Brittany", "Bailey", "Barbara", 
-            
+            "Brook", "Bethany", "Bri", "Brittany", "Bailey", "Barbara",
             "Christine", "Clara", "Clementine", "Charlotte", "Celeste", "Celia", "Cecilia", "Claire", "Chloe", 
             "Caroline", "Catherine", "Cynthia", "Cassandra", "Cass", "Colette", "Camille", "Carmen", "Celine", 
             "Cleo", "Catalina", "Callie", "Clarissa", "Cheyenne",
-            
             "Diane", "Diana", "Daphne", "Daisy", "Delilah",
-            "Evangelina", "Elise", "Eleanor", "Elle", 
+            "Evangelina", "Elise", "Eleanor", "Elle", "Elaine", "Elena", 
             "Francine", "Freya", "Florence", "Flora", "Faye", "Fiona",
             "Georgina", "Gabriella", "Gwen", "Gianna", "Gwendolyn", "Gwenyvere",
             "Holly", "Henrietta", "Hazel", "Hannah", "Helen", "Helena", "Heidi", "Haley",
@@ -61,11 +58,11 @@ namespace HomicideDetective
             "Nancy", "Nanette", "Nina", "Nora", "Nova", "Natalie", "Natasha", "Nat", "Nicole", "Noelle", "Naomi",
             "Ophelia", "Opal", "Olivia", "Octavia",
             "Pheobe", "Penelope", "Persephone", "Piper", "Paige", "Priscilla", "Pearl", "Penny", "Paula",
-            "Regina", "Rita", "Renita", "Rey", "Rose", "Ruby", "Rebecca",
+            "Regina", "Rita", "Rey", "Rose", "Ruby", "Rebecca",
             "Sarah", "Simone", "Stella", "Sage", "Sadie", "Scarlet", "Sylvia",
             "Teresa", "Tabbie", "Thea", "Tessa", "Tiffany",
             "Veronica", "Violet", 
-            "Wanda", "Wilhelmetta", "Wren", "Winter", "Whitney",
+            "Wanda", "Wren", "Winter", "Whitney",
         };
         public static readonly string[] MaleGivenNames = new[]
         {
@@ -79,13 +76,13 @@ namespace HomicideDetective
             "Houston", "Howard", "Hank", "Harry",
             "Ivan", "Isaac", "Ichabod",
             "Jack", "Jeremiah", "Jerome", "Jerry", "John", "Josh", 
-            "Kyle", "Kevin",
-            "Larry", "Lyle", "Lenny", "Luke", 
+            "Kyle", "Kevin", "Kenneth", "Kenny",
+            "Larry", "Lyle", "Lenny", "Luke", "Lloyd",
             "Martin", "Max", "Michael", "Mike", "Matthew", "Mark", 
             "Nate", "Nicholas", "Nick", "Nathan", 
             "Oscar", "Oswald", 
             "Peter", "Paul", 
-            "Quincy", 
+            "Quincy", "Quinton",
             "Ralph", "Roger", 
             "Steve", "Stephen", "Saul", "Simon", 
             "Tom", "Thomas", "Timothy", 
@@ -122,8 +119,6 @@ namespace HomicideDetective
             "Williams", "Wojak", "Winston", "Winchester", "Walton", "White",
             "Yang", "Yellow", 
         };
-        
-
         #endregion
 
         #region speech strings
