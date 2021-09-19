@@ -94,7 +94,7 @@ namespace HomicideDetective.Mysteries
         {
             string name, noun, pronoun, height, width;
             
-            name = $"Scene of the Crime";
+            name = "The Victim's Home";
             pronoun = "it";
             string pronounPossessive = "its";
             string pronounPassive = "the";
@@ -153,7 +153,6 @@ namespace HomicideDetective.Mysteries
         public Place CurrentPlaceInfo(Point position)
         {
             return CurrentLocation.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position).Last();
-
         }
         
         private static RogueLikeMap PlaceRegions(RogueLikeMap map)

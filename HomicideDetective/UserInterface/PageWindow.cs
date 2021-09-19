@@ -56,6 +56,7 @@ namespace HomicideDetective.UserInterface
                 IsVisible = false,
                 UsePrintEffect = true,
             };
+            cursor.AutomaticallyShiftRowsUp = true;
             TextSurface.SadComponents.Add(cursor);
             BackgroundSurface.Children.Add(TextSurface);
         }
@@ -65,7 +66,12 @@ namespace HomicideDetective.UserInterface
             var cursor = TextSurface.GetSadComponent<Cursor>();
             Clear();
             cursor.Position = (0, 0);
-            cursor.Print(new ColoredString($"{Contents[index]}", Color.Blue, Color.Transparent));
+            if (Program.CurrentGame != null)
+            {
+                cursor.Print(new ColoredString(Program.CurrentGame.CurrentTime.ToString(), Color.Blue, Color.Transparent));
+                cursor.NewLine();
+            }
+            cursor.Print(new ColoredString(Contents[index], Color.Blue, Color.Transparent));
         }
 
         public void Write(string contents)

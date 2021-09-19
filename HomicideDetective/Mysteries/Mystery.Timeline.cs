@@ -5,6 +5,33 @@ using HomicideDetective.People;
 
 namespace HomicideDetective.Mysteries
 {
+    /// <summary>
+    /// Mystery.Timeline.cs
+    /// </summary>
+    /// <remarks>
+    /// This generates the timeline for the whole mystery. It starts a week before the murder, and it goes until the
+    /// game begins, at which point it also tracks the detective's movements around town.
+    ///
+    /// To do this, I need to rethink timeline entirely. It needs to be a collection of all events across the town,
+    /// and knowledge of those events is then dolled out to the witnesses in the town (which should include the victim
+    /// and murderer)
+    ///
+    /// For now, this is confined to a small subset of possible activities:
+    /// - Children
+    /// - High School Students
+    /// - Collegiate Folk
+    /// - Food Service Workers
+    /// - Mechanics
+    /// - Office Workers
+    /// - Retail Workers
+    /// - Factory Laborers
+    /// - Lawyers
+    /// - Nurses/Doctors
+    /// - Some folk having a day off
+    ///
+    /// This implies that we need some better location knowledge so that employees of a place can see if someone walks
+    /// by their place of business...
+    /// </remarks>
     public partial class Mystery
     {
         private void GenerateTimeline()
@@ -16,13 +43,13 @@ namespace HomicideDetective.Mysteries
             var highSchool = new List<Personhood>();
             var college = new List<Personhood>();
             var foodService = new List<Personhood>();
-            var serviceWorkers = new List<Personhood>();
+            var mechanics = new List<Personhood>();
             var officeWorkers = new List<Personhood>();
             var retailWorkers = new List<Personhood>();
             var laborers = new List<Personhood>();
             var legal = new List<Personhood>();
             var emergency = new List<Personhood>();
-            var spiritual = new List<Personhood>();
+            var dayOff = new List<Personhood>();
             
             foreach (var entity in Witnesses)
             {
@@ -46,7 +73,7 @@ namespace HomicideDetective.Mysteries
                 
                 // service
                 else if(witness.Occupation == Occupations.Mechanic)
-                     serviceWorkers.Add(witness);
+                     mechanics.Add(witness);
                 
                 //retail and sales
                 else if(witness.Occupation is >= Occupations.RetailWorker and <= Occupations.Salesman)
@@ -70,7 +97,7 @@ namespace HomicideDetective.Mysteries
 
                 //unemployed
                 else
-                    spiritual.Add(witness);
+                    dayOff.Add(witness);
             }
 
             int year = 1970, month = 07, day = 02;
@@ -78,11 +105,11 @@ namespace HomicideDetective.Mysteries
             GenerateDay(year, month, day, 8, 30, 360, highSchool, HighSchoolQueue(), "high school");
             GenerateDay(year, month, day, 8, 30, 360, college, CollegeQueue(), "college");
             GenerateDay(year, month, day, 8, 30, 360, foodService, FoodServiceQueue(), "the restaurant");
-            GenerateDay(year, month, day, 8, 30, 360, serviceWorkers, ServiceWorkersQueue(), "at work");
+            GenerateDay(year, month, day, 8, 30, 360, mechanics, ServiceWorkersQueue(), "at work");
             GenerateDay(year, month, day, 8, 30, 360, emergency, EmergencyServicesQueue(), "all over this town");
             GenerateDay(year, month, day, 8, 30, 360, legal, LegalQueue(), "law firm");
             GenerateDay(year, month, day, 8, 30, 360, laborers, LaborQueue(), "the factory");
-            GenerateDay(year, month, day, 8, 30, 360, spiritual, SpiritualQueue(), "at my office");
+            GenerateDay(year, month, day, 8, 30, 360, dayOff, SpiritualQueue(), "at my office");
             GenerateDay(year, month, day, 8, 30, 360, officeWorkers, OfficeWorkQueue(), "the office");
             GenerateDay(year, month, day, 8, 30, 360, retailWorkers, RetailWorkerQueue(), "the store");
             // GenerateActiveDayOff();

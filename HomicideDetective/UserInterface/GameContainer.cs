@@ -30,11 +30,7 @@ namespace HomicideDetective.UserInterface
         
         public ReadOnlyDictionary<Keys, string> ActionNames => _actionNames.AsReadOnly();
         private readonly Dictionary<Keys, string> _actionNames = new();
-        
-        //game window properties
-        public const int Width = 80;
-        public const int Height = 25;
-        
+
         //map properties
         public const int MapWidth = 100;
         public const int MapHeight = 60;
@@ -45,20 +41,26 @@ namespace HomicideDetective.UserInterface
 
         public GameContainer()
         {
-            Mystery = new Mystery(1, 1);
-            Mystery.Generate(MapWidth, MapHeight, Width * 2 / 3, Height);
-            Map = InitMap();
-            PlayerCharacter = InitPlayerCharacter();
-            MessageWindow = InitMessageWindow();
-            // MessageWindow.Write($"{PlayerCharacter.Position}", Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
-
             _currentDay = 5;
             _currentHour = 18;
             _currentMinute = 0;
             _currentMonth = 7;
             _currentYear = 1970;
+            Mystery = new Mystery(1, 1);
+            Mystery.Generate(MapWidth, MapHeight, Program.Width - 40, Program.Height);
+            Map = InitMap();
+            PlayerCharacter = InitPlayerCharacter();
+            MessageWindow = InitMessageWindow();
+
+            var victim = Mystery.Victim.GoRogueComponents.GetFirst<Substantive>();
+            var caseDetails = $"{CurrentTime}\r\n";
+            caseDetails += $"The Mystery of {victim.Name}\r\n";
+            caseDetails += $"{victim.Name} was found dead at {Mystery.SceneOfCrimeInfo.Name}. ";
+            caseDetails += $"{Mystery.SceneOfCrimeInfo.Description}\r\n";
+            caseDetails += $"{victim.PronounPossessive} friends mourn for {victim.Pronoun}. ";
+            caseDetails += $"Perhaps you should ask {victim.PronounPossessive} family and coworkers for clues.\r\n";
             
-            // GameHost.Instance.FrameUpdate += (s, e) => Map.AllComponents.GetFirst<WeatherController>().Animate();
+            MessageWindow.Write(caseDetails);
         }
 
         private RogueLikeMap InitMap()
@@ -92,8 +94,6 @@ namespace HomicideDetective.UserInterface
             player.PositionChanged += ProcessUnitOfTime;
             player.PositionChanged += (s,e) =>
             {
-                // MessageWindow.Clear();
-                // MessageWindow.Write($"{PlayerCharacter.Position}", Mystery.CurrentPlaceInfo(PlayerCharacter.Position));
                 Mystery.CurrentLocation.PlayerFOV.Calculate(PlayerCharacter.Position, 12, Mystery.CurrentLocation.DistanceMeasurement);
             };
 
@@ -117,12 +117,11 @@ namespace HomicideDetective.UserInterface
         private PageWindow InitMessageWindow()
         {
             //create the component and feed it the player's current thoughts
-            var page = new PageWindow(Width / 3 + 1, Height);
+            var page = new PageWindow(40, Program.Height);
             
             //size the background surface to perfection
-            page.BackgroundSurface.Position = (Width - page.TextSurface.Surface.Width - 1, 0);
+            page.BackgroundSurface.Position = (Program.Width - page.TextSurface.Surface.Width - 1, 0);
             page.BackgroundSurface.IsVisible = true;
-
             Children.Add(page.BackgroundSurface);
             return page;
         }
