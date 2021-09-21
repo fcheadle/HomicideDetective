@@ -21,8 +21,8 @@ namespace HomicideDetective.UserInterface
         
         //the contents printed by the cursor
         // public List<PageContentSource> Contents { get; private set; }= new ();
-        public List<string> Contents { get; private set; } = new();
-        public int PageNumber { get; private set; }
+        public List<string> Contents { get; set; } = new();
+        public int PageNumber { get; set; }
         
         public PageWindow(int width, int height) : base(true, false, true, true)
         {
@@ -60,8 +60,8 @@ namespace HomicideDetective.UserInterface
             TextSurface.SadComponents.Add(cursor);
             BackgroundSurface.Children.Add(TextSurface);
         }
-        
-        private void PrintContents(int index)
+
+        public void PrintContents(int index)
         {
             var cursor = TextSurface.GetSadComponent<Cursor>();
             Clear();
@@ -84,47 +84,6 @@ namespace HomicideDetective.UserInterface
         {
             Contents.Add(contents);
             PageNumber = Contents.Count - 1;
-        }
-
-        public static void BackPage()
-        {
-            var page = Program.CurrentGame.MessageWindow;
-            if (page.PageNumber > 0)
-                page.PrintContents(--page.PageNumber);
-        }
-        
-        public static void ForwardPage()
-        {
-            var page = Program.CurrentGame.MessageWindow;
-            if (page.PageNumber < page.Contents.Count - 1)
-                page.PrintContents(++page.PageNumber);
-        }
-
-        public static void UpOneLine()
-        {
-            var page = Program.CurrentGame.MessageWindow;
-            page.TextSurface.Surface.ViewPosition -= (0, 1);
-            page.TextSurface.IsDirty = true;
-        }
-
-        public static void DownOneLine()
-        {
-            var page = Program.CurrentGame.MessageWindow;
-            page.TextSurface.Surface.ViewPosition += (0, 1);
-            page.TextSurface.IsDirty = true;
-        }
-
-        //temporary - for testing
-        public static void WriteGarbage()
-        {
-            var page = Program.CurrentGame.MessageWindow;
-            page.Clear();
-            string contents = "home ";
-            
-            for (int i = 0; i < 1000; i++)
-                contents += $"{(char)(i % 256)} ";
-            
-            page.Write(contents);
         }
 
         public void Clear()

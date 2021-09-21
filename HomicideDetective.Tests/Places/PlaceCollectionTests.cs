@@ -31,7 +31,7 @@ namespace HomicideDetective.Tests.Places
         private Region CreateRegion(Point sw)
             => new Region($"room {sw}", sw + (0, -15), sw + (15, -15), sw + (15, 0), sw);
 
-        private Substantive CreateSubstantive() => new Substantive(ISubstantive.Types.Place, "test-zone");
+        private Substantive CreateSubstantive() => new Substantive(SubstantiveTypes.Place, "test-zone");
         
         private PlaceCollection CreateCollection()
         {

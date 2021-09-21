@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using GoRogue;
+using System.Linq;
+using System.Text;
+using GoRogue.GameFramework;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;
 using SadRogue.Integration;
-using SadRogue.Integration.Components.Keybindings;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 
 namespace HomicideDetective.UserInterface
 {
@@ -18,19 +19,22 @@ namespace HomicideDetective.UserInterface
     {
         public RogueLikeMap Map { get; set; }
         public PageWindow MessageWindow { get; set; }
-
+        
         public DateTime CurrentTime 
-            => new DateTime(_currentYear, _currentMonth, _currentDay, _currentHour, _currentMinute, 0);
+            => new (_currentYear, _currentMonth, _currentDay, _currentHour, _currentMinute, 0);
 
+        public CommandContext Context { get; }
+        public CommandContext DefaultContext { get; } = CommandContext.CrimeSceneInvestigationContext();
         private int _currentMinute;
         private int _currentHour;
         private int _currentDay;
         private int _currentMonth;
         private int _currentYear;
+        private readonly int _commandDelay = 5;
+        private int _commandDelayCounter = 0;
+        public List<KeyCommand> Commands => _commands;
+        private readonly List<KeyCommand> _commands = new();
         
-        public ReadOnlyDictionary<Keys, string> ActionNames => _actionNames.AsReadOnly();
-        private readonly Dictionary<Keys, string> _actionNames = new();
-
         //map properties
         public const int MapWidth = 100;
         public const int MapHeight = 60;
@@ -41,6 +45,7 @@ namespace HomicideDetective.UserInterface
 
         public GameContainer()
         {
+            IsFocused = true;
             _currentDay = 5;
             _currentHour = 18;
             _currentMinute = 0;
@@ -51,16 +56,77 @@ namespace HomicideDetective.UserInterface
             Map = InitMap();
             PlayerCharacter = InitPlayerCharacter();
             MessageWindow = InitMessageWindow();
-
-            var victim = Mystery.Victim.GoRogueComponents.GetFirst<Substantive>();
-            var caseDetails = $"{CurrentTime}\r\n";
-            caseDetails += $"The Mystery of {victim.Name}\r\n";
-            caseDetails += $"{victim.Name} was found dead at {Mystery.SceneOfCrimeInfo.Name}. ";
-            caseDetails += $"{Mystery.SceneOfCrimeInfo.Description}\r\n";
-            caseDetails += $"{victim.PronounPossessive} friends mourn for {victim.Pronoun}. ";
-            caseDetails += $"Perhaps you should ask {victim.PronounPossessive} family and coworkers for clues.\r\n";
+            Context = DefaultContext;
             
-            MessageWindow.Write(caseDetails);
+            var victim = Mystery.Victim.GoRogueComponents.GetFirst<Substantive>();
+            var caseDetails = new StringBuilder($"{CurrentTime}\r\n");
+            caseDetails.Append($"The Mystery of {victim.Name}\r\n");
+            caseDetails.Append($"{victim.Name} was found dead at {Mystery.SceneOfCrimeInfo.Name}. ");
+            caseDetails.Append($"{Mystery.SceneOfCrimeInfo.Description}\r\n");
+            caseDetails.Append($"{victim.PronounPossessive} friends mourn for {victim.Pronoun}. ");
+            caseDetails.Append($"Perhaps you should ask {victim.PronounPossessive} family and coworkers for clues.\r\n");
+            MessageWindow.Write(caseDetails.ToString());
+        }
+
+        public override bool ProcessKeyboard(Keyboard keyboard)
+        {
+            if(_commandDelayCounter >= _commandDelay)
+            {
+                ResolveMovement(keyboard);
+
+                if (Context.ProcessKeyboard(keyboard))
+                    _commandDelayCounter = 0;
+                else
+                    _commandDelayCounter++;
+            }
+            else
+            {
+                _commandDelayCounter++;
+            }
+
+            return true;
+        }
+
+        private void ResolveMovement(Keyboard keyboard)
+        {
+            //motions
+            if (keyboard.IsKeyDown(Keys.Left))
+                Interact(PlayerCharacter.Position + Direction.Left);
+
+            if (keyboard.IsKeyDown(Keys.Up))
+                Interact(PlayerCharacter.Position + Direction.Up);
+
+            if (keyboard.IsKeyDown(Keys.Right))
+                Interact(PlayerCharacter.Position + Direction.Right);
+
+            if (keyboard.IsKeyDown(Keys.Down))
+                Interact(PlayerCharacter.Position + Direction.Down);
+        }
+
+        private void Interact(Point position)
+        {
+            if (PlayerCharacter.CanMove(position))
+            {
+                PlayerCharacter.Position = position;
+                _commandDelayCounter = 0;
+            }
+            else if (Map.Contains(position))
+            {
+                var entities = Map.Entities.GetItemsAt(position);
+                foreach (var entity in entities)
+                {
+                    var substantive = entity.GoRogueComponents.GetFirstOrDefault<ISubstantive>();
+                    if (substantive != null)
+                    {
+                        if(substantive.Type == SubstantiveTypes.Person)
+                            UserInterface.Commands.TalkTo(position);
+                        if(substantive.Type == SubstantiveTypes.Thing)
+                            UserInterface.Commands.LookAt(position);
+                    }
+                }
+
+                _commandDelayCounter = 0;
+            }
         }
 
         private RogueLikeMap InitMap()
@@ -73,20 +139,13 @@ namespace HomicideDetective.UserInterface
         {
             //creation
             var position = Mystery.RandomFreeSpace(Map);
-            var player = new RogueLikeEntity(position, 1, false)
-            {
-                IsFocused = true,
-            };
+            var player = new RogueLikeEntity(position, 1, false);
             
             //general personhood
             var thoughts = new Memories();
             player.AllComponents.Add(thoughts);
             player.AllComponents.Add(new Speech());
-            
-            //player controls
-            var motionControl = InitKeyCommands();
-            player.AllComponents.Add(motionControl);
-            
+
             //add to map and make view center on player
             Map.AddEntity(player);
             Map.DefaultRenderer?.SadComponents.Add(new SurfaceComponentFollowTarget { Target = player });
@@ -98,21 +157,6 @@ namespace HomicideDetective.UserInterface
             };
 
             return player;
-        }
-        private PlayerKeybindingsComponent InitKeyCommands()
-        {
-            var motionControl = new PlayerKeybindingsComponent();
-            AddNamedAction(motionControl, Keys.T, KeyCommands.Talk, "Talk");
-            AddNamedAction(motionControl, Keys.L, KeyCommands.LookAround, "Look Around");
-            AddNamedAction(motionControl, Keys.I, KeyCommands.Inspect, "Inspect");
-            AddNamedAction(motionControl, Keys.M, KeyCommands.NextMap, "Fast Travel");
-            AddNamedAction(motionControl, Keys.OemQuestion, KeyCommands.PrintCommands, "Print This");
-            AddNamedAction(motionControl, Keys.PageUp, PageWindow.BackPage, "Back Page");
-            AddNamedAction(motionControl, Keys.PageDown, PageWindow.ForwardPage, "Forward Page");
-            AddNamedAction(motionControl, Keys.Insert, PageWindow.WriteGarbage, "Think Garbage"); //for testing purposes
-            AddNamedAction(motionControl, Keys.Home, PageWindow.UpOneLine, "Scroll Up");
-            AddNamedAction(motionControl, Keys.End, PageWindow.DownOneLine, "Scroll Down");
-            return motionControl;
         }
         private PageWindow InitMessageWindow()
         {
@@ -133,7 +177,7 @@ namespace HomicideDetective.UserInterface
             game._currentHour = date.Hour;
             game._currentMinute = date.Minute;
             game._currentMonth = date.Month;
-            game._currentYear = date.Month;
+            game._currentYear = date.Year;
             //todo
         }
 
@@ -150,13 +194,6 @@ namespace HomicideDetective.UserInterface
             Map.DefaultRenderer?.SadComponents.Add(new SurfaceComponentFollowTarget { Target = PlayerCharacter });
             //Weather = new Weather(Map);
             Children.Add(Map);
-        }
-        
-        
-        public void AddNamedAction(PlayerKeybindingsComponent component, Keys key, Action action, string name)
-        {
-            _actionNames.Add(key, name);
-            component.AddAction(key, action);
         }
     }
 }

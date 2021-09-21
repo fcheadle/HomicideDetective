@@ -1,6 +1,6 @@
 namespace HomicideDetective
 {
-    public static class Constants
+    public static class Strings
     {
         #region generation strings
         public static readonly string RegionCollectionTag = "regions";

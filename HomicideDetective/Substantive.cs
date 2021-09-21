@@ -16,7 +16,7 @@ namespace HomicideDetective
     {
         public int Mass { get; set; } //in grams
         public int Volume { get; set; } //in ml
-        public ISubstantive.Types Type { get; set; } 
+        public SubstantiveTypes Type { get; set; } 
         public string Name { get; set; } 
         public string Article { get; set; }
         public string Noun { get; set; }
@@ -30,7 +30,7 @@ namespace HomicideDetective
         private List<string> _details;
         public List<string> Details => _details;
 
-        public Substantive(ISubstantive.Types type, string name, string? gender = null, string? article = null, string? pronoun = null, 
+        public Substantive(SubstantiveTypes type, string name, string? gender = null, string? article = null, string? pronoun = null, 
             string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0, string? noun = null)
         {
             Type = type;
@@ -52,7 +52,7 @@ namespace HomicideDetective
         {
             var description = $"This is {Article} {Name}. ";
             description += $"{Description} ";
-            if(Type != ISubstantive.Types.Place)
+            if(Type != SubstantiveTypes.Place)
             {
                 description += $"{Pronoun} weighs {Mass}g. ";
                 description += $"{Pronoun} is {Volume}ml in size. ";

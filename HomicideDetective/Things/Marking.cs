@@ -11,11 +11,11 @@ namespace HomicideDetective.Things
         public string? Color { get; set; }
         public string? Description { get; set; }
         public string? Adjective { get; set; }
-        public ISubstantive.Types LeftOn { get; set; }
+        public SubstantiveTypes LeftOn { get; set; }
         public IEnumerable<Marking>? LeavesFurtherMarkings { get; set; }
 
         public Marking(string name = null!, string color = null!, string description = null!, string adjective = null!,
-            ISubstantive.Types leftOn = ISubstantive.Types.Person, IEnumerable<Marking>? leavesFurtherMarkings = null!)
+            SubstantiveTypes leftOn = SubstantiveTypes.Person, IEnumerable<Marking>? leavesFurtherMarkings = null!)
         {
             Name = name;
             Color = color;

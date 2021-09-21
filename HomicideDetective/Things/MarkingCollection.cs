@@ -42,11 +42,11 @@ namespace HomicideDetective.Things
             else return null;
         }
 
-        public void LeaveMarkOn(Place place) => LeaveMarkOn(place.Markings, ISubstantive.Types.Place);
+        public void LeaveMarkOn(Place place) => LeaveMarkOn(place.Markings, SubstantiveTypes.Place);
         public void LeaveMarkOn(RogueLikeEntity entity) =>
             LeaveMarkOn(entity.AllComponents.GetFirst<MarkingCollection>(), entity.AllComponents.GetFirst<Substantive>().Type);
 
-        public void LeaveMarkOn(MarkingCollection markings, ISubstantive.Types? type)
+        public void LeaveMarkOn(MarkingCollection markings, SubstantiveTypes? type)
         {
             if (MarkingsLeftBy.Any(m => m.LeftOn == type))
             {

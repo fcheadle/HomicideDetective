@@ -5,8 +5,7 @@ namespace HomicideDetective
 {
     public interface ISubstantive : IPrintable
     {
-        public enum Types {Person, Place, Thing}
-        public Types Type { get; }
+        public SubstantiveTypes Type { get; }
         
         string Name { get; }
         string Description { get; }

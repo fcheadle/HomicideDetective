@@ -21,7 +21,7 @@ namespace HomicideDetective.People
         public string PronounPossessive { get; }
         public Fingerprint Fingerprint { get; }
         public List<string> Details { get; }
-        public ISubstantive.Types Type => ISubstantive.Types.Person;
+        public SubstantiveTypes Type => SubstantiveTypes.Person;
         public Memories Memories { get; set; }
         public Speech Speech { get; set; }
         public MarkingCollection Markings { get; }
