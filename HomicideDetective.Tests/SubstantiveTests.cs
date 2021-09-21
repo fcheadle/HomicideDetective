@@ -9,14 +9,14 @@ namespace HomicideDetective.Tests
         [DataMember] 
         public static IEnumerable<object[]> Types = new List<object[]>
         {
-            new object[] {ISubstantive.Types.Person},
-            new object[] {ISubstantive.Types.Place},
-            new object[] {ISubstantive.Types.Thing},
+            new object[] {SubstantiveTypes.Person},
+            new object[] {SubstantiveTypes.Place},
+            new object[] {SubstantiveTypes.Thing},
         };
         
         [Theory]
         [MemberData(nameof(Types))]
-        public void NewSubstantiveTest(ISubstantive.Types type)
+        public void NewSubstantiveTest(SubstantiveTypes type)
         {
             var substantive = new Substantive(type, "Test", gender: "male",article: "",pronoun: "he", pronounPossessive: "his",
                 description: "a test substantive", mass: 36, volume: 64);
@@ -28,7 +28,7 @@ namespace HomicideDetective.Tests
 
         [Theory]
         [MemberData(nameof(Types))]
-        public void DetailsTest(ISubstantive.Types type)
+        public void DetailsTest(SubstantiveTypes type)
         {
             var substantive = new Substantive(type, "Test", gender: "male",article: "",pronoun: "he", pronounPossessive: "his",
                 description: "a test substantive", mass: 36, volume: 64);
@@ -41,7 +41,7 @@ namespace HomicideDetective.Tests
         
         [Theory]
         [MemberData(nameof(Types))]
-        public void DetailedDescriptionTest(ISubstantive.Types type)
+        public void DetailedDescriptionTest(SubstantiveTypes type)
         {
             var substantive = new Substantive(type, "Test", gender: "male",article: "a ",pronoun: "he", pronounPossessive: "his",
                 description: "a test substantive", mass: 36, volume: 64);

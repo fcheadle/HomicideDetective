@@ -26,9 +26,9 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
-                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Constants.GridViewTag);
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Strings.GridViewTag);
             
-            var shops = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), Constants.RegionCollectionTag);
+            var shops = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), Strings.RegionCollectionTag);
             var colCount = map.Width / 2 / _shortLength;
             var rowCount = (map.Height - 5) / (_longLength + 1);
 

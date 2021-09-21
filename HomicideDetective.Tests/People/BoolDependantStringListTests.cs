@@ -1,7 +1,7 @@
 using HomicideDetective.People;
 using Xunit;
 
-namespace HomicideDetective.Tests
+namespace HomicideDetective.Tests.People
 {
     public class BoolDependantStringListTests
     {

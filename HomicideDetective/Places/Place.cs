@@ -6,7 +6,7 @@ namespace HomicideDetective.Places
 {
     public class Place : ISubstantive
     {
-        public ISubstantive.Types Type => ISubstantive.Types.Place;
+        public SubstantiveTypes Type => SubstantiveTypes.Place;
         public string Name { get; }
         public string Description { get; }
         public string Noun { get; }

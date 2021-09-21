@@ -19,8 +19,8 @@ namespace HomicideDetective.Mysteries
         /// <returns></returns>
         public RogueLikeEntity GenerateVictimEntity()
         {
-            var victimInfo = GeneratePersonalInfo(Constants.FamilyNames.RandomItem());
-            var substantive = new Substantive(ISubstantive.Types.Person, victimInfo.Name, pronoun: victimInfo.Pronoun,
+            var victimInfo = GeneratePersonalInfo(Strings.FamilyNames.RandomItem());
+            var substantive = new Substantive(SubstantiveTypes.Person, victimInfo.Name, pronoun: victimInfo.Pronoun,
                 pronounPossessive: victimInfo.PronounPossessive);
             string descr = $"This is the body of {victimInfo.Name}. {victimInfo.Pronoun} was a";
             substantive.Description = victimInfo.Description!.Replace($"{victimInfo.Pronoun} is a", descr);
@@ -41,7 +41,7 @@ namespace HomicideDetective.Mysteries
         /// <returns></returns>
         public RogueLikeEntity GenerateMurdererEntity()
         {
-            var murdererInfo = GeneratePersonalInfo(Constants.FamilyNames.RandomItem());
+            var murdererInfo = GeneratePersonalInfo(Strings.FamilyNames.RandomItem());
             var entity = new RogueLikeEntity(default, 1, false);
             entity.AllComponents.Add(murdererInfo);
             return entity;
@@ -56,7 +56,7 @@ namespace HomicideDetective.Mysteries
             for(int i = 0; i < 10; i++)
             {
                 var entity = new RogueLikeEntity(default, 1, false);
-                entity.AllComponents.Add(GeneratePersonalInfo(Constants.FamilyNames.RandomItem()));
+                entity.AllComponents.Add(GeneratePersonalInfo(Strings.FamilyNames.RandomItem()));
                 yield return entity;
             }
         }
@@ -72,9 +72,9 @@ namespace HomicideDetective.Mysteries
             bool isTall = Random.Next(0, 2) == 0;
             bool isFat = Random.Next(0, 2) == 0;
 
-            string noun = isMale ? Constants.MaleGenderName : Constants.FemaleGenderName;
-            string pronoun = isMale ? Constants.MalePronoun : Constants.FemalePronoun;
-            string pronounPossessive = isMale ? Constants.MalePronounPossessive : Constants.FemalePronounPossessive;
+            string noun = isMale ? Strings.MaleGenderName : Strings.FemaleGenderName;
+            string pronoun = isMale ? Strings.MalePronoun : Strings.FemalePronoun;
+            string pronounPossessive = isMale ? Strings.MalePronounPossessive : Strings.FemalePronounPossessive;
             
             string heightDescription = isTall ? "slightly taller than average" : "rather short";
             string widthDescription = isFat ? "moderately over-weight" : "rather slender";
@@ -94,7 +94,7 @@ namespace HomicideDetective.Mysteries
             
             string description = $"{pronoun} is a {heightDescription}, {widthDescription} {age} {noun}. ";
             description += $"{pronoun} weighs {mass} grams and is {volume} cm^3 in volume.";
-            string givenName = isMale ? Constants.MaleGivenNames.RandomItem(): Constants.FemaleGivenNames.RandomItem();
+            string givenName = isMale ? Strings.MaleGivenNames.RandomItem(): Strings.FemaleGivenNames.RandomItem();
 
             var person = new Personhood($"{givenName} {surname}", description, noun, pronoun, pronounPossessive, age, occupation, mass, volume);
             InitSpeech(person);
@@ -358,9 +358,9 @@ namespace HomicideDetective.Mysteries
             }
 
             var hair = new Marking(name, color, description, adjective);
-            hair = new Marking(name, color, description, adjective, ISubstantive.Types.Person, new []{hair});
+            hair = new Marking(name, color, description, adjective, SubstantiveTypes.Person, new []{hair});
             collection.AddUnlimitedMarkings(hair);
-            collection.LeaveMarkOn(collection, ISubstantive.Types.Person);
+            collection.LeaveMarkOn(collection, SubstantiveTypes.Person);
             return collection;
         }
     }

@@ -17,12 +17,12 @@ namespace HomicideDetective.Places.Generation
         
         #region private-static
         private static WindyPlain GetPlains(GenerationContext context) 
-            => context.GetFirst<IEnumerable<WindyPlain>>(Constants.WindyPlainsTag).First();
+            => context.GetFirst<IEnumerable<WindyPlain>>(Strings.WindyPlainsTag).First();
 
         private static BodyOfWater GetPond(GenerationContext context)
-            => context.GetFirst<BodyOfWater>(Constants.BodyOfWaterTag);
+            => context.GetFirst<BodyOfWater>(Strings.BodyOfWaterTag);
         private static Region GetRegions(GenerationContext context)
-            => context.GetFirst<Region>(Constants.RegionCollectionTag);
+            => context.GetFirst<Region>(Strings.RegionCollectionTag);
 
         private static ISettableGridView<MemoryAwareRogueLikeCell> GetMapSource(GenerationContext context, string name)
             => context.GetFirst<ISettableGridView<MemoryAwareRogueLikeCell>>(name);
@@ -57,7 +57,7 @@ namespace HomicideDetective.Places.Generation
                     gen.AddSteps(new DownTownStep());
                 });
             
-            var backingMap = GetMapSource(generator.Context, Constants.GridViewTag);
+            var backingMap = GetMapSource(generator.Context, Strings.GridViewTag);
             var map = DrawMap(backingMap, viewWidth, viewHeight);
             map.GoRogueComponents.Add(GetPlains(generator.Context));
             map.GoRogueComponents.Add(GetRegions(generator.Context));
@@ -74,7 +74,7 @@ namespace HomicideDetective.Places.Generation
                     gen.AddSteps(new ParkFeaturesStep());
                 });
             
-            var backingMap = GetMapSource(generator.Context, Constants.GridViewTag);
+            var backingMap = GetMapSource(generator.Context, Strings.GridViewTag);
             var map = DrawMap(backingMap, viewWidth, viewHeight);
             map.GoRogueComponents.Add(GetPond(generator.Context));
             map.GoRogueComponents.Add(GetPlains(generator.Context));
@@ -92,7 +92,7 @@ namespace HomicideDetective.Places.Generation
                     gen.AddSteps(new HouseStep());
                 });
             
-            var backingMap = GetMapSource(generator.Context, Constants.GridViewTag);
+            var backingMap = GetMapSource(generator.Context, Strings.GridViewTag);
             var map = DrawMap(backingMap, viewWidth, viewHeight);
             map.GoRogueComponents.Add(GetPlains(generator.Context));
             map.GoRogueComponents.Add(GetRegions(generator.Context));
