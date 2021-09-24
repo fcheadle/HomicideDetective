@@ -5,6 +5,8 @@ using System.Text;
 using GoRogue.GameFramework;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
+using HomicideDetective.People.Speech;
+using HomicideDetective.Words;
 using SadConsole;
 using SadConsole.Components;
 using SadConsole.Input;
@@ -21,7 +23,7 @@ namespace HomicideDetective.UserInterface
         public PageWindow MessageWindow { get; set; }
         
         public DateTime CurrentTime 
-            => new (_currentYear, _currentMonth, _currentDay, _currentHour, _currentMinute, 0);
+            => new (_currentYear, _currentMonth, _currentDay, _currentHour, _currentMinute, _currentSeconds);
 
         public CommandContext Context { get; }
         public CommandContext DefaultContext { get; } = CommandContext.CrimeSceneInvestigationContext();
@@ -30,6 +32,7 @@ namespace HomicideDetective.UserInterface
         private int _currentDay;
         private int _currentMonth;
         private int _currentYear;
+        private int _currentSeconds;
         private readonly int _commandDelay = 5;
         private int _commandDelayCounter = 0;
         public List<KeyCommand> Commands => _commands;
@@ -46,12 +49,13 @@ namespace HomicideDetective.UserInterface
         public GameContainer()
         {
             IsFocused = true;
+            _currentSeconds = 0;
             _currentDay = 5;
             _currentHour = 18;
             _currentMinute = 0;
             _currentMonth = 7;
             _currentYear = 1970;
-            Mystery = new Mystery(1, 1);
+            Mystery = new Mystery(new Random().Next(), 1);
             Mystery.Generate(MapWidth, MapHeight, Program.Width - 40, Program.Height);
             Map = InitMap();
             PlayerCharacter = InitPlayerCharacter();
@@ -63,8 +67,8 @@ namespace HomicideDetective.UserInterface
             caseDetails.Append($"The Mystery of {victim.Name}\r\n");
             caseDetails.Append($"{victim.Name} was found dead at {Mystery.SceneOfCrimeInfo.Name}. ");
             caseDetails.Append($"{Mystery.SceneOfCrimeInfo.Description}\r\n");
-            caseDetails.Append($"{victim.PronounPossessive} friends mourn for {victim.Pronoun}. ");
-            caseDetails.Append($"Perhaps you should ask {victim.PronounPossessive} family and coworkers for clues.\r\n");
+            caseDetails.Append($"{victim.Pronouns.Possessive} friends mourn for {victim.Pronouns.Objective}. ");
+            caseDetails.Append($"Perhaps you should ask {victim.Pronouns.Possessive} family and coworkers for clues.\r\n");
             MessageWindow.Write(caseDetails.ToString());
         }
 
@@ -138,13 +142,13 @@ namespace HomicideDetective.UserInterface
         private RogueLikeEntity InitPlayerCharacter()
         {
             //creation
-            var position = Mystery.RandomFreeSpace(Map);
+            var position = Map.RandomFreeSpace();
             var player = new RogueLikeEntity(position, 1, false);
             
             //general personhood
             var thoughts = new Memories();
             player.AllComponents.Add(thoughts);
-            player.AllComponents.Add(new Speech());
+            player.AllComponents.Add(new SpeechComponent(Constants.MalePronouns));
 
             //add to map and make view center on player
             Map.AddEntity(player);
@@ -172,12 +176,13 @@ namespace HomicideDetective.UserInterface
         public static void ProcessUnitOfTime(object? sender, ValueChangedEventArgs<Point> valueChangedEventArgs)
         {
             var game = Program.CurrentGame;
-            var date = game.CurrentTime + TimeSpan.FromMinutes(1);
+            var date = game.CurrentTime + TimeSpan.FromSeconds(5);
             game._currentDay = date.Day;
             game._currentHour = date.Hour;
             game._currentMinute = date.Minute;
             game._currentMonth = date.Month;
             game._currentYear = date.Year;
+            game._currentSeconds = date.Second;
             //todo
         }
 
@@ -187,7 +192,7 @@ namespace HomicideDetective.UserInterface
             Map.RemoveEntity(PlayerCharacter);
             Mystery.NextMap();
             Map = Mystery.CurrentLocation;
-            PlayerCharacter.Position = Mystery.RandomFreeSpace(Map);
+            PlayerCharacter.Position = Map.RandomFreeSpace();
             if(!Map.Entities.Contains(PlayerCharacter))
                 Map.AddEntity(PlayerCharacter);
             

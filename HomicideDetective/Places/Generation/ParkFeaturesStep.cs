@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GoRogue.MapGeneration;
 using HomicideDetective.Places.Weather;
+using HomicideDetective.Words;
 using SadRogue.Integration;
 using SadRogue.Integration.FieldOfView.Memory;
 using SadRogue.Primitives;
@@ -28,7 +29,7 @@ namespace HomicideDetective.Places.Generation
         {
             var map = PlantFlowers(context);
             var regions = context.GetFirstOrNew(() => new Region("park", (0, 0), (context.Width, 0),
-                (context.Width, context.Height), (0, context.Height)), Strings.RegionCollectionTag);
+                (context.Width, context.Height), (0, context.Height)), Constants.RegionCollectionTag);
 
             _deepest = map.RandomPosition();
             _secondDeepest = map.RandomPosition();
@@ -71,7 +72,7 @@ namespace HomicideDetective.Places.Generation
                 }
             }
 
-            var bodyOfWater = context.GetFirstOrNew(() => new BodyOfWater(new Rectangle((_left, _top), (_right, _bottom))), Strings.BodyOfWaterTag);
+            var bodyOfWater = context.GetFirstOrNew(() => new BodyOfWater(new Rectangle((_left, _top), (_right, _bottom))), Constants.BodyOfWaterTag);
             bodyOfWater.SeedStartingPattern();
             bodyOfWater.Cells.AddRange(_cells);
 
@@ -83,7 +84,7 @@ namespace HomicideDetective.Places.Generation
 
         private ArrayView<MemoryAwareRogueLikeCell> PlantFlowers(GenerationContext context)
         {
-            var flowerMap = context.GetFirstOrNew(() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Strings.GridViewTag);
+            var flowerMap = context.GetFirstOrNew(() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Constants.GridViewTag);
             FlowerPatch(flowerMap, 8, Color.Goldenrod, 15);
             FlowerPatch(flowerMap, 6, Color.DarkGoldenrod, 15);
             FlowerPatch(flowerMap, 6, Color.LightGoldenrodYellow, 15);

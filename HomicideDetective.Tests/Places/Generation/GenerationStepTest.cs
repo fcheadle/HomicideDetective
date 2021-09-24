@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GoRogue.MapGeneration;
 using HomicideDetective.Places.Generation;
+using HomicideDetective.Words;
 using SadRogue.Integration.FieldOfView.Memory;
 using SadRogue.Primitives.GridViews;
 using Xunit;
@@ -15,10 +16,10 @@ namespace HomicideDetective.Tests.Places.Generation
         private void AssertGeneratedMapHasRequiredComponents(GenerationContext context)
         {
             //required components:
-            var regions = context.GetFirst<Region>(Strings.RegionCollectionTag);
+            var regions = context.GetFirst<Region>(Constants.RegionCollectionTag);
             Assert.NotNull(regions);
 
-            var wallFloor = context.GetFirst<ISettableGridView<MemoryAwareRogueLikeCell>>(Strings.GridViewTag);
+            var wallFloor = context.GetFirst<ISettableGridView<MemoryAwareRogueLikeCell>>(Constants.GridViewTag);
             Assert.NotNull(wallFloor);
         }
         

@@ -59,65 +59,23 @@ namespace HomicideDetective.UserInterface
                 }
             }
         }
-
-        public static void Greet()
-        {
-            if(Program.CurrentGame.Context.Subject is Personhood person)
-                Greet(person);
-        }
+        
         public static void Greet(Personhood partner)
             => MessageWindow.Write(partner.Greet());
-
-        public static void InquireAboutSelf()
-        {
-            if(Program.CurrentGame.Context.Subject is Personhood person)
-                InquireAboutSelf(person);
-        }
         public static void InquireAboutSelf(Personhood partner)
             => MessageWindow.Write(partner.InquireAboutSelf());
-        
-        // public static void InquireWhereabouts()
-        // {
-        //     if(Program.CurrentGame.Context.Subject is Personhood person)
-        //         InquireWhereabouts(person);
-        // }
-        // public static void InquireWhereabouts(Personhood partner, DateTime at)
-        //     => MessageWindow.Write(partner.InquireWhereabouts(at));
-        // public static void InquireWhoWithAtTime()
-        // {
-        //     if(Program.CurrentGame.Context.Subject is Personhood person)
-        //         InquireWhoWithAtTime(person);
-        // }
-        // public static void InquireWhoWithAtTime(Personhood partner, DateTime at)
-        //     => MessageWindow.Write(partner.InquireAboutCompany(at));
-        // public static void InquireAboutMemory()
-        // {
-        //     if(Program.CurrentGame.Context.Subject is Personhood person)
-        //         InquireAboutSelf(person);
-        // }
-        // public static void InquireAboutMemory(Personhood partner, DateTime at)
-        //     => MessageWindow.Write(partner.InquireAboutMemory(at));
-        // public static void InquireAboutPlace()
-        // {
-        //     if(Program.CurrentGame.Context.Subject is Personhood person)
-        //         InquireAboutPlace(person);
-        // }
-        // public static void InquireAboutPlace(Personhood partner, string place)
-        //     => MessageWindow.Write(partner.InquireAboutPlace(place));
-        // public static void InquireAboutPerson()
-        // {
-        //     if(Program.CurrentGame.Context.Subject is Personhood person)
-        //         InquireAboutPerson(person);
-        // }
-        // public static void InquireAboutPerson(Personhood partner, string name)
-        //     => MessageWindow.Write(partner.InquireAboutPerson(name));
-        // public static void InquireAboutThing()
-        // {
-        //     if(Program.CurrentGame.Context.Subject is Personhood person)
-        //         InquireAboutThing(person);
-        // }
-        // public static void InquireAboutThing(Personhood partner, string thing)
-        //     => MessageWindow.Write(partner.InquireAboutThing(thing));
+        public static void InquireWhereabouts(Personhood partner, DateTime at)
+            => MessageWindow.Write(partner.InquireWhereabouts(at));
+        public static void InquireWhoWithAtTime(Personhood partner, DateTime at)
+            => MessageWindow.Write(partner.InquireAboutCompany(at));
+        public static void InquireAboutMemory(Personhood partner, DateTime at)
+            => MessageWindow.Write(partner.InquireAboutMemory(at));
+        public static void InquireAboutPlace(Personhood partner, string place)
+            => MessageWindow.Write(partner.InquireAboutPlace(place));
+        public static void InquireAboutPerson(Personhood partner, string name)
+            => MessageWindow.Write(partner.InquireAboutPerson(name));
+        public static void InquireAboutThing(Personhood partner, string thing)
+            => MessageWindow.Write(partner.InquireAboutThing(thing));
         
         #endregion
         public static void LookAround()

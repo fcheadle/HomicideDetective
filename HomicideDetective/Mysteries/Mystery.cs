@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using GoRogue;
 using HomicideDetective.People;
 using HomicideDetective.Places;
+using HomicideDetective.Places.Generation;
+using HomicideDetective.Things;
+using HomicideDetective.Words;
 using SadRogue.Integration;
 using SadRogue.Integration.Maps;
-#pragma warning disable 8618
+using SadRogue.Primitives;
 
 namespace HomicideDetective.Mysteries
 {
@@ -68,5 +73,153 @@ namespace HomicideDetective.Mysteries
             _viewWidth = viewWidth;
             _viewHeight = viewHeight;
         }
+
+        private string RandomItem(string[] collection) => collection[Random.Next(0, collection.Length)];
+        
+        #region people
+        /// <summary>
+        /// Generates a RogueLikeEntity that is the victim in a murder investigation.
+        /// </summary>
+        /// <returns></returns>
+        public RogueLikeEntity GenerateVictimEntity()
+        {
+            var victimInfo = PersonFactory.GeneratePersonalInfo(Random.Next(), RandomItem(Constants.FamilyNames));
+            var descr = new StringBuilder($"This is the body of {victimInfo.Name}. {victimInfo.Pronouns.Subjective} was a");
+            descr.Append($"{victimInfo.Properties.GetPrintableString()} {victimInfo.Nouns.Singular}. ");
+            descr.Append($"{victimInfo.Pronouns.Subjective} is bloated from gases building up in {victimInfo.Pronouns.Possessive} interior, ");
+            descr.Append($"and discolored from decomposition.");
+            
+            var substantive = new Substantive(SubstantiveTypes.Person, victimInfo.Name, descr.ToString(), victimInfo.Nouns, victimInfo.Pronouns, victimInfo.Properties, null, "the");
+            
+            var victim = new RogueLikeEntity((0,0), 2, false);
+            victim.AllComponents.Add(substantive, Constants.SubstantiveTag);
+            
+            //todo - decompose
+            TimeOfDeath = new DateTime(1970, 7,4, Random.Next(0,24), Random.Next(0,60), 0);
+            return victim;
+        }
+        
+        /// <summary>
+        /// Generates a RogueLikeEntity who is the murderer in a murder investigation.
+        /// </summary>
+        /// <returns></returns>
+        public RogueLikeEntity GenerateMurdererEntity()
+        {
+            var murdererInfo = PersonFactory.GeneratePersonalInfo(Random.Next(), RandomItem(Constants.FamilyNames));
+            var entity = new RogueLikeEntity(default, 1, false);
+            entity.AllComponents.Add(murdererInfo, Constants.SubstantiveTag);
+            return entity;
+        }
+        
+        /// <summary>
+        /// Generates everyone related to the case: family members, friends, coworkers, etc.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<RogueLikeEntity> GenerateWitnessEntities()
+        {
+            for(int i = 0; i < 10; i++)
+            {
+                var entity = new RogueLikeEntity(default, 1, false);
+                entity.AllComponents.Add(
+                    PersonFactory.GeneratePersonalInfo(Random.Next(), RandomItem(Constants.FamilyNames)),
+                    Constants.SubstantiveTag);
+                yield return entity;
+            }
+        }
+        #endregion
+        #region places
+        private void GenerateLocationsOfInterest()
+        { 
+            LocationsOfInterest.Add(MapGen.CreateNeighborhoodMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight));
+            LocationsOfInterest.Add(MapGen.CreateParkMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight));
+            LocationsOfInterest.Add(MapGen.CreateDownTownMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight));
+        }
+        
+        public void NextMap()
+        {
+            if (_currentMapIndex >= LocationsOfInterest.Count - 1)
+                _currentMapIndex = 0;
+            else
+                _currentMapIndex++;
+        }
+
+
+        private void PlacePeopleOnMaps()
+        {
+            var map = LocationsOfInterest[0];
+            SceneOfCrime = map.RandomRoom();
+            var room = map.RandomRoom();
+            //put the murder weapon on the map
+            var murderWeapon = MurderWeapon;
+            murderWeapon.Position = map.RandomFreeSpace(room.Area);
+            map.AddEntity(murderWeapon);
+
+            //add victim's corpse to the map
+            room = SceneOfCrime;
+            var victim = Victim;
+            victim.Position = map.RandomFreeSpace(room.Area);
+            map.AddEntity(victim);
+            
+            foreach (var witness in Witnesses)
+            {
+                map = LocationsOfInterest.RandomItem();
+                room = map.RandomRoom();
+                witness.Position = map.RandomFreeSpace(room.Area);
+                
+                map.AddEntity(witness);
+            }
+        }
+
+        /// <summary>
+        /// Generates the descriptive information about the scene of the crime.
+        /// </summary>
+        /// <returns></returns>
+        public Substantive GenerateSceneOfMurderInfo(string name = "the victim's home")
+        {
+            Noun nouns = new Noun("house", "houses");
+            Pronoun pronouns = Constants.ItemPronouns;
+            PhysicalProperties properties = MapGen.HousePhysicalProperties(Random.Next());
+            
+            string description = $"This {properties.GetPrintableString()} {nouns.Singular} is at 1327 Lincoln street (hardcoded).";
+
+            var substantive = new Substantive(SubstantiveTypes.Place, name, description, nouns, pronouns, properties);
+
+            return substantive;
+        }
+
+        public Place CurrentPlaceInfo(Point position)
+        {
+            return CurrentLocation.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position).Last();
+        }
+        #endregion
+        #region things 
+        
+        /// <summary>
+        /// Generates the item which was used to kill someone
+        /// </summary>
+        /// <returns></returns>
+        public RogueLikeEntity GenerateMurderWeapon()
+        {
+            var itemInfo = ThingFactory.Weapon(Random.Next());
+            var murderWeapon = new RogueLikeEntity((0,0), itemInfo.Name[0], true, true, 2);
+            murderWeapon.AllComponents.Add(itemInfo, Constants.SubstantiveTag);
+            
+            //todo - add markings
+            
+            return murderWeapon;
+        }
+
+        /// <summary>
+        /// Creates a generic rle item
+        /// </summary>
+        /// <returns></returns>
+        public RogueLikeEntity GenerateMiscellaneousItem()
+        {
+            var item = ThingFactory.MiscellaneousItem(Random.Next());
+            var rle = new RogueLikeEntity((0,0), item.Name[0]);
+            rle.AllComponents.Add(item, Constants.SubstantiveTag);
+            return rle;
+        }
+        #endregion
     }
 }

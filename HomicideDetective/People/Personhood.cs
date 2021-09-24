@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
 using GoRogue.Components.ParentAware;
+using HomicideDetective.People.Speech;
 using HomicideDetective.Things;
+using HomicideDetective.Words;
 using SadRogue.Integration;
-using SadRogue.Primitives;
 
 namespace HomicideDetective.People
 {
@@ -16,14 +17,15 @@ namespace HomicideDetective.People
     {
         public string Name { get; set; }
         public string Description { get; }
-        public string Noun { get; }
-        public string Pronoun { get; }
-        public string PronounPossessive { get; }
+        public PhysicalProperties Properties { get; }
+        public Noun Nouns { get; }
+        public Pronoun Pronouns { get; }
+        public Verb? UsageVerb => null;
         public Fingerprint Fingerprint { get; }
         public List<string> Details { get; }
         public SubstantiveTypes Type => SubstantiveTypes.Person;
         public Memories Memories { get; set; }
-        public Speech Speech { get; set; }
+        public SpeechComponent Speech { get; set; }
         public MarkingCollection Markings { get; }
         public int Age { get; }
         public AgeCategory AgeCategory { get; }
@@ -31,36 +33,41 @@ namespace HomicideDetective.People
         private bool _hasIntroduced;
         private bool _hasToldAboutSelf;
         
-        public Personhood(string name, string description, string noun, string pronoun, string pronounPossessive, int age, Occupations occupation, int mass, int volume)
+        public Personhood(string name, string description, int age, Occupations occupation, PhysicalProperties properties, Noun nouns, Pronoun pronouns)
         {
             Age = age;
             AgeCategory = (AgeCategory) Age;
             Name = name;
             Description = description;
-            Noun = noun;
-            Pronoun = pronoun;
-            PronounPossessive = pronounPossessive;
             Occupation = occupation;
+            Properties = properties;
+            Nouns = nouns;
+            Pronouns = pronouns;
             Details = new List<string>();
             Memories = new Memories();
-            Speech = new Speech(pronoun, pronounPossessive);
-            Speech.ApplyPronouns(Pronoun, PronounPossessive);
+            Speech = new SpeechComponent(Pronouns);
             Markings = new MarkingCollection();
-            Fingerprint = new Fingerprint(mass + volume);
+            Fingerprint = new Fingerprint(Properties.Mass + Properties.Volume + age);//todo - how likely are collisions?
+        }
+        public string GetPrintableString()
+        {
+            var noun = !_hasIntroduced ? "a " + Nouns.Singular : Name;
+            var answer = $"This is {noun}. {Speech.BodyLanguage()}";
+            return answer;
         }
         
         #region speech
         public string SpeakTo()
         {
-            Speech.ApplyPronouns(Pronoun, PronounPossessive);
             string answer;
             
             if (!_hasIntroduced)
-                answer = $"\"{Greet()},\" {Pronoun} says, \"{Introduce()}\"";
+                answer = $"\"{Greet()},\" {Pronouns.Subjective} says, \"{Introduce()}\"";
             else if (!_hasToldAboutSelf)
                 answer = $"\"{InquireAboutSelf()},\" says {Name}";
             else
             {
+                //todo - return CommandContext for engaging in conversation
                 var randomMemory = Memories.All.RandomItem();
                 Speech.GetNextSpeech(randomMemory.Private);
                 if (randomMemory.Private)
@@ -152,12 +159,5 @@ namespace HomicideDetective.People
                 return "I am aware of that item, yes";
         }
         #endregion
-
-        public string GetPrintableString()
-        {
-            var noun = !_hasIntroduced ? "a " + Noun : Name;
-            var answer = $"This is {noun}. {Speech.BodyLanguage()}";
-            return answer;
-        }
     }
 }

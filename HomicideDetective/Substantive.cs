@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using System.Text;
 using HomicideDetective.Things;
-#pragma warning disable 8618
+using HomicideDetective.Words;
 
 namespace HomicideDetective
 {
@@ -14,35 +15,29 @@ namespace HomicideDetective
     /// </remarks>
     public class Substantive : ISubstantive
     {
-        public int Mass { get; set; } //in grams
-        public int Volume { get; set; } //in ml
         public SubstantiveTypes Type { get; set; } 
+        public PhysicalProperties Properties { get; set; }
         public string Name { get; set; } 
         public string Article { get; set; }
-        public string Noun { get; set; }
-        public string Pronoun { get; set; }
-        public string PronounPossessive { get; set; }
-        public string? Gender { get; set; }
+        public Noun Nouns { get; set; }
+        public Pronoun Pronouns { get; set; }
+        public Verb? UsageVerb { get; }
         public string Description { get; set; }
-        
         public MarkingCollection Markings { get; set; }
 
         private List<string> _details;
         public List<string> Details => _details;
 
-        public Substantive(SubstantiveTypes type, string name, string? gender = null, string? article = null, string? pronoun = null, 
-            string? pronounPossessive = null, string? description = null, int mass = 0, int volume = 0, string? noun = null)
+        public Substantive(SubstantiveTypes type, string name, string description, Noun nouns, Pronoun pronouns, PhysicalProperties properties, Verb? usageVerbs = null, string article = null)
         {
             Type = type;
             Name = name;
             Article = article;
-            Pronoun = pronoun;
-            PronounPossessive = pronounPossessive;
-            Gender = gender;
-            Mass = mass;
-            Volume = volume;
-            Noun = noun;
+            Pronouns = pronouns;
+            Properties = properties;
+            Nouns = nouns;
             Description = description;
+            UsageVerb = usageVerbs;
             _details = new List<string>();
             Markings = new MarkingCollection();
         }
@@ -50,19 +45,15 @@ namespace HomicideDetective
         public void AddDetail(string detail) => _details.Add(detail);
         public string GetPrintableString()
         {
-            var description = $"This is {Article} {Name}. ";
-            description += $"{Description} ";
-            if(Type != SubstantiveTypes.Place)
-            {
-                description += $"{Pronoun} weighs {Mass}g. ";
-                description += $"{Pronoun} is {Volume}ml in size. ";
-            }
+            var description = new StringBuilder($"This is {Article} {Properties.GetPrintableString()} {Name}. ");
+            description.Append($"{Description} ");
+            
             foreach (var detail in _details)
             {
-                description += $"{detail} ";
+                description.Append($"{detail} ");
             }
 
-            return description;
+            return description.ToString();
         }
     }
 }

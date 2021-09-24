@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using GoRogue.MapGeneration;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
+using HomicideDetective.Words;
+using SadRogue.Integration;
+using SadRogue.Primitives;
 using Xunit;
-// ReSharper disable ObjectCreationAsStatement
 
 namespace HomicideDetective.Tests.Mysteries
 {
@@ -11,186 +14,219 @@ namespace HomicideDetective.Tests.Mysteries
         
         public static readonly IEnumerable<object[]> IntData = new List<object[]>()
         {
+            new object[] {0},
+            new object[] {12},
+            new object[] {32},
+            new object[] {40},
+            new object[] {50},
+            new object[] {60},
             new object[] {79},
             new object[] {144},
             new object[] {169},
+            new object[] {512},
+            new object[] {1024},
             new object[] {4026},
             new object[] {10050},
             new object[] {69696},
             new object[] {999999},
         };
         
+
+        private void AssertEntitiesMatch(RogueLikeEntity firstAnswer, RogueLikeEntity secondAnswer)
+        {
+            var first = firstAnswer.Info();
+            var second = secondAnswer.Info();
+            AssertSubstantiveMatch(first, second);
+        }
+
+        private void AssertSubstantiveMatch(ISubstantive first, ISubstantive second)
+        {
+            Assert.Equal(first.Name, second.Name);
+            Assert.Equal(first.Details, second.Details);
+            Assert.Equal(first.Description, second.Description);
+            
+            Assert.Equal(first.Pronouns.Objective, second.Pronouns.Objective);
+            Assert.Equal(first.Pronouns.Subjective, second.Pronouns.Subjective);
+            Assert.Equal(first.Pronouns.Possessive, second.Pronouns.Possessive);
+            Assert.Equal(first.Pronouns.Reflexive, second.Pronouns.Reflexive);
+            
+            Assert.Equal(first.Nouns.Singular, second.Nouns.Singular);
+            Assert.Equal(first.Nouns.Plural, second.Nouns.Plural);
+            
+            if(first.UsageVerb == null) 
+                Assert.Null(second.UsageVerb);
+            else
+            {
+                Assert.NotNull(second.UsageVerb);
+                Assert.Equal(first.UsageVerb.Infinitive, second.UsageVerb.Infinitive);
+                Assert.Equal(first.UsageVerb.PastTense.FirstPersonSingular, second.UsageVerb.PastTense.FirstPersonSingular);
+                Assert.Equal(first.UsageVerb.PastTense.FirstPersonPlural, second.UsageVerb.PastTense.FirstPersonPlural);
+                Assert.Equal(first.UsageVerb.PastTense.SecondPersonSingular, second.UsageVerb.PastTense.SecondPersonSingular);
+                Assert.Equal(first.UsageVerb.PastTense.SecondPersonPlural, second.UsageVerb.PastTense.SecondPersonPlural);
+                Assert.Equal(first.UsageVerb.PastTense.ThirdPersonSingular, second.UsageVerb.PastTense.ThirdPersonSingular);
+                Assert.Equal(first.UsageVerb.PastTense.ThirdPersonPlural, second.UsageVerb.PastTense.ThirdPersonPlural);
+                
+                Assert.Equal(first.UsageVerb.PresentTense.FirstPersonSingular, second.UsageVerb.PresentTense.FirstPersonSingular);
+                Assert.Equal(first.UsageVerb.PresentTense.FirstPersonPlural, second.UsageVerb.PresentTense.FirstPersonPlural);
+                Assert.Equal(first.UsageVerb.PresentTense.SecondPersonSingular, second.UsageVerb.PresentTense.SecondPersonSingular);
+                Assert.Equal(first.UsageVerb.PresentTense.SecondPersonPlural, second.UsageVerb.PresentTense.SecondPersonPlural);
+                Assert.Equal(first.UsageVerb.PresentTense.ThirdPersonSingular, second.UsageVerb.PresentTense.ThirdPersonSingular);
+                Assert.Equal(first.UsageVerb.PresentTense.ThirdPersonPlural, second.UsageVerb.PresentTense.ThirdPersonPlural);
+                
+                Assert.Equal(first.UsageVerb.FutureTense.FirstPersonSingular, second.UsageVerb.FutureTense.FirstPersonSingular);
+                Assert.Equal(first.UsageVerb.FutureTense.FirstPersonPlural, second.UsageVerb.FutureTense.FirstPersonPlural);
+                Assert.Equal(first.UsageVerb.FutureTense.SecondPersonSingular, second.UsageVerb.FutureTense.SecondPersonSingular);
+                Assert.Equal(first.UsageVerb.FutureTense.SecondPersonPlural, second.UsageVerb.FutureTense.SecondPersonPlural);
+                Assert.Equal(first.UsageVerb.FutureTense.ThirdPersonSingular, second.UsageVerb.FutureTense.ThirdPersonSingular);
+                Assert.Equal(first.UsageVerb.FutureTense.ThirdPersonPlural, second.UsageVerb.FutureTense.ThirdPersonPlural);
+            }        
+        }
+
+        private void AssertVictim(RogueLikeEntity entity)
+        {
+            //victim should have an ISubstantive of some kind
+            var subs = entity.AllComponents.GetFirstOrDefault<ISubstantive>();
+            Assert.NotNull(subs);
+
+            //victim should NOT have Personhood, because they are dead
+            var personhood = entity.AllComponents.GetFirstOrDefault<Personhood>();
+            Assert.Null(personhood);
+            
+            AssertPerson(subs);
+        }
+
+        private void AssertPerson(RogueLikeEntity entity) =>
+            AssertPerson(entity.Info());
+
+        private void AssertPerson(ISubstantive subs)
+        {
+            //person should have a name and description
+            Assert.NotNull(subs.Name);
+            Assert.NotEmpty(subs.Name);
+            Assert.NotNull(subs.Description);
+            Assert.NotEmpty(subs.Description);
+
+            //person should not use item pronouns
+            var pronouns = Constants.ItemPronouns;
+            Assert.NotEqual(pronouns.Objective, subs.Pronouns.Objective);
+            Assert.NotEqual(pronouns.Subjective, subs.Pronouns.Subjective);
+            Assert.NotEqual(pronouns.Possessive, subs.Pronouns.Possessive);
+            Assert.NotEqual(pronouns.Reflexive, subs.Pronouns.Reflexive);
+        }
+
+        private void AssertPlace(ISubstantive subs)
+        {
+            //place should have a name and description
+            Assert.NotNull(subs.Name);
+            Assert.NotEmpty(subs.Name);
+            Assert.NotNull(subs.Description);
+            Assert.NotEmpty(subs.Description);
+            
+            //Places don't have usage verbs
+            Assert.Null(subs.UsageVerb);
+            
+            //Places should use item pronouns
+            var pronouns = Constants.ItemPronouns;
+            Assert.Equal(pronouns.Objective, subs.Pronouns.Objective);
+            Assert.Equal(pronouns.Subjective, subs.Pronouns.Subjective);
+            Assert.Equal(pronouns.Possessive, subs.Pronouns.Possessive);
+            Assert.Equal(pronouns.Reflexive, subs.Pronouns.Reflexive);
+        }
+
+        private void AssertThing(RogueLikeEntity entity) => AssertThing(entity.Info());
+        private void AssertThing(ISubstantive subs)
+        {
+            //thing should have a name and description
+            Assert.NotNull(subs.Name);
+            Assert.NotEmpty(subs.Name);
+            Assert.NotNull(subs.Description);
+            Assert.NotEmpty(subs.Description);
+            
+            //thing should have at least one or two details
+            Assert.NotEmpty(subs.Details);
+            
+            //thing should use item pronouns
+            var pronouns = Constants.ItemPronouns;
+            Assert.Equal(pronouns.Objective, subs.Pronouns.Objective);
+            Assert.Equal(pronouns.Subjective, subs.Pronouns.Subjective);
+            Assert.Equal(pronouns.Possessive, subs.Pronouns.Possessive);
+            Assert.Equal(pronouns.Reflexive, subs.Pronouns.Reflexive);
+        }
+        
+        /// <summary>
+        /// Generating Mysteries is very processor and time intensive. Therefore, we need to assert on EVERYTHING for
+        /// each mystery that we generate, so we aren't generating a mystery just to check one value.
+        /// </summary>
+        /// <remarks>Tests that a mystery Generates every required piece of info, and tests that two mysteries produce
+        /// the same values</remarks>
         [Theory]
         [MemberData(nameof(IntData))]
         public void GenerateMysteryTest(int seed)
         {
             new TestHost();
-            var mystery = new Mystery(seed, 0);
-            mystery.Generate(100, 100, 50, 50);
-            Assert.NotNull(mystery.Victim);
-            Assert.NotNull(mystery.Victim.AllComponents.GetFirstOrDefault<Substantive>());
-            Assert.NotNull(mystery.SceneOfCrimeInfo);
-            Assert.NotNull(mystery.Murderer);
-            var murdererPersonhood = mystery.Murderer.AllComponents.GetFirst<Personhood>();
-            Assert.NotNull(murdererPersonhood.Speech);
-            Assert.NotNull(murdererPersonhood.Memories);
-            
-            Assert.NotNull(mystery.MurderWeapon);
-            Assert.NotNull(mystery.MurderWeapon.AllComponents.GetFirst<Substantive>());
-        }
-
-        [Theory]
-        [MemberData(nameof(IntData))]
-        public void GeneratePersonalInfoTest(int seed)
-        {
             var firstMystery = new Mystery(seed, 0);
             var secondMystery = new Mystery(seed, 0);
             
-            var firstAnswer = firstMystery.GeneratePersonalInfo("test");
-            var secondAnswer = secondMystery.GeneratePersonalInfo("test");
+            Assert.Equal(seed, firstMystery.Seed);
+            Assert.Equal(seed, secondMystery.Seed);
+            Assert.Equal(0, firstMystery.CaseNumber);
+            Assert.Equal(0, secondMystery.CaseNumber);
+            Assert.NotNull(firstMystery.Random);
+            Assert.NotNull(secondMystery.Random);
             
-            // Assert.Equal(firstAnswer.Details, secondAnswer.Details);
-            // Assert.Equal(firstAnswer.Name, secondAnswer.Name);
-            Assert.NotNull(firstAnswer.Name);
-            Assert.NotEmpty(firstAnswer.Name);
-            Assert.NotNull(secondAnswer.Name);
-            Assert.NotEmpty(secondAnswer.Name);
+            firstMystery.Generate(100, 100, 50, 50);
+            secondMystery.Generate(100, 100, 50, 50);
+            
+            AssertEntitiesMatch(firstMystery.Victim, secondMystery.Victim);
+            AssertSubstantiveMatch(firstMystery.SceneOfCrimeInfo, secondMystery.SceneOfCrimeInfo);
+            AssertEntitiesMatch(firstMystery.Murderer, secondMystery.Murderer);
+            AssertEntitiesMatch(firstMystery.MurderWeapon, secondMystery.MurderWeapon);
+            Assert.Equal(firstMystery.Witnesses.Count, secondMystery.Witnesses.Count);
+            
+            for (int i = 0; i < firstMystery.Witnesses.Count; i++)
+            {
+                var firstSub = firstMystery.Witnesses[i].Info();
+                var secondSub = secondMystery.Witnesses[i].Info();
+                AssertSubstantiveMatch(firstSub, secondSub);
+            }
         }
-        
         [Theory]
         [MemberData(nameof(IntData))]
-        public void GenerateMurderWeaponInfoTest(int seed)
+        public void GenerateVictimEntityTest(int seed)
         {
-            var firstMystery = new Mystery(seed, 0);
-            var secondMystery = new Mystery(seed, 0);
-            
-            var firstAnswer = firstMystery.GenerateMurderWeaponInfo();
-            var secondAnswer = secondMystery.GenerateMurderWeaponInfo();
-            
-            Assert.Equal(firstAnswer.Details, secondAnswer.Details);
-            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
-            Assert.NotNull(firstAnswer.Name);
-            Assert.NotEmpty(firstAnswer.Name);
-            Assert.NotNull(secondAnswer.Name);
-            Assert.NotEmpty(secondAnswer.Name);
+            var entity = new Mystery(seed, 0).GenerateVictimEntity();
+            AssertVictim(entity);
         }
-        
+        [Theory]
+        [MemberData(nameof(IntData))]
+        public void GenerateMurdererEntityTest(int seed)
+        {
+            var entity = new Mystery(seed, 0).GenerateMurdererEntity();
+            AssertPerson(entity);
+        }
+        [Theory]
+        [MemberData(nameof(IntData))]
+        public void GenerateWitnessEntitiesTest(int seed)
+        {
+            var entities = new Mystery(seed, 0).GenerateWitnessEntities();
+            Assert.NotEmpty(entities);
+            foreach(var entity in entities) 
+                AssertPerson(entity);
+        }
         [Theory]
         [MemberData(nameof(IntData))]
         public void GenerateSceneOfMurderInfoTest(int seed)
         {
-            var firstMystery = new Mystery(seed, 0);
-            var secondMystery = new Mystery(seed, 0);
-            
-            var firstAnswer = firstMystery.GenerateSceneOfMurderInfo();
-            var secondAnswer = secondMystery.GenerateSceneOfMurderInfo();
-            
-            Assert.Equal(firstAnswer.Details, secondAnswer.Details);
-            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
-            Assert.NotNull(firstAnswer.Name);
-            Assert.NotEmpty(firstAnswer.Name);
-            Assert.NotNull(secondAnswer.Name);
-            Assert.NotEmpty(secondAnswer.Name);
+            var scene = new Mystery(seed, 0).GenerateSceneOfMurderInfo("trailer home");
+            Assert.Contains("trailer home", scene.Name);
+            AssertPlace(scene);
         }
-        
         [Theory]
         [MemberData(nameof(IntData))]
-        public void GenerateVictimTest(int seed)
+        public void GenerateMiscellaneousItemTest(int seed)
         {
-            new TestHost();
-            var firstMystery = new Mystery(seed, 0);
-            var secondMystery = new Mystery(seed, 0);
-            firstMystery.Generate(100, 100, 50, 50);
-            secondMystery.Generate(100, 100, 50, 50);
-            var firstAnswer = firstMystery.Victim;
-            var secondAnswer = secondMystery.Victim;
-            var firstSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
-            var secondSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
-            
-            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
-            Assert.NotNull(firstSubstantive.Name);
-            Assert.NotEmpty(firstSubstantive.Name);
-            Assert.NotNull(secondSubstantive.Name);
-            Assert.NotEmpty(secondSubstantive.Name);
-            Assert.Equal(firstSubstantive.Details, secondSubstantive.Details);
-            Assert.Equal(firstSubstantive.Description, secondSubstantive.Description);
-            Assert.NotNull(firstSubstantive.Description);
-            Assert.NotEmpty(firstSubstantive.Description);
-            Assert.NotNull(secondSubstantive.Description);
-            Assert.NotEmpty(secondSubstantive.Description);
-        }
-        
-        [Theory]
-        [MemberData(nameof(IntData))]
-        public void GenerateMurdererTest(int seed)
-        {
-            new TestHost();
-            var firstMystery = new Mystery(seed, 0);
-            var secondMystery = new Mystery(seed, 0);
-            firstMystery.Generate(100, 100, 50, 50);
-            secondMystery.Generate(100, 100, 50, 50);
-            var firstAnswer = firstMystery.Murderer.AllComponents.GetFirst<Personhood>();
-            var secondAnswer = secondMystery.Murderer.AllComponents.GetFirst<Personhood>();
-            
-            Assert.NotNull(firstAnswer.Name);
-            Assert.NotEmpty(firstAnswer.Name);
-            Assert.NotNull(secondAnswer.Name);
-            Assert.NotEmpty(secondAnswer.Name);
-            // Assert.Equal(firstAnswer.Details, secondAnswer.Details);
-            // Assert.Equal(firstAnswer.Description, secondAnswer.Description);
-            Assert.NotNull(firstAnswer.Description);
-            Assert.NotEmpty(firstAnswer.Description);
-            Assert.NotNull(secondAnswer.Description);
-            Assert.NotEmpty(secondAnswer.Description);
-        }
-
-        [Theory]
-        [MemberData(nameof(IntData))]
-        public void GenerateMurderWeaponTest(int seed)
-        {
-            new TestHost();
-            var firstMystery = new Mystery(seed, 0);
-            var secondMystery = new Mystery(seed, 0);
-            firstMystery.Generate(100, 100, 50, 50);
-            secondMystery.Generate(100, 100, 50, 50);
-            var firstAnswer = firstMystery.MurderWeapon;
-            var firstSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
-            
-            var secondAnswer = secondMystery.Victim;
-            var secondSubstantive = firstAnswer.AllComponents.GetFirst<Substantive>();
-            
-            Assert.Equal(firstAnswer.Name, secondAnswer.Name);
-            Assert.NotNull(firstSubstantive.Name);
-            Assert.NotEmpty(firstSubstantive.Name);
-            Assert.NotNull(secondSubstantive.Name);
-            Assert.NotEmpty(secondSubstantive.Name);
-            Assert.Equal(firstSubstantive.Details, secondSubstantive.Details);
-            Assert.Equal(firstSubstantive.Description, secondSubstantive.Description);
-            Assert.NotNull(firstSubstantive.Description);
-            Assert.NotEmpty(firstSubstantive.Description);
-            Assert.NotNull(secondSubstantive.Description);
-            Assert.NotEmpty(secondSubstantive.Description);
-        }
-
-        [Theory]
-        [MemberData(nameof(IntData))]
-        public void GenerateWitnessesTest(int seed)
-        {
-            new TestHost();
-            var mystery = new Mystery(seed, 0);
-            mystery.Generate(100, 100, 50, 50);
-
-            foreach (var entity in mystery.GenerateWitnessEntities())
-            {
-                var witness = entity.AllComponents.GetFirst<Personhood>();
-                Assert.NotNull(witness.Name);
-                Assert.NotEmpty(witness.Name);
-                Assert.NotNull(witness.Description);
-                Assert.NotEmpty(witness.Description);
-                
-                Assert.NotNull(witness.Speech);
-                Assert.NotNull(witness.Memories);
-            }
+            var thing = new Mystery(seed, 0).GenerateMiscellaneousItem();
+            AssertThing(thing);
         }
     }
 }
