@@ -12,7 +12,7 @@ namespace HomicideDetective.Places.Weather
     /// </summary>
     public class WeatherController : SadConsole.Components.UpdateComponent//ParentAwareComponentBase<RogueLikeMap>
     {
-        private RogueLikeMap Parent;
+        private RogueLikeMap? _parent;
         public int Elapsed { get; private set; }
         private int _windSpeed;
 
@@ -24,7 +24,7 @@ namespace HomicideDetective.Places.Weather
         public override void OnAdded(IScreenObject host)
         {
             if (host is RogueLikeMap map)
-                Parent = map;
+                _parent = map;
             else
                 throw new ArgumentException($"Weather Controller must be added to a parent of type {typeof(RogueLikeMap)}");
         }
@@ -40,7 +40,7 @@ namespace HomicideDetective.Places.Weather
 
         private void BlowWind()
         {
-            var plains = Parent!.GoRogueComponents.GetFirstOrDefault<WindyPlain>();
+            var plains = _parent!.GoRogueComponents.GetFirstOrDefault<WindyPlain>();
             if (plains is not null)
             {
                 plains.DetermineNextStates();
@@ -48,7 +48,7 @@ namespace HomicideDetective.Places.Weather
                 {
                     var position = cell.Position - plains.Body.Position;
                     var wind = cell.GoRogueComponents.GetFirst<BlowsInWind>();
-                    if(Parent.Contains(position))
+                    if(_parent.Contains(position))
                     {
                         wind.State = plains.NextState[position];
                         wind.SetAppearance();
@@ -59,7 +59,7 @@ namespace HomicideDetective.Places.Weather
         }
         private void MakeWaves()
         {
-            var pond = Parent!.GoRogueComponents.GetFirstOrDefault<BodyOfWater>();
+            var pond = _parent!.GoRogueComponents.GetFirstOrDefault<BodyOfWater>();
             if (pond is not null)
             {
                 pond.DetermineNextStates();

@@ -28,15 +28,15 @@ namespace HomicideDetective.Mysteries
         public Statuses Status { get; set; } = Statuses.Active;
         public int Seed { get; set; }
         public int CaseNumber { get; set; }
-        public RogueLikeEntity Victim { get; set; }
-        public RogueLikeEntity Murderer { get; set; }
-        public RogueLikeEntity MurderWeapon { get; set; }
-        public Substantive SceneOfCrimeInfo { get; set; }
-        public Place SceneOfCrime { get; set; }
-        public RogueLikeMap CurrentLocation => LocationsOfInterest[_currentMapIndex];
-        public List<RogueLikeMap> LocationsOfInterest { get; set; }
-        public DateTime TimeOfDeath { get; set; }
-        public List<RogueLikeEntity> Witnesses { get; set; }
+        public RogueLikeEntity? Victim { get; set; }
+        public RogueLikeEntity? Murderer { get; set; }
+        public RogueLikeEntity? MurderWeapon { get; set; }
+        public Substantive? SceneOfCrimeInfo { get; set; }
+        public Place? SceneOfCrime { get; set; }
+        public RogueLikeMap? CurrentLocation => LocationsOfInterest![_currentMapIndex];
+        public List<RogueLikeMap>? LocationsOfInterest { get; set; }
+        public DateTime? TimeOfDeath { get; set; }
+        public List<RogueLikeEntity>? Witnesses { get; set; }
         private int _currentMapIndex;
         public Random Random { get; set; }
 
@@ -129,7 +129,8 @@ namespace HomicideDetective.Mysteries
         #endregion
         #region places
         private void GenerateLocationsOfInterest()
-        { 
+        {
+            LocationsOfInterest = new();
             LocationsOfInterest.Add(MapGen.CreateNeighborhoodMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight));
             LocationsOfInterest.Add(MapGen.CreateParkMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight));
             LocationsOfInterest.Add(MapGen.CreateDownTownMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight));
@@ -137,30 +138,33 @@ namespace HomicideDetective.Mysteries
         
         public void NextMap()
         {
-            if (_currentMapIndex >= LocationsOfInterest.Count - 1)
-                _currentMapIndex = 0;
-            else
-                _currentMapIndex++;
+            if(LocationsOfInterest is not null)
+            {
+                if (_currentMapIndex >= LocationsOfInterest.Count - 1)
+                    _currentMapIndex = 0;
+                else
+                    _currentMapIndex++;
+            }
         }
 
 
         private void PlacePeopleOnMaps()
         {
-            var map = LocationsOfInterest[0];
+            var map = LocationsOfInterest![0];
             SceneOfCrime = map.RandomRoom();
             var room = map.RandomRoom();
             //put the murder weapon on the map
             var murderWeapon = MurderWeapon;
-            murderWeapon.Position = map.RandomFreeSpace(room.Area);
+            murderWeapon!.Position = map.RandomFreeSpace(room.Area);
             map.AddEntity(murderWeapon);
 
             //add victim's corpse to the map
             room = SceneOfCrime;
             var victim = Victim;
-            victim.Position = map.RandomFreeSpace(room.Area);
+            victim!.Position = map.RandomFreeSpace(room.Area);
             map.AddEntity(victim);
             
-            foreach (var witness in Witnesses)
+            foreach (var witness in Witnesses!)
             {
                 map = LocationsOfInterest.RandomItem();
                 room = map.RandomRoom();
@@ -189,7 +193,7 @@ namespace HomicideDetective.Mysteries
 
         public Place CurrentPlaceInfo(Point position)
         {
-            return CurrentLocation.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position).Last();
+            return CurrentLocation!.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position).Last();
         }
         #endregion
         #region things 

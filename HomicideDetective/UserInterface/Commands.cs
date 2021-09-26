@@ -86,7 +86,7 @@ namespace HomicideDetective.UserInterface
             contents += place.Description;
             contents += "\r\n";
             var entitiesVisible = new List<RogueLikeEntity>();
-            foreach (var point in Mystery.CurrentLocation.PlayerFOV.CurrentFOV)
+            foreach (var point in Mystery.CurrentLocation!.PlayerFOV.CurrentFOV)
             {
                 if (point != Player.Position)
                 {

@@ -62,10 +62,10 @@ namespace HomicideDetective.UserInterface
             MessageWindow = InitMessageWindow();
             Context = DefaultContext;
             
-            var victim = Mystery.Victim.GoRogueComponents.GetFirst<Substantive>();
+            var victim = Mystery.Victim!.GoRogueComponents.GetFirst<Substantive>();
             var caseDetails = new StringBuilder($"{CurrentTime}\r\n");
             caseDetails.Append($"The Mystery of {victim.Name}\r\n");
-            caseDetails.Append($"{victim.Name} was found dead at {Mystery.SceneOfCrimeInfo.Name}. ");
+            caseDetails.Append($"{victim.Name} was found dead at {Mystery.SceneOfCrimeInfo!.Name}. ");
             caseDetails.Append($"{Mystery.SceneOfCrimeInfo.Description}\r\n");
             caseDetails.Append($"{victim.Pronouns.Possessive} friends mourn for {victim.Pronouns.Objective}. ");
             caseDetails.Append($"Perhaps you should ask {victim.Pronouns.Possessive} family and coworkers for clues.\r\n");
@@ -138,7 +138,7 @@ namespace HomicideDetective.UserInterface
         {
             var map = Mystery.CurrentLocation;
             Children.Add(map);
-            return map;
+            return map!;
         }
         private RogueLikeEntity InitPlayerCharacter()
         {
@@ -158,7 +158,7 @@ namespace HomicideDetective.UserInterface
             player.PositionChanged += (s,e) =>
             {
                 ProcessUnitOfTime(s,e);
-                Mystery.CurrentLocation.PlayerFOV.Calculate(PlayerCharacter.Position, 12, Mystery.CurrentLocation.DistanceMeasurement);
+                Mystery.CurrentLocation!.PlayerFOV.Calculate(PlayerCharacter.Position, 12, Mystery.CurrentLocation.DistanceMeasurement);
             };
 
             return player;
@@ -195,7 +195,7 @@ namespace HomicideDetective.UserInterface
             Children.Remove(Map);
             Map.RemoveEntity(PlayerCharacter);
             Mystery.NextMap();
-            Map = Mystery.CurrentLocation;
+            Map = Mystery.CurrentLocation!;
             PlayerCharacter.Position = Map.RandomFreeSpace();
             if(!Map.Entities.Contains(PlayerCharacter))
                 Map.AddEntity(PlayerCharacter);
