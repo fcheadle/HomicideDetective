@@ -58,7 +58,7 @@ namespace HomicideDetective.Tests.Mysteries
             else
             {
                 Assert.NotNull(second.UsageVerb);
-                Assert.Equal(first.UsageVerb.Infinitive, second.UsageVerb.Infinitive);
+                Assert.Equal(first.UsageVerb.Infinitive, second.UsageVerb!.Infinitive);
                 Assert.Equal(first.UsageVerb.PastTense.FirstPersonSingular, second.UsageVerb.PastTense.FirstPersonSingular);
                 Assert.Equal(first.UsageVerb.PastTense.FirstPersonPlural, second.UsageVerb.PastTense.FirstPersonPlural);
                 Assert.Equal(first.UsageVerb.PastTense.SecondPersonSingular, second.UsageVerb.PastTense.SecondPersonSingular);
@@ -92,7 +92,7 @@ namespace HomicideDetective.Tests.Mysteries
             var personhood = entity.AllComponents.GetFirstOrDefault<Personhood>();
             Assert.Null(personhood);
             
-            AssertPerson(subs);
+            AssertPerson(subs!);
         }
 
         private void AssertPerson(RogueLikeEntity entity) =>

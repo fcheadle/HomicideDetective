@@ -36,7 +36,7 @@ namespace HomicideDetective.Mysteries
     {
         private void GenerateTimeline()
         {
-            if (Victim == null || Murderer == null || !Witnesses.Any())
+            if (Victim == null || Murderer == null || !Witnesses!.Any())
                 throw new Exception("Attempted to generate a timeline before we have a murderer, victim, or witnesses.");
 
             var children = new List<Personhood>();
@@ -51,7 +51,7 @@ namespace HomicideDetective.Mysteries
             var emergency = new List<Personhood>();
             var dayOff = new List<Personhood>();
             
-            foreach (var entity in Witnesses)
+            foreach (var entity in Witnesses!)
             {
                 var witness = entity.GoRogueComponents.GetFirst<Personhood>();
                 

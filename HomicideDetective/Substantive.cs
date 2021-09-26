@@ -18,7 +18,7 @@ namespace HomicideDetective
         public SubstantiveTypes Type { get; set; } 
         public PhysicalProperties Properties { get; set; }
         public string Name { get; set; } 
-        public string Article { get; set; }
+        public string? Article { get; set; }
         public Noun Nouns { get; set; }
         public Pronoun Pronouns { get; set; }
         public Verb? UsageVerb { get; }
@@ -28,7 +28,7 @@ namespace HomicideDetective
         private List<string> _details;
         public List<string> Details => _details;
 
-        public Substantive(SubstantiveTypes type, string name, string description, Noun nouns, Pronoun pronouns, PhysicalProperties properties, Verb? usageVerbs = null, string article = null)
+        public Substantive(SubstantiveTypes type, string name, string description, Noun nouns, Pronoun pronouns, PhysicalProperties properties, Verb? usageVerbs = null, string? article = null)
         {
             Type = type;
             Name = name;

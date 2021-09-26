@@ -25,7 +25,7 @@ namespace HomicideDetective.Tests
         {
             private SixLabors.ImageSharp.Image _graphic;
 
-            public string ResourcePath { get; private set; }
+            public string? ResourcePath { get; private set; }
 
             public int Height => _graphic.Height;
 
@@ -40,7 +40,7 @@ namespace HomicideDetective.Tests
             public Color[] GetPixels() => throw new NotImplementedException();
             public void SetPixel(Point position, Color color) => throw new NotImplementedException();
             public void SetPixel(int index, Color color) => throw new NotImplementedException();
-            public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color[] cachedColorArray = null, ICellSurface cachedSurface = null) => throw new NotImplementedException();
+            public ICellSurface ToSurface(TextureConvertMode mode, int surfaceWidth, int surfaceHeight, TextureConvertBackgroundStyle backgroundStyle = TextureConvertBackgroundStyle.Pixel, TextureConvertForegroundStyle foregroundStyle = TextureConvertForegroundStyle.Block, Color[]? cachedColorArray = null, ICellSurface? cachedSurface = null) => throw new NotImplementedException();
 
             public Texture(string path)
             {
@@ -75,7 +75,7 @@ namespace HomicideDetective.Tests
 
         public override IRenderer GetRenderer(string name)
         {
-            return null;
+            return null!;
         }
 
         public override ITexture GetTexture(string resourcePath)
