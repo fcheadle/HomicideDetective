@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue.MapGeneration;
+using HomicideDetective.Words;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Integration.FieldOfView.Memory;
@@ -24,8 +25,8 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
-                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Strings.GridViewTag);
-            var roads = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), Strings.RegionCollectionTag);
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Constants.GridViewTag);
+            var roads = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), Constants.RegionCollectionTag);
             var random = new Random();
             int horizontalNameIndex = random.Next(Enum.GetNames(typeof(RoadNames)).Length - 2);
             int verticalNameIndex = random.Next(Enum.GetNames(typeof(RoadNumbers)).Length - 2);

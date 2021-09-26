@@ -52,15 +52,5 @@ namespace HomicideDetective.UserInterface
             };
             return new CommandContext(commands);
         }
-
-        public static CommandContext NewConversationContext(Personhood subject)
-        {
-            var commands = new[]
-            {
-                new KeyCommand("Greet", "", Keys.A, false, false, false, UserInterface.Commands.Greet),
-                new KeyCommand("Introduce", "", Keys.B, false, false, false, UserInterface.Commands.InquireAboutSelf),
-            };
-            return new CommandContext(commands, subject);
-        }
     }
 }

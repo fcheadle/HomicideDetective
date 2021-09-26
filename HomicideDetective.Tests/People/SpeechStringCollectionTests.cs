@@ -1,4 +1,5 @@
 using HomicideDetective.People;
+using HomicideDetective.People.Speech;
 using Xunit;
 
 namespace HomicideDetective.Tests.People
@@ -8,7 +9,7 @@ namespace HomicideDetective.Tests.People
         [Fact]
         public void NewBoolDependantStringListTest()
         {
-            var bdsl = new BoolDependantStringList();
+            var bdsl = new SpeechStringCollection();
         }
     }
 }

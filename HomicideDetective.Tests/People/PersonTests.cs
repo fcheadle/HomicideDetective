@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HomicideDetective.People;
+using HomicideDetective.Words;
 using Xunit;
 
 namespace HomicideDetective.Tests.People
@@ -10,9 +11,9 @@ namespace HomicideDetective.Tests.People
     {
         private readonly string _name = "Testboy";
         private readonly string _description = "a test class instance";
-        private readonly string _noun = "person";
-        private readonly string _pronoun = "him";
-        private readonly string _pronounPossessive = "his";
+        private readonly Noun _noun = Constants.MaleNouns;
+        private readonly Pronoun _pronouns = Constants.MalePronouns;
+        private readonly PhysicalProperties _properties = new PhysicalProperties(1024, 4096);
 
         private readonly string _testLab = "the lab";
 
@@ -63,7 +64,7 @@ namespace HomicideDetective.Tests.People
         };
 
         private Personhood CreateTestEntity() =>
-            new(_name, _description, _noun, _pronoun, _pronounPossessive, 24, Occupations.Professor, 64, 128);
+            new(_name, _description, 24, Occupations.Professor, _properties, _noun, _pronouns);
         
         private void CreateTestTimeline(Personhood person)
         {
@@ -82,9 +83,10 @@ namespace HomicideDetective.Tests.People
             var person = CreateTestEntity();
             Assert.True(_name == person.Name, "Name did not match what we provided in our parameter");
             Assert.True(_description == person.Description, "Description did not match what we provided in our parameter");
-            Assert.True(_noun == person.Noun, "Noun did not match what we provided in our parameter");
-            Assert.True(_pronoun == person.Pronoun, "Pronoun did not match what we provided in our parameter");
-            Assert.True(_pronounPossessive == person.PronounPossessive, "Pronoun did not match what we provided in our parameter");
+            Assert.True(_noun.Singular == person.Nouns.Singular, "Noun did not match what we provided in our parameter");
+            Assert.True("him" == person.Pronouns.Objective, "Pronoun did not match what we provided in our parameter");
+            Assert.True("his" == person.Pronouns.Possessive, "Pronoun did not match what we provided in our parameter");
+            Assert.Null(person.UsageVerb);
         }
 
         [Fact]
@@ -107,7 +109,7 @@ namespace HomicideDetective.Tests.People
         {
             var person = CreateTestEntity();
             var answer = person.GetPrintableString();
-            Assert.Contains("This is a person", answer);
+            Assert.Contains("This is a man", answer);
         }
 
         [Fact]

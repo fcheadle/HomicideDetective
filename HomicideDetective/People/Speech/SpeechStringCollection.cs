@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
 
-namespace HomicideDetective.People
+namespace HomicideDetective.People.Speech
 {
-    public class BoolDependantStringList
+    public class SpeechStringCollection
     {
         public List<string> Truths { get; set; }
         public List<string> Common { get; set; }
         public List<string> Lies { get; set; }
         public string Current { get; private set; } = "";
 
-        public BoolDependantStringList()
+        public SpeechStringCollection()
         {
             Truths = new List<string>();
             Common = new List<string>();

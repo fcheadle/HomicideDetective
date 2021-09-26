@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using HomicideDetective.People;
+using HomicideDetective.People.Speech;
+using HomicideDetective.Words;
 using Xunit;
 
 namespace HomicideDetective.Tests.People
@@ -8,18 +10,17 @@ namespace HomicideDetective.Tests.People
     {
         private string _name = "Neil Armstrong";
         private string _description = "An out-of-this-world trumpet player and bicyclist";
-        private string _noun = "man";
-        private string _pronoun = "he";
-        private string _pronounPossessive = "his";
+        private Noun _noun = Constants.MaleNouns;
+        private Pronoun _pronoun = Constants.FemalePronouns;
+        private PhysicalProperties _properties = new(18, 24);
 
-        private Personhood CreateTestEntity() => new Personhood(_name, _description, _noun, _pronoun,
-            _pronounPossessive, 26, Occupations.Professor, 64, 128);
+        private Personhood CreateTestEntity() => new (_name, _description, 26, Occupations.Professor, _properties, _noun, _pronoun);
         
         [Fact]
         public void NewSpeechComponentTest()
         {
-            var speech = new Speech();
-            Assert.Contains("Their voice is ", speech.VoiceDescription);
+            var speech = new SpeechComponent(_pronoun);
+            Assert.Contains("her voice is ", speech.VoiceDescription);
         }
 
         [Fact]
@@ -38,7 +39,7 @@ namespace HomicideDetective.Tests.People
             new object[] {"quall", "quill"},
         };
 
-        private void AssertBodyLanguageHasPronouns(Speech bl, string pronoun, string pronounPossessive)
+        private void AssertBodyLanguageHasPronouns(SpeechComponent bl, string pronoun, string pronounPossessive)
         {
             Assert.True(bl.Posture.Current.Contains(pronoun) || bl.Posture.Current.Contains(pronounPossessive));
             Assert.True(bl.Stance.Current.Contains(pronoun) || bl.Stance.Current.Contains(pronounPossessive));
@@ -47,7 +48,7 @@ namespace HomicideDetective.Tests.People
         }
         
 
-        private void AssertBodyLanguageDoesNotHavePronouns(Speech bl, string pronoun, string pronounPossessive)
+        private void AssertBodyLanguageDoesNotHavePronouns(SpeechComponent bl, string pronoun, string pronounPossessive)
         {
             Assert.False(bl.Posture.Current.Contains(pronoun) || bl.Posture.Current.Contains(pronounPossessive));
             Assert.False(bl.Stance.Current.Contains(pronoun) || bl.Stance.Current.Contains(pronounPossessive));

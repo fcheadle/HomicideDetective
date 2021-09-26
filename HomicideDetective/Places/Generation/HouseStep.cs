@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GoRogue;
 using GoRogue.MapGeneration;
+using HomicideDetective.Words;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Integration.FieldOfView.Memory;
@@ -28,8 +29,8 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
-                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Strings.GridViewTag);
-            var block = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), Strings.RegionCollectionTag);
+                (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Constants.GridViewTag);
+            var block = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), Constants.RegionCollectionTag);
             
             int houseSize = (_horizontalRooms + 1) * _sideLength;
             var start = (5, map.Height - 5);

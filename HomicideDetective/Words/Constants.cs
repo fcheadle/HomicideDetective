@@ -1,39 +1,32 @@
-namespace HomicideDetective
+namespace HomicideDetective.Words
 {
-    public static class Strings
+    public static class Constants
     {
-        #region generation strings
-        public static readonly string RegionCollectionTag = "regions";
-        public static readonly string GridViewTag = "map";
-        public static readonly string WindyPlainsTag = "plains";
-        public static readonly string BodyOfWaterTag = "pond";
+        #region component tags
+        //people
+        public const string MemoryComponentTag = "Memories";
+        public const string FingerprintComponentTag = "Memories";
+        public const string SpeechComponentTag = "Memories";
+        
+        //places
+        public const string RegionCollectionTag = "RegionCollection";
+        public const string GridViewTag = "Map";
+        public const string WindyPlainsTag = "WindyPlains";
+        public const string BodyOfWaterTag = "BodyOfWater";
+        public const string PlaceCollectionTag = "PlaceCollection";
+        public const string SubstantiveTag = "Info";
+        public const string WeatherTag = "Weather";
         #endregion
-        
+
         #region people strings
-        public static readonly string MaleGenderName = "male";
-        public static readonly string MalePronoun = "he";
-        public static readonly string MalePronounPossessive = "his";
-        public static readonly string MalePronounPassive = "him";
-        public static readonly string MaleAdultNoun = "man";
-        public static readonly string MaleChildNoun = "boy";
-
-        public static readonly string FemaleGenderName = "female";
-        public static readonly string FemalePronoun = "she";
-        public static readonly string FemalePronounPossessive = "her";
-        public static readonly string FemalePronounPassive = "her";
-        public static readonly string FemaleAdultNoun = "woman";
-        public static readonly string FemaleChildNoun = "girl";
-
-        public static readonly string NonBinaryGenderName = "intersex";
-        public static readonly string NonBinaryPronoun = "they";
-        public static readonly string NonBinaryPronounPossessive = "their";
-        public static readonly string NonBinaryPronounPassive = "them";
-        public static readonly string NonBinaryAdultNoun = "person";
-        public static readonly string NonBinaryChildNoun = "child";  
-        
-        public static readonly string NonGenderedPronoun = "it";
-        public static readonly string NonGenderedPronounPossessive = "it's";
-        public static readonly string NonGenderedPronounPassive = "that";
+        public static readonly Noun MaleNouns = new Noun("man", "men");
+        public static readonly Noun FemaleNouns = new Noun("woman", "women");
+        public static readonly Noun ChildNouns = new Noun("child", "children");
+        public static readonly Noun GenderNeutralNouns = new Noun("person", "people");
+        public static readonly Pronoun MalePronouns = new Pronoun("he", "him", "his", "himself");
+        public static readonly Pronoun FemalePronouns = new Pronoun("she", "her", "her", "herself");
+        public static readonly Pronoun GenderNeutralPronouns = new Pronoun("they", "them", "their", "themself");
+        public static readonly Pronoun ItemPronouns = new Pronoun("it", "that", "that's", "itself");
 
         public static readonly string[] FemaleGivenNames = new[]
         {
@@ -124,5 +117,6 @@ namespace HomicideDetective
         #region speech strings
 
         #endregion
+
     }
 }

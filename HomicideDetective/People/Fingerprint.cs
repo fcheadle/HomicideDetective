@@ -16,6 +16,7 @@ namespace HomicideDetective.People
     /// </remarks>
     public class Fingerprint : Marking
     {
+        public int Seed => _seed;
         private int _seed;
         private const int _width = 64;
         private const int _height = 64;
