@@ -70,6 +70,7 @@ namespace HomicideDetective.UserInterface
             caseDetails.Append($"{victim.Pronouns.Possessive} friends mourn for {victim.Pronouns.Objective}. ");
             caseDetails.Append($"Perhaps you should ask {victim.Pronouns.Possessive} family and coworkers for clues.\r\n");
             MessageWindow.Write(caseDetails.ToString());
+            PlayerCharacter.Position = (0, 0);
         }
 
         public override bool ProcessKeyboard(Keyboard keyboard)
@@ -154,9 +155,9 @@ namespace HomicideDetective.UserInterface
             Map.AddEntity(player);
             Map.DefaultRenderer?.SadComponents.Add(new SurfaceComponentFollowTarget { Target = player });
 
-            player.PositionChanged += ProcessUnitOfTime;
             player.PositionChanged += (s,e) =>
             {
+                ProcessUnitOfTime(s,e);
                 Mystery.CurrentLocation.PlayerFOV.Calculate(PlayerCharacter.Position, 12, Mystery.CurrentLocation.DistanceMeasurement);
             };
 
@@ -176,14 +177,17 @@ namespace HomicideDetective.UserInterface
         public static void ProcessUnitOfTime(object? sender, ValueChangedEventArgs<Point> valueChangedEventArgs)
         {
             var game = Program.CurrentGame;
-            var date = game.CurrentTime + TimeSpan.FromSeconds(5);
-            game._currentDay = date.Day;
-            game._currentHour = date.Hour;
-            game._currentMinute = date.Minute;
-            game._currentMonth = date.Month;
-            game._currentYear = date.Year;
-            game._currentSeconds = date.Second;
-            //todo
+            if (game is not null)
+            {
+                var date = game.CurrentTime + TimeSpan.FromSeconds(5);
+                game._currentDay = date.Day;
+                game._currentHour = date.Hour;
+                game._currentMinute = date.Minute;
+                game._currentMonth = date.Month;
+                game._currentYear = date.Year;
+                game._currentSeconds = date.Second;
+                //todo
+            }
         }
 
         public void NextMap()
