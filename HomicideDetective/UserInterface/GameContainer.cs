@@ -65,10 +65,12 @@ namespace HomicideDetective.UserInterface
             var victim = Mystery.Victim!.GoRogueComponents.GetFirst<Substantive>();
             var caseDetails = new StringBuilder($"{CurrentTime}\r\n");
             caseDetails.Append($"The Mystery of {victim.Name}\r\n");
-            caseDetails.Append($"{victim.Name} was found dead at {Mystery.SceneOfCrimeInfo!.Name}. ");
+            caseDetails.Append($"{victim.Name} was found dead at {victim.Pronouns.Possessive} home. ");
             caseDetails.Append($"{Mystery.SceneOfCrimeInfo.Description}\r\n");
             caseDetails.Append($"{victim.Pronouns.Possessive} friends mourn for {victim.Pronouns.Objective}. ");
             caseDetails.Append($"Perhaps you should ask {victim.Pronouns.Possessive} family and coworkers for clues.\r\n");
+            caseDetails.Append("\r\n");
+            caseDetails.Append(DefaultContext.ToString());
             MessageWindow.Write(caseDetails.ToString());
             PlayerCharacter.Position = (0, 0);
         }

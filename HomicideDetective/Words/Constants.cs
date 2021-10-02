@@ -1,3 +1,5 @@
+using SadRogue.Primitives;
+
 namespace HomicideDetective.Words
 {
     public static class Constants
@@ -16,6 +18,7 @@ namespace HomicideDetective.Words
         public const string PlaceCollectionTag = "PlaceCollection";
         public const string SubstantiveTag = "Info";
         public const string WeatherTag = "Weather";
+
         #endregion
 
         #region people strings
@@ -112,6 +115,44 @@ namespace HomicideDetective.Words
             "Williams", "Wojak", "Winston", "Winchester", "Walton", "White",
             "Yang", "Yellow", 
         };
+        #endregion
+
+        #region specific substantives
+        public const string ParkName = "Butterfly Park";
+        public const string ParkDescription = "a popular place among the locals";
+        public static readonly Noun ParkNouns = new Noun("park", "parks");
+        public static Substantive ParkSubstantive => new Substantive(SubstantiveTypes.Place, ParkName,
+            ParkDescription, ParkNouns, ItemPronouns, new PhysicalProperties(0, 0));
+
+        public const string PondName = "Clark's Pond";
+        public const string PondDescription = "a popular spot for locals to come and watch the waves go by";
+        public static readonly Noun PondNouns = new Noun("pond", "ponds");
+        public static Substantive PondSubstantive => new(SubstantiveTypes.Place, PondName, PondDescription, PondNouns,
+            ItemPronouns, new PhysicalProperties(0, 0));
+
+        public const string BlockDescription = "a quiet residential block";
+        public static readonly Noun BlockNouns = new Noun("block", "blocks");
+
+        public const string StreetDescription = "a busy street";
+        public static readonly Noun StreetNouns = new ("street", "streets");
+
+        public const string HouseDescription = "a house in a neighborhood";
+        public static readonly Noun HouseNouns = new("house", "houses");
+
+        public static readonly Noun RoomNouns = new("room", "rooms");
+        public static Substantive RoomSubstantive => new(SubstantiveTypes.Place, "room", "a room in a building",
+            RoomNouns, ItemPronouns, new PhysicalProperties(0, 0));
+
+        public static readonly Noun HallNouns = new("hall", "halls");
+
+        public static Substantive HallSubstantive => new(SubstantiveTypes.Place, "hall", "a hall in a building",
+            HallNouns, ItemPronouns, new PhysicalProperties(0, 0));
+
+        public const string DownTownDescription = "A lively place where people come to shop";
+        public static readonly Noun DownTownNouns = new Noun("downtown area", "downtown areas");
+
+        public static readonly Noun ShopNouns = new("shop", "shops");
+
         #endregion
 
         #region speech strings

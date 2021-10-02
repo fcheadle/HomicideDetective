@@ -7,9 +7,9 @@ namespace HomicideDetective.Places
     public class PlaceCollection : List<Place>
     {
         public IEnumerable<Place> GetPlacesContaining(Point point) 
-            => this.Where(place => place.Area.Points.Contains(point));
+            => this.Where(place => place.Area.InnerPoints.Contains(point));
 
         public bool Contains(Point point) 
-            => this.Any(place => place.Area.Points.Contains(point));
+            => this.Any(place => place.Area.InnerPoints.Contains(point));
     }
 }

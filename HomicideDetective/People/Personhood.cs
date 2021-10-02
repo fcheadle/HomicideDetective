@@ -15,11 +15,16 @@ namespace HomicideDetective.People
     /// </summary>
     public class Personhood : ParentAwareComponentBase<RogueLikeEntity>, ISubstantive
     {
-        public string Name { get; set; }
-        public string Description { get; }
-        public PhysicalProperties Properties { get; }
-        public Noun Nouns { get; }
-        public Pronoun Pronouns { get; }
+        public string Name
+        {
+            get => _substantive.Name;
+            set => _substantive.Name = value;
+        }
+
+        public string Description => _substantive.Description;
+        public PhysicalProperties Properties => _substantive.Properties;
+        public Noun Nouns => _substantive.Nouns;
+        public Pronoun Pronouns => _substantive.Pronouns;
         public Verb? UsageVerb => null;
         public Fingerprint Fingerprint { get; }
         public List<string> Details { get; }
@@ -32,26 +37,29 @@ namespace HomicideDetective.People
         public Occupations Occupation { get; }
         private bool _hasIntroduced;
         private bool _hasToldAboutSelf;
+        private readonly Substantive _substantive;
         
-        public Personhood(string name, string description, int age, Occupations occupation, PhysicalProperties properties, Noun nouns, Pronoun pronouns)
+        public Personhood(string name, string description, int age, Occupations occupation, Noun nouns, Pronoun pronouns, PhysicalProperties properties)
+            : this(new Substantive(SubstantiveTypes.Person, name, description, nouns, pronouns, properties), age, occupation) { }
+
+        public Personhood(Substantive info, int age, Occupations occupation)
         {
+            _substantive = info;
             Age = age;
-            AgeCategory = (AgeCategory) Age;
-            Name = name;
-            Description = description;
+            AgeCategory = (AgeCategory)age;
             Occupation = occupation;
-            Properties = properties;
-            Nouns = nouns;
-            Pronouns = pronouns;
             Details = new List<string>();
             Memories = new Memories();
             Speech = new SpeechComponent(Pronouns);
             Markings = new MarkingCollection();
-            Fingerprint = new Fingerprint(Properties.Mass + Properties.Volume + age);//todo - how likely are collisions?
+            Fingerprint = new Fingerprint(Properties.Mass + Properties.Volume + age);
         }
+        
         public string GetPrintableString()
         {
-            var noun = !_hasIntroduced ? "a " + Nouns.Singular : Name;
+            var description = Properties.GetPrintableString();
+            description = description.Length == 0 ? "a " + Nouns.Singular : $"a {description} {Nouns.Singular}";
+            var noun = !_hasIntroduced ? description : Name;
             var answer = $"This is {noun}. {Speech.BodyLanguage()}";
             return answer;
         }

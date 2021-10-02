@@ -20,56 +20,84 @@ namespace HomicideDetective.Places.Generation
         private Color _floorSecondaryColor = Color.Red;
         private readonly Color _backgroundColor = Color.Black;
         private int _themeIndex;
-        private int _horizontalRooms = 3;
-        private int _verticalRooms = 3;
-        private int _sideLength = 7;
+        private readonly int _horizontalRooms = 3;
+        private readonly int _verticalRooms = 3;
+        private readonly int _sideLength = 7;
+        private readonly int _horizontalStreetIndex;
+        private readonly int _verticalStreetIndex;
+        private readonly List<Point> _connections = new ();
 
-        private readonly List<Point> _connections = new List<Point>();
+        public HouseStep()
+        {
+            _horizontalStreetIndex = 0;
+            _verticalStreetIndex = 0;
+        }
+        public HouseStep(int horizontalStreetIndex, int verticalStreetIndex)
+        {
+            _horizontalStreetIndex = horizontalStreetIndex;
+            _verticalStreetIndex = verticalStreetIndex;
+        }
         
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
                 (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Constants.GridViewTag);
-            var block = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), Constants.RegionCollectionTag);
+            var blockArea = PolygonArea.Rectangle(new Rectangle((0, 0), (context.Width, context.Height)));
+            var blockName = $"{_horizontalStreetIndex}00 block {(RoadNames)_verticalStreetIndex} street";
+            var block = context.GetFirstOrNew(
+                () => new Place(blockArea, blockName, Constants.BlockDescription, Constants.BlockNouns,
+                    Constants.ItemPronouns, new PhysicalProperties(0, 0)), Constants.RegionCollectionTag);
             
             int houseSize = (_horizontalRooms + 1) * _sideLength;
-            var start = (5, map.Height - 5);
-            var side = map.Width / 2;
-            var overallPlot = new Region("total house area", NorthWest(start, side), NorthEast(start, side), SouthEast(start, side), start);
-            for (int j = map.Height - 5; j > houseSize / 2; j -= houseSize) 
+            bool top = false;
+            for (int j = map.Height - 5; j > houseSize / 2; j -= houseSize)
             {
-                for (int i = map.Height - j; i < map.Width - houseSize * 1.25; i += houseSize)
+                int addressOffset = 5;
+                for (int i = map.Height - j; i < map.Width - houseSize /* * 1.25*/; i += houseSize)
                 {
-                    if(overallPlot.Contains((i,j)))
-                    {
-                        SwitchColorTheme();
-                        var bottomLeft = (i, j);
-                        foreach (Region plot in CreateParallelogramHouse(bottomLeft))
-                        {
-                            block.AddSubRegion(plot);
-                            foreach (var region in plot.SubRegions)
-                            {
-                                DrawRegion(region, map);
-                                yield return null;
-                            }
-                        }
-
-                        foreach (var point in _connections)
-                            if (map.Contains(point))
-                                map[point] = Door(point);
-
-                        _connections.Clear();
-                    }
+                    var address = ChooseAddress(addressOffset, top);
+                    var house = CreateAndDrawHouse(i, j, address, map);
+                    block.AddSubRegion(house);
+                    addressOffset += 2;
+                    yield return null;
                 }
+                top = !top;
             }
             
             MapGen.Finalize(map);
         }
-        private IEnumerable<Region> CreateParallelogramHouse(Point bottomLeft)
+
+        private string ChooseAddress(int addressOffset, bool top)
         {
-            var house = new Region($"house {bottomLeft}", NorthWest(bottomLeft, _sideLength * 3),
-                NorthEast(bottomLeft, _sideLength * 3), SouthEast(bottomLeft, _sideLength * 3),
-                bottomLeft);
+            var offset = addressOffset < 10 ? $"{_horizontalStreetIndex}0{addressOffset}" : $"{_horizontalStreetIndex}{addressOffset}";
+            string street;
+            if (top)
+                street = $"{(RoadNames)_verticalStreetIndex} street";
+            else
+                street = $"{(RoadNames)(_verticalStreetIndex + 1)} street";
+            return $"{offset} {street}";
+        }
+
+        private Place CreateAndDrawHouse(int x, int y, string address, ISettableGridView<MemoryAwareRogueLikeCell> map)
+        {                    
+            SwitchColorTheme();
+            var house = CreateParallelogramHouse((x,y), address);
+            foreach(var room in house.SubAreas)
+                DrawRegion((Place)room, map);//safe for me
+
+            foreach (var point in _connections)
+                if (map.Contains(point))
+                    map[point] = Door(point);
+
+            _connections.Clear();
+            return house;
+        }
+
+        private Place CreateParallelogramHouse(Point bottomLeft, string name)
+        {
+            var house = new Place(PolygonArea.Parallelogram(bottomLeft, _sideLength * 3, _sideLength * 3), name,
+                Constants.HouseDescription, MapGen.HouseNouns(bottomLeft.X + bottomLeft.Y), Constants.ItemPronouns, new PhysicalProperties(0, 0));
+
             for (int i = 0; i < _horizontalRooms; i++)
             {
                 for (int j = 0; j < _verticalRooms; j++)
@@ -77,17 +105,10 @@ namespace HomicideDetective.Places.Generation
                     int x = bottomLeft.X + j * _sideLength + i * _sideLength;
                     int y = bottomLeft.Y - j * _sideLength;
                     Point southWest = (x, y);
-                    var region = new Region($"room of house {southWest}", NorthWest(southWest, _sideLength),
-                        NorthEast(southWest, _sideLength), SouthEast(southWest, _sideLength),
-                        southWest);
-                    house.AddSubRegion(region);
-
-                    if (j == 0)
-                        region.AddConnection(MapGen.MiddlePoint(region.NorthBoundary));
-                    else if (j == 2)
-                        region.AddConnection(MapGen.MiddlePoint(region.SouthBoundary));
-                    else if (j == 1 && i == 1)
-                        MapGen.ConnectAllSides(region);
+                    var region = PolygonArea.Parallelogram(southWest, _sideLength, _sideLength);
+                    var room = new Place(region, Constants.RoomSubstantive);
+                    house.AddSubRegion(room);
+                    ConnectOnAllSides(room);
                 }
             }
             
@@ -95,43 +116,49 @@ namespace HomicideDetective.Places.Generation
             CreateEatingSpaces(house);
             CreateBathroom(house);
             TrimUnusedRooms(house);
-            yield return house;
+            return house;
         }
 
-        private void CreateBathroom(Region house)
+        private void ConnectOnAllSides(Place room)
         {
-            var hall = house.SubRegions.First(r => r.Name == "hall");
-            var bathroom = house.SubRegions.RandomItem(r => r.Name != "hall" && r.Name != "dining" && r.Name != "kitchen" && hall.OuterPoints.Count(r.Contains) > 3);
+            foreach(var boundary in room.Area.OuterPoints.SubAreas)
+                room.AddConnection(boundary[boundary.Count / 2]);
+        }
+
+        private void CreateBathroom(Place house)
+        {
+            var bathroom = house.SubAreas.RandomItem(r => r.Name != "hall" && r.Name != "dining" && r.Name != "kitchen");
             bathroom.Name = "bathroom";
         }
 
-        private void TrimUnusedRooms(Region house)
+        private void TrimUnusedRooms(Place house)
         {
-            var hall = house.SubRegions.First(r => r.Name == "hall");
-            var kitchen = house.SubRegions.First(r => r.Name == "kitchen");
-            var dining  = house.SubRegions.First(r => r.Name == "dining");
-            var regionsToLose = house.SubRegions.Where(reg =>
-                hall.OuterPoints.Count(reg.Contains) + kitchen.OuterPoints.Count(reg.Contains) +
-                dining.OuterPoints.Count(reg.Contains) < 3).ToList();
+            var hall = house.SubAreas.First(r => r.Name == "hall");
+            var kitchen = house.SubAreas.First(r => r.Name == "kitchen");
+            var dining  = house.SubAreas.First(r => r.Name == "dining");
+            var regionsToLose = house.SubAreas.Where(reg =>
+                hall.Area.OuterPoints.Count(reg.Area.Contains) + kitchen.Area.OuterPoints.Count(reg.Area.Contains) +
+                dining.Area.OuterPoints.Count(reg.Area.Contains) < 3).ToList();
             foreach(var room in regionsToLose)
-                house.RemoveSubRegion(room.Name);
+                house.RemoveSubRegion(room);
         }
 
-        private void CreateEatingSpaces(Region house)
+        private void CreateEatingSpaces(Place house)
         {
-            var hall = house.SubRegions.First(r => r.Name == "hall");
-            var kitchen = house.SubRegions.RandomItem(r => r.Name != "hall"  && hall.OuterPoints.Count(r.Contains) > 3);
+            var hall = house.SubAreas.First(r => r.Name == "hall");
+            var kitchen = house.SubAreas.RandomItem(r => r.Name != "hall"  && hall.Area.OuterPoints.Count(r.Area.Contains) > 3);
             kitchen.Name = "kitchen";
+            kitchen.Description = "A room used for preparing food";
             
-            var dining = house.SubRegions.RandomItem(r => r.Name != "hall" && r.Name != "kitchen" && r.OuterPoints.Where(kitchen.Contains).Count() > 2);
+            var dining = house.SubAreas.RandomItem(r => r.Name != "hall" && r.Name != "kitchen" && kitchen.Area.OuterPoints.Count(r.Area.Contains) > 3);
             dining.Name = "dining";
             ConnectRooms(kitchen, dining);
         }
-        private void ConnectRooms(Region one, Region other)
+        private void ConnectRooms(Place one, Place other)
         {
-            var overlapping = one.OuterPoints.Where(p =>
-                other.OuterPoints.Contains(p) && !IsCorner(other, p) &&
-                !IsCorner(one, p)).ToList();
+            var overlapping = one.Area.OuterPoints.Where(p =>
+                other.Area.OuterPoints.Contains(p) && !other.Area.Corners.Contains(p) &&
+                !one.Area.Corners.Contains(p)).ToList();
 
             if(overlapping.Any())
             {
@@ -140,94 +167,51 @@ namespace HomicideDetective.Places.Generation
                 other.AddConnection(connectingPoint);
             }
         }
-        private bool IsCorner(Region region, Point point)
-        {
-            return point == region.NorthEastCorner || point == region.NorthWestCorner ||
-                   point == region.SouthEastCorner || point == region.SouthWestCorner;
-        }
-        private void CreateCentralHallWay(Region house)
+        
+        private void CreateCentralHallWay(Place house)
         {
             var r = new Random();
-            var chance = r.Next(1, 101);
-            Point southEast;
-            Point southwest;
-            Point northEast;
-            Point northwest;
-            Point difference;
-            
-            if (chance % 2 == 0)
-            {
-                //vertically-oriented central hall
-                difference = (_sideLength, 0);
-                chance = r.Next(1, 101);
-                switch (chance % 3)
-                {
-                    default:
-                        southEast = house.SouthEastCorner;
-                        southwest = house.SouthEastCorner - difference;
-                        northEast = house.NorthEastCorner;
-                        northwest = house.NorthEastCorner - difference;
-                        break;
-                    case 1:
-                        southEast = house.SouthWestCorner + difference;
-                        southwest = house.SouthWestCorner;
-                        northEast = house.NorthWestCorner + difference;
-                        northwest = house.NorthWestCorner;
-                        break;
-                    case 2:
-                        southEast = house.SouthEastCorner - difference;
-                        southwest = house.SouthWestCorner + difference;
-                        northEast = house.NorthEastCorner - difference;
-                        northwest = house.NorthWestCorner + difference;
-                        break;
-                }
-            }
-            else
-            {
-                //horizontally-aligned central hall
-                chance = r.Next(1, 101);
-                difference = (-_sideLength, _sideLength);
-                switch (chance % 3)
-                {
-                    default:
-                        southEast = house.SouthEastCorner;
-                        southwest = house.SouthWestCorner;
-                        northEast = house.SouthEastCorner - difference;
-                        northwest = house.SouthWestCorner - difference;
-                        break;
-                    case 1:
-                        southEast = house.SouthEastCorner - difference;
-                        southwest = house.SouthWestCorner - difference;
-                        northEast = house.NorthEastCorner + difference;
-                        northwest = house.NorthWestCorner + difference;
-                        break;
-                    case 2:
-                        southEast = house.NorthEastCorner + difference;
-                        southwest = house.NorthWestCorner + difference;
-                        northEast = house.SouthEastCorner - difference;
-                        northwest = house.SouthWestCorner - difference;
-                        break;
-                }
-            }
-            
-            var region = new Region("hall", northwest, northEast, southEast, southwest);
-            house.AddSubRegion(region);
+            Point southwest = (house.Area.Left, house.Area.Bottom);
+            int width = _sideLength;
+            int height = _sideLength;
+            Point offset;
 
-            var regionsToLose = house.SubRegions.Where(reg => region.InnerPoints.Contains(reg.InnerPoints) && region != reg).ToList();
-            foreach(var reg in regionsToLose)
-                house.RemoveSubRegion(reg.Name);
+            var chance = r.Next(1, 101);
+            if (chance % 2 == 0) //vertically-oriented central hall
+            {
+                width *= 3;
+                offset = (_sideLength, 0);
+            }
+
+            else //horizontally-aligned central hall
+            {
+                height *= 3;
+                offset = (_sideLength, -_sideLength);
+            }
             
-            MapGen.ConnectAllSides(region);
+            chance = r.Next(3);
+            southwest += offset * chance;
+
+            var region = PolygonArea.Parallelogram(southwest, width, height);
+            var hallway = Constants.HallSubstantive;
+            var place = new Place(region, hallway);
+            house.AddSubRegion(place);
+
+            var regionsToLose = house.SubAreas.Where(reg => region.InnerPoints.Contains(reg.Area.InnerPoints) && place != reg).ToList();
+            foreach(var reg in regionsToLose)
+                house.RemoveSubRegion(reg);
+            
+            ConnectOnAllSides(place);
         }
-        private void DrawRegion(Region region, ISettableGridView<MemoryAwareRogueLikeCell> map)
+        private void DrawRegion(Place region, ISettableGridView<MemoryAwareRogueLikeCell> map)
         {
             bool isEatingSpace = region.Name == "kitchen" || region.Name == "dining";
             bool isBathroom = region.Name == "bathroom";
             
-            foreach (var point in region.InnerPoints.Where(map.Contains))
+            foreach (var point in region.Area.InnerPoints.Where(map.Contains))
                 map[point] = isEatingSpace ? KitchenFloor(point) : isBathroom ? BathroomFloor(point) : Floor(point);
             
-            foreach (var point in region.OuterPoints.Where(map.Contains))
+            foreach (var point in region.Area.OuterPoints.Where(map.Contains))
                 map[point] = Wall(point);
 
             foreach (var point in region.Connections)
@@ -269,13 +253,15 @@ namespace HomicideDetective.Places.Generation
             _floorPrimaryColor = Color.DarkGoldenrod;
             _floorSecondaryColor = Color.DarkGray;
         }
-        private MemoryAwareRogueLikeCell Wall(Point point) => new MemoryAwareRogueLikeCell(point, _wallColor, _backgroundColor, _wallGlyph, 0, false, false);
-        private MemoryAwareRogueLikeCell Floor(Point point) => new MemoryAwareRogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, _floorPrimaryGlyph, 0);
-        private MemoryAwareRogueLikeCell KitchenFloor(Point point) => new MemoryAwareRogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, '+', 0);
-        private MemoryAwareRogueLikeCell Door(Point point) => new MemoryAwareRogueLikeCell(point, _wallColor, _backgroundColor, _doorGlyph, 0, true, false);
-        private MemoryAwareRogueLikeCell BathroomFloor(Point point) => new MemoryAwareRogueLikeCell(point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, 4, 0);
-        private Point NorthEast(Point bottomLeft, int lengthOfSide) => bottomLeft + (lengthOfSide * 2, -lengthOfSide); 
-        private Point NorthWest(Point bottomLeft, int lengthOfSide) => bottomLeft + (lengthOfSide, -lengthOfSide); 
-        private Point SouthEast(Point bottomLeft, int lengthOfSide) => bottomLeft + (lengthOfSide, 0);
+        private MemoryAwareRogueLikeCell Wall(Point point) 
+            => new (point, _wallColor, _backgroundColor, _wallGlyph, 0, false, false);
+        private MemoryAwareRogueLikeCell Floor(Point point) 
+            => new (point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, _floorPrimaryGlyph, 0);
+        private MemoryAwareRogueLikeCell KitchenFloor(Point point) 
+            => new (point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, '+', 0);
+        private MemoryAwareRogueLikeCell Door(Point point) 
+            => new (point, _wallColor, _backgroundColor, _doorGlyph, 0, true, false);
+        private MemoryAwareRogueLikeCell BathroomFloor(Point point) 
+            => new (point, (point.X + point.Y) % 2 == 1 ? _floorPrimaryColor : _floorSecondaryColor, _backgroundColor, 4, 0);
     }
 }

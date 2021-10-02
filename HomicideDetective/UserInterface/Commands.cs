@@ -80,37 +80,41 @@ namespace HomicideDetective.UserInterface
         #endregion
         public static void LookAround()
         {
-            var place = Mystery.CurrentPlaceInfo(Player.Position);
-            var contents = place.Name;
-            contents += "\r\n";
-            contents += place.Description;
-            contents += "\r\n";
+            var contents = new StringBuilder();
+            var description = "";
+            foreach (var place in Mystery.CurrentPlaceInfo(Player.Position))
+            {
+                contents.Append($"{place.Name}, ");
+                description = place.Description;
+            }
+            
+            contents.Append("\r\n");
+            contents.Append(description);
+            contents.Append("\r\n");
             var entitiesVisible = new List<RogueLikeEntity>();
             foreach (var point in Mystery.CurrentLocation!.PlayerFOV.CurrentFOV)
-            {
                 if (point != Player.Position)
-                {
                     entitiesVisible.AddRange(Map.GetEntitiesAt<RogueLikeEntity>(point));
-                }
-            }
+            
+            
             
             if(entitiesVisible.Any())
             {
                 foreach(var entity in entitiesVisible)
                 {
-                    contents += " I see";
+                    contents.Append(" I see");
                     var subs = entity.AllComponents.GetFirstOrDefault<ISubstantive>(); 
                     if (subs != null)
-                        contents += $" {subs.Name}\r\n {subs.Description}.\r\n";
+                        contents.Append($" {subs.Name}\r\n {subs.Description}.\r\n");
                 }
             }
 
             else
             {
-                contents += " There are no people nor items in sight.";
+                contents.Append(" There are no people nor items in sight.");
             }
             
-            MessageWindow.Write(contents);
+            MessageWindow.Write(contents.ToString());
         }
 
         public static void LookAt(Point position)
@@ -165,17 +169,7 @@ namespace HomicideDetective.UserInterface
         {
             var game = Program.CurrentGame;
             var keybindings = game.Commands;
-            
-            string help = "";
-            foreach (var command in keybindings)
-            {
-                var keyString = command.Key.ToString();
-                if (keyString.Contains("OemQuestion"))
-                    keyString = "?";
-                help += $"{keyString}: {command.Name}\r\n";
-            }
-
-            MessageWindow.Write(help);
+            MessageWindow.Write(keybindings.ToString());
         }
         
         
@@ -219,6 +213,5 @@ namespace HomicideDetective.UserInterface
             
             page.Write(contents);
         }
-
     }
 }

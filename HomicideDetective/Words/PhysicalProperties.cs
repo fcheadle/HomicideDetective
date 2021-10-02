@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace HomicideDetective.Words
@@ -34,9 +35,9 @@ namespace HomicideDetective.Words
             if(AgeAdjective != null) sb.Append($"{AgeAdjective} ");
             if(ShapeAdjective != null) sb.Append($"{ShapeAdjective} ");
             if(ColorAdjective != null) sb.Append($"{ColorAdjective} ");
-            if(ProperAdjective != null) sb.Append($"{ProperAdjective} ");
-            
-            return sb.ToString();
+            if(ProperAdjective != null) sb.Append($"{ProperAdjective}");
+            var answer = sb.ToString();
+            return answer.Trim();
         }
     }
 }

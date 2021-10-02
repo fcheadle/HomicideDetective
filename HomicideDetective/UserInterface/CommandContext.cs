@@ -52,5 +52,20 @@ namespace HomicideDetective.UserInterface
             };
             return new CommandContext(commands);
         }
+
+        public override string ToString()
+        {
+            string help = "";
+            
+            foreach (var command in Commands)
+            {
+                var keyString = command.Key.ToString();
+                if (keyString.Contains("OemQuestion"))
+                    keyString = "?";
+                help += $"{keyString}: {command.Name}\r\n";
+            }
+
+            return help;
+        }
     }
 }

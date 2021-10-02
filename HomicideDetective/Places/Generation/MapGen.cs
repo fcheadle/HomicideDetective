@@ -44,27 +44,8 @@ namespace HomicideDetective.Places.Generation
 
             return map;
         }
-
-                private static RogueLikeMap PlaceRegions(RogueLikeMap map)
-        {
-            var regionMap = map.AllComponents.GetFirst<Region>(Constants.RegionCollectionTag);
-            regionMap.DistinguishSubRegions();//todo - test
-            var places = new PlaceCollection();
-            foreach (var region in regionMap.SubRegions)
-            {
-                var info = GeneratePlaceInfo(region);
-                places.Add(new Place(region, info));
-                foreach (var subRegion in region.SubRegions)
-                {
-                    info = GeneratePlaceInfo(subRegion);
-                    places.Add(new Place(subRegion,  info));
-                }
-            }
-
-            map.AllComponents.Add(places, Constants.PlaceCollectionTag);
-            return map;
-        }
-        private static Noun HouseNouns(int seed)
+        
+        public static Noun HouseNouns(int seed)
         {
             var type = RandomHouseType(seed);
             return new Noun(type, type + "s");//for now
@@ -149,26 +130,29 @@ namespace HomicideDetective.Places.Generation
         #endregion
         
         #region create-maps
-        public static RogueLikeMap CreateDownTownMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
+        public static RogueLikeMap CreateDownTownMap(int seed, int mapWidth, int mapHeight, int viewWidth, int viewHeight)
         {
+            var random = new Random(seed);
+            var horiz = random.Next(Enum.GetValues<RoadNumbers>().Length - 1);
+            var vertic = random.Next(Enum.GetValues<RoadNames>().Length - 1);
+            
             var generator = new Generator(mapWidth, mapHeight)
                 .ConfigAndGenerateSafe(gen =>
                 {
                     gen.AddSteps(new GrassStep());
-                    gen.AddSteps(new StreetStep(true));
-                    gen.AddSteps(new DownTownStep());
+                    gen.AddSteps(new StreetStep(true, horiz, vertic));
+                    gen.AddSteps(new DownTownStep(horiz, vertic));
                 });
             
             var backingMap = GetMapSource(generator.Context, Constants.GridViewTag);
             var map = DrawMap(backingMap, viewWidth, viewHeight);
             map.GoRogueComponents.Add(GetPlains(generator.Context), Constants.WindyPlainsTag);
             map.GoRogueComponents.Add(GetRegions(generator.Context), Constants.RegionCollectionTag);
-            return PlaceRegions(map);
+            return map;
         }
         
         public static RogueLikeMap CreateParkMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
         {
-            
             var generator = new Generator(mapWidth, mapHeight)
                 .ConfigAndGenerateSafe(gen =>
                 {
@@ -181,24 +165,28 @@ namespace HomicideDetective.Places.Generation
             map.GoRogueComponents.Add(GetPond(generator.Context), Constants.BodyOfWaterTag);
             map.GoRogueComponents.Add(GetPlains(generator.Context), Constants.WindyPlainsTag);
             map.GoRogueComponents.Add(GetRegions(generator.Context), Constants.RegionCollectionTag);
-            return PlaceRegions(map);
+            return map;
         }
         
-        public static RogueLikeMap CreateNeighborhoodMap(int mapWidth, int mapHeight, int viewWidth, int viewHeight)
+        public static RogueLikeMap CreateNeighborhoodMap(int seed, int mapWidth, int mapHeight, int viewWidth, int viewHeight)
         {
+            var random = new Random(seed);
+            var horiz = random.Next(Enum.GetValues<RoadNumbers>().Length);
+            var vertic = random.Next(Enum.GetValues<RoadNames>().Length);
             var generator = new Generator(mapWidth, mapHeight)
                 .ConfigAndGenerateSafe(gen =>
                 {
                     gen.AddSteps(new GrassStep());
-                    gen.AddSteps(new StreetStep());
-                    gen.AddSteps(new HouseStep());
+                    gen.AddSteps(new StreetStep(false, horiz, vertic));
+                    gen.AddSteps(new HouseStep(horiz, vertic));
                 });
             
             var backingMap = GetMapSource(generator.Context, Constants.GridViewTag);
             var map = DrawMap(backingMap, viewWidth, viewHeight);
             map.GoRogueComponents.Add(GetPlains(generator.Context), Constants.WindyPlainsTag);
             map.GoRogueComponents.Add(GetRegions(generator.Context), Constants.RegionCollectionTag);
-            return PlaceRegions(map);
+            return map;
+            // return PlaceRegions(map);
         }
         #endregion
         
@@ -210,22 +198,6 @@ namespace HomicideDetective.Places.Generation
             var width = rand.Next(16, 32);
             var height = rand.Next(16, 32);
             return new PhysicalProperties(-1, width * height * 1000, RandomHouseWidth(rand.Next()), RandomHouseHeight(rand.Next()));
-        }
-        internal static Region Parallelogram(int left, int bottom, int width, int height)
-        {
-            Point nw = (left + height, bottom - height);
-            Point ne = (left + height + width, bottom - height);
-            Point se = (left + width, bottom);
-            Point sw = (left, bottom);
-            return new Region("parallelogram", nw, ne, se, sw);
-        }
-        
-        internal static void ConnectAllSides(Region region)
-        {
-            region.AddConnection(MiddlePoint(region.WestBoundary));
-            region.AddConnection(MiddlePoint(region.EastBoundary));
-            region.AddConnection(MiddlePoint(region.NorthBoundary));
-            region.AddConnection(MiddlePoint(region.SouthBoundary));
         }
         internal static Point MiddlePoint(IReadOnlyArea area) => area[area.Count() / 2];
         
@@ -247,117 +219,6 @@ namespace HomicideDetective.Places.Generation
             }
         }
         
-        
-        public static void ConnectOnLeftSide(Region plot)
-            => plot.AddConnection(MiddlePoint(plot.WestBoundary));
-        
-        public static void ConnectOnRightSide(Region plot)
-            => plot.AddConnection(MiddlePoint(plot.EastBoundary));
-
-        public static void ConnectOnTopSide(Region plot)
-            => plot.AddConnection(MiddlePoint(plot.NorthBoundary));
-
-        public static void ConnectOnBottomSide(Region plot)
-            => plot.AddConnection(MiddlePoint(plot.SouthBoundary));
-
-        public static Region BaseRegion(string name, int width, int height)
-            => new Region(name, (0, 0), (width, 0), (width, height), (0, height));
         #endregion
-        
-
-        public static Substantive GeneratePlaceInfo(Region region)
-        {
-            string name = region.Name; 
-            string description;
-            string detail;
-            Noun nouns;
-            Pronoun pronouns = Constants.ItemPronouns;
-            PhysicalProperties properties = new PhysicalProperties(-1, region.Width * region.Height * 100);
-            
-            if (region.Name.Contains("hall"))
-            {
-                nouns = new Noun("hallway", "hallways");
-                description = "This central corridor connects many rooms.";
-                detail = "It is immaculately clean.";
-            }
-            else if (region.Name.Contains("kitchen"))
-            {
-                nouns = new Noun("kitchen", "kitchens");
-                description = "This room is used to prepare food.";
-                detail = "It has a patterned floor and granite countertops.";
-            }
-            else if (region.Name.Contains("dining"))
-            {
-                name = "dining room";
-                nouns = new Noun("dining room", "dining rooms");
-                description = "This room is for eating meals.";
-                detail = "It is dominated by a large table and chairs in the center.";
-            }
-            else if (region.Name.Contains("bedroom"))
-            {
-                nouns = new Noun("bedroom", "bedrooms");
-                description = "This is a room in which to sleep.";
-                detail = "The floor is covered in clutter.";
-            }
-            else if (region.Name.Contains("house"))
-            {
-                nouns = new Noun("house", "houses");
-                description = "This is someone's home.";
-                detail = "It is quaint, with sparse decorations.";
-            }
-            else if (region.Name.Contains("street"))
-            {
-                nouns = new Noun("street", "streets");
-                description = "This is a street in a neighborhood.";
-                detail = "It is a quiet day on this street.";
-            }
-            else if (region.Name.Contains("block"))
-            {
-                nouns = new Noun("block", "blocks");
-                description = "This is the block on which the victim lived.";
-                detail = "A moderate breeze blows through the grass.";
-            }
-            else if(region.Name.Contains("Park"))
-            {
-                nouns = new Noun("park", "parks");
-                description = "This is the park near the victim's home.";
-                detail = "According to witnesses, the victim walked through the park on the day they died.";
-            }
-            else if(region.Name.Contains("Pond"))
-            {
-                nouns = new Noun("pond", "ponds");
-                description = "This pond is a popular spot for locals to gather and watch the waves go by.";
-                detail = "The victim was often spotted here, including on the day they were murdered.";
-            }        
-            else if (region.Name.Contains("clothing"))
-            {
-                nouns = new Noun("clothing store", "clothing stores");
-                description = "This is a shop for buying clothing.";
-                detail = "It has a welcoming aura and pleasant odor.";
-            }
-            else if(region.Name.Contains("diner"))
-            {
-                nouns = new Noun("diner", "diners");
-                description = "This is a diner.";
-                detail = "It claims to have world-famous coffee and hash browns.";
-            }
-            else if(region.Name.Contains("antique"))
-            {
-                nouns = new Noun("antique store", "antique stores");
-                description = "This is an antique shop.";
-                detail = "Many of the items here are older than I am.";
-            }
-            else 
-            {
-                nouns = new Noun(name, "?");
-                description = "(description unclear)";
-                detail = "(???)";
-            }
-
-            var substantive = new Substantive(SubstantiveTypes.Place, name, description, nouns, pronouns, properties);
-
-            substantive.AddDetail(detail);
-            return substantive;
-        }
     }
 }

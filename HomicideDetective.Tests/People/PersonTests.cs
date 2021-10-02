@@ -64,7 +64,7 @@ namespace HomicideDetective.Tests.People
         };
 
         private Personhood CreateTestEntity() =>
-            new(_name, _description, 24, Occupations.Professor, _properties, _noun, _pronouns);
+            new(_name, _description, 24, Occupations.Professor, _noun, _pronouns, _properties);
         
         private void CreateTestTimeline(Personhood person)
         {

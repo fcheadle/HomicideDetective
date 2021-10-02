@@ -12,100 +12,112 @@ namespace HomicideDetective.Places.Generation
     public class StreetStep : GenerationStep
     {
         private bool _streetInMiddle;
+        private int _horizontalStreetIndex;
+        private int _verticalStreetIndex;
 
         public StreetStep()
         {
             _streetInMiddle = false;
+            _horizontalStreetIndex = 0;
+            _verticalStreetIndex = 0;
         }
-        public StreetStep(bool streetInMiddle)
+        public StreetStep(bool streetInMiddle, int horizontalRoadIndex, int verticalRoadIndex)
         {
             _streetInMiddle = streetInMiddle;
+            _horizontalStreetIndex = horizontalRoadIndex;
+            _verticalStreetIndex = verticalRoadIndex;
         }
 
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = context.GetFirstOrNew<ISettableGridView<MemoryAwareRogueLikeCell>>
                 (() => new ArrayView<MemoryAwareRogueLikeCell>(context.Width, context.Height), Constants.GridViewTag);
-            var roads = context.GetFirstOrNew(() => MapGen.BaseRegion("City Block", context.Width, context.Height), Constants.RegionCollectionTag);
+            var blockArea = PolygonArea.Rectangle(new Rectangle((0, 0), (context.Width, context.Height)));
+            var blockName = $"{_horizontalStreetIndex}00 block {(RoadNames)_verticalStreetIndex} street";
+            var roads = context.GetFirstOrNew(() => new Place(blockArea, blockName, Constants.BlockDescription, Constants.BlockNouns, Constants.ItemPronouns, new PhysicalProperties(0,0)), Constants.RegionCollectionTag);
             var random = new Random();
-            int horizontalNameIndex = random.Next(Enum.GetNames(typeof(RoadNames)).Length - 2);
-            int verticalNameIndex = random.Next(Enum.GetNames(typeof(RoadNumbers)).Length - 2);
             
             if(_streetInMiddle)
-                foreach(var region in CreateStreet(map.Width, map.Height, horizontalNameIndex, verticalNameIndex))
+                foreach(var region in CreateStreet(map.Width, map.Height, _horizontalStreetIndex, _verticalStreetIndex))
                     roads.AddSubRegion(region);
             else
-                foreach(var road in CreateBlock(map.Width, map.Height, horizontalNameIndex, verticalNameIndex)) 
+                foreach(var road in CreateBlock(map.Width, map.Height, _horizontalStreetIndex, _verticalStreetIndex)) 
                     roads.AddSubRegion(road);
             
-            foreach(var road in roads.SubRegions)
-            {
-                foreach (var point in road.Points.Where(p => map.Contains(p)))
-                {
+            foreach(var road in roads.SubAreas)
+                foreach (var point in road.Area.Where(p => map.Contains(p)))
                     map[point] = new MemoryAwareRogueLikeCell(point, Color.DarkGray, Color.Black, '.', 0);
-                }
-            }
+
 
             yield return null;
-            
-            
-            roads.AddSubRegion(new Region($"{horizontalNameIndex}00 block {verticalNameIndex} street", 
-                (0, 0), (map.Width, 0), (map.Width, map.Height), (0, map.Height)));
         }
 
-        private IEnumerable<Region> CreateStreet(int width, int height, int horizontalNameIndex, int verticalNameIndex)
+        //creates a map where the street is in the center
+        private IEnumerable<Place> CreateStreet(int width, int height, int horizontalNameIndex, int verticalNameIndex)
         {
             var equator = height / 2;
             Point nw = (-3, equator - 3);
             Point sw = (-3, equator + 3);
             Point ne = (width + 3, equator - 3);
             Point se = (width + 3, equator + 3);
-            yield return new Region($"{Enum.GetNames(typeof(RoadNames))[horizontalNameIndex]} street", nw, ne, se, sw);
-            
-            nw = (13, -10);
-            sw = (13, height + 10);
-            ne = (19, -10);
-            se = (19, height + 10);
+            var polygon = new PolygonArea(nw, ne, se, sw);
+            yield return new Place(polygon, $"{(RoadNames)horizontalNameIndex} street", Constants.StreetDescription,
+                Constants.StreetNouns, Constants.ItemPronouns, new PhysicalProperties(0, 0));
 
-            yield return new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex]} street", nw, ne, se, sw).Rotate(45);
+            var sqDiff = (int)(height / Math.Sqrt(2));
+            nw = (13, -sqDiff);
+            sw = (13, height + sqDiff);
+            ne = (19, -sqDiff);
+            se = (19, height + sqDiff);
+            polygon = new PolygonArea(nw, ne, se, sw).Rotate(45);
+            yield return new Place(polygon, $"{(RoadNumbers)verticalNameIndex} street", Constants.StreetDescription,
+                Constants.StreetNouns, Constants.ItemPronouns, new PhysicalProperties(0, 0));
             
-            nw = (width - 10, -10);
-            sw = (width - 10, height + 10);
-            ne = (width - 4 , -10);
-            se = (width - 4 , height + 10);
-
-            yield return new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex + 1]} street", nw, ne, se, sw).Rotate(45);
+            nw = (width - 10, -sqDiff);
+            sw = (width - 10, height + sqDiff);
+            ne = (width - 4 , -sqDiff);
+            se = (width - 4 , height + sqDiff);
+            polygon = new PolygonArea(nw, ne, se, sw).Rotate(45);
+            yield return new Place(polygon, $"{(RoadNumbers)(++verticalNameIndex)} street", Constants.StreetDescription,
+                Constants.StreetNouns, Constants.ItemPronouns, new PhysicalProperties(0, 0));
         }
 
-        private IEnumerable<Region> CreateBlock(int width, int height, int horizontalNameIndex, int verticalNameIndex)
+        private IEnumerable<Place> CreateBlock(int width, int height, int horizontalNameIndex, int verticalNameIndex)
         {
             //generate roads
             Point nw = (-3, -3);
             Point sw = (-3, 3);
             Point ne = (width + 3, -3);
             Point se = (width + 3, 3);
-            yield return new Region($"{Enum.GetNames(typeof(RoadNames))[horizontalNameIndex]} street", nw, ne, se, sw);
+            var polygon = new PolygonArea(nw, ne, se, sw);
+            yield return new Place(polygon, $"{(RoadNames)horizontalNameIndex} street", Constants.StreetDescription,
+                Constants.StreetNouns, Constants.ItemPronouns, new PhysicalProperties(0, 0));
+            
             
             nw = (-3, height - 3);
             sw = (-3, height + 3);
             ne = (width + 3, height - 3);
             se = (width + 3, height + 3);
-
-            yield return new Region($"{Enum.GetNames(typeof(RoadNames))[horizontalNameIndex + 1]} street", nw, ne, se, sw);
+            polygon = new PolygonArea(nw, ne, se, sw);
+            yield return new Place(polygon, $"{(RoadNames)(++horizontalNameIndex)} street", Constants.StreetDescription,
+                Constants.StreetNouns, Constants.ItemPronouns, new PhysicalProperties(0, 0));
             
-            nw = (13, -10);
-            sw = (13, height + 10);
-            ne = (19, -10);
-            se = (19, height + 10);
-
-            yield return new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex]} street", nw, ne, se, sw).Rotate(45);
+            var sqDiff = (int)(height / Math.Sqrt(2));
+            nw = (13, -sqDiff);
+            sw = (13, height + sqDiff);
+            ne = (19, -sqDiff);
+            se = (19, height + sqDiff);
+            polygon = new PolygonArea(nw, ne, se, sw).Rotate(45);
+            yield return new Place(polygon, $"{(RoadNumbers)verticalNameIndex} street", Constants.StreetDescription,
+                Constants.StreetNouns, Constants.ItemPronouns, new PhysicalProperties(0, 0));
             
-            nw = (width - 10, -10);
-            sw = (width - 10, height + 10);
-            ne = (width - 4 , -10);
-            se = (width - 4 , height + 10);
-
-            yield return new Region($"{Enum.GetNames(typeof(RoadNumbers))[verticalNameIndex + 1]} street", nw, ne, se, sw).Rotate(45);
+            nw = (width - 10, -sqDiff);
+            sw = (width - 10, height + sqDiff);
+            ne = (width - 4 , -sqDiff);
+            se = (width - 4 , height + sqDiff);
+            polygon = new PolygonArea(nw, ne, se, sw).Rotate(45);
+            yield return new Place(polygon, $"{(RoadNumbers)(++verticalNameIndex)} street", Constants.StreetDescription,
+                Constants.StreetNouns, Constants.ItemPronouns, new PhysicalProperties(0, 0));
         }
     }
     public enum RoadNames

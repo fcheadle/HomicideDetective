@@ -14,7 +14,7 @@ namespace HomicideDetective.Tests.People
         private Pronoun _pronoun = Constants.FemalePronouns;
         private PhysicalProperties _properties = new(18, 24);
 
-        private Personhood CreateTestEntity() => new (_name, _description, 26, Occupations.Professor, _properties, _noun, _pronoun);
+        private Personhood CreateTestEntity() => new (_name, _description, 26, Occupations.Professor, _noun, _pronoun, _properties);
         
         [Fact]
         public void NewSpeechComponentTest()

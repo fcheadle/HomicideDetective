@@ -12,7 +12,6 @@ namespace HomicideDetective.Tests
         public class RenderStep : IRenderStep
         {
             public uint SortOrder { get => 1; set => throw new NotImplementedException(); }
-
             public void Composing(IRenderer renderer, IScreenSurface screenObject) => throw new NotImplementedException();
             public void Dispose() => throw new NotImplementedException();
             public bool Refresh(IRenderer renderer, IScreenSurface screenObject, bool backingTextureChanged, bool isForced) => throw new NotImplementedException();
@@ -24,17 +23,10 @@ namespace HomicideDetective.Tests
         public class Texture : ITexture
         {
             private SixLabors.ImageSharp.Image _graphic;
-
             public string? ResourcePath { get; private set; }
-
             public int Height => _graphic.Height;
-
             public int Width => _graphic.Width;
-
-            public void Dispose()
-            {
-                _graphic.Dispose();
-            }
+            public void Dispose() => _graphic.Dispose();
             public Color GetPixel(Point position) => throw new NotImplementedException();
             public Color GetPixel(int index) => throw new NotImplementedException();
             public Color[] GetPixels() => throw new NotImplementedException();
@@ -55,49 +47,20 @@ namespace HomicideDetective.Tests
                 _graphic = SixLabors.ImageSharp.Image.Load(textureStream);
             }
         }
-
-
+        
         public TestHost()
         {
             Instance = this;
             LoadDefaultFonts("");
         }
 
-        public override IKeyboardState GetKeyboardState()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IMouseState GetMouseState()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IRenderer GetRenderer(string name)
-        {
-            return null!;
-        }
-
-        public override ITexture GetTexture(string resourcePath)
-        {
-            return new Texture(resourcePath);
-        }
-
-        public override ITexture GetTexture(Stream textureStream)
-        {
-            return new Texture(textureStream);
-        }
-
-        public override IRenderStep GetRendererStep(string name)
-        {
-            return new RenderStep();
-        }
-
+        public override IKeyboardState GetKeyboardState() => throw new NotImplementedException();
+        public override IMouseState GetMouseState() => throw new NotImplementedException(); 
+        public override IRenderer GetRenderer(string name) => null!;
+        public override ITexture GetTexture(string resourcePath) => new Texture(resourcePath);
+        public override ITexture GetTexture(Stream textureStream) => new Texture(textureStream);
+        public override IRenderStep GetRendererStep(string name) => new RenderStep();
         public override void ResizeWindow(int width, int height) => throw new NotImplementedException();
-
-        public override void Run()
-        {
-            throw new NotImplementedException();
-        }
+        public override void Run() => throw new NotImplementedException();
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using GoRogue.Components;
 using HomicideDetective.People.Speech;
 using HomicideDetective.Words;
@@ -10,21 +11,18 @@ namespace HomicideDetective.People
         /// <summary>
         /// Generate the descriptive info for any random person.
         /// </summary>
+        /// <param name="seed">The RNG seed to use for generating this info</param>
         /// <param name="surname">The Surname of the individual to generate.</param>
         /// <returns></returns>
         public static Personhood GeneratePersonalInfo(int seed, string surname)
         {
             var random = new Random(seed);
             bool isMale = random.Next(0, 2) == 0;
-            bool isTall = random.Next(0, 2) == 0;
-            bool isFat = random.Next(0, 2) == 0;
 
-            var nouns = isMale ? Constants.MaleNouns : Constants.FemaleNouns; //todo - intersex
+            //todo - intersex, non binary
+            var nouns = isMale ? Constants.MaleNouns : Constants.FemaleNouns; 
             var pronouns = isMale ? Constants.MalePronouns : Constants.FemalePronouns;
             
-            string heightDescription = isTall ? "slightly taller than average" : "rather short";
-            string widthDescription = isFat ? "moderately over-weight" : "rather slender";
-
             int age = random.Next(0, 99);
             var ageCategory = CategoryFromAge(age);
             Occupations occupation;
@@ -37,16 +35,56 @@ namespace HomicideDetective.People
             
             var mass = DetermineMass(seed, ageCategory);
             var volume = DetermineVolume(seed, ageCategory);
-            var properties = new PhysicalProperties(mass, volume);
+            
+            string heightDescription = RandomHeightDescription(seed);
+            string widthDescription = RandomWidthDescription(seed);
+            var properties = new PhysicalProperties(mass, volume, heightDescription, widthDescription, ageCategory.ToString());
             var massText = $"{mass / 1000}";
             var volumeText = $"{volume / 1000}";
-            string description = $"{pronouns.Subjective} is a {heightDescription}, {widthDescription} {nouns.Singular}. ";
+            string description = $"{pronouns.Subjective} weighs {massText}kg and is {volumeText}l in volume.";
             string givenName = isMale ? RandomItem(seed, Constants.MaleGivenNames): RandomItem(seed, Constants.FemaleGivenNames);
-
-            var person = new Personhood($"{givenName} {surname}", description, age, occupation, properties, nouns, pronouns);
-            person.Details.Add($"{pronouns.Subjective} weighs {massText}kg and is {volumeText}l in volume.");
+            var person = new Personhood($"{givenName} {surname}", description, age, occupation, nouns, pronouns, properties);
             InitSpeech(person);
             return person;
+        }
+
+        private static string RandomWidthDescription(int seed)
+        {
+            var descriptors = new[]
+            {
+                "slender",
+                "skinny",
+                "thin",
+                "trim",
+                "fit",
+                "lean",
+                "thick",
+                "jacked",
+                "slightly overweight",
+                "somewhat overweight",
+                "portly",
+                "shapely",
+                "rotund",
+                "overweight",
+            };
+
+            return RandomItem(seed, descriptors);
+        }
+
+        private static string RandomHeightDescription(int seed)
+        {
+            var descriptors = new[]
+            {
+                "short",
+                "somewhat short",
+                "average-height",
+                "sort of tall",
+                "tall",
+                "very short",
+                "very tall",
+            };
+
+            return RandomItem(seed, descriptors);
         }
 
         private static IComponentCollection PersonhoodComponents(int seed, ISubstantive substantive)
@@ -67,8 +105,8 @@ namespace HomicideDetective.People
 
         private static AgeCategory CategoryFromAge(int age)
         {
-            return (AgeCategory) age;
-            //return Enum.GetValues<AgeCategory>().Where(ac => ac <= age)
+            var val = Enum.GetValues<AgeCategory>().Where(ac => ac <= (AgeCategory)age);
+            return val.OrderByDescending(ac => ac).First();
         }
 
         private static int DetermineMass(int seed, AgeCategory age)

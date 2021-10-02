@@ -28,8 +28,8 @@ namespace HomicideDetective.Places.Generation
         protected override IEnumerator<object?> OnPerform(GenerationContext context)
         {
             var map = PlantFlowers(context);
-            var regions = context.GetFirstOrNew(() => new Region("park", (0, 0), (context.Width, 0),
-                (context.Width, context.Height), (0, context.Height)), Constants.RegionCollectionTag);
+            var parkArea = PolygonArea.Rectangle(new Rectangle((0, 0), (context.Width, context.Height)));
+            var regions = context.GetFirstOrNew(() => new Place(parkArea, Constants.ParkSubstantive), Constants.RegionCollectionTag);
 
             _deepest = map.RandomPosition();
             _secondDeepest = map.RandomPosition();
@@ -76,9 +76,7 @@ namespace HomicideDetective.Places.Generation
             bodyOfWater.SeedStartingPattern();
             bodyOfWater.Cells.AddRange(_cells);
 
-            var region = MapGen.BaseRegion("Butterfly Park", context.Width, context.Height);
-            regions.AddSubRegion(region);
-            region = new Region("Clark's Pond", (_left, _top), (_right, _top), (_right, _bottom), (_left, _bottom));
+            var region = new Place(new PolygonArea((_left, _top), (_right, _top), (_right, _bottom), (_left, _bottom)), Constants.PondSubstantive);
             regions.AddSubRegion(region);
         }
 

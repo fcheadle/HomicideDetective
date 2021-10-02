@@ -12,14 +12,13 @@ namespace HomicideDetective.Tests.Places
         private readonly Noun _noun = new ("state", "states");
         private readonly Pronoun _pronoun = Constants.ItemPronouns;
         private readonly PhysicalProperties _properties = new PhysicalProperties(18, 24, "superior", "big", "young", "round", "blue", "Royal");
-
-        private Region TestRegion() 
-            => new Region(_name, (0, 0), (15, 0), (15, 15), (0, 15));
+        private PolygonArea TestPolygon => new PolygonArea((0, 0), (15, 0), (15, 15), (0, 15));
+        private Region TestRegion() => new Region(TestPolygon);
         
         [Fact]
         public void NewPlaceTest()
         {
-            var place = new Place(TestRegion(), _name, _description, _properties, _noun, _pronoun);
+            var place = new Place(TestRegion().Area, _name, _description, _noun, _pronoun, _properties);
             Assert.NotNull(place.Markings);
             Assert.Empty(place.Markings.MarkingsOn);
             Assert.Empty(place.Markings.MarkingsLeftBy);

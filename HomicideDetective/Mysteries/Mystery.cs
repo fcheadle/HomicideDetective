@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using GoRogue;
 using HomicideDetective.People;
 using HomicideDetective.Places;
@@ -60,9 +61,9 @@ namespace HomicideDetective.Mysteries
             Murderer = GenerateMurdererEntity();
             MurderWeapon = GenerateMurderWeapon();
             Witnesses = GenerateWitnessEntities().ToList();
-            SceneOfCrimeInfo = GenerateSceneOfMurderInfo();
             GenerateTimeline();
             GenerateLocationsOfInterest();
+            SceneOfCrimeInfo = GenerateSceneOfMurderInfo();
             PlacePeopleOnMaps();
         }
 
@@ -73,8 +74,8 @@ namespace HomicideDetective.Mysteries
             _viewWidth = viewWidth;
             _viewHeight = viewHeight;
         }
-
-        private string RandomItem(string[] collection) => collection[Random.Next(0, collection.Length)];
+        private T RandomItem<T>(T[] collection) => collection[Random.Next(0, collection.Length)];
+        private T RandomItem<T>(List<T> collection) => collection[Random.Next(0, collection.Count)];
         
         #region people
         /// <summary>
@@ -131,9 +132,9 @@ namespace HomicideDetective.Mysteries
         private void GenerateLocationsOfInterest()
         {
             LocationsOfInterest = new();
-            LocationsOfInterest.Add(MapGen.CreateNeighborhoodMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight));
+            LocationsOfInterest.Add(MapGen.CreateNeighborhoodMap(Random.Next(), _mapWidth, _mapHeight, _viewWidth, _viewHeight));
             LocationsOfInterest.Add(MapGen.CreateParkMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight));
-            LocationsOfInterest.Add(MapGen.CreateDownTownMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight));
+            LocationsOfInterest.Add(MapGen.CreateDownTownMap(Random.Next(), _mapWidth, _mapHeight, _viewWidth, _viewHeight));
         }
         
         public void NextMap()
@@ -151,24 +152,26 @@ namespace HomicideDetective.Mysteries
         private void PlacePeopleOnMaps()
         {
             var map = LocationsOfInterest![0];
-            SceneOfCrime = map.RandomRoom();
+            SceneOfCrime = map.GoRogueComponents.GetFirst<Place>().SubAreas
+                .First(sa => sa.Name == SceneOfCrimeInfo.Name);
+            //SceneOfCrime = map.RandomRoom();
             var room = map.RandomRoom();
+            
             //put the murder weapon on the map
             var murderWeapon = MurderWeapon;
-            murderWeapon!.Position = map.RandomFreeSpace(room.Area);
+            murderWeapon!.Position = map.RandomFreeSpace(room);
             map.AddEntity(murderWeapon);
 
             //add victim's corpse to the map
-            room = SceneOfCrime;
             var victim = Victim;
-            victim!.Position = map.RandomFreeSpace(room.Area);
+            victim!.Position = map.RandomFreeSpace(SceneOfCrime);
             map.AddEntity(victim);
             
             foreach (var witness in Witnesses!)
             {
                 map = LocationsOfInterest.RandomItem();
                 room = map.RandomRoom();
-                witness.Position = map.RandomFreeSpace(room.Area);
+                witness.Position = map.RandomFreeSpace(room);
                 
                 map.AddEntity(witness);
             }
@@ -180,21 +183,24 @@ namespace HomicideDetective.Mysteries
         /// <returns></returns>
         public Substantive GenerateSceneOfMurderInfo(string name = "the victim's home")
         {
-            Noun nouns = new Noun("house", "houses");
+            //pick a random map
+            var map = LocationsOfInterest![0];//RandomItem(LocationsOfInterest!);//todo
+            var places = map.AllComponents.GetFirst<Place>(Constants.RegionCollectionTag);
+            var place = places.SubAreas.First(p => Regex.IsMatch(p.Name, "\\d+ \\w+ street"));
+            Noun nouns = MapGen.HouseNouns(Random.Next());
             Pronoun pronouns = Constants.ItemPronouns;
             PhysicalProperties properties = MapGen.HousePhysicalProperties(Random.Next());
             
-            string description = $"This {properties.GetPrintableString()} {nouns.Singular} is at 1327 Lincoln street (hardcoded).";
+            string description = $"This {properties.GetPrintableString()} {nouns.Singular} is located at {place.Name}";
 
-            var substantive = new Substantive(SubstantiveTypes.Place, name, description, nouns, pronouns, properties);
+            var substantive = new Substantive(SubstantiveTypes.Place, place.Name, description, nouns, pronouns, properties);
 
             return substantive;
         }
 
-        public Place CurrentPlaceInfo(Point position)
-        {
-            return CurrentLocation!.GoRogueComponents.GetFirst<PlaceCollection>().GetPlacesContaining(position).Last();
-        }
+        public IEnumerable<Place> CurrentPlaceInfo(Point position)
+            => CurrentLocation!.GoRogueComponents.GetFirst<Place>().GetPlacesContaining(position);
+        
         #endregion
         #region things 
         
