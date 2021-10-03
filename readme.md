@@ -9,17 +9,7 @@ Investigate small-town murders. These homicides are procedurally generated from 
 
 ### Playing
 
-There is currently no content and nothing to do. To get it to build on your system,
-
-1. Clone [TheSadRogue.Integration](https://github.com/thesadrogue/TheSadRogue.Integration ) locally
-2. Open in Visual Studio or Rider
-3. Right Click `TheSadRogue.Integration` project > `Properties...`
-4. Click `Nuget > Generate Nuget Package During Build`
-5. Give it the version, `1.0.0-alpha01-debug`, and build the solution
-6. Find the output nuget package (at `Solution Folder/TheSadRogue.Integration/bin/Debug`)
-7. Add that file location to your IDE's package sources. [Visual Studio](https://support.microsoft.com/en-us/topic/how-to-use-a-local-package-repository-79a79bd8-090e-78f6-b396-8d03cee41981 ) [Rider](https://www.jetbrains.com/help/rider/Using_NuGet.html#sources )
-8. Close your IDE, and open Homicide Detective.
-9. Restore Nuget Packages if it isn't building.
+There is currently no content and nothing to do. To play it, you must run it in visual studio / rider / other C# ide.
 
 ## Features
 ***NOT DONE***
