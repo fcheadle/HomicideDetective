@@ -107,14 +107,6 @@ namespace HomicideDetective.Tests.Mysteries
         }
         [Theory]
         [MemberData(nameof(IntData))]
-        public void GenerateSceneOfMurderInfoTest(int seed)
-        {
-            var scene = new Mystery(seed, 0).GenerateSceneOfMurderInfo("trailer home");
-            Assert.Contains("trailer home", scene.Name);
-            TestUtilities.AssertPlace(scene);
-        }
-        [Theory]
-        [MemberData(nameof(IntData))]
         public void GenerateMiscellaneousItemTest(int seed)
         {
             var thing = new Mystery(seed, 0).GenerateMiscellaneousItem();

@@ -181,7 +181,7 @@ namespace HomicideDetective.Mysteries
         /// Generates the descriptive information about the scene of the crime.
         /// </summary>
         /// <returns></returns>
-        public Substantive GenerateSceneOfMurderInfo(string name = "the victim's home")
+        private Substantive GenerateSceneOfMurderInfo(string name = "the victim's home")
         {
             //pick a random map
             var map = LocationsOfInterest![0];//RandomItem(LocationsOfInterest!);//todo

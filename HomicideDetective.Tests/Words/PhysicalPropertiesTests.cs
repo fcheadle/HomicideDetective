@@ -26,7 +26,7 @@ namespace HomicideDetective.Tests.Words
             Assert.Equal(color, properties.ColorAdjective);
             Assert.Equal(proper, properties.ProperAdjective);
 
-            var expected = $"{quality} {size} {age} {shape} {color} {proper} ";
+            var expected = $"{quality} {size} {age} {shape} {color} {proper}";
             var actual = properties.GetPrintableString();
             Assert.Equal(expected, actual);
         }
