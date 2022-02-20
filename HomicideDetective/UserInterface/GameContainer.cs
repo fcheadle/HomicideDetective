@@ -23,20 +23,20 @@ namespace HomicideDetective.UserInterface
         public PageWindow MessageWindow { get; set; }
         
         public DateTime CurrentTime 
-            => new (_currentYear, _currentMonth, _currentDay, _currentHour, _currentMinute, _currentSeconds);
+            => new (_currentYear, _currentMonth, _currentDay, _currentHour, _currentMinute, _currentSecond);
 
-        public CommandContext Context { get; }
+        public CommandContext Context { get; private set; }
         public CommandContext DefaultContext { get; } = CommandContext.CrimeSceneInvestigationContext();
         private int _currentMinute;
         private int _currentHour;
         private int _currentDay;
         private int _currentMonth;
         private int _currentYear;
-        private int _currentSeconds;
+        private int _currentSecond;
         private readonly int _commandDelay = 5;
         private int _commandDelayCounter = 0;
-        public List<KeyCommand> Commands => _commands;
-        private readonly List<KeyCommand> _commands = new();
+        //public List<KeyCommand> Commands => _commands;
+        //private readonly List<KeyCommand> _commands = new();
         
         //map properties
         public const int MapWidth = 100;
@@ -49,7 +49,7 @@ namespace HomicideDetective.UserInterface
         public GameContainer()
         {
             IsFocused = true;
-            _currentSeconds = 0;
+            _currentSecond = 0;
             _currentDay = 5;
             _currentHour = 18;
             _currentMinute = 0;
@@ -112,6 +112,9 @@ namespace HomicideDetective.UserInterface
 
         private void Interact(Point position)
         {
+            if (Context != DefaultContext)
+                Context = DefaultContext;
+            
             if (PlayerCharacter.CanMove(position))
             {
                 PlayerCharacter.Position = position;
@@ -187,7 +190,7 @@ namespace HomicideDetective.UserInterface
                 game._currentMinute = date.Minute;
                 game._currentMonth = date.Month;
                 game._currentYear = date.Year;
-                game._currentSeconds = date.Second;
+                game._currentSecond = date.Second;
                 //todo
             }
         }
@@ -205,6 +208,12 @@ namespace HomicideDetective.UserInterface
             Map.DefaultRenderer?.SadComponents.Add(new SurfaceComponentFollowTarget { Target = PlayerCharacter });
             //Weather = new Weather(Map);
             Children.Add(Map);
+        }
+
+        public void SetContext(ConversationContext context)
+        {
+            Context = context;
+            Commands.PrintCommands();
         }
     }
 }

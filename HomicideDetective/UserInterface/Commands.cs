@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
+using HomicideDetective.People.Speech;
 using SadRogue.Integration;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
@@ -35,8 +36,12 @@ namespace HomicideDetective.UserInterface
                             var component = entity.AllComponents.GetFirstOrDefault<Personhood>();
                             if (component is not null)
                             {
-                                var contents = component.SpeakTo();
-                                MessageWindow.Write(contents);
+                                var context = ConversationContext.GreetContext(new List<KeyCommand>(), component,
+                                    new List<string>(), new List<DateTime>());
+
+                                Program.CurrentGame.SetContext(context);
+                                //var contents = component.SpeakTo();
+                                //MessageWindow.Write(contents);
                             }
                         }
                     }
@@ -168,7 +173,7 @@ namespace HomicideDetective.UserInterface
         public static void PrintCommands()
         {
             var game = Program.CurrentGame;
-            var keybindings = game.Commands;
+            var keybindings = game.Context;
             MessageWindow.Write(keybindings.ToString());
         }
         
