@@ -35,8 +35,9 @@ namespace HomicideDetective.People
         public int Age { get; }
         public AgeCategory AgeCategory { get; }
         public Occupations Occupation { get; }
-        private bool _hasIntroduced;
-        private bool _hasToldAboutSelf;
+        public bool HasIntroduced { get; private set; }
+        public bool HasToldAboutSelf { get; private set; }
+        
         private readonly Substantive _substantive;
         
         public Personhood(string name, string description, int age, Occupations occupation, Noun nouns, Pronoun pronouns, PhysicalProperties properties)
@@ -59,7 +60,7 @@ namespace HomicideDetective.People
         {
             var description = Properties.GetPrintableString();
             description = description.Length == 0 ? "a " + Nouns.Singular : $"a {description} {Nouns.Singular}";
-            var noun = !_hasIntroduced ? description : Name;
+            var noun = !HasIntroduced ? description : Name;
             var answer = $"This is {noun}. {Speech.BodyLanguage()}";
             return answer;
         }
@@ -69,9 +70,9 @@ namespace HomicideDetective.People
         {
             string answer;
             
-            if (!_hasIntroduced)
+            if (!HasIntroduced)
                 answer = $"\"{Greet()},\" {Pronouns.Subjective} says, \"{Introduce()}\"";
-            else if (!_hasToldAboutSelf)
+            else if (!HasToldAboutSelf)
                 answer = $"\"{InquireAboutSelf()},\" says {Name}";
             else
             {
@@ -92,17 +93,16 @@ namespace HomicideDetective.People
         
         public string Greet()
         {
-            _hasIntroduced = true;
             return "Hello Detective";
         }
         public string Introduce()
         {
-            _hasIntroduced = true;
+            HasIntroduced = true;
             return $"My name is {Name}";
         }
         public string InquireAboutSelf()
         {
-            _hasToldAboutSelf = true;
+            HasToldAboutSelf = true;
             var answer = $"I am a {Enum.GetName(Occupation)}. (info about self?) (info about relationship to victim?)";
             return answer;
         }

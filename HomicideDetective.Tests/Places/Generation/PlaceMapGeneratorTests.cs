@@ -25,12 +25,13 @@ namespace HomicideDetective.Tests.Places.Generation
             Assert.NotNull(places);    
         }
         
-        // [Fact]
-        // public void GenerateDownTownMapTest()
-        // {
-        //     var map = MapGen.CreateDownTownMap(_width, _height, _viewWidth, _viewHeight);
-        //     AssertMapHasRequiredComponents(map);
-        // }
+
+        [Fact]
+        public void GenerateDownTownMapTest()
+        {
+            var map = MapGen.CreateDownTownMap(_random.Next(), _width, _height, _viewWidth, _viewHeight);
+            AssertMapHasRequiredComponents(map);
+        }
         
         [Fact]
         public void GenerateHouseMapTest()

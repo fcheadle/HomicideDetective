@@ -17,29 +17,206 @@ namespace HomicideDetective.Places
         public ArrayView<CrossRoads> Minimap { get; private set; }
         public ArrayView<RogueLikeMap?> Maps { get; private set; }
         public int Seed { get; }
+        public bool GenerationComplete { get; private set; } = false;
+        public DateTime CurrentDate { get; private set; } = new(1960, 1, 1, 0, 0, 0);        
+        
+        public IEnumerable<ISubstantive> Townsfolk => _townsfolk;
+        private List<ISubstantive> _townsfolk = new();
+        
+        public IEnumerable<ISubstantive> Places => _places;
+        private List<ISubstantive> _places = new();
+        
         private Random _random;
         private readonly int _size;
-        private readonly List<string> _families;
-        public IEnumerable<ISubstantive> Townsfolk => _townsfolk;
-        private readonly List<ISubstantive> _townsfolk;
-        public IEnumerable<ISubstantive> Places => _places;
-        private readonly List<ISubstantive> _places;
-
+        private List<string> _familyNames = new();
+        private List<Family> _families = new();
         private readonly int _mapWidth = 100;
         private readonly int _mapHeight = 60;
         private readonly int _viewWidth = Program.Width - 40;
         private readonly int _viewHeight = Program.Height;
+        private readonly int _desiredFamilyCount;
+        private readonly int _minimumFamilySize;
+        private readonly int _maximumFamilySize;
+        private int _currentHorizontalIndex = 0;
+        private int _currentVerticalIndex = 0;
+        private bool _beganCurrentMap = false;
+        private bool _finishedGeneratingMaps = false;
+        private bool _finishedGeneratingFamilySurnames = false;
+        private bool _finishedGeneratingFamilies = false;
+        private bool _beganGeneratingFamilies = false;
+        private bool _beganSurnames = false;
+        private bool _beganElapsingTime = false;
+        private bool _finishedElapsingTime = false;
+        private bool _beganStalkingVictim = false;
+        private bool _finishedStalkingVictim = false;
+        private bool _committedMurder = false;
         
-        public Town(int seed, int size = 4)
+        public Town(int seed, int size = 4, int desiredFamilyCount = 64, int minimumFamilySize = 1, int maximumFamilySize = 6)
         {
             Seed = seed;
+            _maximumFamilySize = maximumFamilySize;
+            _minimumFamilySize = minimumFamilySize;
             _size = size;
+            _desiredFamilyCount = desiredFamilyCount;
             _random = new (Seed);
             Minimap = GenerateMiniMap();
-            _families = GenerateFamilyNames().ToList();
-            _townsfolk = GenerateTownsfolk().ToList();
-            _places = new();
             Maps = new ArrayView<RogueLikeMap?>(_size, _size);
+        }
+
+        public string DoGenerationStep()
+        {
+            string answer = string.Empty;
+
+            if (!_finishedGeneratingMaps)
+            {
+                answer = GenerateMapStep();
+            }
+            
+            else if(!_finishedGeneratingFamilySurnames)
+            {
+                answer = GenerateSurnamesStep();
+            }
+            
+            else if (!_finishedGeneratingFamilies)
+            {
+                answer = GenerateFamilyStep();
+            }
+            
+            else if (!_finishedElapsingTime)
+            {
+                answer = ElapseTimeStep();
+            }
+            
+            else if (!_finishedStalkingVictim)
+            {
+                answer = StalkVictimStep();
+            }
+            
+            else if (!_committedMurder)
+            {
+                answer = CommitMurderStep();
+            }
+            
+            return answer;
+        }
+
+        private string CommitMurderStep()
+        {
+            //todo: pick means
+            //todo: pick opportunity
+            //todo: elapse time until date of Murder
+            //todo: victim's last day
+            throw new NotImplementedException();
+        }
+
+        private string StalkVictimStep()
+        {
+            //todo: pick victim
+            //todo: pick murderer
+            //todo: pick motive
+            throw new NotImplementedException();
+        }
+
+        private string ElapseTimeStep()
+        {
+            //todo
+            CurrentDate += TimeSpan.FromDays(1);
+            
+            if (CurrentDate >= new DateTime(1970, 1, 1, 0, 0, 0))
+                _finishedElapsingTime = true;
+            
+            return $"Living through {CurrentDate.Date}";
+        }
+
+        private string GenerateFamilyStep()
+        {
+            string answer;
+            if (_beganGeneratingFamilies)
+            {
+                if (_families.Count < _desiredFamilyCount)
+                {
+                    var family = GenerateFamily(_familyNames[_families.Count]);
+                    answer = $"Generated {family.Surname} family: ";
+                    foreach (var member in family.Elderly)
+                        answer += $"{member.Name}, ";
+                    foreach (var member in family.Adults)
+                        answer += $"{member.Name}, ";
+                    foreach (var member in family.Children)
+                        answer += $"{member.Name}, ";
+                }
+                else
+                {
+                    answer = "Finished Generating Families. ";
+                    _finishedGeneratingFamilies = true;
+                }
+            }
+            else
+            {
+                answer = "Generating Families... ";
+                _beganGeneratingFamilies = true;
+            }
+
+            return answer;
+        }
+
+        private string GenerateSurnamesStep()
+        {
+            if (_beganSurnames)
+            {
+                _familyNames = GenerateFamilyNames().ToList();
+                _finishedGeneratingFamilySurnames = true;
+                return "Done. ";
+            }
+            else
+            {
+                _beganSurnames = true;
+                return "Generating Family Surnames... ";
+            }
+        }
+
+        private string GenerateMapStep()
+        {
+            if (Maps[_currentHorizontalIndex, _currentVerticalIndex] == null)
+            {
+                if (_beganCurrentMap)
+                {
+                    Maps[_currentHorizontalIndex, _currentVerticalIndex] =
+                        GenerateMap(_currentHorizontalIndex, _currentVerticalIndex);
+
+                    _beganCurrentMap = false;
+                    return "Done. ";
+                }
+
+                else
+                {
+                    _beganCurrentMap = true;
+                    return $"Beginning to Generate {Minimap[_currentHorizontalIndex, _currentVerticalIndex].Type}... ";
+                }
+            }
+            else
+            {
+                //Map at the current place is already generated
+                if (_currentHorizontalIndex < _size)
+                {
+                    _currentHorizontalIndex++;
+                    return GenerateMapStep();
+                }
+                else
+                {
+                    _currentHorizontalIndex = 0;
+
+                    if (_currentVerticalIndex < _size)
+                    {
+                        _currentVerticalIndex++;
+                        return GenerateMapStep();
+                    }
+                    else
+                    {
+                        _finishedGeneratingMaps = true;
+                        return "Done. ";
+                    }
+                }
+            }        
         }
 
         public ArrayView<CrossRoads> GenerateMiniMap()
@@ -88,43 +265,57 @@ namespace HomicideDetective.Places
             return Minimap;
         }
 
-        public void GenerateMap(int x, int y)
-        {
-            if (Minimap.Contains(x, y))
-            {
-                var mapBasics = Minimap[x, y];
-                RogueLikeMap map;
 
-                switch (mapBasics.Type)
-                {
-                    // case MapType.Downtown: map = DownTown(); break;
-                    case MapType.Park: map = Park(); break;
-                    case MapType.ResidentialNeighborhood: map = Neighborhood(); break;
-                    default: break;
-                }
+        public RogueLikeMap? GenerateMap(int x, int y)
+        {
+            RogueLikeMap map;
+
+            var mapBasics = Minimap[x, y];
+            switch (mapBasics.Type)
+            {
+                default:
+                case MapType.Park: map = Park(); break;
+                case MapType.Downtown: map = DownTown(); break;
+                case MapType.ResidentialNeighborhood: map = Neighborhood(); break;
+                //todo: case MapType.ServiceDistrict: map = ServiceDistrict(); break;
+                //todo: case MapType.School: map = School(); break;
             }
+            
+            return map;
         }
 
-        // private RogueLikeMap DownTown() 
-        //     => MapGen.CreateDownTownMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
+        private RogueLikeMap DownTown() 
+            => MapGen.CreateDownTownMap(_random.Next(), _mapWidth, _mapHeight, _viewWidth, _viewHeight);
 
         private RogueLikeMap Neighborhood()
             => MapGen.CreateNeighborhoodMap(_random.Next(),_mapWidth, _mapHeight, _viewWidth, _viewHeight);
 
         private RogueLikeMap Park()
             => MapGen.CreateParkMap(_mapWidth, _mapHeight, _viewWidth, _viewHeight);
-
-        public IEnumerable<string> GenerateFamilyNames()
+        
+        private IEnumerable<string> GenerateFamilyNames()
         {
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < _desiredFamilyCount; i++)
                 yield return Constants.FamilyNames[_random.Next(0, Constants.FamilyNames.Length)];
         }
 
-        public IEnumerable<ISubstantive> GenerateTownsfolk()
+        private Family GenerateFamily(string surname)
         {
-            foreach(var familyName in _families)
-                for (int i = 0; i < _random.Next(1, 7); i++)
-                    yield return PersonFactory.GeneratePersonalInfo(_random.Next(), familyName);
+            int size = _random.Next(_minimumFamilySize, _maximumFamilySize);
+            var family = new Family(surname);
+            for (int i = 0; i < size; i++)
+            {
+                var familyMember = PersonFactory.GeneratePersonalInfo(_random.Next(), surname);
+                
+                if (familyMember.AgeCategory >= AgeCategory.Elderly)
+                    family.Elderly.Add(familyMember);
+                else if (familyMember.AgeCategory >= AgeCategory.YoungAdult)
+                    family.Adults.Add(familyMember);
+                else 
+                    family.Children.Add(familyMember);
+            }
+
+            return family;
         }
     }
 }

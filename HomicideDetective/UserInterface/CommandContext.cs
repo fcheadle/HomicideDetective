@@ -1,19 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
-using HomicideDetective.People;
+using System.Text;
 using SadConsole.Input;
 
 namespace HomicideDetective.UserInterface
 {
     public class CommandContext
     {
-        public KeyCommand[] Commands { get; }
+        public IEnumerable<KeyCommand> Commands { get; }
         public ISubstantive? Subject { get; }
         
         public CommandContext(IEnumerable<KeyCommand> contextCommands, ISubstantive? subject = null)
         {
             Subject = subject;
-            Commands = contextCommands.ToArray();
+            Commands = contextCommands;
         }
 
         public bool ProcessKeyboard(Keyboard keyboard)
@@ -55,17 +55,18 @@ namespace HomicideDetective.UserInterface
 
         public override string ToString()
         {
-            string help = "";
+            StringBuilder help = new ("\r\n");
             
             foreach (var command in Commands)
             {
                 var keyString = command.Key.ToString();
                 if (keyString.Contains("OemQuestion"))
                     keyString = "?";
-                help += $"{keyString}: {command.Name}\r\n";
+
+                help.Append($"{keyString}: {command.Name}\r\n");
             }
 
-            return help;
+            return help.ToString();
         }
     }
 }
