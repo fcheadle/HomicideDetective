@@ -53,7 +53,7 @@ namespace HomicideDetective.People
             Memories = new Memories();
             Speech = new SpeechComponent(Pronouns);
             Markings = new MarkingCollection();
-            Fingerprint = new Fingerprint(Properties.Mass + Properties.Volume + age);
+            //Fingerprint = new Fingerprint(Properties.Mass + Properties.Volume + age);
         }
         
         public string GetPrintableString()

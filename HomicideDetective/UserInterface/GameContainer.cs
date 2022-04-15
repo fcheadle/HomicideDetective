@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using GoRogue.GameFramework;
 using HomicideDetective.Mysteries;
 using HomicideDetective.People;
 using HomicideDetective.People.Speech;
+using HomicideDetective.Places;
 using HomicideDetective.Words;
 using SadConsole;
 using SadConsole.Components;
@@ -14,6 +14,7 @@ using SadRogue.Integration;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
+using Console = SadConsole.Console;
 
 namespace HomicideDetective.UserInterface
 {
@@ -27,12 +28,12 @@ namespace HomicideDetective.UserInterface
 
         public CommandContext Context { get; private set; }
         public CommandContext DefaultContext { get; } = CommandContext.CrimeSceneInvestigationContext();
-        private int _currentMinute;
-        private int _currentHour;
-        private int _currentDay;
-        private int _currentMonth;
-        private int _currentYear;
-        private int _currentSecond;
+        private int _currentSecond = 0;
+        private int _currentMinute = 0;
+        private int _currentHour = 18;
+        private int _currentDay = 5;
+        private int _currentMonth = 7;
+        private int _currentYear = 1970;
         private readonly int _commandDelay = 5;
         private int _commandDelayCounter = 0;
         //public List<KeyCommand> Commands => _commands;
@@ -46,22 +47,25 @@ namespace HomicideDetective.UserInterface
         public RogueLikeEntity PlayerCharacter;
         public Mystery Mystery;
 
+        private readonly Console _loadingScreen;
+        private readonly List<string> _loadingStepsCompleted = new();
+        
         public GameContainer()
         {
             IsFocused = true;
-
-            _currentSecond = 0;
-            _currentDay = 5;
-            _currentHour = 18;
-            _currentMinute = 0;
-            _currentMonth = 7;
-            _currentYear = 1970;
             Mystery = new Mystery(new Random().Next(), 1);
-            Mystery.Generate(MapWidth, MapHeight, Program.Width - 40, Program.Height);
+            Mystery.SetDimensions(MapWidth, MapHeight, Program.Width - 40, Program.Height);
+            Context = DefaultContext;
+            _loadingScreen = new Console(Program.Width, Program.Height * 10);
+            Children.Add(_loadingScreen);
+        }
+
+        private void OpenMystery()
+        {
+            Children.Remove(_loadingScreen);
             Map = InitMap();
             PlayerCharacter = InitPlayerCharacter();
             MessageWindow = InitMessageWindow();
-            Context = DefaultContext;
             
             var victim = Mystery.Victim!.GoRogueComponents.GetFirst<Substantive>();
             var caseDetails = new StringBuilder($"{CurrentTime}\r\n");
@@ -73,9 +77,26 @@ namespace HomicideDetective.UserInterface
             caseDetails.Append("\r\n");
             caseDetails.Append(DefaultContext.ToString());
             MessageWindow.Write(caseDetails.ToString());
-            PlayerCharacter.Position = (0, 0);
+            PlayerCharacter.Position = (0,0);
         }
 
+        public override void Update(TimeSpan delta)
+        {
+            if (!Mystery.GenerationComplete)
+            {
+                var step = Mystery.DoGenerationStep();
+                _loadingStepsCompleted.Add(step);
+                
+                var count = _loadingStepsCompleted.Count > Program.Height ? Program.Height : _loadingStepsCompleted.Count;
+                _loadingScreen.Print(0, count, step);
+                
+                if (count >= Program.Height)
+                    _loadingScreen.ShiftUp();
+                
+                if(step.Contains("Good luck"))
+                    OpenMystery();
+            }
+        }
         public override bool ProcessKeyboard(Keyboard keyboard)
         {
             if(_commandDelayCounter >= _commandDelay)
